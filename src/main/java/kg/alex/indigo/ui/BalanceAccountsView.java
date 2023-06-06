@@ -1,0 +1,927 @@
+package kg.alex.indigo.ui;
+
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.Validator;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.validator.DoubleRangeValidator;
+import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
+import kg.alex.indigo.MyVaadinUI;
+import kg.alex.indigo.Settings;
+import kg.alex.indigo.dao.DbDefinition;
+import kg.alex.indigo.dao.DbInvoice;
+import kg.alex.indigo.dao.DbTransfers;
+import kg.alex.indigo.domain.AccBalanceSettings;
+import kg.alex.indigo.domain.Invoice;
+import kg.alex.indigo.domain.Transfer;
+import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.utils.FormattedFilterTable;
+import kg.alex.indigo.utils.MyFilterDecorator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.vaadin.dialogs.ConfirmDialog;
+import org.vaadin.hene.popupbutton.PopupButton;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+public class BalanceAccountsView extends HorizontalSplitPanel implements Button.ClickListener,
+        Property.ValueChangeListener {
+
+    static final Logger logger = LogManager.getLogger(BalanceAccountsView.class);
+    private final MyVaadinUI myUI;
+    private Button createBtn;
+    private Button modifyBtn;
+    private Button deleteBtn;
+    private Button saveBtn;
+    private Button cancelBtn;
+    private Button confirmBtn;
+    private PopupButton searchBtn;
+    private TextField invoiceNumberTF;
+    private TextArea noteTF, note2TF;
+    private DateField dateDF;
+    private boolean isNew;
+
+    private final String[] NATURAL_COL_ORDER;
+    private GridLayout settingsLay;
+    private GridLayout rightLay;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private FormattedFilterTable invoicesTable;
+    private int invID;
+    private final SimpleDateFormat df;
+
+    public BalanceAccountsView(MyVaadinUI myUI) {
+        this.myUI = myUI;
+        df = Settings.ymdf;
+        NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(IndigoMessages.InvoiceNumber),
+                myUI.getMessage(IndigoMessages.Date), myUI.getMessage(IndigoMessages.Amount),
+                myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Note) + " 2"};
+
+        buildRightLayout();
+        buildSettingsLayout();
+        this.setSplitPosition(24, Unit.PERCENTAGE);
+        this.setSizeFull();
+        this.setLocked(true);
+        this.setFirstComponent(settingsLay);
+        this.setSecondComponent(rightLay);
+
+        prepareNormalMode();
+    }
+
+    private void buildSettingsLayout() {
+
+        settingsLay = new GridLayout(2, 5);
+        settingsLay.setMargin(new MarginInfo(true, false, true, true));
+        settingsLay.setSpacing(true);
+        settingsLay.setWidth(Settings.PERCENTS100);
+
+        HorizontalLayout buttonsLay = new HorizontalLayout();
+        buttonsLay.setSpacing(true);
+
+        modifyBtn = new Button();
+        modifyBtn.setEnabled(false);
+        modifyBtn.setDescription(myUI.getMessage(IndigoMessages.ModifyButton));
+        modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        modifyBtn.setIcon(FontAwesome.PENCIL);
+        modifyBtn.addClickListener(this);
+        buttonsLay.addComponent(modifyBtn);
+
+        createBtn = new Button();
+        createBtn.setEnabled(false);
+        createBtn.setDescription(myUI.getMessage(IndigoMessages.CreateButton));
+        createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        createBtn.setIcon(FontAwesome.FILE_O);
+        createBtn.addClickListener(this);
+        buttonsLay.addComponent(createBtn);
+
+        deleteBtn = new Button();
+        deleteBtn.setEnabled(false);
+        deleteBtn.setDescription(myUI.getMessage(IndigoMessages.DeleteButton));
+        deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        deleteBtn.setIcon(FontAwesome.TRASH_O);
+        deleteBtn.addClickListener(this);
+        buttonsLay.addComponent(deleteBtn);
+
+        saveBtn = new Button();
+        saveBtn.setDescription(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        saveBtn.setIcon(FontAwesome.FLOPPY_O);
+        saveBtn.addClickListener(this);
+        buttonsLay.addComponent(saveBtn);
+
+        cancelBtn = new Button();
+        cancelBtn.setDescription(myUI.getMessage(IndigoMessages.CancelButton));
+        cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        cancelBtn.setIcon(FontAwesome.BAN);
+        cancelBtn.addClickListener(this);
+        buttonsLay.addComponent(cancelBtn);
+
+        confirmBtn = new Button();
+        confirmBtn.setDescription(myUI.getMessage(IndigoMessages.Confirm));
+        confirmBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        confirmBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        confirmBtn.setIcon(FontAwesome.CHECK);
+        confirmBtn.setEnabled(false);
+        confirmBtn.addClickListener(this);
+        buttonsLay.addComponent(confirmBtn);
+        settingsLay.addComponent(buttonsLay, 0, 0, 1, 0);
+
+        invoiceNumberTF = new TextField(myUI.getMessage(IndigoMessages.InvoiceNumber));
+        invoiceNumberTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        invoiceNumberTF.setWidth(Settings.PERCENTS100);
+        invoiceNumberTF.addValueChangeListener(this);
+        settingsLay.addComponent(invoiceNumberTF);
+
+        searchBtn = new PopupButton();
+        searchBtn.setDescription(myUI.getMessage(IndigoMessages.Search));
+        searchBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        searchBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        searchBtn.setIcon(FontAwesome.BINOCULARS);
+        searchBtn.addClickListener(this);
+        settingsLay.addComponent(searchBtn);
+        settingsLay.setComponentAlignment(searchBtn, Alignment.BOTTOM_RIGHT);
+
+        dateDF = new DateField(myUI.getMessage(IndigoMessages.Date));
+        dateDF.setWidth(Settings.PERCENTS100);
+        dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        dateDF.setRequired(true);
+        dateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        dateDF.setResolution(Resolution.MONTH);
+        dateDF.setDateFormat(Settings.yearMonthPattern);
+        dateDF.setValue(new Date());
+        settingsLay.addComponent(dateDF, 0, 2, 1, 2);
+
+        noteTF = new TextArea(myUI.getMessage(IndigoMessages.Note));
+        noteTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        noteTF.setWidth(Settings.PERCENTS100);
+        noteTF.setRows(3);
+        settingsLay.addComponent(noteTF, 0, 3, 1, 3);
+
+        note2TF = new TextArea(myUI.getMessage(IndigoMessages.Note) + " 2");
+        note2TF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        note2TF.setWidth(Settings.PERCENTS100);
+        note2TF.setRows(3);
+        settingsLay.addComponent(note2TF, 0, 4, 1, 4);
+        settingsLay.setColumnExpandRatio(0, 1);
+
+        buildSearchLayout();
+        searchBtn.setContent(invoicesTable);
+    }
+
+    private void buildRightLayout() {
+        int assetsCounter, debtsCounter, acc_category_id = 0;
+        try {
+            DbDefinition dbCon = new DbDefinition();
+            dbCon.connect();
+            List<AccBalanceSettings> assetsList = dbCon.exec_balance_settings(3);
+            assetsCounter = assetsList.size();
+            List<AccBalanceSettings> debtsList = dbCon.exec_balance_settings(4);
+            debtsCounter = debtsList.size();
+            dbCon.close();
+            for (AccBalanceSettings balanceSettings : assetsList) {
+                if (acc_category_id != balanceSettings.getAccCategoryId()) {
+                    assetsCounter++;
+                }
+                acc_category_id = balanceSettings.getAccCategoryId();
+            }
+            acc_category_id = 0;
+            for (AccBalanceSettings balanceSettings : debtsList) {
+                if (acc_category_id != balanceSettings.getAccCategoryId()) {
+                    debtsCounter++;
+                }
+                acc_category_id = balanceSettings.getAccCategoryId();
+            }
+
+            rightLay = new GridLayout(5, (assetsCounter > debtsCounter ? assetsCounter + 4 : debtsCounter + 4));
+            rightLay.setSpacing(true);
+            rightLay.setWidth(Settings.PERCENTS100);
+            rightLay.setMargin(true);
+            rightLay.setColumnExpandRatio(0, 4f);
+            rightLay.setColumnExpandRatio(1, 1f);
+            rightLay.setColumnExpandRatio(2, 0.1f);
+            rightLay.setColumnExpandRatio(3, 4f);
+            rightLay.setColumnExpandRatio(4, 1f);
+
+            Label l = createLabel("DÖNEN VARLIKLAR (USD)", ValoTheme.LABEL_H2);
+            l.addStyleName("border");
+            rightLay.addComponent(l, 0, 0);
+            l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_H2);
+            l.addStyleName("border");
+            rightLay.addComponent(l, 1, 0);
+            rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
+
+            l = createLabel("KISA VADELİ BORÇLAR (USD)", ValoTheme.LABEL_H2);
+            l.addStyleName("border");
+            rightLay.addComponent(l, 3, 0);
+            l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_H2);
+            l.addStyleName("border");
+            rightLay.addComponent(l, 4, 0);
+            rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
+            int assetsRow = buildRows(assetsList, 0);
+            int debtsRow = buildRows(debtsList, 3);
+
+            int row = assetsRow > debtsRow ? assetsRow + 1 : debtsRow + 1;
+            l = createLabel("Gecmis Donem Kari", ValoTheme.LABEL_LARGE);
+            l.addStyleName("border");
+            rightLay.addComponent(l, 3, row);
+            l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_LARGE);
+            l.addStyleName("border");
+            rightLay.addComponent(l, 4, row);
+            rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
+            row++;
+            l = createLabel("Donem Net Kari", ValoTheme.LABEL_LARGE);
+            l.addStyleName("border");
+            rightLay.addComponent(l, 3, row);
+            l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_LARGE);
+            l.addStyleName("border");
+            rightLay.addComponent(l, 4, row);
+            rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+    }
+
+    private int buildRows(List<AccBalanceSettings> list, int column) {
+        int acc_category_id = 0;
+        int row = 1;
+        for (AccBalanceSettings balanceSettings : list) {
+            if (acc_category_id != balanceSettings.getAccCategoryId()) {
+                Label l = createLabel(balanceSettings.getAccCategory(), ValoTheme.LABEL_LARGE);
+                l.addStyleName("tableCpt");
+                rightLay.addComponent(l, column, row);
+                l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_LARGE);
+                l.addStyleName("tableCpt");
+                l.setId(myUI.getMessage(IndigoMessages.Parent));
+                rightLay.addComponent(l, column + 1, row);
+                rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
+                row++;
+            }
+            if (balanceSettings.isWithTextField()) {
+                HorizontalLayout hl = new HorizontalLayout();
+                hl.setSpacing(true);
+                hl.setWidth(Settings.PERCENTS100);
+                hl.addComponent(createLabel(balanceSettings.getPrefix(), null));
+                TextField tf = createTextField(new StringLengthValidator(
+                                myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                                null, 100, true), false, null,
+                        myUI.getMessage(IndigoMessages.Note), null, null, null);
+                hl.addComponent(tf);
+                hl.setExpandRatio(tf, 1);
+                if (balanceSettings.getPostfix() != null) {
+                    hl.addComponent(createLabel(balanceSettings.getPostfix(), null));
+                }
+                rightLay.addComponent(hl, column, row);
+            } else {
+                rightLay.addComponent(createLabel(balanceSettings.getPrefix(), null), column, row);
+            }
+            balanceSettings.setRow(row);
+            balanceSettings.setColumn(column);
+            rightLay.addComponent(createTextField(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                            0.0, null), false, null, balanceSettings, this,
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2)), column + 1, row);
+            row++;
+            acc_category_id = balanceSettings.getAccCategoryId();
+        }
+        return row;
+    }
+
+    private Label createLabel(String value, String style) {
+        Label l = new Label(value);
+        l.setSizeUndefined();
+        if (style != null) {
+            l.setStyleName(style);
+        }
+        return l;
+    }
+
+    public TextField createTextField(Validator validator, boolean isRequired, String itemId, Object data,
+                                     Property.ValueChangeListener listener,
+                                     ObjectProperty<?> property, Converter<String, ?> converter) {
+        TextField tf = new TextField();
+        tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
+        tf.setWidth(Settings.PERCENTS100);
+        if (validator != null) {
+            tf.addValidator(validator);
+        }
+        if (isRequired) {
+            tf.setRequired(true);
+            tf.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        }
+        if (property != null) {
+            tf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
+            property.setValue(null);
+            tf.setPropertyDataSource(property);
+            tf.setNullRepresentation("");
+            tf.setNullSettingAllowed(true);
+            tf.setConverter(converter);
+        } else {
+            tf.setNullRepresentation("");
+        }
+        tf.setId(itemId);
+        tf.setData(data);
+        if (listener != null) {
+            tf.addValueChangeListener(listener);
+        }
+        return tf;
+    }
+
+    private void buildSearchLayout() {
+
+        invoicesTable = new FormattedFilterTable(myUI);
+        invoicesTable.setFilterDecorator(new MyFilterDecorator(myUI));
+        invoicesTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        invoicesTable.setSelectable(true);
+        invoicesTable.setFilterBarVisible(true);
+        invoicesTable.setNullSelectionAllowed(false);
+        invoicesTable.addValueChangeListener(this);
+        try {
+            DbInvoice dbCon = new DbInvoice();
+            dbCon.connect();
+            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId(), this));
+            dbCon.close();
+            if (invoicesTable.getContainerDataSource().size() != 0) {
+                invoicesTable.setValue(((IndexedContainer) invoicesTable.getContainerDataSource()).firstItemId());
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        invoicesTable.setPageLength(5);
+        invoicesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
+        invoicesTable.setColumnWidth(myUI.getMessage(IndigoMessages.Note), 200);
+        invoicesTable.setColumnWidth(myUI.getMessage(IndigoMessages.Note) + " 2", 200);
+        invoicesTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), CustomTable.Align.RIGHT);
+    }
+
+    @Override
+    public void buttonClick(Button.ClickEvent event) {
+        final Button source = event.getButton();
+        if (source == modifyBtn && invoicesTable.getValue() != null) {
+            if (currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.prmConfirmationControl) ||
+                    invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null &&
+                            !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue()) {
+                isNew = false;
+                fillFields();
+                prepareModificationMode();
+                invoiceNumberTF.focus();
+            } else {
+                Notification.show(myUI.getMessage(IndigoMessages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
+            }
+        } else if (source == createBtn) {
+            isNew = true;
+            clearFields();
+            prepareModificationMode();
+        } else if (source == deleteBtn && invoicesTable.getValue() != null) {
+            if (currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.prmConfirmationControl) ||
+                    invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null &&
+                            !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue()) {
+                ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
+                        myUI.getMessage(IndigoMessages.ConfirmDeletion),
+                        myUI.getMessage(IndigoMessages.Yes),
+                        myUI.getMessage(IndigoMessages.No),
+                        (ConfirmDialog.Listener) dialog -> {
+                            if (dialog.isConfirmed()) {
+                                execDelete();
+                            }
+                        });
+            } else {
+                Notification.show(myUI.getMessage(IndigoMessages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
+            }
+        } else if (source == saveBtn) {
+            try {
+                if (Settings.validate(settingsLay) && Settings.validate(rightLay)) {
+                    double assetsAmount = Settings.dFormat2.parse((
+                            (Label) rightLay.getComponent(1, 0)).getValue()).doubleValue();
+                    double debtsAmount = Settings.dFormat2.parse((
+                            (Label) rightLay.getComponent(4, 0)).getValue()).doubleValue();
+                    if (assetsAmount > 0.0 || debtsAmount > 0.0) {
+                        DbInvoice dbCon = new DbInvoice();
+                        dbCon.connect();
+                        if (isNew) {
+                            if (!dbCon.isExists(myUI.getUser().getSchool().getId(), 5, dateDF.getValue(), 0)) {
+                                Invoice inv = getInvoice(0);
+                                int id = dbCon.exec_insert(inv);
+                                if (id != 0) {
+                                    insertTransfers(id, 3);
+                                    insertTransfers(id, 4);
+                                    addDataContainerItem(id, df.format(dateDF.getValue()));
+                                    Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                    prepareNormalMode();
+                                } else {
+                                    Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                                }
+                            } else {
+                                Notification.show(myUI.getMessage(IndigoMessages.ExistsInvoiceNotification), Notification.Type.WARNING_MESSAGE);
+                            }
+                        } else {
+                            if (!dbCon.isExists(myUI.getUser().getSchool().getId(), 5, dateDF.getValue(), invID)) {
+                                int status = 0;
+                                Invoice inv = getInvoice(invID);
+                                try {
+                                    status = dbCon.exec_update(inv);
+                                } catch (Exception e) {
+                                    logger.error(e);
+                                    logger.catching(e);
+                                }
+                                if (status != 0) {
+                                    insertTransfers(invID, 3);
+                                    insertTransfers(invID, 4);
+                                    updateDataContainer();
+                                    setTransfers();
+                                    Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                    prepareNormalMode();
+                                } else {
+                                    Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                                }
+                            } else {
+                                Notification.show(myUI.getMessage(IndigoMessages.ExistsInvoiceNotification), Notification.Type.WARNING_MESSAGE);
+                            }
+                        }
+                        dbCon.close();
+                    } else {
+                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue), Notification.Type.WARNING_MESSAGE);
+                    }
+                } else {
+                    Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue), Notification.Type.WARNING_MESSAGE);
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+        } else if (source == cancelBtn) {
+            if (invoicesTable.getValue() != null) {
+                fillFields();
+                setTransfers();
+            }
+            prepareNormalMode();
+        } else if (source == confirmBtn) {
+            if (currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.prmConfirmationControl)) {
+                CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue();
+                ckb.setValue(true);
+                confirmBtn.setEnabled(false);
+            } else {
+                ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
+                        myUI.getMessage(IndigoMessages.ConfirmConfirmation),
+                        myUI.getMessage(IndigoMessages.Yes),
+                        myUI.getMessage(IndigoMessages.No),
+                        (ConfirmDialog.Listener) dialog -> {
+                            if (dialog.isConfirmed()) {
+                                CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue();
+                                ckb.setValue(true);
+                                try {
+                                    DbInvoice dbInvoice = new DbInvoice();
+                                    dbInvoice.connect();
+                                    int status = dbInvoice.exec_update(invID, 1);
+                                    dbInvoice.close();
+                                    if (status == 1) {
+                                        Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                        confirmBtn.setEnabled(false);
+                                    }
+                                } catch (Exception e) {
+                                    logger.error(e);
+                                    logger.catching(e);
+                                }
+                            }
+                        });
+            }
+        }
+    }
+
+    @Override
+    public void valueChange(Property.ValueChangeEvent event) {
+        Property property = event.getProperty();
+        if (property == invoicesTable) {
+            invoiceNumberTF.removeValueChangeListener(this);
+            if (invoicesTable.getItem(invoicesTable.getValue()) != null) {
+                invID = (Integer) invoicesTable.getValue();
+                setTransfers();
+                fillFields();
+            }
+            invoiceNumberTF.addValueChangeListener(this);
+        } else if (property == invoiceNumberTF) {
+            invoiceNumberTF.removeValueChangeListener(this);
+            Iterator<?> iter = invoicesTable.getItemIds().iterator();
+            boolean isFound = false;
+            Object next;
+            while (iter.hasNext()) {
+                next = iter.next();
+                if (invoicesTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.InvoiceNumber)).getValue().equals(property.getValue())) {
+                    invoicesTable.setValue(next);
+                    isFound = true;
+                    break;
+                }
+            }
+            if (!isFound) {
+                invoiceNumberTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                        myUI.getMessage(IndigoMessages.InvoiceNumber)).getValue().toString());
+            }
+            invoiceNumberTF.addValueChangeListener(this);
+        } else if (event.getProperty() instanceof CheckBox) {
+            try {
+                int value = 1;
+                if (event.getProperty().getValue() == Boolean.FALSE) {
+                    value = 0;
+                }
+                DbInvoice dbInvoice = new DbInvoice();
+                dbInvoice.connect();
+                int status = dbInvoice.exec_update((Integer) ((CheckBox) event.getProperty()).getData(), value);
+                dbInvoice.close();
+                if (status == 1) {
+                    Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                    if ((int) ((CheckBox) event.getProperty()).getData() == (int) invoicesTable.getValue()) {
+                        confirmBtn.setEnabled(value != 1);
+                    }
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+        } else {
+            TextField amountTf = ((TextField) event.getProperty());
+            AccBalanceSettings balanceSettings = (AccBalanceSettings) amountTf.getData();
+            if (balanceSettings.isWithTextField()) {
+                HorizontalLayout hl = (HorizontalLayout) rightLay.getComponent(
+                        balanceSettings.getColumn(), balanceSettings.getRow());
+                TextField tf = (TextField) hl.getComponent(1);
+                if (amountTf.isValid() && amountTf.getConvertedValue() != null && (Double) amountTf.getConvertedValue() != 0.0) {
+                    tf.setRequired(true);
+                    tf.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                    tf.setNullSettingAllowed(false);
+                    tf.removeAllValidators();
+                    tf.addValidator(new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                            1, 100, false));
+                } else {
+                    tf.setRequired(false);
+                    tf.setRequiredError(null);
+                    tf.setNullSettingAllowed(true);
+                    tf.removeAllValidators();
+                    tf.addValidator(new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                            null, 100, true));
+                }
+            }
+            recalculateTotals(balanceSettings.getColumn() + 1);
+        }
+    }
+
+    private void prepareModificationMode() {
+        if (invoicesTable.getValue() != null && invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null) {
+            confirmBtn.setEnabled(false);
+        }
+        modifyBtn.setEnabled(false);
+        createBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
+        saveBtn.setEnabled(true);
+        cancelBtn.setEnabled(true);
+        searchBtn.setEnabled(false);
+        invoiceNumberTF.setEnabled(false);
+        dateDF.setEnabled(true);
+        noteTF.setEnabled(true);
+        note2TF.setEnabled(true);
+        rightLay.setEnabled(true);
+    }
+
+    private void prepareNormalMode() {
+        if (currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.actModify)) {
+            modifyBtn.setEnabled(true);
+        }
+        if (currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.actAdd)) {
+            createBtn.setEnabled(true);
+        }
+        if (currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.actDelete)) {
+            deleteBtn.setEnabled(true);
+        }
+        saveBtn.setEnabled(false);
+        cancelBtn.setEnabled(false);
+        invoiceNumberTF.setEnabled(true);
+        searchBtn.setEnabled(true);
+        dateDF.setEnabled(false);
+        noteTF.setEnabled(false);
+        note2TF.setEnabled(false);
+        rightLay.setEnabled(false);
+
+        if (invoicesTable.getValue() != null && invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null) {
+            confirmBtn.setEnabled(!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                    Settings.button).getValue()).getValue());
+        }
+    }
+
+    private void fillFields() {
+        if (invoicesTable.getValue() != null && invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                Settings.button).getValue() != null) {
+            confirmBtn.setEnabled(!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                    Settings.button).getValue()).getValue());
+        }
+        invoiceNumberTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                myUI.getMessage(IndigoMessages.InvoiceNumber)).getValue().toString());
+        try {
+            dateDF.setValue(df.parse(invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                    myUI.getMessage(IndigoMessages.Date)).getValue().toString()));
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        if (invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                myUI.getMessage(IndigoMessages.Note)).getValue() != null) {
+            noteTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                    myUI.getMessage(IndigoMessages.Note)).getValue().toString());
+        } else {
+            noteTF.setValue("");
+        }
+        if (invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                myUI.getMessage(IndigoMessages.Note) + " 2").getValue() != null) {
+            note2TF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                    myUI.getMessage(IndigoMessages.Note) + " 2").getValue().toString());
+        } else {
+            note2TF.setValue("");
+        }
+    }
+
+    private void clearFields() {
+        invoiceNumberTF.removeValueChangeListener(this);
+        invoiceNumberTF.setValue("");
+        invoiceNumberTF.addValueChangeListener(this);
+        dateDF.setValue(new Date());
+        note2TF.setValue("");
+        noteTF.setValue("");
+        clearAll(rightLay);
+    }
+
+    public void clearAll(ComponentContainer layout) {
+        for (Component c : layout) {
+            if (c instanceof AbstractField) {
+                ((AbstractField<?>) c).setValue(null);
+                c.setId(null);
+                if (((AbstractField<?>) c).getData() != null &&
+                        ((AbstractField<?>) c).getData().equals(myUI.getMessage(IndigoMessages.Note))) {
+                    ((TextField) c).setRequired(false);
+                    ((TextField) c).setRequiredError(null);
+                    ((TextField) c).setNullSettingAllowed(true);
+                    ((TextField) c).removeAllValidators();
+                    ((TextField) c).addValidator(new StringLengthValidator(
+                            myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                            null, 100, true));
+                }
+            } else if (c instanceof AbstractComponentContainer) {
+                clearAll((AbstractComponentContainer) c);
+            }
+        }
+    }
+
+    private void setTransfers() {
+        clearAll(rightLay);
+        try {
+            DbTransfers dbCon = new DbTransfers();
+            dbCon.connect();
+            Map<Integer, Transfer> transfersMap = dbCon.execSQL(invID);
+            dbCon.close();
+            for (int i = 0; i < rightLay.getRows(); i++) {
+                int column = 1;
+                setTransfers(transfersMap, i, column);
+                column = 4;
+                setTransfers(transfersMap, i, column);
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        recalculateTotals(1);
+        recalculateTotals(4);
+    }
+
+    private void setTransfers(Map<Integer, Transfer> transfersMap, int i, int column) {
+        if (rightLay.getComponent(column, i) instanceof TextField) {
+            TextField tf = (TextField) rightLay.getComponent(column, i);
+            AccBalanceSettings balanceSettings = (AccBalanceSettings) tf.getData();
+            Transfer tr = transfersMap.get(balanceSettings.getId());
+            if (tr != null) {
+                tf.removeValueChangeListener(this);
+                tf.getPropertyDataSource().setValue(tr.getAmount());
+                tf.addValueChangeListener(this);
+                tf.setId(Integer.toString(tr.getId()));
+                if (balanceSettings.isWithTextField()) {
+                    Component component = rightLay.getComponent(column - 1, i);
+                    if (component instanceof HorizontalLayout) {
+                        String value = tr.getNote().replace(balanceSettings.getPrefix(), "");
+                        if (balanceSettings.getPostfix() != null) {
+                            value = value.replace(balanceSettings.getPostfix(), "");
+                        }
+                        for (int j = 0; j < ((HorizontalLayout) component).getComponentCount(); j++) {
+                            Component c = ((HorizontalLayout) component).getComponent(j);
+                            if (c instanceof TextField) {
+                                ((TextField) c).setValue(value.trim());
+                                ((TextField) c).setRequired(true);
+                                ((TextField) c).setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                                ((TextField) c).setNullSettingAllowed(false);
+                                ((TextField) c).removeAllValidators();
+                                ((TextField) c).addValidator(new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                                        1, 100, false));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void updateDataContainer() {
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(IndigoMessages.Date)).setValue(
+                df.format(dateDF.getValue()));
+        try {
+            invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(IndigoMessages.Amount)).setValue(
+                    Settings.dFormat2.parse(((Label) rightLay.getComponent(4, rightLay.getRows() - 1))
+                            .getValue()).doubleValue());
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(IndigoMessages.Note)).setValue(
+                noteTF.getValue());
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(IndigoMessages.Note) + " 2").setValue(
+                note2TF.getValue());
+    }
+
+    private void addDataContainerItem(int id, String date) {
+        Item item = ((IndexedContainer) invoicesTable.getContainerDataSource()).addItemAt(0, id);
+        item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(date);
+        try {
+            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
+                    Settings.dFormat2.parse(((Label) rightLay.getComponent(4, rightLay.getRows() - 1))
+                            .getValue()).doubleValue());
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(noteTF.getValue());
+        item.getItemProperty(myUI.getMessage(IndigoMessages.Note) + " 2").setValue(note2TF.getValue());
+        try {
+            DbInvoice dbCon = new DbInvoice();
+            dbCon.connect();
+            item.getItemProperty(myUI.getMessage(IndigoMessages.InvoiceNumber)).setValue(dbCon.execSQL_invoice_number(id));
+            dbCon.close();
+            CheckBox cb = new CheckBox();
+            cb.setData(id);
+            cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
+            if (!currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.prmConfirmationControl)) {
+                cb.setEnabled(false);
+            } else {
+                cb.addValueChangeListener(this);
+            }
+            item.getItemProperty(Settings.button).setValue(cb);
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        invoicesTable.setValue(id);
+    }
+
+    private Invoice getInvoice(int i) {
+        Invoice inv = new Invoice();
+        try {
+            DbInvoice dbCon = new DbInvoice();
+            dbCon.connect();
+            inv.setInvoice_number(dbCon.execSQL_max_invoice_number(
+                    myUI.getUser().getSchool().getId(), 5) + 1);
+            dbCon.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        if (noteTF.getValue() != null && !noteTF.getValue().equals("")) {
+            inv.setNote(noteTF.getValue());
+        }
+        if (note2TF.getValue() != null && !note2TF.getValue().equals("")) {
+            inv.setNote2(note2TF.getValue());
+        }
+        inv.setAcc_invoice_type_id(5);
+        inv.setCreation_date(dateDF.getValue());
+        inv.setSchool_id(myUI.getUser().getSchool().getId());
+        inv.setEmployee_id(myUI.getUser().getId());
+        inv.setId(i);
+        return inv;
+    }
+
+    private void execDelete() {
+        try {
+            DbDefinition dbDef = new DbDefinition();
+            dbDef.connect();
+            int st = dbDef.exec_delete(invoicesTable.getValue().toString(), Settings.dbTransfers, Settings.invoice_id);
+            if (st != 0) {
+                st = dbDef.exec_delete((Integer) invoicesTable.getValue(), Settings.dbAccInvoice);
+                if (st != 0) {
+                    invoicesTable.getContainerDataSource().removeItem(invoicesTable.getValue());
+                    if (invoicesTable.getContainerDataSource().size() != 0) {
+                        invoicesTable.setValue(((IndexedContainer) invoicesTable.getContainerDataSource()).firstItemId());
+                    } else {
+                        clearFields();
+                        invoicesTable.setValue(null);
+                    }
+                }
+            }
+            dbDef.close();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete), Notification.Type.WARNING_MESSAGE);
+            logger.error(e);
+            logger.catching(e);
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+    }
+
+    private void insertTransfers(int invoice_id, int invoice_type_id) {
+        int column = invoice_type_id == 3 ? 1 : 4;
+        try {
+            DbTransfers dbCon = new DbTransfers();
+            dbCon.connect();
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
+            for (int i = 0; i < rightLay.getRows(); i++) {
+                if (rightLay.getComponent(column, i) instanceof TextField) {
+                    TextField tf = (TextField) rightLay.getComponent(column, i);
+                    Component component = rightLay.getComponent(column - 1, i);
+                    if (tf.isValid() && tf.getConvertedValue() != null && (Double) tf.getConvertedValue() != 0.0) {
+                        AccBalanceSettings balanceSettings = (AccBalanceSettings) tf.getData();
+                        Transfer tr = new Transfer();
+                        tr.setAcc_balance_settings_id(balanceSettings.getId());
+                        tr.setAcc_category_id(balanceSettings.getAccCategoryId());
+                        tr.setAmount((Double) tf.getConvertedValue());
+                        tr.setCurrency_id(2);
+                        tr.setRate(myUI.getDb_currency_rate());
+                        tr.setInvoice_id(invoice_id);
+                        if (component instanceof Label) {
+                            tr.setNote(((Label) component).getValue());
+                        } else if (component instanceof HorizontalLayout) {
+                            String value = "";
+                            for (int j = 0; j < ((HorizontalLayout) component).getComponentCount(); j++) {
+                                Component c = ((HorizontalLayout) component).getComponent(j);
+                                if (c instanceof Label) {
+                                    value += " " + ((Label) c).getValue();
+                                } else if (c instanceof TextField) {
+                                    value += " " + ((TextField) c).getValue();
+                                }
+                            }
+                            tr.setNote(value.trim());
+                        }
+                        if (tf.getId() != null) {
+                            tr.setId(Integer.parseInt(tf.getId()));
+                            dbCon.exec_update(tr);
+                        } else {
+                            dbCon.exec_insert(tr);
+                        }
+                    } else if (tf.getId() != null) {
+                        dbd.exec_delete(tf.getId(), Settings.dbTransfers);
+                    }
+                }
+            }
+            dbCon.close();
+            dbd.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+    }
+
+    public void recalculateTotals(int column) {
+        double totalAmount = 0.0, parentTotal = 0.0;
+        for (int i = rightLay.getRows() - 1; i >= 0; i--) {
+            if (rightLay.getComponent(column, i) instanceof TextField) {
+                TextField tf = (TextField) rightLay.getComponent(column, i);
+                if (tf.isValid() && tf.getConvertedValue() != null && (Double) tf.getConvertedValue() != 0.0) {
+                    totalAmount += (Double) tf.getConvertedValue();
+                    parentTotal += (Double) tf.getConvertedValue();
+                }
+            } else if (rightLay.getComponent(column, i) instanceof Label && rightLay.getComponent(column, i).getId() != null
+                    && rightLay.getComponent(column, i).getId().equals(myUI.getMessage(IndigoMessages.Parent))) {
+                ((Label) rightLay.getComponent(column, i)).setValue(Settings.dFormat2.format(parentTotal));
+                parentTotal = 0.0;
+            }
+        }
+        ((Label) rightLay.getComponent(column, 0)).setValue(Settings.dFormat2.format(totalAmount));
+        try {
+            double net = Settings.dFormat2.parse(((Label) rightLay.getComponent(1, 0)).getValue()).doubleValue()
+                    - Settings.dFormat2.parse(((Label) rightLay.getComponent(4, 0)).getValue()).doubleValue();
+            ((Label) rightLay.getComponent(4, rightLay.getRows() - 1)).setValue(Settings.dFormat2.format(net));
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+    }
+
+    public Component getNewObj() {
+        return new BalanceAccountsView(myUI);
+    }
+}

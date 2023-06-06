@@ -1,0 +1,431 @@
+/* Import the reindeer theme. */
+/* This only allows us to use the mixins defined in it and does not add any styles by itself. */
+@import "variables";
+
+/* This contains all of your theme. */
+/* If somebody wants to extend the theme she will include this mixin. */
+@mixin mytheme {
+  /* Include all the styles from the reindeer theme */
+  @include valo;
+
+  .v-button-primary.v-button-primary {
+    background: #fff;
+    border-color: $v-focus-color;
+    color: $v-focus-color;
+  }
+
+  .v-button-danger.v-button-danger {
+    background: #fff;
+    border-color: $v-error-indicator-color;
+    color: $v-error-indicator-color;
+  }
+
+  .v-button-unread {
+    color: #fff;
+    border: 2px solid #9E0000;
+    background: #ed473b;
+  }
+
+  .v-button-cv {
+    height: 14px;
+    padding: 0 8px;
+    font-size: 10px;
+  }
+
+  .v-slider-base:before,
+  .v-slider-base:after {
+    border: none !important;
+  }
+
+  .v-label-mainPage {
+    font-size: 40px;
+    font-weight: bold;
+    color: #1b3977;
+    letter-spacing: 0.05em;
+  }
+  .v-horizontallayout-loginLayout {
+    background-color: #1b3977;
+  }
+  .v-panel-caption-loginPanel {
+    line-height: 35px;
+    color: #1b3977;
+    font-weight: 500;
+    font-size: 20px;
+  }
+  .v-label-mylabel {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1b3977;
+    letter-spacing: 0.05em;
+  }
+  .v-menubar .v-menubar-menuitem {
+    font-size: 16px;
+  }
+  .v-label-captionLbl {
+    padding-left: 50px;
+    font-size: 17px;
+    color: #fff;
+    background-color: #1b3977;
+  }
+  .v-upload .v-button {
+    height: 23px;
+    padding: 0 11px;
+  }
+  .v-table.wordwrap-headers .v-table-header-wrap {
+    height: auto;
+  }
+
+  .v-table.wordwrap-headers .v-table-header {
+    min-height: 20px;
+    height: auto;
+  }
+
+  .v-table.wordwrap-headers .v-table-header-cell {
+    vertical-align: top;
+    position: relative;
+  }
+
+  .v-table.wordwrap-headers .v-table-resizer {
+    height: 500px;
+    float: none;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 2px;
+  }
+
+  .v-table.wordwrap-headers .v-table-caption-container {
+    white-space: normal;
+  }
+
+  .v-table.wordwrap-headers td.v-table-header-cell,
+  .v-table.wordwrap-headers td.v-table-header-cell-desc,
+  .v-table.wordwrap-headers td.v-table-header-cell-asc {
+    display: inline-block !important;
+    position: relative;
+  }
+
+  .v-panel-caption-accounting {
+    padding-left: 30px;
+    font-size: 17px;
+    font-weight: 600;
+    background-color: #1b3977;
+    background-image: -webkit-linear-gradient(top, #3B5998 2%, #3B5998 98%);
+    background-image: -moz-linear-gradient(to bottom, #3B5998 2%, #3B5998 98%);
+    color: #fff;
+  }
+
+  .v-textfield-searchTF {
+    background-color: #f5f5f5;
+    padding-left: 10px;
+  }
+
+  .v-verticallayout-myVertical {
+    background-color: #f5f5f5;
+  }
+
+  .v-label-labelInfo {
+    font-size: 16px;
+    line-height: normal;
+    color: white;
+  }
+
+  .v-label-tableCpt {
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #1b3977;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 3px;
+    letter-spacing: 0.04em;
+  }
+  .v-table-cell-content-right-aligned {
+    text-align: right !important;
+  }
+
+  .v-table-row.v-table-row-highlight-green, .v-table-row-odd.v-table-row-highlight-green {
+    background-color: #eafbf5;
+  }
+
+  .v-table-row.v-table-row-highlight-darkgreen, .v-table-row-odd.v-table-row-highlight-darkgreen {
+    background-color: #81c784;
+  }
+  .v-table-row.v-table-row-highlight-yellow, .v-table-row-odd.v-table-row-highlight-yellow {
+    background-color: #fffecc;
+  }
+
+  .v-table-row.v-table-row-highlight-blue, .v-table-row-odd.v-table-row-highlight-blue {
+    background-color: #b0b8ff;
+  }
+  .v-table-row.v-table-row-highlight-red, .v-table-row-odd.v-table-row-highlight-red {
+    background-color: #ffe6e6;
+  }
+
+  .filters-wrap {
+    border-left: 2px solid #C2C3C4;
+    border-right: 2px solid #C2C3C4;
+  }
+
+  .filters-panel input.v-textfield.v-widget, .v-window .v-table .filters-panel input.v-textfield.v-widget {
+    padding: 0px;
+    border-right: 0px;
+    border-bottom: 0px;
+    background: #b7b7b7;
+    padding: 3px 6px !important;
+    color: #455f2a;
+  }
+
+  .filters-panel .v-label, .filters-panel .filterplaceholder {
+    border: 1px solid #abafa7;
+    background: #b7b7b7;
+    border-right: 0px;
+  }
+  .numberfilterpopup .v-popupbutton, .numberfilterpopup .v-popupbutton:focus, .numberfilterpopup .v-popupbutton:active, .numberfilterpopup .v-popupbutton.v-pressed {
+    background: #b7b7b7;
+    border: 1px solid #b7b7b7;
+    border-bottom: 0px;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    -o-border-radius: 0px;
+    margin-left: 0.5px;
+    color: #455f2a;
+  }
+
+  .v-label-lblSmall {
+    font-size: 11px;
+    padding: 3px 16px 3px 32px;
+  }
+
+  .v-button-min-padding {
+    padding: 0px 3px;
+  }
+
+  .v-table-cell-content-right-aligned {
+    text-align: right !important;
+  }
+
+  v-table-cell-wrapper-right-aligned {
+    text-align: right !important;
+  }
+
+  .v-textfield-doubleValue {
+    text-align: right !important;
+  }
+
+  .v-upload .v-button {
+    height: 27px;
+  }
+
+  .v-tabsheet-framed.padded-tabbar > .v-tabsheet-tabcontainer {
+    border: 0px;
+    padding-top: 0px;
+  }
+
+  .v-label-success, .v-label-failure {
+    background: #F0F9E7;
+    border: 1px solid #2c9720;
+    border-radius: 0px;
+    padding: 1px 16px 1px 32px;
+  }
+
+  .v-label-border {
+    background: #F0F9E7;
+    border: 1px solid #2c9720;
+    border-radius: 0px;
+    padding: 1px 16px 1px 32px;
+  }
+
+  .v-label-success:before, .v-label-failure:before {
+    margin-left: -25px;
+  }
+
+  .v-table-cell-wrapper {
+    margin-left: 1px;
+  }
+
+  .v-table-noWrap .v-table-cell-wrapper {
+    white-space: normal;
+    overflow: hidden;
+    margin-left: 2px;
+  }
+
+  .v-table-noWrap tr.v-selected {
+    background-image: none;
+  }
+
+  .v-table-noWrapHeader .v-table-header-wrap {
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .v-table-noWrapFooter .v-table-footer-wrap {
+    white-space: normal;
+  }
+
+  .v-table-noWrapFooter .v-table-cell-wrapper {
+    margin-left: 2px;
+  }
+
+  .v-loading-indicator {
+    height: 6px;
+    background-color: #F28900;
+  }
+
+  .v-popupbutton .v-popup-indicator {
+    display: none;
+  }
+
+  .v-splitpanel-horizontal.large > div > .v-splitpanel-second-container {
+    margin-left: 0px;
+  }
+
+  .v-spacing {
+    height: 5px;
+    width: 5px;
+  }
+
+  .v-gridlayout-spacing-on {
+    width: 5px;
+    height: 5px;
+  }
+
+  .v-gridlayout-spacing-on {
+    padding-left: 5px;
+    padding-top: 5px;
+  }
+
+  .v-tabsheet-content > div > .v-scrollable > .v-margin-bottom {
+    padding-bottom: 30px;
+  }
+
+  .v-accordion-item-caption > .v-caption {
+    background: #1b3977;
+    color: #fff;
+  }
+
+  .v-disabled {
+    opacity: 0.75 !important;
+    filter: alpha(opacity=75);
+  }
+
+  .v-table-footer-container, .v-table-caption-container {
+    overflow: initial;
+  }
+
+  .v-upload-with-icon .v-button {
+    background-image: url('icons/24/file-upload-solid.png');
+    background-repeat: no-repeat;
+    background-size: 12px 16px;
+    background-position: center;
+  }
+
+  .v-upload-large .v-button {
+    background: #fff;
+    border-color: $v-focus-color;
+    color: $v-focus-color;
+    height: 32px;
+  }
+
+  .v-grid {
+    .v-grid-scroller, .v-grid-scroller-horizontal {
+    }
+
+    .v-grid-tablewrapper {
+      .v-grid-header {
+        .v-grid-row {
+          .v-grid-cell, .frozen, .v-grid-cell-focused {
+            white-space: nowrap;
+            font-size: 12px;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+            font-weight: bold;
+            height: 28px;
+            line-height: 13px;
+          }
+        }
+      }
+
+      .v-grid-body {
+        .v-grid-row,
+        .v-grid-row-stripe,
+        .v-grid-row-has-data {
+          .v-grid-cell, .frozen, .v-grid-cell-focused {
+            font-size: 11px;
+            padding-top: 8px;
+            padding-bottom: 6px;
+            padding-left: 6px;
+            padding-right: 6px;
+            height: 40px;
+            line-height: 24px;
+          }
+        }
+      }
+
+      .v-grid-footer {
+        .v-grid-row {
+          .v-grid-cell, .frozen, .v-grid-cell-focused {
+            white-space: nowrap;
+            font-size: 12px;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+            font-weight: bold;
+            height: 28px;
+            line-height: 13px;
+          }
+        }
+      }
+    }
+
+    .v-grid-header-deco {
+    }
+
+    .v-grid-footer-deco {
+    }
+
+    .v-grid-horizontal-scrollbar-deco {
+    }
+
+    .v-grid-editor {
+      .v-grid-editor-cells {
+      }
+
+      .v-grid-editor-footer {
+        .v-grid-editor-message {
+        }
+
+        .v-grid-editor-buttons {
+          .v-grid-editor-save {
+          }
+
+          .v-grid-editor-cancel {
+          }
+        }
+      }
+    }
+  }
+
+  .v-grid-row.green > td {
+    background-color: #d4f7eb;
+  }
+
+  .v-grid-row.red > td {
+    background-color: #ffe6e6;
+  }
+
+  .v-grid-row.yellow > td {
+    background-color: #fffecc;
+  }
+
+  .v-grid-row.ord > td {
+    background-color: #f6f7f9;
+  }
+
+  .align-right {
+    text-align: right;
+  }
+
+  .v-filterselect-suggestpopup div[class*="page"] {
+    opacity: 0.6;
+  }
+
+}

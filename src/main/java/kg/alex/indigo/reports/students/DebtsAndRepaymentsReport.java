@@ -1,0 +1,245 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package kg.alex.indigo.reports.students;
+
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.data.Property;
+import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
+import kg.alex.indigo.MyVaadinUI;
+import kg.alex.indigo.Settings;
+import kg.alex.indigo.dao.DbClassName;
+import kg.alex.indigo.dao.DbDefinition;
+import kg.alex.indigo.dao.DbStudentContract;
+import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
+import kg.alex.indigo.utils.FormattedTable;
+import kg.alex.indigo.utils.MyFilterDecorator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.tepi.filtertable.FilterTable;
+import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
+
+import java.util.Set;
+
+public class DebtsAndRepaymentsReport implements Button.ClickListener,
+        Property.ValueChangeListener {
+
+    static final Logger logger = LogManager.getLogger(DebtsAndRepaymentsReport.class);
+    private final MyVaadinUI myUI;
+    private Button generateBtn, selectAllBtn, deselectAllBtn, excelBtn;
+    private final HorizontalSplitPanel splitPanel;
+    private ComboBoxMultiselect educationStatusMCB;
+    private ComboBox yearSelect;
+    private FormattedTable dataTable;
+    private FilterTable classTable;
+    private PopupDateField fromDateDF, tillDateDF;
+
+    public DebtsAndRepaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
+        this.myUI = ui;
+        this.splitPanel = splitPanel;
+        buildLeftPanel();
+        buildRightLayout();
+    }
+
+    private void buildLeftPanel() {
+
+        GridLayout leftGrid = new GridLayout(4, 6);
+        leftGrid.setSizeFull();
+        leftGrid.setSpacing(true);
+
+        yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.Year));
+        yearSelect.setNullSelectionAllowed(false);
+        yearSelect.setRequired(true);
+        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        yearSelect.setWidth(Settings.PERCENTS100);
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        yearSelect.setFilteringMode(FilteringMode.CONTAINS);
+
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.EducationStatus));
+        educationStatusMCB.setRequired(true);
+        educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        educationStatusMCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        educationStatusMCB.setWidth(Settings.PERCENTS100);
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(IndigoMessages.Clear));
+        educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(IndigoMessages.SelectAll));
+        try {
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
+            educationStatusMCB.setContainerDataSource(
+                    dbd.exec_for_select(myUI, Settings.dbEducationStatus, true));
+            dbd.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        educationStatusMCB.setValue(Settings.convertToSet(educationStatusMCB.getContainerDataSource().getItemIds()));
+        educationStatusMCB.addValueChangeListener(this);
+
+        yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
+        yearSelect.addValueChangeListener(this);
+
+        fromDateDF = new PopupDateField(myUI.getMessage(IndigoMessages.FromDate));
+        fromDateDF.setInputPrompt(myUI.getMessage(IndigoMessages.AnyDate));
+        fromDateDF.setWidth(Settings.PERCENTS100);
+        fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        fromDateDF.setDateFormat(Settings.datePattern);
+        fromDateDF.setResolution(Resolution.DAY);
+        fromDateDF.addValueChangeListener(this);
+
+        tillDateDF = new PopupDateField(myUI.getMessage(IndigoMessages.TillDate));
+        tillDateDF.setInputPrompt(myUI.getMessage(IndigoMessages.AnyDate));
+        tillDateDF.setWidth(Settings.PERCENTS100);
+        tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        tillDateDF.setDateFormat(Settings.datePattern);
+        tillDateDF.setResolution(Resolution.DAY);
+        tillDateDF.addValueChangeListener(this);
+
+        selectAllBtn = new Button(myUI.getMessage(IndigoMessages.AllClasses));
+        selectAllBtn.setWidth(Settings.PERCENTS100);
+        selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
+        selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
+        selectAllBtn.addClickListener(this);
+
+        deselectAllBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllBtn.setWidth(Settings.PERCENTS100);
+        deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
+        deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
+        deselectAllBtn.addClickListener(this);
+
+        classTable = new FilterTable();
+        classTable.setFilterDecorator(new MyFilterDecorator(myUI));
+        classTable.setStyleName(ValoTheme.TABLE_SMALL);
+        classTable.setSizeFull();
+        classTable.setNullSelectionAllowed(false);
+        classTable.setMultiSelect(true);
+        classTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
+        classTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
+        classTable.setFilterBarVisible(true);
+        classTable.setFooterVisible(false);
+        classTable.setSelectable(true);
+        classTable.addValueChangeListener(this);
+        try {
+            DbClassName dbcn = new DbClassName();
+            dbcn.connect();
+            classTable.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
+            dbcn.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
+
+        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn.setWidth(Settings.PERCENTS100);
+        generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
+        generateBtn.addClickListener(this);
+
+        excelBtn = new Button();
+        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setWidth(Settings.PERCENTS100);
+        excelBtn.setEnabled(false);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
+        excelBtn.addClickListener(this);
+
+        leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
+        leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
+        leftGrid.addComponent(tillDateDF, 2, 1, 3, 1);
+        leftGrid.addComponent(educationStatusMCB, 0, 2, 3, 2);
+        leftGrid.addComponent(selectAllBtn, 0, 3, 1, 3);
+        leftGrid.addComponent(deselectAllBtn, 2, 3, 3, 3);
+        leftGrid.addComponent(classTable, 0, 4, 3, 4);
+        leftGrid.addComponent(generateBtn, 0, 5, 2, 5);
+        leftGrid.addComponent(excelBtn, 3, 5);
+        leftGrid.setRowExpandRatio(4, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+    }
+
+    private void buildRightLayout() {
+        VerticalLayout vl = new VerticalLayout();
+        vl.setSizeFull();
+        vl.setMargin(true);
+        dataTable = new FormattedTable(myUI);
+        dataTable.setFooterVisible(true);
+        dataTable.setSizeFull();
+        dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        dataTable.addStyleName("noWrap");
+        vl.addComponent(dataTable);
+        splitPanel.setSecondComponent(vl);
+    }
+
+    @Override
+    public void buttonClick(Button.ClickEvent event) {
+        final Button source = event.getButton();
+        if (source == generateBtn) {
+            if (classTable.getValue() != null && ((Set<?>) classTable.getValue()).size() > 0) {
+                try {
+                    DbStudentContract dbCon = new DbStudentContract();
+                    dbCon.connect();
+                    dbCon.execDebtsAndRepayments(myUI, (Integer) yearSelect.getValue(),
+                            Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
+                            Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                            fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
+                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Debt), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Repayment), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Balance), Table.Align.RIGHT);
+                    dataTable.setColumnWidth(myUI.getMessage(IndigoMessages.ClassName), 80);
+                    dataTable.setColumnWidth(myUI.getMessage(IndigoMessages.Note), 200);
+                    if (dataTable.size() != 0) {
+                        excelBtn.setEnabled(true);
+                    }
+                    dbCon.close();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+            } else {
+                Notification.show(myUI.getMessage(IndigoMessages.NotificationNothingIsSelected),
+                        Notification.Type.WARNING_MESSAGE);
+            }
+        } else if (source == excelBtn) {
+            if (dataTable.getContainerDataSource().size() != 0) {
+                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
+                excelReport.setReportTitle(myUI.getMessage(IndigoMessages.DebtsAndRepaymentsReport));
+                excelReport.setDisplayTotals(true);
+                excelReport.convertTable();
+                excelReport.getTotalsRow().getCell(9).setCellFormula(null);
+                excelReport.getTotalsRow().getCell(9).setCellValue(
+                        dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.Balance)));
+                excelReport.sendConverted();
+            }
+        } else if (source == selectAllBtn) {
+            classTable.setValue(classTable.getContainerDataSource().getItemIds());
+        } else if (source == deselectAllBtn) {
+            classTable.setValue(null);
+        }
+    }
+
+    @Override
+    public void valueChange(Property.ValueChangeEvent event) {
+        Property property = event.getProperty();
+        if (property == classTable && classTable.getValue() != null) {
+            excelBtn.setEnabled(false);
+            dataTable.setContainerDataSource(null);
+        } else if (property == yearSelect || property == educationStatusMCB
+                || property == fromDateDF || property == tillDateDF) {
+            excelBtn.setEnabled(false);
+            dataTable.setContainerDataSource(null);
+        }
+    }
+}
