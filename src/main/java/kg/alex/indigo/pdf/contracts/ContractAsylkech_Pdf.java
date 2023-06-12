@@ -18,9 +18,9 @@ import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-public class ContractUWIS_Pdf {
+public class ContractAsylkech_Pdf {
 
-    static final Logger logger = LogManager.getLogger(ContractUWIS_Pdf.class);
+    static final Logger logger = LogManager.getLogger(ContractAsylkech_Pdf.class);
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
@@ -28,10 +28,10 @@ public class ContractUWIS_Pdf {
     private final StudentInfoPdf studentInfo;
 
 
-    private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
+    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
-    public ContractUWIS_Pdf(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractAsylkech_Pdf(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.studentInfo = st_info;
 
@@ -117,12 +117,9 @@ public class ContractUWIS_Pdf {
                 paragraph.add(new Phrase(", именуемая в дальнейшем «Школа», в лице директора ", ordFont));
                 String fullName = null;
                 try {
-                    boolean isFeminine = studentInfo.getDirector().getGender_id() == 2;
-                    fullName = dcl.DeclineSurnameGenitive(studentInfo.getDirector().getSurname(), isFeminine)
-                            + " " + dcl.DeclineNameGenitive(studentInfo.getDirector().getName(), isFeminine, false);
+                    fullName = studentInfo.getDirector().getSurname() + " " + studentInfo.getDirector().getName();
                     if (studentInfo.getDirector().getMiddle_name() != null && !studentInfo.getDirector().getMiddle_name().equals("")) {
-                        fullName += " " + dcl.DeclinePatronymicGenitive(studentInfo.getDirector().getMiddle_name(),
-                                null, isFeminine, false);
+                        fullName += " " + studentInfo.getDirector().getMiddle_name();
                     }
                 } catch (Exception e) {
                     logger.error(e);
@@ -185,7 +182,7 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("1.1. Предметом Договора является организация процесса обучения Учащегося, получение им образования по стандартам «Cambridge Assessment International Education» и программ соответствующего уровня образования по Британскому учебному плану, на период ", ordFont));
+                paragraph.add(new Phrase("1.1. Предметом Договора является организация процесса обучения Учащегося, получение им образования по стандартам «MARSHALL CAVENDISH EDUCATION» (Сингапур) и программ соответствующего уровня образования по кембриджскому учебному плану, на период ", ordFont));
                 String[] temp = studentInfo.getYear().split("-");
                 paragraph.add(new Phrase("с «29» августа " + temp[0] + " года по «9» июня " + temp[1] + " года.", ordBoldFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
@@ -220,13 +217,13 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.1.1. Организовать и обеспечить надлежащее исполнение услуг, предусмотренных в статье 1.1. настоящего Договора. Образовательные услуги оказываются в соответствии со стандартом «Cambridge Assessment International Education» и программ соответствующего уровня образования по Британскому учебному плану.", ordFont));
+                paragraph.add(new Phrase("2.1.1. Организовать и обеспечить надлежащее исполнение услуг, предусмотренных в статье 1.1. настоящего Договора.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.1.1. Organize and ensure the proper performance of the services provided for in Article 1.1. of this Contract. Educational services are provided in accordance with the Cambridge Assessment International Education standard and the programs of corresponding level of education in accordance with the British Curriculum.", ordFont));
+                paragraph.add(new Phrase("2.1.1. Organize and ensure the proper performance of the services provided for in Article 1.1. of this Contract.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -340,22 +337,19 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.3. Школа имеет право ежегодно изменять размер предоставленной скидки в оплате, при этом предоставленные скидки действуют только в течении данного учебного года. Установленные скидки (за успеваемость, призер олимпиады, скидка за высший балл при поступлении, в том числе скидки, предоставленные Генеральной дирекцией МОУ «Сапат» и др.) ", ordFont));
-                paragraph.add(new Phrase("аннулируются без предупреждения в случае несвоевременной оплаты за обучение и нарушения графика оплаты Родителем 3 раза.", ordBoldFont));
+                paragraph.add(new Phrase("2.2.3. Школа имеет право ежегодно изменять размер предоставленной скидки в оплате, при этом предоставленные скидки действуют только в течении данного учебного года.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.3. The school has the right to change the amount of the discount provided annually, while the discounts provided are valid only during this academic year. The granted discount (for academic excellence, Olympiad medalists, discounts based on the results of admission exams and discounts granted by general management of Sapat) ", ordFont));
-                paragraph.add(new Phrase("may be cancelled ", ordBoldFont));
-                paragraph.add(new Phrase("without further notice in case of late payment or disciplinary issues of the student and violation of the Parent's payment schedule 3 times.", ordFont));
+                paragraph.add(new Phrase("2.2.3. The school has the right to change the amount of the   discount provided annually, while the discounts provided are valid only during this academic year.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.4 Отчислить Учащегося из Школы без возмещения стоимости обучения в следующих случаях:", ordFont));
+                paragraph.add(new Phrase("2.2.4. Отчислить Учащегося из Школы без возмещения стоимости обучения в следующих случаях:", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -403,7 +397,7 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.5 Расторгнуть настоящий Договор при условии не освоения Учащимся в установленный годовым календарным планом (графиком) срок образовательных программ, являющихся предметом настоящего Договора.", ordFont));
+                paragraph.add(new Phrase("2.2.5. Расторгнуть настоящий Договор при условии не освоения Учащимся в установленный годовым календарным планом (графиком) срок образовательных программ, являющихся предметом настоящего Договора.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -415,49 +409,37 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.6 Самостоятельно перевести Учащегося в параллельную группу.", ordFont));
+                paragraph.add(new Phrase("2.2.6. Расторгать в одностороннем порядке договор с родителями, систематически нарушающих п.3.1-3.4 настоящего Договора.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.6 Transfer the Student to a parallel group on its own.", ordFont));
+                paragraph.add(new Phrase("2.2.6. Unilaterally terminate the Contract with parents who repeatedly violate Clauses 3.1-3.4 of this Contract.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.7 Расторгать в одностороннем порядке договор с родителями, систематически нарушающих п.3.1-3.4 настоящего Договора.", ordFont));
+                paragraph.add(new Phrase("2.2.7. В случае расторжения контракта с родителем ученика после 30-го июня, удержанию подлежит 5% от суммы контракта.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.7 Unilaterally terminate the Contract with parents who repeatedly violate Clauses 3.1-3.4 of this Contract.", ordFont));
+                paragraph.add(new Phrase("2.2.7. In case of termination of the contract with the student's parent after the 30th day of June, 5% of the contract amount is non-refundable.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.8 В случае расторжения контракта с родителем ученика после 30-го июня, удержанию подлежит 5% от суммы контракта.", ordFont));
+                paragraph.add(new Phrase("2.2.8. В целях оповещения образовательного процесса и деятельности Школы, Школа без уведомления учащегося и родителей имеет право размещать фото и видеоматериалы в своих интернет страницах и СМИ.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.8 In case of termination of the contract with the student's parent after the 30th day of June, 5% of the contract amount is non-refundable.", ordFont));
-                mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
-
-                paragraph = new Paragraph();
-                paragraph.setTabSettings(new TabSettings(15f));
-                paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.9. В целях оповещения образовательного процесса и деятельности Школы, Школа без уведомления учащегося и родителей имеет право размещать фото и видеоматериалы в своих интернет страницах и СМИ.", ordFont));
-                mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
-
-                paragraph = new Paragraph();
-                paragraph.setTabSettings(new TabSettings(15f));
-                paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.9. In order to notify the educational process and activities of the School, the School without notifying the student and parents has the right to post photos and videos on its Internet pages and social media.", ordFont));
+                paragraph.add(new Phrase("2.2.8. In order to notify the educational process and activities of the School, the School without notifying the student and parents has the right to post photos and videos on its Internet pages and social media.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -530,18 +512,6 @@ public class ContractUWIS_Pdf {
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
                 paragraph.add(new Phrase("2.3.5. Be fully financially responsible for all actions of the Student that entail damage or destruction of the School property.", ordFont));
-                mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
-
-                paragraph = new Paragraph();
-                paragraph.setTabSettings(new TabSettings(15f));
-                paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.3.6. Обеспечить подвоз ученика в Школу и обратно.", ordFont));
-                mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
-
-                paragraph = new Paragraph();
-                paragraph.setTabSettings(new TabSettings(15f));
-                paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.3.6. Provide transportation of the Student to and from school.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -627,41 +597,41 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("3.2. Оплата производится в 4 взноса. Первый взнос производится при заключении настоящего договора, остальная часть в первую неделю сентября, января и марта. При этом последний взнос должен быть внесен не позднее 31 марта, следующего года. Ученики, не оплатившие сумму договора в указанное время, не будут допущены к занятиям.", ordFont));
+                paragraph.add(new Phrase("3.2. Оплата производится в 4 взноса. Первый взнос производится при заключении настоящего договора, остальная часть в первую неделю сентября, января и марта. При этом последний взнос должен быть внесен не позднее 31 Апреля, следующего года. Ученики, не оплатившие сумму договора в указанное время, не будут допущены к занятиям.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("3.2. The Contract shall be paid in 4 installments. The first installment is due at the conclusion of the contract; the rest is due during the first week of September, January and March respectively. In addition, the last installment shall be made no later than the 31st day of March of the next year. Students whose tuition is not paid on time will not be admitted to the lessons.", ordFont));
+                paragraph.add(new Phrase("3.2. The Contract shall be paid in 4 installments. The first installment is due at the conclusion of the contract; the rest is due during the first week of September, January and March respectively. In addition, the last installment shall be made no later than the 31st day of April of the next year. Students whose tuition is not paid on time will not be admitted to the lessons.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("3.3. Первоначальный взнос для вновь поступивших учеников составляет 50% от общей стоимости контракта, остальная часть вносится в первую неделю сентября, ноября и января.", ordFont));
+                paragraph.add(new Phrase("3.3. Первоначальный взнос для вновь поступивших учеников составляет 30% от общей стоимости контракта, остальная часть вносится в первую неделю сентября, ноября и января.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("3.3. The first installment for new students is 50% of the total fee; the rest is due during the first week of September, November and January respectively.", ordFont));
+                paragraph.add(new Phrase("3.3. The first installment for new students is 30% of the total fee; the rest is due during the first week of September, November and January respectively.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
                 paragraph.add(new Phrase("3.4. Оплата родителями или лицами их заменяющими, родительского взноса ", ordFont));
-                paragraph.add(new Phrase("производится в сомах на банковский счет ", ordBoldFont));
-                paragraph.add(new Phrase("Школы, не позднее 3 календарных дней с даты, указанной в официальном счете/ invoice.", ordFont));
+                paragraph.add(new Phrase("производится в сомах ", ordBoldFont));
+                paragraph.add(new Phrase(", не позднее 3 календарных дней с даты, указанной в официальном счете/ invoice.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
                 paragraph.add(new Phrase("3.4. Payment by parents, or persons replacing them, of the parental contribution ", ordFont));
-                paragraph.add(new Phrase("shall be made in KG soms to the bank account ", ordBoldFont));
-                paragraph.add(new Phrase("of the School no later than 3 calendar days from the date specified in the official invoice.", ordFont));
+                paragraph.add(new Phrase("shall be made in KG soms ", ordBoldFont));
+                paragraph.add(new Phrase("no later than 3 calendar days from the date specified in the official invoice.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -669,7 +639,7 @@ public class ContractUWIS_Pdf {
                 paragraph.add(Chunk.TABBING);
                 paragraph.add(new Phrase("3.5. Общая стоимость родительских взносов составляет ", ordFont));
                 paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getContract()), ordBoldFont));
-                paragraph.add(new Phrase(" долл. США, которая производится строго в сомах на день оплаты по учетному курсу НБ КР.", ordFont));
+                paragraph.add(new Phrase(" долл. США, которая производится строго в сомах на основе сегодняшнего курса валюты.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -677,19 +647,19 @@ public class ContractUWIS_Pdf {
                 paragraph.add(Chunk.TABBING);
                 paragraph.add(new Phrase("3.5. The total amount of parental contributions is ", ordFont));
                 paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getContract()), ordBoldFont));
-                paragraph.add(new Phrase(" US dollars, which is made strictly in KG soms as of the day of payment at the rate of the National Bank of the Kyrgyz Republic.", ordFont));
+                paragraph.add(new Phrase(" US dollars, which is made strictly in KG soms based on today’s exchange rate.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("3.6. Учебники, подвоз детей в Школу и обратно, питание предоставляется Школой бесплатно. (Новый кампус ЮВИС не предоставляет услугу школьного транспорта)", ordFont));
+                paragraph.add(new Phrase("3.6. Учебники и питание предоставляется Школой бесплатно.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("3.6. Textbooks, transportation of children to and from the school and meals are provided by the school on a free of charge basis. (UWIS New Campus doesn’t provide transportation)", ordFont));
+                paragraph.add(new Phrase("3.6. Textbooks and meals are provided by the school on a free of charge basis.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -718,18 +688,6 @@ public class ContractUWIS_Pdf {
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
                 paragraph.add(new Phrase("3.8. Tuition fees do not include fees for the official Cambridge Assessment International Education exam.", ordFont));
-                mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
-
-                paragraph = new Paragraph();
-                paragraph.setTabSettings(new TabSettings(15f));
-                paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("3.9. Для заключения контракта необходимо произвести дополнительную предоплату в сумме 450 долларов США.", ordFont));
-                mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
-
-                paragraph = new Paragraph();
-                paragraph.setTabSettings(new TabSettings(15f));
-                paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("3.9. An additional prepayment of 450 $ is required to conclude a contract.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -830,18 +788,6 @@ public class ContractUWIS_Pdf {
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
                 paragraph.add(new Phrase("5.6. This Contract is made in two original copies in Russian and in English languages and signed by both parties. Both original copies are identical and have the same legal force. Each of the parties has one original copy of this Contract.", ordFont));
-                mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
-
-                paragraph = new Paragraph();
-                paragraph.setTabSettings(new TabSettings(15f));
-                paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("5.7. Новые ученики, поступающие в Школу, должны ознакомиться со школьным справочником ЮВИС, до подписания контракта.", ordFont));
-                mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
-
-                paragraph = new Paragraph();
-                paragraph.setTabSettings(new TabSettings(15f));
-                paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("5.7. Prospective students for Secondary should read UWIS Student Handbook before the contract is signed. ", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();

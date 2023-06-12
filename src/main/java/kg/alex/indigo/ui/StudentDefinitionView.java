@@ -504,15 +504,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG = new OptionGroup();
         contractTypeOG.setNullSelectionAllowed(true);
         contractTypeOG.addValueChangeListener(this);
-        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.LiseContrRu));
-        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.LiseContrKg));
-        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.SchoolContrRu));
-        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.SchoolContrKg));
-        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.CambridgeOshContrRu));
-        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.CambridgeContrRu));
-        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.CambridgeContrEn));
-        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.UWIS_Contract));
-        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.STEM_Contract));
+        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.ASYLKECH_Contract));
 
         printButton = new PopupButton(myUI.getMessage(IndigoMessages.Print));
         printButton.setDescription(myUI.getMessage(IndigoMessages.Print));
@@ -1407,32 +1399,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
                                 saveBtn.click();
-                                if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.LiseContrRu))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 9) {
-                                        new ContractLisePdf_2024_ru(myUI, studInfo, instPlanCont);
-                                    } else {
-                                        new ContractLisePdf_2023_ru(myUI, studInfo, instPlanCont);
-                                    }
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.LiseContrKg))) {
-                                    new ContractLisePdf_kg(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.SchoolContrRu))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 9) {
-                                        new ContractSchoolPdf_2024_ru(myUI, studInfo, instPlanCont);
-                                    } else {
-                                        new ContractSchoolPdf_2023_ru(myUI, studInfo, instPlanCont);
-                                    }
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.SchoolContrKg))) {
-                                    new ContractSchoolPdf_kg(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.CambridgeOshContrRu))) {
-                                    new ContractCambridgeOshPdf_ru(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.CambridgeContrRu))) {
-                                    new ContractCambridgePdf_ru(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.CambridgeContrEn))) {
-                                    new ContractCambridgePdf_en(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.UWIS_Contract))) {
-                                    new ContractUWIS_Pdf(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.STEM_Contract))) {
-                                    new ContractSTEM_Pdf(myUI, studInfo, instPlanCont);
+                                if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.ASYLKECH_Contract))) {
+                                    new ContractAsylkech_Pdf(myUI, studInfo, instPlanCont);
                                 }
                                 contractTypeOG.setValue(null);
                             } else {

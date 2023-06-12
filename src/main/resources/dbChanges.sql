@@ -1,5 +1,0 @@
-CREATE DATABASE IF NOT EXISTS indigo;
-CREATE USER 'indigo'@'localhost' IDENTIFIED BY 'In2023DIgo#';
-GRANT ALL PRIVILEGES ON indigo.* TO 'indigo'@'localhost';
-FLUSH PRIVILEGES;
-
