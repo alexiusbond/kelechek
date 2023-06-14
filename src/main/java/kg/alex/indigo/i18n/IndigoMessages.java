@@ -38,6 +38,7 @@ public class IndigoMessages extends ListResourceBundle implements Serializable {
     public static final String ChangePasswordButton = generateId();
     public static final String SystemClosedNotification = generateId();
     public static final String Title = generateId();
+    public static final String DurationInMonths = generateId();
     public static final String ValidityMonths = generateId();
     public static final String Description = generateId();
     public static final String Block = generateId();
@@ -467,7 +468,8 @@ public class IndigoMessages extends ListResourceBundle implements Serializable {
     public static final String Summary = generateId();
     public static final String Report = generateId();
     public static final String ToPlan = generateId();
-    public static final String ASYLKECH_Contract = generateId();
+    public static final String AsylkechContract = generateId();
+    public static final String KidsContract = generateId();
     public static final String CallsReport = generateId();
     public static final String ContractTypes = generateId();
     public static final String DiscountAmount = generateId();

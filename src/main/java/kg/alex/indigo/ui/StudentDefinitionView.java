@@ -25,7 +25,8 @@ import kg.alex.indigo.dao.*;
 import kg.alex.indigo.domain.*;
 import kg.alex.indigo.i18n.IndigoMessages;
 import kg.alex.indigo.pdf.InvoicePDF;
-import kg.alex.indigo.pdf.contracts.*;
+import kg.alex.indigo.pdf.contracts.ContractAsylkech_Pdf;
+import kg.alex.indigo.pdf.contracts.ContractKidsPdf;
 import kg.alex.indigo.utils.ExistsValidator;
 import kg.alex.indigo.utils.FormattedTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
@@ -504,7 +505,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG = new OptionGroup();
         contractTypeOG.setNullSelectionAllowed(true);
         contractTypeOG.addValueChangeListener(this);
-        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.ASYLKECH_Contract));
+        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.AsylkechContract));
+        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.KidsContract));
 
         printButton = new PopupButton(myUI.getMessage(IndigoMessages.Print));
         printButton.setDescription(myUI.getMessage(IndigoMessages.Print));
@@ -1321,6 +1323,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (contractCB.getValue() != null) {
                         studInfo.getContractInfo().setContract((Double) (contractCB.getContainerProperty(contractCB.getValue(),
                                 myUI.getMessage(IndigoMessages.Amount)).getValue()));
+                        studInfo.getContractInfo().setDuration((Integer) (contractCB.getContainerProperty(contractCB.getValue(),
+                                myUI.getMessage(IndigoMessages.DurationInMonths)).getValue()));
                     }
                     studInfo.getContractInfo().setDebt(debt);
                     if (discountsTable.size() > 0) {
@@ -1399,8 +1403,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
                                 saveBtn.click();
-                                if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.ASYLKECH_Contract))) {
+                                if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.AsylkechContract))) {
                                     new ContractAsylkech_Pdf(myUI, studInfo, instPlanCont);
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.KidsContract))) {
+                                    new ContractKidsPdf(myUI, studInfo);
                                 }
                                 contractTypeOG.setValue(null);
                             } else {

@@ -23,8 +23,17 @@ public class ContractInfo implements Serializable {
     private Double left;
     private Double net;
     private int students;
+    private int duration;
     private int contractNumber;
     private Date creationDate;
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 
     public Double getInstallmentPlanDebt() {
         return installmentPlanDebt;

@@ -151,7 +151,7 @@ public class DbSchool extends BaseDb {
         String sql = "INSERT IGNORE INTO school (code, name_ru, name_kg, name_en, "
                 + "activity_status_id, city, address, inn, bank, "
                 + "bank_account, phone, photo, school_type_id) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());
         stat.setString(2, scl.getName_ru());

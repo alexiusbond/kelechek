@@ -20,6 +20,15 @@ public class StudentRelative implements Serializable {
     private int relative_id;
     private String relativeDeclarative;
     private String relativeTitle;
+    private int gender_id;
+
+    public int getGender_id() {
+        return gender_id;
+    }
+
+    public void setGender_id(int gender_id) {
+        this.gender_id = gender_id;
+    }
 
     public String getRelativeTitle() {
         return relativeTitle;
