@@ -63,7 +63,7 @@ public class DbContract extends BaseDb {
             item.getItemProperty(myUi.getMessage(IndigoMessages.Year)).setValue(
                     result.getString("y.name"));
             item.getItemProperty(myUi.getMessage(IndigoMessages.DurationInMonths)).setValue(
-                    result.getString("c.duration"));
+                    result.getInt("c.duration"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("c.activity_status_id"));
             item.getItemProperty(myUi.getMessage(IndigoMessages.Status)).setValue(

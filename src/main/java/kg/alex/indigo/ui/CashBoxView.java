@@ -204,13 +204,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencySettingsOG.setWidth(Settings.PERCENTS100);
         currencySettingsOG.setStyleName(ValoTheme.OPTIONGROUP_SMALL);
         currencySettingsOG.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
-        currencySettingsOG.addItem(myUI.getMessage(IndigoMessages.NBKR));
+        currencySettingsOG.addItem(myUI.getMessage(IndigoMessages.OptimaCurrency));
         currencySettingsOG.addItem(myUI.getMessage(IndigoMessages.Manual));
         currencySettingsOG.addValueChangeListener(this);
         if (myUI.isManualRate()) {
             currencySettingsOG.select(myUI.getMessage(IndigoMessages.Manual));
         } else {
-            currencySettingsOG.select(myUI.getMessage(IndigoMessages.NBKR));
+            currencySettingsOG.select(myUI.getMessage(IndigoMessages.OptimaCurrency));
         }
 
         saveButton = new Button();
@@ -513,7 +513,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 }
                 if (st != 0) {
                     if (cr.getManual() == 0) {
-                        currencyTF.getPropertyDataSource().setValue(myUI.getCurrencyRateFromBank());
+                        currencyTF.getPropertyDataSource().setValue(myUI.getCurrencyRateFromOptima());
                     }
                     Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                 }

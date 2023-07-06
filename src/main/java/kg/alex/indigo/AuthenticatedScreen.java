@@ -634,6 +634,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                         myUI.getUser().getSchool().setPhoto(schoolSelect.getContainerProperty(schoolSelect.getValue(),
                                 myUI.getMessage(IndigoMessages.Logo)).getValue().toString());
                     }
+                    myUI.getUser().getSchool().setSchool_type_id((Integer) schoolSelect.getContainerProperty(schoolSelect.getValue(),
+                            Settings.dbSchoolType).getValue());
                     insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
                             myUI.getUser().getId());
                     updatePage();

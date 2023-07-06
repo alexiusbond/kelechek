@@ -1,2 +1,5 @@
-ALTER TABLE `indigo`.`contract`
-    ADD COLUMN `duration` INT NOT NULL DEFAULT '1' AFTER `employee_id`;
+ALTER TABLE `indigo`.`student_discount`
+DROP FOREIGN KEY `fk_student_discount_attechment1`;
+ALTER TABLE `indigo`.`student_discount`
+DROP COLUMN `attachment_id`,
+DROP INDEX `fk_student_discount_attachment1_idx` ;

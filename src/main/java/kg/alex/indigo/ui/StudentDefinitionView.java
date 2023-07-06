@@ -98,7 +98,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private final ArrayList<String> delPayIds = new ArrayList<>();
     private final ArrayList<String> delCallIds = new ArrayList<>();
     private final ArrayList<String> delCorrectionIds = new ArrayList<>();
-    private final ArrayList<StudentDiscount> delDiscIds = new ArrayList<>();
+    private final ArrayList<String> delDiscIds = new ArrayList<>();
     private final ArrayList<String> delRelIds = new ArrayList<>();
     private PopupButton printButton;
     private Button financialHistoryButton;
@@ -1081,14 +1081,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         } else if (source.getId() != null && source.getId().equals(Settings.dbStudentDiscount)) {
             discCounter--;
-            StudentDiscount sd = new StudentDiscount();
-            sd.setId(source.getData().toString());
-            Button b = (Button) ((HorizontalLayout) discountsTable.getContainerProperty(sd.getId(),
-                    myUI.getMessage(IndigoMessages.Document)).getValue()).getComponent(0);
-            if (b.getData() != null) {
-                sd.setAttachmentUniqueName(((Attachment) b.getData()).getUnique_name());
-            }
-            delDiscIds.add(sd);
+            delDiscIds.add(source.getData().toString());
             discountsTable.removeItem(event.getButton().getData().toString());
             if (initialPaymentTF.isValid()) {
                 recountInstPlanLabel();
@@ -2940,7 +2933,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         if (NATURAL_COL_ORDER_DISCOUNTS == null) {
             NATURAL_COL_ORDER_DISCOUNTS = new String[]{Settings.button,
                     myUI.getMessage(IndigoMessages.Title), myUI.getMessage(IndigoMessages.Amount),
-                    myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Document)};
+                    myUI.getMessage(IndigoMessages.Note)};
         }
         try {
             DbStudentDiscount dbsd = new DbStudentDiscount();
@@ -3071,8 +3064,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(IndigoMessages.Amount), TextField.class, null);
             discountCont.addContainerProperty(
                     myUI.getMessage(IndigoMessages.Note), TextField.class, null);
-            discountCont.addContainerProperty(myUI.getMessage(IndigoMessages.Document),
-                    HorizontalLayout.class, null);
             discountCont.addContainerProperty(
                     Settings.crud_status, String.class, null);
         } else {
@@ -3250,7 +3241,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         if (NATURAL_COL_ORDER_DISCOUNTS == null) {
             NATURAL_COL_ORDER_DISCOUNTS = new String[]{Settings.button,
                     myUI.getMessage(IndigoMessages.Title), myUI.getMessage(IndigoMessages.Amount),
-                    myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Document)};
+                    myUI.getMessage(IndigoMessages.Note)};
         }
         discCounter++;
         String id = Settings.FreshItem + (--r_table_counter);
@@ -3268,22 +3259,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 createTextFieldDisc(null, null, myUI.getMessage(IndigoMessages.DiscountAmount), id, true));
         item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(
                 createTextField(null, myUI.getMessage(IndigoMessages.Note), id, true, false));
-
-        HorizontalLayout hl = new HorizontalLayout();
-        hl.setSpacing(true);
-
-        Button b = createButton(myUI.getMessage(IndigoMessages.DownLoad), null, Settings.download_button, FontAwesome.DOWNLOAD);
-        b.setStyleName("unread");
-        b.addStyleName(ValoTheme.BUTTON_SMALL);
-        b.setEnabled(false);
-        hl.addComponent(b);
-
-        Upload u = createUpload("", false);
-        u.setId(id);
-        u.setData(b);
-        hl.addComponent(u);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Document)).setValue(hl);
-
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
         discountsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_DISCOUNTS);
     }
@@ -3330,7 +3305,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
             DateField df = createDateField(currDate.getValue(), myUI.getMessage(IndigoMessages.Date),
                     id, false, true);
-            df.setRangeEnd(new Date(myUI.getUser().getCurrent_year().getInstallment_date_limit()));
+            if (myUI.getUser().getSchool().getSchool_type_id() == 6) {
+                df.setRangeEnd(new Date(myUI.getUser().getCurrent_year().getInstallment_date_limit()));
+            }
             item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(df);
             item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
                     createTextFieldDouble(null, 2, myUI.getMessage(IndigoMessages.Amount), id));
@@ -3361,7 +3338,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 if (installmentTable.getContainerDataSource().size() == 0) {
                     installmentTable.setContainerDataSource(prepareInstPlanContainer());
                 }
-                if (dateLimit.after(cal)) {
+                if (dateLimit.after(cal) || myUI.getUser().getSchool().getSchool_type_id() != 6) {
                     String id = Settings.FreshItem + (--r_table_counter);
                     Item item = ((IndexedContainer) installmentTable.getContainerDataSource()).addItemAt(
                             installmentTable.getContainerDataSource().size(), id);
@@ -3370,7 +3347,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
                     DateField df = createDateField(cal.getTime(), myUI.getMessage(IndigoMessages.Date), id,
                             false, true);
-                    df.setRangeEnd(new Date(myUI.getUser().getCurrent_year().getInstallment_date_limit()));
+                    if (myUI.getUser().getSchool().getSchool_type_id() == 6) {
+                        df.setRangeEnd(new Date(myUI.getUser().getCurrent_year().getInstallment_date_limit()));
+                    }
                     item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(df);
                     item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
                             createTextFieldDouble(Settings.round(divSum, 2), 2, myUI.getMessage(IndigoMessages.Amount), id));
@@ -3566,12 +3545,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (!((ComboBox) discountsTable.getItem(obj).getItemProperty(
                     myUI.getMessage(IndigoMessages.Title)).getValue()).isValid()) {
                 Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
-                        Notification.Type.WARNING_MESSAGE);
-                return false;
-            }
-            if (((Button) ((HorizontalLayout) discountsTable.getItem(obj).getItemProperty(
-                    myUI.getMessage(IndigoMessages.Document)).getValue()).getComponent(0)).getData() == null) {
-                Notification.show(myUI.getMessage(IndigoMessages.NotificationUploadDocument),
                         Notification.Type.WARNING_MESSAGE);
                 return false;
             }
@@ -3779,12 +3752,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         d.setId(disc_id);
         d.setNote(((TextField) discountsTable
                 .getContainerProperty(disc_id, myUI.getMessage(IndigoMessages.Note)).getValue()).getValue());
-        Button b = (Button) ((HorizontalLayout) discountsTable.getContainerProperty(disc_id,
-                myUI.getMessage(IndigoMessages.Document)).getValue()).getComponent(0);
-        if (b.getData() != null) {
-            d.setAttachment_id(((Attachment) b.getData()).getId());
-            logger.info(">>> ATTACHMENT ID FROM BUTTON " + d.getAttachment_id());
-        }
         if (contractCB.getValue() != null) {
             discountAmount = (Double) (((TextField) discountsTable.getContainerProperty(disc_id,
                     myUI.getMessage(IndigoMessages.Amount)).getValue()).getPropertyDataSource().getValue());
@@ -4223,17 +4190,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (delDiscIds.size() > 0) {
                 for (int i = 0; i < delDiscIds.size(); i++) {
                     try {
-                        if (delDiscIds.get(i).getAttachmentUniqueName() != null) {
-                            File f = new File(Settings.PATH_TO_UPLOADS
-                                    + delDiscIds.get(i).getAttachmentUniqueName());
-                            f.delete();
-                        }
                     } catch (Exception ex) {
                         logger.error(ex);
                         logger.catching(ex);
                     }
-                    dbsd.exec_update_emp_id(myUI.getUser().getId(), delDiscIds.get(i).getId());
-                    dbCon.exec_delete(delDiscIds.get(i).getId(), Settings.dbStudentDiscount);
+                    dbsd.exec_update_emp_id(myUI.getUser().getId(), delDiscIds.get(i));
+                    dbCon.exec_delete(delDiscIds.get(i), Settings.dbStudentDiscount);
                 }
             }
             contr_with_disc = (Double) contractCB.getContainerProperty(contractCB.getValue(), myUI.getMessage(IndigoMessages.Amount)).getValue();
@@ -4242,14 +4204,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 for (Object next : discountsTable.getItemIds()) {
                     StudentDiscount studentDiscount = getStudentDiscount((Integer) studDataTable.getValue(),
                             myUI.getUser().getCurrent_year().getId(), ((String) next));
-                    if (studentDiscount.getAttachment_id() != 0) {
-                        if (discountsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                                .equals(myUI.getMessage(IndigoMessages.Update))) {
-                            dbsd.exec_update(studentDiscount);
-                        } else if (discountsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                                .equals(myUI.getMessage(IndigoMessages.Insert))) {
-                            dbsd.exec_insert_st_discount(studentDiscount);
-                        }
+                    if (discountsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
+                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                        dbsd.exec_update(studentDiscount);
+                    } else if (discountsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
+                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                        dbsd.exec_insert_st_discount(studentDiscount);
                     }
                 }
             }

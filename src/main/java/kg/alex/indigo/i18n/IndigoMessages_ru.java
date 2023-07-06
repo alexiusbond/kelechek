@@ -100,7 +100,7 @@ public class IndigoMessages_ru extends IndigoMessages {
             {Details, "Детали"},
             {SaveButton, "Сохранить"},
             {Manual, "Мануально"},
-            {NBKR, "НБКР"},
+            {OptimaCurrency, "Оптима банк"},
             {DivideButton, "Разделить"},
             {CancelButton, "Отменить"},
             {FinancialHistory, "Финансовая история"},

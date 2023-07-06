@@ -23,6 +23,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -49,7 +51,7 @@ public class MyVaadinUI extends UI {
     private UserDetails user;
     public VaadinRequest r;
     private IndexedContainer schoolCont;
-    private double nbkr_currency_rate;
+    private double currency_rate;
     private Date nbkr_time = new Date();
     private boolean isManualRate;
     private Button messagesBtn;
@@ -184,7 +186,7 @@ public class MyVaadinUI extends UI {
         Calendar c = Calendar.getInstance();
         c.setTime(nbkr_time);
         c.add(Calendar.MINUTE, 3000);
-        if (nbkr_currency_rate == 0.00 || c.getTime().before(new Date())) {
+        if (currency_rate == 0.00 || c.getTime().before(new Date())) {
             nbkr_time = new Date();
             DecimalFormatSymbols symbols = new DecimalFormatSymbols();
             symbols.setDecimalSeparator(',');
@@ -201,7 +203,7 @@ public class MyVaadinUI extends UI {
                     if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                         Element eElement = (Element) nNode;
                         if (eElement.getAttribute("ISOCode").equals("USD")) {
-                            nbkr_currency_rate = format.parse(eElement.getElementsByTagName("Value")
+                            currency_rate = format.parse(eElement.getElementsByTagName("Value")
                                     .item(0).getTextContent()).doubleValue();
                         }
                     }
@@ -211,7 +213,30 @@ public class MyVaadinUI extends UI {
                 logger.catching(e);
             }
         }
-        return Double.parseDouble(Settings.dFormat4.format(nbkr_currency_rate));
+        return Double.parseDouble(Settings.dFormat4.format(currency_rate));
+    }
+
+    public double getCurrencyRateFromOptima() {
+        Calendar c = Calendar.getInstance();
+        c.setTime(nbkr_time);
+        c.add(Calendar.MINUTE, 3000);
+        if (currency_rate == 0.00 || c.getTime().before(new Date())) {
+            nbkr_time = new Date();
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+            symbols.setDecimalSeparator('.');
+            DecimalFormat format = new DecimalFormat("##.####");
+            format.setDecimalFormatSymbols(symbols);
+            try {
+                org.jsoup.nodes.Document doc = Jsoup.connect("https://www.optimabank.kg/en/").get();
+                Elements elems = doc.getElementsByClass("mod_rates_table");
+                Elements els = elems.first().getElementsByClass("up");
+                currency_rate = format.parse(els.get(1).text()).doubleValue();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+        }
+        return Double.parseDouble(Settings.dFormat4.format(currency_rate));
     }
 
     public double getDb_currency_rate() {
@@ -222,7 +247,7 @@ public class MyVaadinUI extends UI {
             db_currency_rate = dbCon.execSQL_last_rate(getUser().getSchool().getId());
             if (db_currency_rate == 0.0) {
                 isManualRate = false;
-                db_currency_rate = this.getCurrencyRateFromBank();
+                db_currency_rate = this.getCurrencyRateFromOptima();
             } else {
                 isManualRate = true;
             }

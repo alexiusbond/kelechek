@@ -17,24 +17,6 @@ public class StudentDiscount implements Serializable {
     private double free_entry_amount;
     private double discount_value;
     private String note;
-    private int attachment_id;
-    private String attachmentUniqueName;
-
-    public int getAttachment_id() {
-        return attachment_id;
-    }
-
-    public void setAttachment_id(int attachment_id) {
-        this.attachment_id = attachment_id;
-    }
-
-    public String getAttachmentUniqueName() {
-        return attachmentUniqueName;
-    }
-
-    public void setAttachmentUniqueName(String attachmentUniqueName) {
-        this.attachmentUniqueName = attachmentUniqueName;
-    }
 
     public double getDiscount_value() {
         return discount_value;
@@ -111,8 +93,6 @@ public class StudentDiscount implements Serializable {
                 ", free_entry_amount=" + free_entry_amount +
                 ", discount_value=" + discount_value +
                 ", note='" + note + '\'' +
-                ", attachment_id=" + attachment_id +
-                ", attachmentUniqueName='" + attachmentUniqueName + '\'' +
                 '}';
     }
 }

@@ -42,7 +42,7 @@ public class DbStudentDiscount extends BaseDb {
     public int exec_insert_st_discount(StudentDiscount d) throws SQLException {
         String sql = "INSERT INTO student_discount (free_entry_amount,discount_id,"
                 + "student_id,year_id,employee_id,modification_date,note,"
-                + "discount_value,attachment_id,creation_date) VALUES(?,?,?,?,?,NOW(),?,?,?,NOW())";
+                + "discount_value,creation_date) VALUES(?,?,?,?,?,NOW(),?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (d.getFree_entry_amount() == 0.0) {
             stat.setNull(1, Types.VARCHAR);
@@ -55,11 +55,6 @@ public class DbStudentDiscount extends BaseDb {
         stat.setInt(5, d.getEmployee_id());
         stat.setString(6, d.getNote());
         stat.setDouble(7, d.getDiscount_value());
-        if (d.getAttachment_id() != 0) {
-            stat.setInt(8, d.getAttachment_id());
-        } else {
-            stat.setNull(8, Types.INTEGER);
-        }
         logger.info(d);
         logger.info(">>> INSERT DISCOUNT " + stat);
         int st = stat.executeUpdate();
@@ -73,7 +68,7 @@ public class DbStudentDiscount extends BaseDb {
     public int exec_update(StudentDiscount sd) throws SQLException {
         String sql = "update student_discount set free_entry_amount = ?, "
                 + "discount_id = ?, student_id = ?, year_id = ?, employee_id = ?, "
-                + "modification_date=NOW(), note = ?, discount_value = ?, attachment_id = ? "
+                + "modification_date=NOW(), note = ?, discount_value = ? "
                 + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDouble(1, sd.getFree_entry_amount());
@@ -83,12 +78,7 @@ public class DbStudentDiscount extends BaseDb {
         stat.setInt(5, sd.getEmployee_id());
         stat.setString(6, sd.getNote());
         stat.setDouble(7, sd.getDiscount_value());
-        if (sd.getAttachment_id() != 0) {
-            stat.setInt(8, sd.getAttachment_id());
-        } else {
-            stat.setNull(8, Types.INTEGER);
-        }
-        stat.setString(9, sd.getId());
+        stat.setString(8, sd.getId());
         return stat.executeUpdate();
     }
 
@@ -123,10 +113,9 @@ public class DbStudentDiscount extends BaseDb {
                                                  StudentDefinitionView dw) throws SQLException {
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT sd.id, sd.free_entry_amount, sd.discount_id, sd.note, "
-                + "d.discount_type_id, d.id, d.amount, a.id, a.name, a.extension, a.unique_name "
+                + "d.discount_type_id, d.id, d.amount "
                 + "FROM student_discount as sd "
                 + "left join discount as d on d.id = sd.discount_id "
-                + "left join attachments as a on a.id = sd.attachment_id "
                 + "where sd.student_id = ? and sd.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
@@ -162,37 +151,10 @@ public class DbStudentDiscount extends BaseDb {
             TextField tf = dw.createTextField(result.getString("sd.note"),
                     myUI.getMessage(IndigoMessages.Note), id, true, false);
             item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(tf);
-            HorizontalLayout hl = new HorizontalLayout();
-            hl.setSpacing(true);
             if (!currentUser.isPermitted(Settings.discountsTable + ":" + Settings.actModify)) {
                 tf.setEnabled(false);
-                hl.setEnabled(false);
                 cb.setEnabled(false);
             }
-            b = dw.createButton(myUI.getMessage(IndigoMessages.DownLoad), id,
-                    Settings.download_button, FontAwesome.DOWNLOAD);
-            b.setStyleName("unread");
-            b.addStyleName(ValoTheme.BUTTON_SMALL);
-            b.setEnabled(false);
-            b.setData(null);
-            if (result.getInt("a.id") != 0) {
-                Attachment a = new Attachment();
-                a.setId(result.getInt("a.id"));
-                a.setUnique_name(result.getString("a.unique_name"));
-                a.setExtension(result.getString("a.extension"));
-                a.setName(result.getString("a.name"));
-                b.setData(a);
-                b.setEnabled(true);
-                b.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-                b.addStyleName(ValoTheme.BUTTON_SMALL);
-            }
-            hl.addComponent(b);
-
-            Upload upload = dw.createUpload("", false);
-            upload.setId(id);
-            upload.setData(b);
-            hl.addComponent(upload);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Document)).setValue(hl);
             item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
         }
         return container;

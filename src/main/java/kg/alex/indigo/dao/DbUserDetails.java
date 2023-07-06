@@ -52,6 +52,7 @@ public class DbUserDetails extends BaseDb {
             user.getSchool().setId(result.getInt("eo.school_id"));
             user.getSchool().setName_ru(result.getString("sch.name_ru"));
             user.getSchool().setPhoto(result.getString("sch.photo"));
+            user.getSchool().setSchool_type_id(result.getInt("sch.school_type_id"));
             user.setBranch_id(result.getInt("eb.hr_branch_id"));
             user.setPosition_id(result.getInt("pos.id"));
             user.setCurrent_year(new Year(result.getInt("y.id"), result.getString("y.name"),
