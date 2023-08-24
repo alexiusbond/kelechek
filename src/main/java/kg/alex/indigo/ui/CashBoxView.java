@@ -204,13 +204,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencySettingsOG.setWidth(Settings.PERCENTS100);
         currencySettingsOG.setStyleName(ValoTheme.OPTIONGROUP_SMALL);
         currencySettingsOG.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
-        currencySettingsOG.addItem(myUI.getMessage(IndigoMessages.OptimaCurrency));
+        currencySettingsOG.addItem(myUI.getMessage(IndigoMessages.NbkrCurrency));
         currencySettingsOG.addItem(myUI.getMessage(IndigoMessages.Manual));
         currencySettingsOG.addValueChangeListener(this);
         if (myUI.isManualRate()) {
             currencySettingsOG.select(myUI.getMessage(IndigoMessages.Manual));
         } else {
-            currencySettingsOG.select(myUI.getMessage(IndigoMessages.OptimaCurrency));
+            currencySettingsOG.select(myUI.getMessage(IndigoMessages.NbkrCurrency));
         }
 
         saveButton = new Button();
@@ -418,7 +418,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.getColumn(myUI.getMessage(IndigoMessages.Note)).setMaximumWidth(400);
         grid.getColumn(myUI.getMessage(IndigoMessages.Note)).setExpandRatio(1);
         grid.getEditorFieldGroup().addCommitHandler(this);
-
+/*
         Grid.HeaderRow filterRow = grid.appendHeaderRow();
         for (Object pid : grid.getContainerDataSource().getContainerPropertyIds()) {
             if (grid.getColumn(pid).getEditorField() instanceof TextField) {
@@ -476,7 +476,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 });
                 cell.setComponent(filterField);
             }
-        }
+        }*/
     }
 
     @Override

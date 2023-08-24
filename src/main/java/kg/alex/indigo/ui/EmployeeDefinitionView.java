@@ -5348,6 +5348,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item.getItemProperty(myUI.getMessage(IndigoMessages.Permissions)).setValue(
                 mainPositionCB.getContainerProperty(mainPositionCB.getValue(),
                         myUI.getMessage(IndigoMessages.Permissions)).getValue());
+        item.getItemProperty(Settings.visible_hr_orders).setValue("1,2,3,4,5,6");
         item.getItemProperty(Settings.gender_id).setValue(genderCB.getValue());
         item.getItemProperty(Settings.nationality_id).setValue(nationalityCB.getValue());
         item.getItemProperty(Settings.citizenship_id).setValue(citizenshipCB.getValue());

@@ -62,7 +62,6 @@ public class DbStudentPayment extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = dw.preparePaymentsContainer();
         while (result.next()) {
@@ -94,16 +93,16 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(IndigoMessages.PaymentType)).setValue(
                     dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(IndigoMessages.PaymentType), id,
                             Settings.dbPaymentType, false, false, false, isDisabled));
-            TextField tf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(IndigoMessages.Amount), id);
+            TextField tf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, Settings.USD, id);
             tf.setId(myUI.getMessage(IndigoMessages.Payments));
             tf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(tf);
+            item.getItemProperty(Settings.USD).setValue(tf);
             tf = dw.createTextFieldDouble(null, 2, Settings.KGS, id);
             tf.setId(Settings.KGS);
             tf.setRequired(false);
             tf.removeAllValidators();
             tf.addValidator(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 0.0, null));
-            tf.setEnabled(!isDisabled);
+            tf.setEnabled(!isDisabled && currentUser.hasRole(Settings.rnAdmin));
             item.getItemProperty(Settings.KGS).setValue(tf);
             tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), 4, myUI.getMessage(IndigoMessages.Rate), id);
             tf.setEnabled(!isDisabled);
@@ -130,8 +129,7 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(tf);
             Button b = dw.createButton(myUI.getMessage(IndigoMessages.Print), id,
                     myUI.getMessage(IndigoMessages.Invoice), FontAwesome.PRINT);
-            b.setEnabled(currentUser.isPermitted(Settings.paymentsTab
-                    + ":" + Settings.actPrint));
+            b.setEnabled(currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actPrint));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Print)).setValue(b);
             item.getItemProperty(Settings.old_amount).setValue(result.getDouble("sp.amount"));
             item.getItemProperty(Settings.old_date).setValue(result.getDate("sp.modification_date"));

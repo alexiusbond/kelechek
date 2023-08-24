@@ -227,10 +227,10 @@ public class MyVaadinUI extends UI {
             DecimalFormat format = new DecimalFormat("##.####");
             format.setDecimalFormatSymbols(symbols);
             try {
-                org.jsoup.nodes.Document doc = Jsoup.connect("https://www.optimabank.kg/en/").get();
-                Elements elems = doc.getElementsByClass("mod_rates_table");
-                Elements els = elems.first().getElementsByClass("up");
-                currency_rate = format.parse(els.get(1).text()).doubleValue();
+                org.jsoup.nodes.Document doc = Jsoup.connect("https://www.optimabank.kg/index.php?lang=ru").get();
+                org.jsoup.nodes.Element elem = doc.getElementById("tab-cash");
+                Elements elements = elem.getElementsByClass("up");
+                currency_rate =format.parse( elements.get(1).text()).doubleValue();
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -247,7 +247,7 @@ public class MyVaadinUI extends UI {
             db_currency_rate = dbCon.execSQL_last_rate(getUser().getSchool().getId());
             if (db_currency_rate == 0.0) {
                 isManualRate = false;
-                db_currency_rate = this.getCurrencyRateFromOptima();
+                db_currency_rate = this.getCurrencyRateFromBank();
             } else {
                 isManualRate = true;
             }

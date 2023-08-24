@@ -839,7 +839,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             iip.setPayment_date(((DateField) paymentsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(IndigoMessages.Date)).getValue()).getValue());
             iip.setAmount((Double) (((TextField) paymentsTable.getContainerProperty(source.getData(),
-                    myUI.getMessage(IndigoMessages.Amount)).getValue()).getPropertyDataSource().getValue()));
+                    Settings.USD).getValue()).getPropertyDataSource().getValue()));
             iip.setKurs((Double) (((TextField) paymentsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(IndigoMessages.Rate)).getValue()).getPropertyDataSource().getValue()));
             iip.setSchool_name(myUI.getUser().getSchool().getName_ru());
@@ -1218,12 +1218,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (((ComboBox) paymentsTable.getContainerProperty(itemId,
                     myUI.getMessage(IndigoMessages.PaymentCategoryType)).getValue()).getValue() != null
                     && ((TextField) paymentsTable.getContainerProperty(itemId,
-                    myUI.getMessage(IndigoMessages.Amount)).getValue()).getValue() != null
+                    Settings.USD).getValue()).getValue() != null
                     && ((DateField) paymentsTable.getContainerProperty(itemId,
                     myUI.getMessage(IndigoMessages.Date)).getValue()).getValue() != null) {
                 AccTransaction tr = null;
                 TextField tf = (TextField) paymentsTable.getContainerProperty(itemId,
-                        myUI.getMessage(IndigoMessages.Amount)).getValue();
+                        Settings.USD).getValue();
                 if ((Integer) ((ComboBox) paymentsTable.getContainerProperty(itemId,
                         myUI.getMessage(IndigoMessages.PaymentCategoryType)).getValue()).getValue() != 3
                         && (paymentsTable.getContainerProperty(itemId,
@@ -1232,7 +1232,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         myUI.getMessage(IndigoMessages.Date)).getValue()).getValue(), java.util.Calendar.DAY_OF_MONTH).compareTo(
                         (Date) paymentsTable.getContainerProperty(itemId, Settings.old_date).getValue()) == 0)
                         && (Double) ((TextField) paymentsTable.getContainerProperty(itemId,
-                        myUI.getMessage(IndigoMessages.Amount)).getValue()).getPropertyDataSource().getValue()
+                        Settings.USD).getValue()).getPropertyDataSource().getValue()
                         > (Double) paymentsTable.getContainerProperty(itemId, Settings.old_amount).getValue()) {
                     tf.removeAllValidators();
                     tf.addValidator(new DoubleRangeValidator(
@@ -1276,7 +1276,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 ((AbstractField<?>) property).getId().equals(myUI.getMessage(IndigoMessages.Rate)))) {
             Object itemId = ((AbstractField<?>) property).getData();
             TextField tfAmount = (TextField) paymentsTable.getContainerProperty(itemId,
-                    myUI.getMessage(IndigoMessages.Amount)).getValue();
+                   Settings.USD).getValue();
             TextField tfRate = (TextField) paymentsTable.getContainerProperty(itemId,
                     myUI.getMessage(IndigoMessages.Rate)).getValue();
             TextField tfKGS = (TextField) paymentsTable.getContainerProperty(itemId, Settings.KGS).getValue();
@@ -1578,7 +1578,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             ((ComboBox) paymentsTable.getContainerProperty(next,
                     myUI.getMessage(IndigoMessages.PaymentType)).getValue()).setEnabled(false);
             ((TextField) paymentsTable.getContainerProperty(next,
-                    myUI.getMessage(IndigoMessages.Amount)).getValue()).setEnabled(false);
+                    Settings.USD).getValue()).setEnabled(false);
             ((TextField) paymentsTable.getContainerProperty(next,
                     myUI.getMessage(IndigoMessages.Rate)).getValue()).setEnabled(false);
             ((TextField) paymentsTable.getContainerProperty(next, Settings.KGS).getValue()).setEnabled(false);
@@ -2272,7 +2272,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if (setDefPayCatType) {
             cb.setValue(2);
         } else if (setDefPayType) {
-            cb.setValue(3);
+            cb.setValue(1);
         } else {
             cb.setValue(value);
         }
@@ -2540,8 +2540,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             Notification.Type.WARNING_MESSAGE);
                     return false;
                 }
-                if (!((TextField) t.getItem(next).getItemProperty(
-                        myUI.getMessage(IndigoMessages.Amount)).getValue()).isValid()) {
+                if (!((TextField) t.getItem(next).getItemProperty(Settings.USD).getValue()).isValid()) {
                     Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                     return false;
@@ -2800,7 +2799,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         sp.setPayment_type_id((Integer) ((ComboBox) item.getItemProperty(
                 myUI.getMessage(IndigoMessages.PaymentType)).getValue()).getValue());
         sp.setAmount((Double) ((TextField) item.getItemProperty(
-                myUI.getMessage(IndigoMessages.Amount)).getValue()).getPropertyDataSource().getValue());
+                Settings.USD).getValue()).getPropertyDataSource().getValue());
         sp.setRate((Double) ((TextField) item.getItemProperty(
                 myUI.getMessage(IndigoMessages.Rate)).getValue()).getPropertyDataSource().getValue());
         sp.setWho_paid(((TextField) item.getItemProperty(
@@ -2868,7 +2867,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         if (NATURAL_COL_ORDER_PAYMENTS == null) {
             NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
                     myUI.getMessage(IndigoMessages.PaymentCategoryType),
-                    myUI.getMessage(IndigoMessages.PaymentType), myUI.getMessage(IndigoMessages.Amount),
+                    myUI.getMessage(IndigoMessages.PaymentType), Settings.USD,
                     myUI.getMessage(IndigoMessages.Rate), Settings.KGS,
                     myUI.getMessage(IndigoMessages.WhoPaid), myUI.getMessage(IndigoMessages.Date),
                     myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Print)};
@@ -3013,8 +3012,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(IndigoMessages.PaymentCategoryType), ComboBox.class, null);
             paymentCont.addContainerProperty(
                     myUI.getMessage(IndigoMessages.PaymentType), ComboBox.class, null);
-            paymentCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Amount), TextField.class, null);
+            paymentCont.addContainerProperty( Settings.USD, TextField.class, null);
             paymentCont.addContainerProperty(
                     myUI.getMessage(IndigoMessages.Rate), TextField.class, null);
             paymentCont.addContainerProperty(Settings.KGS, TextField.class, null);
@@ -3146,7 +3144,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         if (NATURAL_COL_ORDER_PAYMENTS == null) {
             NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
                     myUI.getMessage(IndigoMessages.PaymentCategoryType),
-                    myUI.getMessage(IndigoMessages.PaymentType), myUI.getMessage(IndigoMessages.Amount),
+                    myUI.getMessage(IndigoMessages.PaymentType), Settings.USD,
                     myUI.getMessage(IndigoMessages.Rate), Settings.KGS,
                     myUI.getMessage(IndigoMessages.WhoPaid), myUI.getMessage(IndigoMessages.Date),
                     myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Print)};
@@ -3167,9 +3165,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(IndigoMessages.PaymentType)).setValue(
                 createCombobox(0, myUI.getMessage(IndigoMessages.PaymentType), id,
                         Settings.dbPaymentType, false, true, false, false));
-        TextField tf = createTextFieldDouble(null, 2, myUI.getMessage(IndigoMessages.Amount), id);
+        TextField tf = createTextFieldDouble(null, 2, Settings.USD, id);
         tf.setId(myUI.getMessage(IndigoMessages.Payments));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(tf);
+        item.getItemProperty(Settings.USD).setValue(tf);
         tf = createTextFieldDouble(null, 2, Settings.KGS, id);
         tf.setId(Settings.KGS);
         tf.setRequired(false);
@@ -3178,6 +3176,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(Settings.KGS).setValue(tf);
         tf = createTextFieldDouble(myUI.getDb_currency_rate(), 4, myUI.getMessage(IndigoMessages.Rate), id);
         tf.setId(myUI.getMessage(IndigoMessages.Rate));
+        tf.setEnabled(currentUser.hasRole(Settings.rnAdmin));
         item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(tf);
         String wh_paid = null;
         try {
@@ -4385,7 +4384,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         StudentPayment sp = getPayment(0, 0, paymentsTable.getItem(next));
                         tr = new AccTransaction();
                         tr.setAmount(Settings.dFormat2.parse(((TextField) paymentsTable.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Amount)).getValue()).getValue()).doubleValue());
+                             Settings.USD).getValue()).getValue()).doubleValue());
                         tr.setDate(sp.getModification_date());
                         tr.setCategory_id((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(IndigoMessages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),

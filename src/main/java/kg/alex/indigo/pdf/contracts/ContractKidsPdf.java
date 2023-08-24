@@ -22,8 +22,8 @@ public class ContractKidsPdf {
     private final MyVaadinUI myUI;
     private final StudentInfoPdf studentInfo;
 
-    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
+    private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
 
     public ContractKidsPdf(final MyVaadinUI ui, StudentInfoPdf st_info) {
         this.myUI = ui;

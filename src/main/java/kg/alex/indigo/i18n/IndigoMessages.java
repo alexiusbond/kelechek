@@ -114,7 +114,7 @@ public class IndigoMessages extends ListResourceBundle implements Serializable {
     public static final String Details = generateId();
     public static final String SaveButton = generateId();
     public static final String Manual = generateId();
-    public static final String OptimaCurrency = generateId();
+    public static final String NbkrCurrency = generateId();
     public static final String DivideButton = generateId();
     public static final String CancelButton = generateId();
     public static final String FinancialHistory = generateId();
