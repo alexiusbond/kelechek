@@ -478,6 +478,8 @@ public class IndigoMessages_ru extends IndigoMessages {
             {ToPlan, "К плану"},
             {AsylkechContract, "Договор Asylkech"},
             {KidsContract, "Договор Детсад"},
+            {SchoolContrRu, "Договор школа(RU)"},
+            {SchoolContrKg, "Договор школа(KG)"},
             {CallsReport, "Отчет о вызовах"},
             {ContractType, "Тип контракта"},
             {AgreementType, "Тип договора"},

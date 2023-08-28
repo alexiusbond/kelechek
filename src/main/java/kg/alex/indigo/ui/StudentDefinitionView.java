@@ -25,8 +25,7 @@ import kg.alex.indigo.dao.*;
 import kg.alex.indigo.domain.*;
 import kg.alex.indigo.i18n.IndigoMessages;
 import kg.alex.indigo.pdf.InvoicePDF;
-import kg.alex.indigo.pdf.contracts.ContractAsylkech_Pdf;
-import kg.alex.indigo.pdf.contracts.ContractKidsPdf;
+import kg.alex.indigo.pdf.contracts.*;
 import kg.alex.indigo.utils.ExistsValidator;
 import kg.alex.indigo.utils.FormattedTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
@@ -507,6 +506,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG.addValueChangeListener(this);
         contractTypeOG.addItem(myUI.getMessage(IndigoMessages.AsylkechContract));
         contractTypeOG.addItem(myUI.getMessage(IndigoMessages.KidsContract));
+        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.SchoolContrRu));
+        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.SchoolContrKg));
 
         printButton = new PopupButton(myUI.getMessage(IndigoMessages.Print));
         printButton.setDescription(myUI.getMessage(IndigoMessages.Print));
@@ -1400,6 +1401,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     new ContractAsylkech_Pdf(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.KidsContract))) {
                                     new ContractKidsPdf(myUI, studInfo);
+                                }else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.SchoolContrRu))) {
+                                    if (myUI.getUser().getCurrent_year().getId() == 9) {
+                                        new ContractSchoolPdf_2024_ru(myUI, studInfo, instPlanCont);
+                                    } else {
+                                        new ContractSchoolPdf_2023_ru(myUI, studInfo, instPlanCont);
+                                    }
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.SchoolContrKg))) {
+                                    new ContractSchoolPdf_kg(myUI, studInfo, instPlanCont);
                                 }
                                 contractTypeOG.setValue(null);
                             } else {
