@@ -19,6 +19,7 @@ import kg.alex.indigo.ui.StudentDefinitionView;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DbStudentInstallmentPlan extends BaseDb {
@@ -91,9 +92,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
     }
 
     public IndexedContainer execSQL_InstPLan(MyVaadinUI myUI, int stud_id, int year_id,
-                                             InstallmentPlanPaymentsReport ip)
-            throws SQLException {
-
+                                             InstallmentPlanPaymentsReport ip) throws SQLException {
 
         String sql = "SELECT ip.id, ip.amount, ip.date_of_payment "
                 + "FROM student_installement_plan as ip "
@@ -113,6 +112,39 @@ public class DbStudentInstallmentPlan extends BaseDb {
             item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
                     result.getDouble("ip.amount"));
             ip.total_inst += result.getDouble("ip.amount");
+        }
+        return container;
+    }
+
+    public IndexedContainer execSQL_InstPLan(MyVaadinUI myUI, int stud_id, int year_id,
+                                             double payments) throws SQLException {
+
+        String sql = "SELECT ip.id, ip.amount, ip.date_of_payment "
+                + "FROM student_installement_plan as ip "
+                + "where ip.student_id = ? and ip.year_id = ? "
+                + "order by ip.date_of_payment";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, stud_id);
+        stat.setInt(2, year_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
+        boolean isFound = false;
+        while (result.next()) {
+            payments -= result.getDouble("ip.amount");
+            if (payments < 0.0 && !isFound) {
+                isFound = true;
+                Item item = container.addItem(result.getInt("ip.id"));
+                item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+                        Settings.df.format((result.getDate("ip.date_of_payment"))));
+                item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(-1 * payments);
+            } else if (isFound) {
+                Item item = container.addItem(result.getInt("ip.id"));
+                item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+                        Settings.df.format((result.getDate("ip.date_of_payment"))));
+                item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("ip.amount"));
+            }
         }
         return container;
     }

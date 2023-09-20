@@ -10,6 +10,7 @@ import java.util.Date;
 
 public class InvoiceInfoPdf implements Serializable {
 
+    private int student_id;
     private String login;
     private String class_name;
     private String studentFullName;
@@ -21,7 +22,33 @@ public class InvoiceInfoPdf implements Serializable {
     private int paymentCategoryId;
     private Date payment_date;
     private double amount;
+    private double left;
+    private double payments;
     private double kurs;
+
+    public double getPayments() {
+        return payments;
+    }
+
+    public void setPayments(double payments) {
+        this.payments = payments;
+    }
+
+    public int getStudent_id() {
+        return student_id;
+    }
+
+    public void setStudent_id(int student_id) {
+        this.student_id = student_id;
+    }
+
+    public double getLeft() {
+        return left;
+    }
+
+    public void setLeft(double left) {
+        this.left = left;
+    }
 
     public int getPaymentCategoryId() {
         return paymentCategoryId;
