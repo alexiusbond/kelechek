@@ -12,6 +12,8 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbStudentInstallmentPlan;
 import kg.alex.indigo.domain.InvoiceInfoPdf;
 import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.utils.money.WritableSummRu;
+import kg.alex.indigo.utils.money.WritableSummRuSOM;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -181,8 +183,21 @@ public class Invoice2023PDF {
                 cell.setPaddingRight(10);
                 invoiceTable.addCell(cell);
 
+                WritableSummRu convertToLetters = new WritableSummRuSOM();
+                Paragraph sumLetterPar = new Paragraph();
+                sumLetterPar.add(new Chunk("Сумма прописью: ", bold_font));
+                sumLetterPar.add(new Chunk(convertToLetters.numberToString(
+                        Math.round(student.getAmount() * rate)),normal_font));
+                cell = new PdfPCell(sumLetterPar);
+                cell.setBorder(Rectangle.NO_BORDER);
+                cell.setPaddingTop(3);
+                cell.setPaddingBottom(3);
+                cell.setPaddingLeft(15);
+                cell.setPaddingRight(10);
+                invoiceTable.addCell(cell);
+
                 Paragraph leftPar = new Paragraph();
-                leftPar.add(new Chunk("Осталось: ", bold_font));
+                leftPar.add(new Chunk("Остаток: ", bold_font));
                 leftPar.add(new Chunk(Settings.dFormat2.format(student.getLeft()) + " USD", underlined_font));
                 cell = new PdfPCell(leftPar);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);

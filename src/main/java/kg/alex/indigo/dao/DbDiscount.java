@@ -155,7 +155,8 @@ public class DbDiscount extends BaseDb {
                         result.getString("t.name") + " - (max " + result.getString("t.amount") + "%)");
             } else if (result.getInt("t.discount_type_id") == 4) {
                 item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
-                        result.getString("t.name") + " - (max " + result.getString("t.amount") + "$)");
+                        result.getString("t.name") + " - (max " + result.getString("t.amount")
+                                + "$)");
             } else if (result.getInt("t.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount") + "%");
@@ -171,7 +172,7 @@ public class DbDiscount extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUi, int year_id, int discount_id, int student_id,
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, int year_id, int currency_id, int discount_id, int student_id,
                                             String studentFullName) throws SQLException {
         double orderAmountDiscount = 0.0, orderPercentDiscount = 0.0;
         try {
@@ -186,11 +187,13 @@ public class DbDiscount extends BaseDb {
             logger.error(e);
             logger.catching(e);
         }
-        String sql = "SELECT d.id, d.name, " +
+        String sql = "SELECT d.id, d.name, cur.name, " +
                 "(CASE WHEN d.discount_unit_id = 2 AND ? IS NOT NULL THEN ? " +
                 "WHEN d.discount_unit_id = 1 AND ? IS NOT NULL THEN ? ELSE d.amount END) as amount, " +
                 "d.discount_type_id, d.discount_unit_id FROM discount as d " +
-                "where d.year_id = ? and (d.activity_status_id = 2 or d.id = ?)";
+                "left join acc_currency as cur on cur.id = d.acc_currency_id " +
+                "where d.year_id = ? and (d.activity_status_id = 2 or d.id = ?) " +
+                "and (d.acc_currency_id = ? or d.acc_currency_id IS NULL)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (orderAmountDiscount != 0.0) {
             stat.setDouble(1, orderAmountDiscount);
@@ -206,6 +209,7 @@ public class DbDiscount extends BaseDb {
         stat.setDouble(4, orderPercentDiscount);
         stat.setInt(5, year_id);
         stat.setInt(6, discount_id);
+        stat.setInt(7, currency_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
@@ -221,7 +225,8 @@ public class DbDiscount extends BaseDb {
             } else if (result.getInt("d.discount_type_id") == 4) {
                 item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
                         result.getString("d.name") + " - (max "
-                                + Settings.dFormat2.format(result.getDouble("amount")) + "$)");
+                                + Settings.dFormat2.format(result.getDouble("amount"))
+                                + " " + result.getString("cur.name") + ")");
             } else if (result.getInt("d.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
                         result.getString("d.name") + " - "
@@ -229,7 +234,8 @@ public class DbDiscount extends BaseDb {
             } else if (result.getInt("d.discount_type_id") == 2) {
                 item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
                         result.getString("d.name") + " - "
-                                + Settings.dFormat2.format(result.getDouble("amount")) + "$");
+                                + Settings.dFormat2.format(result.getDouble("amount"))
+                                + " " + result.getString("cur.name"));
             }
             item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(Settings.round(
                     result.getDouble("amount"), 2));

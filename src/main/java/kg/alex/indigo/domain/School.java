@@ -25,7 +25,16 @@ public class School implements Serializable {
     private String city;
     private int status_id;
     private int school_type_id;
+    private int currency_id;
     private String photo;
+
+    public int getCurrency_id() {
+        return currency_id;
+    }
+
+    public void setCurrency_id(int currency_id) {
+        this.currency_id = currency_id;
+    }
 
     public String getOkpo() {
         return okpo;

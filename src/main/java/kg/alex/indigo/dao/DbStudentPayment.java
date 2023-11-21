@@ -97,13 +97,6 @@ public class DbStudentPayment extends BaseDb {
             tf.setId(myUI.getMessage(IndigoMessages.Payments));
             tf.setEnabled(!isDisabled);
             item.getItemProperty(Settings.USD).setValue(tf);
-            tf = dw.createTextFieldDouble(null, 2, Settings.KGS, id);
-            tf.setId(Settings.KGS);
-            tf.setRequired(false);
-            tf.removeAllValidators();
-            tf.addValidator(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 0.0, null));
-            tf.setEnabled(!isDisabled && currentUser.hasRole(Settings.rnAdmin));
-            item.getItemProperty(Settings.KGS).setValue(tf);
             tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), 4, myUI.getMessage(IndigoMessages.Rate), id);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(tf);

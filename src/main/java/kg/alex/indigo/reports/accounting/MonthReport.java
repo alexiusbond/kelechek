@@ -328,7 +328,7 @@ public class MonthReport implements Button.ClickListener,
                                                         nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue()
                                                         + " - " + myUI.getMessage(IndigoMessages.Total),
                                                 Table.Align.RIGHT);
-                                        SchoolAccounting scAcc = dbTr.exec_get_totals((Integer) nextSchool, current.getTime(),
+                                        SchoolAccounting scAcc = dbTr.exec_get_totals((Integer) nextSchool, 2, current.getTime(),
                                                 tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                         incomesDataTable.setColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue() + " - "
@@ -340,7 +340,7 @@ public class MonthReport implements Button.ClickListener,
                                     }
                                 }
                                 if (!currentUser.hasRole(Settings.rnAdmin)) {
-                                    SchoolAccounting scAcc = dbTr.exec_get_totals(myUI.getUser().getSchool().getId(), current.getTime(),
+                                    SchoolAccounting scAcc = dbTr.exec_get_totals(myUI.getUser().getSchool().getId(), 2, current.getTime(),
                                             tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
                                             Settings.ymdf.format(current.getTime()), myUI.getMessage(IndigoMessages.PreviousBalance) + " ("

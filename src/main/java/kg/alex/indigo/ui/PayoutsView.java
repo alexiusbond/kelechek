@@ -75,7 +75,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     private int r_table_counter = 1000;
     private final ArrayList<String> delPayoutsIds = new ArrayList<>();
     private int invID;
-    private double totalAmountUsd = 0.0, oldTotalAmountUsd = 0.0;
+    private double totalAmount = 0.0;
+    private double amountUsd = 0.0, oldAmountUsd = 0.0;
+    private double amountKgs = 0.0, oldAmountKgs = 0.0;
 
     public PayoutsView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -293,10 +295,16 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     dbCon.connect();
                     if (isNew) {
                         Invoice inv = getInvoice(0);
-                        AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), inv.getCreation_date(), 0, totalAmountUsd, 2);
-                        if (tr != null) {
-                            Notification.show(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                    + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                        AccTransaction trUsd = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
+                                2, inv.getCreation_date(), 0, amountUsd, 2);
+                        AccTransaction trKgs = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
+                                1, inv.getCreation_date(), 0, amountKgs, 2);
+                        if (trUsd != null) {
+                            Notification.show(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(trUsd.getOverLimit())
+                                    + " USD (" + Settings.df.format(trUsd.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                        } else if (trKgs != null) {
+                            Notification.show(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(trKgs.getOverLimit())
+                                    + " KGS (" + Settings.df.format(trKgs.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                         } else {
                             int id = dbCon.exec_insert(inv);
                             if (id != 0) {
@@ -313,10 +321,16 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     } else {
                         int status = 0;
                         Invoice inv = getInvoice(invID);
-                        AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), inv.getCreation_date(), oldTotalAmountUsd, totalAmountUsd, 2);
-                        if (tr != null) {
-                            Notification.show(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                    + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                        AccTransaction trUsd = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
+                                2, inv.getCreation_date(), oldAmountUsd, amountUsd, 2);
+                        AccTransaction trKgs = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
+                                1, inv.getCreation_date(), oldAmountKgs, amountKgs, 2);
+                        if (trUsd != null) {
+                            Notification.show(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(trUsd.getOverLimit())
+                                    + " USD (" + Settings.df.format(trUsd.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                        } else if (trKgs != null) {
+                            Notification.show(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(trKgs.getOverLimit())
+                                    + " KGS (" + Settings.df.format(trKgs.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                         } else {
                             try {
                                 status = dbCon.exec_update(inv);
@@ -857,8 +871,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     }
 
     private void repaintPayoutsFooter() {
-        totalAmountUsd = 0.0;
-        double totalAmountKGS = 0.0;
+        totalAmount = 0.0;
+        amountUsd = 0.0;
+        amountKgs = 0.0;
         if (payoutsTable.getContainerDataSource().size() > 0) {
             for (Object next : payoutsTable.getItemIds()) {
                 if (((TextField) payoutsTable.getItem(next).getItemProperty(
@@ -869,27 +884,27 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         myUI.getMessage(IndigoMessages.Currency)).getValue()).isValid()) {
                     if ((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
                             myUI.getMessage(IndigoMessages.Currency)).getValue()).getValue() == 2) {
-                        totalAmountUsd += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                        totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(IndigoMessages.Amount)).getValue()).getPropertyDataSource().getValue();
-                        totalAmountKGS += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.Amount)).getValue()).getPropertyDataSource().getValue()
-                                * (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.Rate)).getValue()).getPropertyDataSource().getValue();
+                        amountUsd += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                                myUI.getMessage(IndigoMessages.Amount)).getValue()).getPropertyDataSource().getValue();
                     } else {
-                        totalAmountUsd += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                        totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(IndigoMessages.Amount)).getValue()).getPropertyDataSource().getValue()
                                 / (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(IndigoMessages.Rate)).getValue()).getPropertyDataSource().getValue();
-                        totalAmountKGS += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                        amountKgs += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(IndigoMessages.Amount)).getValue()).getPropertyDataSource().getValue();
                     }
                 }
             }
         }
         payoutsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount),
-                Settings.dFormat2.format(totalAmountUsd) + " " + Settings.USD);
+                myUI.getMessage(IndigoMessages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.USD);
+        payoutsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Currency),
+                Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
         payoutsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Rate),
-                Settings.dFormat2.format(totalAmountKGS) + " " + Settings.KGS);
+                Settings.dFormat2.format(amountUsd) + " " + Settings.USD);
     }
 
     private void insertPayouts(int invoice_id, DbAccTransactions dbAt) {
@@ -956,7 +971,8 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             if (rate == 0.0) {
                 Notification.show(myUI.getMessage(IndigoMessages.CantGetFromNBKR), Notification.Type.ERROR_MESSAGE);
             } else {
-                AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), inv.getCreation_date(), 0, totalAmountUsd, 2);
+                AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), 2,
+                        inv.getCreation_date(), 0, totalAmount, 2);
                 if (tr != null) {
                     Notification.show(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
@@ -1003,12 +1019,15 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         }
     }
 
-    public void setPayoutsFooter(double amountUsd, double amountKgs) {
-        totalAmountUsd = amountUsd;
-        oldTotalAmountUsd = amountUsd;
+    public void setPayoutsFooter(double amountUsd, double amountKgs, double total) {
+        totalAmount = amountUsd;
+        oldAmountUsd = amountUsd;
+        oldAmountKgs = amountKgs;
         payoutsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount),
-                Settings.dFormat2.format(totalAmountUsd) + " " + Settings.USD);
+                myUI.getMessage(IndigoMessages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.USD);
         payoutsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Rate),
+                Settings.dFormat2.format(amountUsd) + " " + Settings.USD);
+        payoutsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Currency),
                 Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
     }
 

@@ -27,7 +27,7 @@ public class DbUserDetails extends BaseDb {
     public UserDetails execSQLUserInfo(String login) throws SQLException {
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "select e.id, ord.working_status_id, eb.hr_branch_id, e.login, concat(e.surname, ' ', e.name) as fullname, "
-                + "eo.school_id, sch.name_ru, sch.school_type_id, sch.photo, sch.code, pos.id, "
+                + "eo.school_id, sch.name_ru, sch.school_type_id, sch.acc_currency_id, sch.photo, sch.code, pos.id, "
                 + "y.id, y.name, y.is_last, y.installment_date_limit, sch.transactions_start_date "
                 + "from employee as e "
                 + "left join hr_employee_branch as eb on eb.employee_id = e.id and eb.hr_importance_id = 1 "
@@ -53,6 +53,7 @@ public class DbUserDetails extends BaseDb {
             user.getSchool().setName_ru(result.getString("sch.name_ru"));
             user.getSchool().setPhoto(result.getString("sch.photo"));
             user.getSchool().setSchool_type_id(result.getInt("sch.school_type_id"));
+            user.getSchool().setCurrency_id(result.getInt("sch.acc_currency_id"));
             user.setBranch_id(result.getInt("eb.hr_branch_id"));
             user.setPosition_id(result.getInt("pos.id"));
             user.setCurrent_year(new Year(result.getInt("y.id"), result.getString("y.name"),

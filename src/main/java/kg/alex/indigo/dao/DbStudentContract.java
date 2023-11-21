@@ -204,7 +204,8 @@ public class DbStudentContract extends BaseDb {
         clr.corrections = 0;
         clr.debts = 0;
         clr.overPays = 0;
-        String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, ";
+        clr.males = 0;
+        String sql = "SELECT st.id, st.login, st.name, st.surname, st.gender_id, edu.name, ";
         if (from_date != null && till_date != null) {
             sql += "IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
         } else if (from_date != null) {
@@ -383,6 +384,7 @@ public class DbStudentContract extends BaseDb {
         container.addContainerProperty(myUI.getMessage(IndigoMessages.EducationStatus), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.FirstName), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Gender), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.ClassName), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Contract), Double.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.DiscountType), String.class, null);
@@ -407,6 +409,12 @@ public class DbStudentContract extends BaseDb {
                     result.getString("st.login"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.FirstName)).setValue(result.getString("st.name"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.LastName)).setValue(result.getString("st.surname"));
+            if (result.getInt("st.gender_id") == 1) {
+                clr.males++;
+                item.getItemProperty(myUI.getMessage(IndigoMessages.Gender)).setValue("М");
+            } else {
+                item.getItemProperty(myUI.getMessage(IndigoMessages.Gender)).setValue("Ж");
+            }
             item.getItemProperty(myUI.getMessage(IndigoMessages.ClassName)).setValue(
                     result.getString("class"));
             if (result.getString("rel.name") != null) {

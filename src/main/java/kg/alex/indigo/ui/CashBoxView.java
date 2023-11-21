@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package kg.alex.indigo.ui;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
@@ -15,8 +10,6 @@ import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.filter.Compare;
-import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ItemClickEvent;
@@ -51,20 +44,15 @@ import org.vaadin.dialogs.ConfirmDialog;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CashBoxView extends GridLayout implements Button.ClickListener,
         Property.ValueChangeListener, FieldGroup.CommitHandler {
     static final Logger logger = LogManager.getLogger(CashBoxView.class);
     private final MyVaadinUI myUI;
     private Button addButton, saveButton, searchButton;
-    private OptionGroup currencySettingsOG;
+    private OptionGroup currencySettingsOG, cashBoxesOG;
     private TextField currencyTF;
-    private Label incomeTtlLab;
-    private Label expenseTtlLab;
-    private Label ttlLab;
-    private Label prev_balanceLab;
+    private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab;
     public SchoolAccounting schoolAcc;
     private DateField fromDateDF, tillDateDF;
     private final Grid expensesGrid, incomesGrid;
@@ -75,13 +63,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     private HorizontalLayout currencyHl;
     private ComboBox expensesCategoryCb, incomesCategoryCb, toEmployeesCb;
     private Date today;
-    private final Map<String, Container.Filter> filters = new HashMap<>();
+    //private final Map<String, Container.Filter> filters = new HashMap<>();
 
     public CashBoxView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
         setRows(3);
-        setColumns(4);
+        setColumns(5);
         setSizeFull();
         setMargin(true);
         setSpacing(true);
@@ -100,7 +88,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         accordion.setSelectedTab(expensesGrid);
         accordion.addSelectedTabChangeListener((TabSheet.SelectedTabChangeListener)
                 event -> setGridData(Integer.parseInt(accordion.getSelectedTab().getId())));
-        addComponent(accordion, 0, 2, 3, 2);
+        addComponent(accordion, 0, 2, 4, 2);
         setRowExpandRatio(2, 1);
         getTotals();
         recount();
@@ -121,6 +109,8 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(today);
+        fromDateDF.setEnabled(currentUser.isPermitted(
+                Settings.cnTransactionsView + ":" + Settings.prmSearchByDates));
 
         tillDateDF = new DateField();
         tillDateDF.setDescription(myUI.getMessage(IndigoMessages.TillDate));
@@ -128,6 +118,8 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(today);
+        tillDateDF.setEnabled(currentUser.isPermitted(
+                Settings.cnTransactionsView + ":" + Settings.prmSearchByDates));
 
         searchButton = new Button();
         searchButton.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -224,21 +216,48 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencySettingsHl.addComponent(saveButton);
         currencySettingsHl.setExpandRatio(currencySettingsOG, 1);
 
+        cashBoxesOG = new OptionGroup();
+        cashBoxesOG.setWidth(Settings.PERCENTS100);
+        cashBoxesOG.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        try {
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
+            cashBoxesOG.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAcc_currency, true));
+            dbd.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        cashBoxesOG.setValue(myUI.getUser().getSchool().getCurrency_id());
+        cashBoxesOG.addValueChangeListener((Property.ValueChangeListener) event -> {
+            if (fromDateDF.getValue() != null && tillDateDF.getValue() != null) {
+                setGridData(Integer.parseInt(accordion.getSelectedTab().getId()));
+                getTotals();
+                recount();
+            }
+        });
+        if (myUI.getUser().getSchool().getCurrency_id() == 1) {
+            cashBoxesOG.setEnabled(false);
+        }
+
         addComponent(hl, 0, 0);
         addComponent(addButton, 0, 1);
-        addComponent(prev_balanceLab, 1, 0);
-        addComponent(incomeTtlLab, 1, 1);
-        addComponent(expenseTtlLab, 2, 1);
-        addComponent(ttlLab, 2, 0);
-        addComponent(currencyHl, 3, 0);
-        addComponent(currencySettingsHl, 3, 1);
+        addComponent(cashBoxesOG, 1, 0, 1, 1);
+        addComponent(prev_balanceLab, 2, 0);
+        addComponent(incomeTtlLab, 2, 1);
+        addComponent(expenseTtlLab, 3, 1);
+        addComponent(ttlLab, 3, 0);
+        addComponent(currencyHl, 4, 0);
+        addComponent(currencySettingsHl, 4, 1);
+        setComponentAlignment(cashBoxesOG, Alignment.MIDDLE_CENTER);
         setComponentAlignment(addButton, Alignment.BOTTOM_RIGHT);
         setComponentAlignment(ttlLab, Alignment.MIDDLE_RIGHT);
         setComponentAlignment(prev_balanceLab, Alignment.BOTTOM_LEFT);
-        setColumnExpandRatio(0, 2);
-        setColumnExpandRatio(1, 4);
+        setColumnExpandRatio(0, 2.2f);
+        setColumnExpandRatio(1, 0.4f);
         setColumnExpandRatio(2, 4);
-        setColumnExpandRatio(3, 2);
+        setColumnExpandRatio(3, 3.8f);
+        setColumnExpandRatio(4, 2);
     }
 
     private void buildGrid(Grid grid) {
@@ -274,21 +293,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 } else {
                     dateDf.setRangeStart(null);
                 }
-                TextField amountUSDTf = (TextField) grid.getColumn(myUI.getMessage(IndigoMessages.AmountUSD)).getEditorField();
-                TextField amountKGSTf = (TextField) grid.getColumn(myUI.getMessage(IndigoMessages.AmountKGS)).getEditorField();
-                refreshValidators(amountUSDTf);
-                refreshValidators(amountKGSTf);
-                if (grid.getContainerDataSource().getContainerProperty(event.getItemId(), myUI.getMessage(IndigoMessages.AmountUSD)).getValue() == null &&
-                        grid.getContainerDataSource().getContainerProperty(event.getItemId(), myUI.getMessage(IndigoMessages.AmountKGS)).getValue() == null) {
-                    amountUSDTf.setRequired(true);
-                    amountKGSTf.setRequired(true);
-                } else if (grid.getContainerDataSource().getContainerProperty(event.getItemId(), myUI.getMessage(IndigoMessages.AmountUSD)).getValue() == null) {
-                    amountKGSTf.setRequired(true);
-                    amountUSDTf.setRequired(false);
-                } else if (grid.getContainerDataSource().getContainerProperty(event.getItemId(), myUI.getMessage(IndigoMessages.AmountKGS)).getValue() == null) {
-                    amountUSDTf.setRequired(true);
-                    amountKGSTf.setRequired(false);
-                }
+                TextField amountTf = (TextField) grid.getColumn(myUI.getMessage(IndigoMessages.Amount)).getEditorField();
+                refreshValidators(amountTf);
+                amountTf.setRequired(true);
             } else {
                 grid.setEditorEnabled(false);
             }
@@ -296,7 +303,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.setSelectionMode(Grid.SelectionMode.NONE);
         grid.getColumn(Settings.from_employee_id).setHidden(true);
         grid.getColumn(Settings.is_disabled).setHidden(true);
-        grid.getColumn(Settings.acc_currency_id).setHidden(true);
         if (grid == expensesGrid) {
             if (expensesCategoryCb == null) {
                 expensesCategoryCb = createCombobox(null, true, null);
@@ -340,10 +346,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             grid.getColumn(myUI.getMessage(IndigoMessages.Category)).setEditorField(incomesCategoryCb);
         }
         grid.getColumn(myUI.getMessage(IndigoMessages.Date)).setEditorField(createDateField(this));
-        grid.getColumn(myUI.getMessage(IndigoMessages.AmountUSD)).setEditorField(createTextField(
-                new DoubleRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 0.01, null),
-                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), this));
-        grid.getColumn(myUI.getMessage(IndigoMessages.AmountKGS)).setEditorField(createTextField(
+        grid.getColumn(myUI.getMessage(IndigoMessages.Amount)).setEditorField(createTextField(
                 new DoubleRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 0.01, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), this));
         grid.getColumn(myUI.getMessage(IndigoMessages.Rate)).setEditorField(createTextField(
@@ -354,7 +357,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 null, null, null));
 
         grid.getColumn(Settings.hashTags).setEditable(false);
-        grid.getColumn(Settings.acc_currency_id).setEditable(false);
         grid.getColumn(Settings.button).setEditable(false);
         grid.getColumn(Settings.from_employee_id).setEditable(false);
         grid.getColumn(Settings.is_disabled).setEditable(false);
@@ -382,9 +384,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         });
 
         grid.getColumn(myUI.getMessage(IndigoMessages.Date)).setRenderer(new DateRenderer(Settings.dtmf));
-        grid.getColumn(myUI.getMessage(IndigoMessages.AmountUSD)).setRenderer(
-                new NumberRenderer(Settings.getNumberFormat(2)));
-        grid.getColumn(myUI.getMessage(IndigoMessages.AmountKGS)).setRenderer(
+        grid.getColumn(myUI.getMessage(IndigoMessages.Amount)).setRenderer(
                 new NumberRenderer(Settings.getNumberFormat(2)));
         grid.getColumn(myUI.getMessage(IndigoMessages.Rate)).setRenderer(
                 new NumberRenderer(Settings.getNumberFormat(4)));
@@ -406,8 +406,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.getColumn(Settings.hashTags).setWidth(60);
         grid.getColumn(myUI.getMessage(IndigoMessages.Date)).setWidth(120);
         grid.getColumn(myUI.getMessage(IndigoMessages.Rate)).setWidth(100);
-        grid.getColumn(myUI.getMessage(IndigoMessages.AmountUSD)).setWidth(105);
-        grid.getColumn(myUI.getMessage(IndigoMessages.AmountKGS)).setWidth(105);
+        grid.getColumn(myUI.getMessage(IndigoMessages.Amount)).setWidth(105);
         grid.getColumn(myUI.getMessage(IndigoMessages.Category)).setMinimumWidth(300);
         grid.getColumn(myUI.getMessage(IndigoMessages.Category)).setExpandRatio(1);
         if (grid.getColumn(myUI.getMessage(IndigoMessages.ToEmployee)) != null) {
@@ -584,187 +583,94 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         Property property = event.getProperty();
         if (property != currencySettingsOG) {
             Grid grid = (Grid) accordion.getSelectedTab();
-            TextField rateTf = null;
-
             if (grid != null && grid.isEditorActive() && grid.getEditedItemId() != null) {
                 String itemId = grid.getEditedItemId().toString();
                 Item item = grid.getContainerDataSource().getItem(itemId);
-                TextField amountUSDTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(IndigoMessages.AmountUSD));
-                TextField amountKGSTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(IndigoMessages.AmountKGS));
-                if (property == amountKGSTf && amountKGSTf.getValue() != null) {
-                    item.getItemProperty(Settings.acc_currency_id).setValue(1);
-                    amountKGSTf.setRequired(true);
-                    amountUSDTf.removeValueChangeListener(this);
-                    amountUSDTf.setValue(null);
-                    amountUSDTf.setRequired(false);
-                    amountUSDTf.addValueChangeListener(this);
-                } else if (property == amountUSDTf && amountUSDTf.getValue() != null) {
-                    item.getItemProperty(Settings.acc_currency_id).setValue(2);
-                    amountUSDTf.setRequired(true);
-                    amountKGSTf.removeValueChangeListener(this);
-                    amountKGSTf.setValue(null);
-                    amountKGSTf.setRequired(false);
-                    amountKGSTf.addValueChangeListener(this);
-                } else if ((property == amountUSDTf || property == amountKGSTf) && amountUSDTf.getValue() == null
-                        && amountKGSTf.getValue() == null) {
-                    if ((Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1) {
-                        amountKGSTf.setRequired(true);
-                    } else {
-                        amountUSDTf.setRequired(true);
-                    }
-                }
-                if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
-                    rateTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(IndigoMessages.Rate));
-                }
+                TextField amountTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(IndigoMessages.Amount));
                 DateField dateDf = (DateField) grid.getEditorFieldGroup().getField(myUI.getMessage(IndigoMessages.Date));
-
                 if (accordion.getSelectedTab() == expensesGrid) {
-                    if ((amountUSDTf.getValue() != null || amountKGSTf.getValue() != null)
-                            && (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
-                            rateTf.getValue() != null) && dateDf.getValue() != null) {
+                    if (amountTf.getValue() != null && dateDf.getValue() != null) {
                         try {
-                            double amount;
-                            double rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
-                                    Settings.dFormat2.parse(rateTf.getValue()).doubleValue() :
-                                    (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).getValue();
-                            boolean isKGS = (Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1;
-                            if (isKGS) {
-                                amount = Settings.dFormat2.parse(amountKGSTf.getValue()).doubleValue();
-                                if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
-                                    amount = Settings.round(amount / rate, 2);
-                                } else {
-                                    amount = Settings.round(amount / (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).getValue(), 2);
-                                }
-                            } else {
-                                amount = Settings.dFormat2.parse(amountUSDTf.getValue()).doubleValue();
-                            }
+                            double amount = Settings.dFormat2.parse(amountTf.getValue()).doubleValue();
                             if (amount > 0.0) {
                                 double old_amount = 0;
-                                if ((Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1 &&
-                                        item.getItemProperty(myUI.getMessage(IndigoMessages.AmountKGS)).getValue() != null) {
-                                    old_amount = (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.AmountKGS)).getValue();
-                                    old_amount = Settings.round(old_amount / (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).getValue(), 2);
-                                } else if (item.getItemProperty(myUI.getMessage(IndigoMessages.AmountUSD)).getValue() != null) {
-                                    old_amount = (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.AmountUSD)).getValue();
+                                if (item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).getValue() != null) {
+                                    old_amount = (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).getValue();
                                 }
                                 DbAccTransactions dbTr = new DbAccTransactions();
                                 dbTr.connect();
-                                AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(),
+                                AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(), (Integer) cashBoxesOG.getValue(),
                                         dateDf.getValue(), old_amount, amount, 2);
-                                amountUSDTf.removeAllValidators();
-                                amountKGSTf.removeAllValidators();
+                                amountTf.removeAllValidators();
                                 if (tr != null) {
                                     double limit = tr.getLimit();
-                                    if (isKGS) {
-                                        limit = limit * rate;
-                                        amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.01, Settings.round(limit, 2)));
-                                    } else {
-                                        amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.01, Settings.round(limit, 2)));
-                                    }
+                                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
+                                            + " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue())
+                                            + " (" + Settings.df.format(tr.getDate()) + ")", 0.01, Settings.round(limit, 2)));
                                     Notification.show(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                            + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                                            + " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue())
+                                            + " (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                                 } else {
-                                    refreshValidators(amountUSDTf);
-                                    refreshValidators(amountKGSTf);
+                                    refreshValidators(amountTf);
                                 }
                                 dbTr.close();
                             } else {
-                                refreshValidators(amountUSDTf);
-                                refreshValidators(amountKGSTf);
+                                refreshValidators(amountTf);
                             }
                         } catch (Exception e) {
-                            showMessageIfAnyInvalid(rateTf, amountUSDTf, amountKGSTf, dateDf);
-                            refreshValidators(amountUSDTf);
-                            refreshValidators(amountKGSTf);
+                            showMessageIfAnyInvalid(amountTf, dateDf);
+                            refreshValidators(amountTf);
                             logger.error(e);
                             logger.catching(e);
                         }
                     } else {
-                        showMessageIfAnyInvalid(rateTf, amountUSDTf, amountKGSTf, dateDf);
-                        refreshValidators(amountUSDTf);
-                        refreshValidators(amountKGSTf);
+                        showMessageIfAnyInvalid(amountTf, dateDf);
+                        refreshValidators(amountTf);
                     }
                 } else if (accordion.getSelectedTab() == incomesGrid && !itemId.contains(Settings.FreshItem)) {
-                    if ((amountUSDTf.getValue() != null || amountKGSTf.getValue() != null) &&
-                            (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
-                                    rateTf.getValue() != null) && dateDf.getValue() != null) {
+                    if (amountTf.getValue() != null && dateDf.getValue() != null) {
                         try {
-                            double amount;
-                            double rate;
-                            rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
-                                    Settings.dFormat2.parse(rateTf.getValue()).doubleValue() :
-                                    (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).getValue();
-                            boolean isKGS = (Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1;
-                            if (isKGS) {
-                                amount = Settings.dFormat2.parse(amountKGSTf.getValue()).doubleValue();
-                                if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
-                                    amount = Settings.round(amount / rate, 2);
-                                } else {
-                                    amount = Settings.round(amount / (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).getValue(), 2);
-                                }
-                            } else {
-                                amount = Settings.dFormat2.parse(amountUSDTf.getValue()).doubleValue();
-                            }
+                            double amount = Settings.dFormat2.parse(amountTf.getValue()).doubleValue();
                             if (amount > 0.0) {
-                                double old_amount = 0;
-                                if ((Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1 &&
-                                        item.getItemProperty(myUI.getMessage(IndigoMessages.AmountKGS)).getValue() != null) {
-                                    old_amount = (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.AmountKGS)).getValue();
-                                    old_amount = Settings.round(old_amount / (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).getValue(), 2);
-                                } else if (item.getItemProperty(myUI.getMessage(IndigoMessages.AmountUSD)).getValue() != null) {
-                                    old_amount = (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.AmountUSD)).getValue();
-                                }
+                                double old_amount = (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).getValue();
                                 if (amount <= old_amount || DateUtils.truncate(dateDf.getValue(), Calendar.DAY_OF_MONTH)
                                         .compareTo((Date) item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).getValue()) != 0) {
                                     DbAccTransactions dbTr = new DbAccTransactions();
                                     dbTr.connect();
                                     AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(),
-                                            dateDf.getValue(), old_amount, amount, 1);
-                                    amountUSDTf.removeAllValidators();
-                                    amountKGSTf.removeAllValidators();
+                                            (Integer) cashBoxesOG.getValue(), dateDf.getValue(), old_amount, amount, 1);
+                                    amountTf.removeAllValidators();
                                     if (tr != null) {
                                         double limit = tr.getLimit();
-                                        if (isKGS) {
-                                            limit = limit * rate;
-                                            amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                    + " $ (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
-                                        } else {
-                                            amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                    + " $ (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
-                                        }
+                                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
+                                                + " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()) +
+                                                " (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
                                         Notification.show(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                                                + " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()) +
+                                                " (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                                     } else {
-                                        refreshValidators(amountUSDTf);
-                                        refreshValidators(amountKGSTf);
+                                        refreshValidators(amountTf);
                                     }
                                     dbTr.close();
                                 } else {
-                                    refreshValidators(amountUSDTf);
-                                    refreshValidators(amountKGSTf);
+                                    refreshValidators(amountTf);
                                 }
 
                             } else {
-                                refreshValidators(amountUSDTf);
-                                refreshValidators(amountKGSTf);
+                                refreshValidators(amountTf);
                             }
                         } catch (Exception e) {
-                            showMessageIfAnyInvalid(rateTf, amountUSDTf, amountKGSTf, dateDf);
-                            refreshValidators(amountUSDTf);
-                            refreshValidators(amountKGSTf);
+                            showMessageIfAnyInvalid(amountTf, dateDf);
+                            refreshValidators(amountTf);
                             logger.error(e);
                             logger.catching(e);
                         }
                     } else {
-                        showMessageIfAnyInvalid(rateTf, amountUSDTf, amountKGSTf, dateDf);
-                        refreshValidators(amountUSDTf);
-                        refreshValidators(amountKGSTf);
+                        showMessageIfAnyInvalid(amountTf, dateDf);
+                        refreshValidators(amountTf);
                     }
                 } else {
-                    refreshValidators(amountUSDTf);
-                    refreshValidators(amountKGSTf);
+                    refreshValidators(amountTf);
                 }
             }
         } else {
@@ -772,24 +678,12 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         }
     }
 
-    private void showMessageIfAnyInvalid(TextField rateTf, TextField amountUSDTf, TextField amountKGSTf, DateField dateDf) {
-        if (amountUSDTf.getValue() != null && !amountUSDTf.isValid()) {
+    private void showMessageIfAnyInvalid(TextField amountTf, DateField dateDf) {
+        if (amountTf.getValue() != null && !amountTf.isValid()) {
             Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue) + ": " +
-                            myUI.getMessage(IndigoMessages.AmountUSD) + " - " + amountUSDTf.getValue(),
+                            myUI.getMessage(IndigoMessages.Amount) + " - " + amountTf.getValue(),
                     Notification.Type.ERROR_MESSAGE);
-            amountUSDTf.setValue(null);
-        }
-        if (amountKGSTf.getValue() != null && !amountKGSTf.isValid()) {
-            Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue) + ": " +
-                            myUI.getMessage(IndigoMessages.AmountKGS) + " - " + amountKGSTf.getValue(),
-                    Notification.Type.ERROR_MESSAGE);
-            amountKGSTf.setValue(null);
-        }
-        if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)
-                && rateTf.getValue() != null && !rateTf.isValid()) {
-            Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue) + ": " + myUI.getMessage(IndigoMessages.Rate) + " - "
-                    + rateTf.getValue(), Notification.Type.ERROR_MESSAGE);
-            rateTf.setValue(null);
+            amountTf.setValue(null);
         }
         if (dateDf.getValue() != null && !dateDf.isValid()) {
             Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue) + ": " +
@@ -809,10 +703,12 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             DbAccTransactions dbCon = new DbAccTransactions();
             dbCon.connect();
             if (in_out == 1) {
-                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), myUI.getUser().getCurrent_year().getId(),
+                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), (Integer) cashBoxesOG.getValue(),
+                        myUI.getUser().getCurrent_year().getId(),
                         incomesGrid, this, fromDateDF.getValue(), tillDateDF.getValue());
             } else {
-                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), myUI.getUser().getCurrent_year().getId(),
+                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), (Integer) cashBoxesOG.getValue(),
+                        myUI.getUser().getCurrent_year().getId(),
                         expensesGrid, this, fromDateDF.getValue(), tillDateDF.getValue());
             }
             dbCon.close();
@@ -820,7 +716,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-
     }
 
     public Button createButton(String description, Object itemId, String data, boolean isDisabled, FontAwesome icon, String style) {
@@ -937,11 +832,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), Date.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Category), Integer.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Rate), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.AmountUSD), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.AmountKGS), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Note), String.class, null);
         container.addContainerProperty(Settings.from_employee_id, String.class, null);
-        container.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
         container.addContainerProperty(Settings.is_disabled, Boolean.class, false);
         return container;
     }
@@ -959,7 +852,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullName());
         }
         item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(today);
-        item.getItemProperty(Settings.acc_currency_id).setValue(1);
         item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(myUI.getDb_currency_rate());
     }
 
@@ -984,23 +876,15 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             if (accordion.getSelectedTab() == incomesGrid) {
                 DbAccTransactions dbTr = new DbAccTransactions();
                 dbTr.connect();
-                double amount = 0;
-                if ((Integer) incomesCont.getContainerProperty(source.getId(), Settings.acc_currency_id).getValue() == 1 &&
-                        incomesCont.getContainerProperty(source.getId(), myUI.getMessage(IndigoMessages.AmountKGS)).getValue() != null) {
-                    amount = Settings.round((Double) incomesCont.getContainerProperty(source.getId(),
-                            myUI.getMessage(IndigoMessages.AmountKGS)).getValue()
-                            / (Double) incomesCont.getContainerProperty(source.getId(),
-                            myUI.getMessage(IndigoMessages.Rate)).getValue(), 2);
-                } else if (incomesCont.getContainerProperty(source.getId(), myUI.getMessage(IndigoMessages.AmountUSD)).getValue() != null) {
-                    amount = (Double) incomesCont.getContainerProperty(source.getId(),
-                            myUI.getMessage(IndigoMessages.AmountUSD)).getValue();
-                }
+                double amount = (Double) incomesCont.getContainerProperty(source.getId(),
+                        myUI.getMessage(IndigoMessages.Amount)).getValue();
                 AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(),
-                        (Date) incomesCont.getContainerProperty(source.getId(),
+                        (Integer) cashBoxesOG.getValue(), (Date) incomesCont.getContainerProperty(source.getId(),
                                 myUI.getMessage(IndigoMessages.Date)).getValue(), amount, 0.0, 1);
                 if (tr != null) {
                     Notification.show(myUI.getMessage(IndigoMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                            + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                            + " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()) +
+                            " (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                 } else {
                     dbDef.exec_update_emp_id(Integer.parseInt(source.getId()),
                             myUI.getUser().getId(), Settings.dbAcc_transactions);
@@ -1042,13 +926,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         t.setDate((Date) item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).getValue());
         t.setCategory_id((Integer) item.getItemProperty(myUI.getMessage(IndigoMessages.Category)).getValue());
         t.setAccTypeId(acc_type_id);
-        t.setCurrency_id((Integer) item.getItemProperty(Settings.acc_currency_id).getValue());
+        t.setCurrency_id((Integer) cashBoxesOG.getValue());
         t.setCurrency_rate((Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).getValue());
-        if (t.getCurrency_id() == 1) {
-            t.setAmount((Double) item.getItemProperty(myUI.getMessage(IndigoMessages.AmountKGS)).getValue());
-        } else {
-            t.setAmount((Double) item.getItemProperty(myUI.getMessage(IndigoMessages.AmountUSD)).getValue());
-        }
+        t.setAmount((Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).getValue());
         if (item.getItemProperty(myUI.getMessage(IndigoMessages.ToEmployee)) != null &&
                 item.getItemProperty(myUI.getMessage(IndigoMessages.ToEmployee)).getValue() != null) {
             t.setFrom_to_employee_id((Integer) item.getItemProperty(myUI.getMessage(IndigoMessages.ToEmployee)).getValue());
@@ -1066,15 +946,21 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     }
 
     private void recount() {
-        incomeTtlLab.setValue(myUI.getMessage(IndigoMessages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$");
-        expenseTtlLab.setValue(myUI.getMessage(IndigoMessages.ExpensesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + "$");
+        incomeTtlLab.setValue(myUI.getMessage(IndigoMessages.IncomesTotal) + ": "
+                + Settings.dFormat2.format(schoolAcc.getTotal_income()) +
+                " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()));
+        expenseTtlLab.setValue(myUI.getMessage(IndigoMessages.ExpensesTotal) + ": "
+                + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) +
+                " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()));
         ttlLab.setValue("<b>" + myUI.getMessage(IndigoMessages.CashBox) + ": " + Settings.dFormat2.format(
-                (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$" + "</b>");
+                (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) +
+                " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()) + "</b>");
         Calendar c = Calendar.getInstance();
         c.setTime(fromDateDF.getValue());
         c.add(Calendar.DAY_OF_MONTH, -1);
         prev_balanceLab.setValue(myUI.getMessage(IndigoMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + "): "
-                + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + "$");
+                + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + " "
+                + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()));
     }
 
     private void getTotals() {
@@ -1082,6 +968,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             DbAccTransactions dbAc = new DbAccTransactions();
             dbAc.connect();
             schoolAcc = dbAc.exec_get_totals(myUI.getUser().getSchool().getId(),
+                    (Integer) cashBoxesOG.getValue(),
                     fromDateDF.getValue(), tillDateDF.getValue(), null);
             dbAc.close();
         } catch (Exception e) {
@@ -1117,7 +1004,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                 Item item = grid.getContainerDataSource().getItem(itemId);
                 item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullName());
-                schoolAcc = dbCon.exec_get_totals(myUI.getUser().getSchool().getId(),
+                schoolAcc = dbCon.exec_get_totals(myUI.getUser().getSchool().getId(), (Integer) cashBoxesOG.getValue(),
                         fromDateDF.getValue(), tillDateDF.getValue(), null);
                 recount();
             }

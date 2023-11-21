@@ -42,7 +42,7 @@ public class ClassListReport implements Button.ClickListener,
     private FormattedFilterTable dataTable;
     private FilterTable classTable;
     private IndexedContainer dataCont;
-    public int activeStudents, discountedStudents;
+    public int activeStudents, discountedStudents, males;
     public double contracts, discounts, corrections, prevYearDebts, prevYearOverpays, nets, paid_amounts, debts, overPays;
     private PopupDateField fromDateDF, tillDateDF;
 
@@ -223,6 +223,8 @@ public class ClassListReport implements Button.ClickListener,
                     dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.OverPay), CustomTable.Align.RIGHT);
                     dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Id),
                             myUI.getMessage(IndigoMessages.Students) + ": " + dataCont.size());
+                    dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Gender),
+                            "М: " + males + "; Ж: " + (dataTable.getContainerDataSource().size() - males));
                     dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.EducationStatus),
                             myUI.getMessage(IndigoMessages.Active) + activeStudents);
                     dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Contract),

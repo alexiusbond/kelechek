@@ -242,7 +242,7 @@ public class DbSchool extends BaseDb {
 
     public IndexedContainer execSchoolSel(MyVaadinUI myUI, int except_id) throws SQLException {
         String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.name_kg, " +
-                "s.photo, s.code, s.primary_code, s.secondary_code, s.school_type_id from school as s " +
+                "s.photo, s.code, s.primary_code, s.secondary_code, s.school_type_id, s.acc_currency_id from school as s " +
                 "where s.id != ? order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, except_id);
@@ -256,6 +256,7 @@ public class DbSchool extends BaseDb {
         container.addContainerProperty(myUI.getMessage(IndigoMessages.SecondaryCode), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Logo), String.class, null);
         container.addContainerProperty(Settings.dbSchoolType, Integer.class, 0);
+        container.addContainerProperty(Settings.dbAcc_currency, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
@@ -266,6 +267,7 @@ public class DbSchool extends BaseDb {
             item.getItemProperty(myUI.getMessage(IndigoMessages.SecondaryCode)).setValue(result.getString("s.secondary_code"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Logo)).setValue(result.getString("s.photo"));
             item.getItemProperty(Settings.dbSchoolType).setValue(result.getInt("s.school_type_id"));
+            item.getItemProperty(Settings.dbAcc_currency).setValue(result.getInt("s.acc_currency_id"));
         }
         return container;
     }

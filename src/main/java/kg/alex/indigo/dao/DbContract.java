@@ -145,10 +145,13 @@ public class DbContract extends BaseDb {
     public IndexedContainer exec_contr_select(MyVaadinUI myUi, int year_id, int school_id,
                                               int contr_id)
             throws SQLException {
-        String sql = "select t.id, t.name, t.amount, t.duration, y.name from contract as t "
-                + "left join year as y on t.year_id = y.id "
-                + "where t.year_id = ? and t.school_id = ? "
-                + "and (t.activity_status_id = 2 or t.id = ?) order by t.name, t.amount";
+        String sql = "select t.id, t.name, t.amount, t.duration, y.name, cur.name " +
+                "from contract as t " +
+                "left join school as sch on sch.id = t.school_id " +
+                "left join acc_currency as cur on cur.id = sch.acc_currency_id " +
+                "left join year as y on t.year_id = y.id " +
+                "where t.year_id = ? and t.school_id = ? " +
+                "and (t.activity_status_id = 2 or t.id = ?) order by t.name, t.amount";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, school_id);
@@ -163,7 +166,7 @@ public class DbContract extends BaseDb {
             item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
                     result.getString("t.name") + " - [" + result.getInt("t.duration") + " мес.] "
                             + Settings.dFormat2.format(result.getDouble("t.amount"))
-                            + "$ (" + result.getString("y.name") + ")");
+                            + " " + result.getString("cur.name") + " (" + result.getString("y.name") + ")");
             item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(
                     result.getDouble("t.amount"));
             item.getItemProperty(myUi.getMessage(IndigoMessages.DurationInMonths)).setValue(
