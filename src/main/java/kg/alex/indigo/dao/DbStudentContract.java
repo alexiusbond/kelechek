@@ -182,8 +182,7 @@ public class DbStudentContract extends BaseDb {
 
     public int execUpdateNetPayments(double ttl_pay, int stud_id, int year_id)
             throws SQLException {
-        String sql = "update student_contract set net_payments = ? "
-                + "where student_id = ? and year_id = ?";
+        String sql = "update student_contract set net_payments = ? where student_id = ? and year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDouble(1, ttl_pay);
         stat.setInt(2, stud_id);

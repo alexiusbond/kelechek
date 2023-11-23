@@ -284,10 +284,10 @@ public class DbAccTransactions extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int exec_delete_by_st_id(int st_id) throws SQLException {
+    public int exec_delete_by_st_id(int st_id, Connection conn) throws SQLException {
         String sql = "delete act from acc_transactions as act left join student_payments as sp " +
                 "on sp.id = act.student_payments_id where sp.student_id = ?";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
+        PreparedStatement stat = conn.prepareStatement(sql);
         stat.setInt(1, st_id);
         return stat.executeUpdate();
     }
@@ -295,9 +295,11 @@ public class DbAccTransactions extends BaseDb {
     public AccTransaction exec_allow_delete_by_st_id(int st_id, int school_id, int currency_id) throws SQLException {
         String sql = "select tr.date_time, tr.amount, sp.payment_category_id from acc_transactions as tr "
                 + "left join student_payments as sp on sp.id = tr.student_payments_id "
-                + "where sp.student_id = ?";
+                + "where sp.student_id = ? and tr.acc_currency_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
+        stat.setInt(2, currency_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             if (result.getInt("sp.payment_category_id") != 3) {
@@ -562,7 +564,6 @@ public class DbAccTransactions extends BaseDb {
         stat.setDate(5, new java.sql.Date(from.getTime()));
         stat.setInt(6, scl_id);
         stat.setInt(7, currency_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         SchoolAccounting acc = new SchoolAccounting();
         while (result.next()) {
@@ -1323,6 +1324,7 @@ public class DbAccTransactions extends BaseDb {
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             AccTransaction tr = new AccTransaction();
+            tr.setCurrency_id(currency_id);
             tr.setDate(result.getDate("balances_table.date_time"));
             if (inOut == 1) {
                 tr.setLimit(old_amount - result.getDouble("balance"));

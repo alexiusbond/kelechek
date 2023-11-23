@@ -14,10 +14,7 @@ import kg.alex.indigo.i18n.IndigoMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 
 /**
  * @author alex
@@ -30,22 +27,23 @@ public class DbDiscount extends BaseDb {
         super();
     }
 
-    public IndexedContainer execSQL(MyVaadinUI myUi)
-            throws SQLException {
+    public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
 
-
-        String sql = "SELECT d.id, d.name, d.amount, d.activity_status_id, dt.name,"
-                + "d.discount_type_id, ac.name, d.year_id, y.name FROM discount as d "
-                + "left join discount_type as dt on dt.id=d.discount_type_id "
-                + "left join year as y on y.id=d.year_id "
-                + "left join activity_status as ac on ac.id=d.activity_status_id "
-                + "order by y.id DESC, d.id DESC";
+        String sql = "SELECT d.id, d.name, d.amount, d.activity_status_id, dt.name, d.discount_type_id, " +
+                "d.acc_currency_id, ac.name, d.year_id, y.name, cur.name FROM discount as d " +
+                "left join discount_type as dt on dt.id = d.discount_type_id " +
+                "left join acc_currency as cur on cur.id = d.acc_currency_id " +
+                "left join year as y on y.id = d.year_id " +
+                "left join activity_status as ac on ac.id = d.activity_status_id " +
+                "order by y.id DESC, d.id DESC";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(IndigoMessages.Value), Double.class, 0.0);
+        container.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
+        container.addContainerProperty(myUi.getMessage(IndigoMessages.Currency), String.class, null);
         container.addContainerProperty(Settings.discount_type_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(IndigoMessages.DiscountType), String.class, null);
         container.addContainerProperty(Settings.year_id, Integer.class, 0);
@@ -60,6 +58,10 @@ public class DbDiscount extends BaseDb {
                     result.getString("d.name"));
             item.getItemProperty(myUi.getMessage(IndigoMessages.Value)).setValue(
                     result.getDouble("d.amount"));
+            item.getItemProperty(Settings.acc_currency_id).setValue(
+                    result.getInt("d.acc_currency_id"));
+            item.getItemProperty(myUi.getMessage(IndigoMessages.Currency)).setValue(
+                    result.getString("cur.name"));
             item.getItemProperty(Settings.discount_type_id).setValue(
                     result.getInt("d.discount_type_id"));
             item.getItemProperty(myUi.getMessage(IndigoMessages.DiscountType)).setValue(
@@ -78,15 +80,19 @@ public class DbDiscount extends BaseDb {
     }
 
     public int exec_insert(Discount d) throws SQLException {
-        String sql = "INSERT IGNORE INTO discount (name,amount,"
-                + "activity_status_id,discount_type_id,year_id) "
-                + "VALUES(?,?,?,?,?)";
+        String sql = "INSERT IGNORE INTO discount (name, amount, activity_status_id, discount_type_id, year_id, acc_currency_id) "
+                + "VALUES(?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, d.getName());
         stat.setDouble(2, d.getAmount());
         stat.setInt(3, d.getStatus_id());
         stat.setInt(4, d.getDisc_type_id());
         stat.setInt(5, d.getYear_id());
+        if (d.getCurrency_id() != 0) {
+            stat.setInt(6, d.getCurrency_id());
+        } else {
+            stat.setNull(6, Types.INTEGER);
+        }
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -96,14 +102,19 @@ public class DbDiscount extends BaseDb {
     }
 
     public int exec_update(Discount d) throws SQLException {
-        String sql = "UPDATE discount SET name = ?, amount = ?,activity_status_id = ?,"
-                + "discount_type_id = ? WHERE id = ?";
+        String sql = "UPDATE discount SET name = ?, amount = ?, activity_status_id = ?, "
+                + "discount_type_id = ?, acc_currency_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, d.getName());
         stat.setDouble(2, d.getAmount());
         stat.setInt(3, d.getStatus_id());
         stat.setInt(4, d.getDisc_type_id());
-        stat.setInt(5, d.getId());
+        if (d.getCurrency_id() != 0) {
+            stat.setInt(5, d.getCurrency_id());
+        } else {
+            stat.setNull(5, Types.INTEGER);
+        }
+        stat.setInt(6, d.getId());
         return stat.executeUpdate();
     }
 
@@ -126,8 +137,8 @@ public class DbDiscount extends BaseDb {
 
     public int exec_copy(int curr_year, int selected_year) throws SQLException {
         String sql = "insert ignore into discount (name, amount, "
-                + "discount_type_id, year_id, activity_status_id) select name, "
-                + "amount,discount_type_id, ? as year_id, activity_status_id "
+                + "discount_type_id, year_id, activity_status_id, acc_currency_id) select name, "
+                + "amount,discount_type_id, ? as year_id, activity_status_id, acc_currency_id "
                 + "from discount where year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, curr_year);

@@ -25,9 +25,8 @@ public class DbContract extends BaseDb {
         super();
     }
 
-    public IndexedContainer execSQL(MyVaadinUI myUi, int school_id)
+    public IndexedContainer execSQL(MyVaadinUI myUi, int school_id, String amountTitle)
             throws SQLException {
-
 
         String sql = "SELECT c.id, c.name, c.amount, c.year_id, y.name, c.school_id, "
                 + "sc.name_ru, sc.name_ru, c.activity_status_id, ac.name, c.duration "
@@ -42,7 +41,7 @@ public class DbContract extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Value), Double.class, 0.0);
+        container.addContainerProperty(amountTitle, Double.class, 0.0);
         container.addContainerProperty(Settings.year_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(IndigoMessages.Year), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
@@ -56,8 +55,7 @@ public class DbContract extends BaseDb {
             Item item = container.addItem(result.getInt("c.id"));
             item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
                     result.getString("c.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Value)).setValue(
-                    result.getDouble("c.amount"));
+            item.getItemProperty(amountTitle).setValue(result.getDouble("c.amount"));
             item.getItemProperty(Settings.year_id).setValue(
                     result.getInt("c.year_id"));
             item.getItemProperty(myUi.getMessage(IndigoMessages.Year)).setValue(

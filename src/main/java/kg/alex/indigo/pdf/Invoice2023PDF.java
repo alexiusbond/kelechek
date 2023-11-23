@@ -30,7 +30,7 @@ public class Invoice2023PDF {
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
 
-    public Invoice2023PDF(final MyVaadinUI myUI, final InvoiceInfoPdf student) {
+    public Invoice2023PDF(final MyVaadinUI myUI, final InvoiceInfoPdf invoiceInfo) {
 
         StreamResource.StreamSource source1 = () -> {
 
@@ -72,7 +72,7 @@ public class Invoice2023PDF {
                 invoiceTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
                 invoiceTable.getDefaultCell().setPaddingLeft(15);
                 invoiceTable.getDefaultCell().setPaddingRight(10);
-                PdfPCell cell = new PdfPCell(new Phrase(student.getSchool_name(), normal_font));
+                PdfPCell cell = new PdfPCell(new Phrase(invoiceInfo.getSchool_name(), normal_font));
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setPaddingTop(2);
                 cell.setPaddingBottom(2);
@@ -90,7 +90,7 @@ public class Invoice2023PDF {
                 cell.setPaddingRight(10);
                 invoiceTable.addCell(cell);
 
-                if (student.getPaymentCategoryId() == 3) {
+                if (invoiceInfo.getPaymentCategoryId() == 3) {
                     cell = new PdfPCell(new Phrase("к расходному кассовому ордеру", bold_font));
                 } else {
                     cell = new PdfPCell(new Phrase("к приходному кассовому ордеру", bold_font));
@@ -112,7 +112,7 @@ public class Invoice2023PDF {
                 cell.setPaddingRight(10);
                 invoiceTable.addCell(cell);
 
-                Phrase datePhr = new Phrase("Дата: " + dateRu.format(student.getPayment_date()), normal_font);
+                Phrase datePhr = new Phrase("Дата: " + dateRu.format(invoiceInfo.getPayment_date()), normal_font);
                 cell = new PdfPCell(datePhr);
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setPaddingTop(3);
@@ -122,17 +122,17 @@ public class Invoice2023PDF {
                 invoiceTable.addCell(cell);
                 Paragraph nameInvPar = new Paragraph();
                 nameInvPar.setLeading(20);
-                if (student.getPaymentCategoryId() == 3) {
+                if (invoiceInfo.getPaymentCategoryId() == 3) {
                     nameInvPar.add(new Chunk("Выдано: ", bold_font));
                 } else {
                     nameInvPar.add(new Chunk("Принято от: ", bold_font));
                 }
-                if (student.getWhoPaidFullName() != null && !student.getWhoPaidFullName().equals("")) {
-                    nameInvPar.add(new Chunk(student.getLogin() + ", " + student.getClass_name() + ", "
-                            + student.getStudentFullName() + " (" + student.getWhoPaidFullName() + ")", normal_font));
+                if (invoiceInfo.getWhoPaidFullName() != null && !invoiceInfo.getWhoPaidFullName().equals("")) {
+                    nameInvPar.add(new Chunk(invoiceInfo.getLogin() + ", " + invoiceInfo.getClass_name() + ", "
+                            + invoiceInfo.getStudentFullName() + " (" + invoiceInfo.getWhoPaidFullName() + ")", normal_font));
                 } else {
-                    nameInvPar.add(new Chunk(student.getLogin() + ", " + student.getClass_name() + ", "
-                            + student.getStudentFullName(), normal_font));
+                    nameInvPar.add(new Chunk(invoiceInfo.getLogin() + ", " + invoiceInfo.getClass_name() + ", "
+                            + invoiceInfo.getStudentFullName(), normal_font));
                 }
                 cell = new PdfPCell(nameInvPar);
                 cell.setBorder(Rectangle.NO_BORDER);
@@ -144,7 +144,7 @@ public class Invoice2023PDF {
 
                 Paragraph reasonPar = new Paragraph();
                 reasonPar.add(new Chunk("Основание: ", bold_font));
-                if (student.getPaymentCategoryId() == 3) {
+                if (invoiceInfo.getPaymentCategoryId() == 3) {
                     reasonPar.add(new Chunk("возврат оплаты за учебу - " + myUI.getUser().getCurrent_year().getName(),
                             underlined_font));
                 } else {
@@ -161,7 +161,7 @@ public class Invoice2023PDF {
 
                 Paragraph payTypePar = new Paragraph();
                 payTypePar.add(new Chunk("Тип оплаты: ", bold_font));
-                payTypePar.add(new Chunk(student.getPayment_type(), underlined_font));
+                payTypePar.add(new Chunk(invoiceInfo.getPayment_type(), underlined_font));
                 cell = new PdfPCell(payTypePar);
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setPaddingTop(3);
@@ -171,10 +171,17 @@ public class Invoice2023PDF {
                 invoiceTable.addCell(cell);
 
                 Paragraph sumPar = new Paragraph();
-                double rate = student.getKurs();
+                double rate = invoiceInfo.getKurs();
                 sumPar.add(new Chunk("Сумма цифрами: ", bold_font));
-                sumPar.add(new Chunk(Settings.dFormat2.format(Math.round(student.getAmount() * rate))
-                        + " сом (" + Settings.dFormat2.format(student.getAmount()) + " USD)", underlined_font));
+                if (rate != 0) {
+                    if (invoiceInfo.getCurrency_id() == 1) {
+                        sumPar.add(new Chunk(Settings.dFormat2.format(Math.round(invoiceInfo.getAmount()))
+                                + " сом (" + Settings.dFormat2.format(invoiceInfo.getAmount() / rate) + " USD)", underlined_font));
+                    } else {
+                        sumPar.add(new Chunk(Settings.dFormat2.format(Math.round(invoiceInfo.getAmount() * rate))
+                                + " сом (" + Settings.dFormat2.format(invoiceInfo.getAmount()) + " USD)", underlined_font));
+                    }
+                }
                 cell = new PdfPCell(sumPar);
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setPaddingTop(3);
@@ -186,8 +193,13 @@ public class Invoice2023PDF {
                 WritableSummRu convertToLetters = new WritableSummRuSOM();
                 Paragraph sumLetterPar = new Paragraph();
                 sumLetterPar.add(new Chunk("Сумма прописью: ", bold_font));
-                sumLetterPar.add(new Chunk(convertToLetters.numberToString(
-                        Math.round(student.getAmount() * rate)),normal_font));
+                if (invoiceInfo.getCurrency_id() == 1) {
+                    sumLetterPar.add(new Chunk(convertToLetters.numberToString(
+                            Math.round(invoiceInfo.getAmount())), normal_font));
+                } else {
+                    sumLetterPar.add(new Chunk(convertToLetters.numberToString(
+                            Math.round(invoiceInfo.getAmount() * rate)), normal_font));
+                }
                 cell = new PdfPCell(sumLetterPar);
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setPaddingTop(3);
@@ -198,7 +210,7 @@ public class Invoice2023PDF {
 
                 Paragraph leftPar = new Paragraph();
                 leftPar.add(new Chunk("Остаток: ", bold_font));
-                leftPar.add(new Chunk(Settings.dFormat2.format(student.getLeft()) + " USD", underlined_font));
+                leftPar.add(new Chunk(Settings.dFormat2.format(invoiceInfo.getLeft()) + " USD", underlined_font));
                 cell = new PdfPCell(leftPar);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setBorder(Rectangle.NO_BORDER);
@@ -212,7 +224,7 @@ public class Invoice2023PDF {
                     DbStudentInstallmentPlan dbip = new DbStudentInstallmentPlan();
                     dbip.connect();
                     IndexedContainer installmentCont = dbip.execSQL_InstPLan(myUI,
-                            student.getStudent_id(), myUI.getUser().getCurrent_year().getId(), student.getPayments());
+                            invoiceInfo.getStudent_id(), myUI.getUser().getCurrent_year().getId(), invoiceInfo.getPayments());
                     if (installmentCont.size() > 0) {
                         float[] table_plan_colsWidth = {0.75f, 3f, 3f};
                         PdfPTable table_plan = new PdfPTable(3);
@@ -314,7 +326,10 @@ public class Invoice2023PDF {
         StreamResource resource = new StreamResource(source1, nameOf
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
-        myUI.getPage().open(resource, nameOf, false);
+        myUI.getPage().
+
+                open(resource, nameOf, false);
+
     }
 
     private static final DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols() {

@@ -48,12 +48,15 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
     private VerticalLayout settingsLay;
 
     private final Subject currentUser = SecurityUtils.getSubject();
+    private String amountTitle;
 
     public ContractDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
+        amountTitle = myUI.getUser().getSchool().getCurrency_id() == 1 ?
+                myUI.getMessage(IndigoMessages.AmountKGS) : myUI.getMessage(IndigoMessages.AmountUSD);
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Title),
-                myUI.getMessage(IndigoMessages.Value), myUI.getMessage(IndigoMessages.School),
+                amountTitle, myUI.getMessage(IndigoMessages.School),
                 myUI.getMessage(IndigoMessages.Year), myUI.getMessage(IndigoMessages.DurationInMonths)
                 , myUI.getMessage(IndigoMessages.Status)};
         buildSettingsLayout();
@@ -68,7 +71,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         dataTable.setSelectable(true);
         dataTable.setFilterBarVisible(true);
         dataTable.addValueChangeListener(this);
-        setTable_options();
+        setTableOptions();
         dataTable.setFilterFieldValue(myUI.getMessage(IndigoMessages.Year),
                 myUI.getUser().getCurrent_year().getName());
         dataTable.setNullSelectionAllowed(false);
@@ -163,7 +166,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         settingsLay.addComponent(nameTF);
 
         ObjectProperty<Double> property = new ObjectProperty<>(0.0);
-        valueTF = new TextField(myUI.getMessage(IndigoMessages.Value), property);
+        valueTF = new TextField(amountTitle, property);
         valueTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         valueTF.setRequired(true);
         valueTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
@@ -378,7 +381,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(IndigoMessages.Title)).getValue().toString());
         valueTF.getPropertyDataSource().setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Value)).getValue());
+                amountTitle).getValue());
         durationTF.getPropertyDataSource().setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(IndigoMessages.DurationInMonths)).getValue());
         statusSelect.setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
@@ -395,8 +398,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
     private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(IndigoMessages.Title)).setValue(nameTF.getValue());
-        dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Value)).setValue(
+        dataTable.getContainerProperty(dataTable.getValue(), amountTitle).setValue(
                 valueTF.getPropertyDataSource().getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(IndigoMessages.DurationInMonths)).setValue(
@@ -418,7 +420,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(
                 nameTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Value)).setValue(
+        item.getItemProperty(amountTitle).setValue(
                 valueTF.getPropertyDataSource().getValue());
         item.getItemProperty(myUI.getMessage(IndigoMessages.DurationInMonths)).setValue(
                 durationTF.getPropertyDataSource().getValue());
@@ -480,18 +482,18 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         }
     }
 
-    private void setTable_options() {
+    private void setTableOptions() {
         try {
             DbContract dbd = new DbContract();
             dbd.connect();
-            dataTable.setContainerDataSource(dbd.execSQL(myUI, myUI.getUser().getSchool().getId()));
+            dataTable.setContainerDataSource(dbd.execSQL(myUI, myUI.getUser().getSchool().getId(), amountTitle));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Value), CustomTable.Align.RIGHT);
+        dataTable.setColumnAlignment(amountTitle, CustomTable.Align.RIGHT);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
         }
@@ -509,7 +511,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
             logger.catching(e);
         }
         if (status != 0) {
-            setTable_options();
+            setTableOptions();
             Notification.show(myUI.getMessage(IndigoMessages.ValuesCopied),
                     Notification.Type.HUMANIZED_MESSAGE);
         } else {

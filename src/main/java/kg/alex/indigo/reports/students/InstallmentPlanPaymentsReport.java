@@ -473,7 +473,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             discCont = dbsd.exec_disc_strCont(myUI, (Integer) studentsTable.getValue(),
                     (Integer) yearSelect.getValue());
             sp = dbsp.exec_recount_payment((Integer) studentsTable.getValue(),
-                    (Integer) yearSelect.getValue());
+                    (Integer) yearSelect.getValue(), myUI.getUser().getSchool().getCurrency_id());
             amount = c.getAmount();
             debt = dbsc.exec_get_debt((Integer) studentsTable.getValue(),
                     (Integer) yearSelect.getValue());

@@ -37,7 +37,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
     static final Logger logger = LogManager.getLogger(DiscountDefinitionView.class);
     private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBox discTypeSelect, statusSelect, yearSelect;
+    private ComboBox currencySelect, discTypeSelect, statusSelect, yearSelect;
     private final FormattedFilterTable dataTable;
     private TextField nameTF, valueTF;
     private PopupButton copyButton;
@@ -50,8 +50,8 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
     public DiscountDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Title),
-                myUI.getMessage(IndigoMessages.Value), myUI.getMessage(IndigoMessages.DiscountType),
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.DiscountType), myUI.getMessage(IndigoMessages.Title),
+                myUI.getMessage(IndigoMessages.Value), myUI.getMessage(IndigoMessages.Currency),
                 myUI.getMessage(IndigoMessages.Year), myUI.getMessage(IndigoMessages.Status)};
         buildSettingsLayout();
 
@@ -159,17 +159,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         discTypeSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         discTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         discTypeSelect.addValueChangeListener(this);
-
-        try {
-            DbDefinition dbDef = new DbDefinition();
-            dbDef.connect();
-            discTypeSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, Settings.dbDiscountType, true));
-            dbDef.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
         settingsLay.addComponent(discTypeSelect);
 
         nameTF = new TextField(myUI.getMessage(IndigoMessages.Title));
@@ -193,6 +182,15 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                 myUI.getMessage(IndigoMessages.NotificationWrongValue), 0.01, null));
         settingsLay.addComponent(valueTF);
 
+        currencySelect = new ComboBox(myUI.getMessage(IndigoMessages.Currency));
+        currencySelect.setNullSelectionAllowed(true);
+        currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        currencySelect.setWidth(Settings.PERCENTS100);
+        currencySelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        currencySelect.setFilteringMode(FilteringMode.CONTAINS);
+        currencySelect.setEnabled(false);
+        settingsLay.addComponent(currencySelect);
+
         statusSelect = new ComboBox(myUI.getMessage(IndigoMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
@@ -206,6 +204,10 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
             dbDef.connect();
             statusSelect.setContainerDataSource(
                     dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
+            discTypeSelect.setContainerDataSource(
+                    dbDef.exec_for_select(myUI, Settings.dbDiscountType, true));
+            currencySelect.setContainerDataSource(
+                    dbDef.exec_for_select(myUI, Settings.dbAcc_currency, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -220,8 +222,8 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         final Button source = event.getButton();
         if (source == modifyBtn && dataTable.getValue() != null) {
             isNew = false;
-            fillFields();
             prepareModificationMode();
+            fillFields();
             int i = 0;
             try {
                 DbStudentDiscount dbsd = new DbStudentDiscount();
@@ -351,6 +353,15 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                 valueTF.addValidator(new DoubleRangeValidator(
                         myUI.getMessage(IndigoMessages.NotificationWrongValue), 0.01, null));
             }
+            if (discTypeSelect.isEnabled() && ((Integer) discTypeSelect.getValue() == 2 || (Integer) discTypeSelect.getValue() == 4)) {
+                currencySelect.setEnabled(true);
+                currencySelect.setRequired(true);
+                currencySelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+            } else {
+                currencySelect.setValue(null);
+                currencySelect.setEnabled(false);
+                currencySelect.setRequired(false);
+            }
         } else if (property == yearSelect && yearSelect.getValue() != null
                 && dataTable.getValue() != null) {
             try {
@@ -385,6 +396,11 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         nameTF.setEnabled(true);
         valueTF.setEnabled(true);
 //        discTypeSelect.setEnabled(true);
+        if (dataTable.getValue() != null &&
+                ((Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id).getValue() == 2 ||
+                        (Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id).getValue() == 4)) {
+            currencySelect.setEnabled(true);
+        }
         statusSelect.setEnabled(true);
     }
 
@@ -408,19 +424,19 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         valueTF.setEnabled(false);
         discTypeSelect.setEnabled(false);
         statusSelect.setEnabled(false);
+        currencySelect.setEnabled(false);
     }
 
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(IndigoMessages.Title)).getValue().toString());
-        valueTF.getPropertyDataSource().setValue(
-                dataTable.getContainerProperty(dataTable.getValue(),
-                        myUI.getMessage(IndigoMessages.Value)).getValue());
-        discTypeSelect.setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.discount_type_id).getValue().toString()));
-        statusSelect.setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.status_id).getValue().toString()));
-
+        valueTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(IndigoMessages.Value)).getValue().toString());
+        discTypeSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id).getValue());
+        statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(), Settings.status_id).getValue());
+        if (dataTable.getContainerProperty(dataTable.getValue(), Settings.acc_currency_id).getValue() != null) {
+            currencySelect.setValue(dataTable.getContainerProperty(dataTable.getValue(), Settings.acc_currency_id).getValue());
+        }
     }
 
     private void clearFields() {
@@ -429,6 +445,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         valueTF.removeAllValidators();
         discTypeSelect.setValue(null);
         statusSelect.setValue(null);
+        currencySelect.setValue(null);
     }
 
     private void updateDataContainer() {
@@ -449,6 +466,14 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                         myUI.getMessage(IndigoMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect.getValue());
+        if (currencySelect.getValue() != null) {
+            dataTable.getContainerProperty(dataTable.getValue(),
+                    myUI.getMessage(IndigoMessages.Currency)).setValue(currencySelect
+                    .getContainerProperty(currencySelect.getValue(),
+                            myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+            dataTable.getContainerProperty(dataTable.getValue(),
+                    Settings.acc_currency_id).setValue(currencySelect.getValue());
+        }
     }
 
     private void addDataContainerItem(int id) {
@@ -471,6 +496,12 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         item.getItemProperty(Settings.year_id).setValue(
                 myUI.getUser().getCurrent_year().getId());
         item.getItemProperty(Settings.id).setValue(id);
+        if (currencySelect.getValue() != null) {
+            item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue(
+                    currencySelect.getContainerProperty(currencySelect.getValue(),
+                            myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+            item.getItemProperty(Settings.acc_currency_id).setValue(currencySelect.getValue());
+        }
         dataTable.setValue(id);
     }
 
@@ -481,6 +512,9 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         d.setAmount((Double) valueTF.getPropertyDataSource().getValue());
         d.setYear_id(myUI.getUser().getCurrent_year().getId());
         d.setStatus_id((Integer) statusSelect.getValue());
+        if (currencySelect.getValue() != null) {
+            d.setCurrency_id((Integer) currencySelect.getValue());
+        }
         d.setId(i);
         return d;
     }
