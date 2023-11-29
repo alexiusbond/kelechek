@@ -710,7 +710,8 @@ public class ContractSchoolPdf_kg {
                 }
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Алдын ала төлөм: ", ordFont));
-                text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()) + "", ordBoldFont));
+                text15.add(new Phrase(studentInfo.getContractInfo().getInitialPayment() == null ? "0.00" :
+                        Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()) + "", ordBoldFont));
                 text15.add(new Phrase(" АКШ доллары.", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Калган төлөм: ", ordFont));

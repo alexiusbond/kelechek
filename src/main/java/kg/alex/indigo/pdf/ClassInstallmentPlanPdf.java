@@ -129,7 +129,8 @@ public class ClassInstallmentPlanPdf {
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(myUI.getMessage(IndigoMessages.Total) + ": "
-                            + Settings.dFormat2.format(ttl_plan), ordFontBold));
+                            + Settings.dFormat2.format(ttl_plan) + " " +
+                            (myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD), ordFontBold));
 
                     document.add(table_plan);
 

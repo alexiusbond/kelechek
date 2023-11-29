@@ -33,7 +33,7 @@ public class ClassPaymentsPdf {
     private final Date aDate = new Date(System.currentTimeMillis());
 
 
-    public ClassPaymentsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
+    public ClassPaymentsPdf(final MyVaadinUI myUI, final IndexedContainer dataContainer, final String year,
                             final Date fDate, final Date tDate, final StudentInfoPdf studentInfo, final double total) {
         //installment plan table
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
@@ -52,7 +52,7 @@ public class ClassPaymentsPdf {
 
                 try {
 
-                    document = new Document(PageSize.A4, 10, 10, 70, 40);
+                    document = new Document(PageSize.A4.rotate(), 10, 10, 70, 40);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
                     HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, studentInfo.getSchool().getName_ru(),
@@ -88,8 +88,8 @@ public class ClassPaymentsPdf {
                     document.add(new Paragraph(24, " "));
 
                     //installment plan table
-                    float[] table_plan_colsWidth = {0.1f, 0.4f, 0.4f, 0.17f, 0.4f, 0.4f, 0.3f, 0.25f};
-                    PdfPTable infoTable = new PdfPTable(8);
+                    float[] table_plan_colsWidth = {0.1f, 0.25f, 0.25f, 0.17f, 0.4f, 0.4f, 0.3f, 0.12f, 0.25f, 0.12f};
+                    PdfPTable infoTable = new PdfPTable(10);
                     infoTable.setWidthPercentage(90f);
                     infoTable.setWidths(table_plan_colsWidth);
                     infoTable.getDefaultCell().
@@ -101,32 +101,38 @@ public class ClassPaymentsPdf {
                     infoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.PaymentCategoryType), ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.WhoPaid), ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Date), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Rate), ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Amount), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Currency), ordFontBold));
 
-                    Iterator<?> iter = planCont.getItemIds().iterator();
+                    Iterator<?> iter = dataContainer.getItemIds().iterator();
                     int i = 0;
-                    if (planCont.size() > 0) {
+                    if (dataContainer.size() > 0) {
                         i = 1;
                     }
                     while (iter.hasNext()) {
                         Object next = iter.next();
                         infoTable.addCell(new Phrase(i + "", tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataContainer.getContainerProperty(next,
                                 myUI.getMessage(IndigoMessages.FirstName)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataContainer.getContainerProperty(next,
                                 myUI.getMessage(IndigoMessages.LastName)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataContainer.getContainerProperty(next,
                                 myUI.getMessage(IndigoMessages.ClassName)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataContainer.getContainerProperty(next,
                                 myUI.getMessage(IndigoMessages.PaymentCategoryType)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataContainer.getContainerProperty(next,
                                 myUI.getMessage(IndigoMessages.WhoPaid)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataContainer.getContainerProperty(next,
                                 myUI.getMessage(IndigoMessages.Date)).getValue().toString(), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        infoTable.addCell(new Phrase(Settings.dFormat2.format(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(Settings.dFormat2.format(dataContainer.getContainerProperty(next,
+                                myUI.getMessage(IndigoMessages.Rate)).getValue()), tableFont));
+                        infoTable.addCell(new Phrase(Settings.dFormat2.format(dataContainer.getContainerProperty(next,
                                 myUI.getMessage(IndigoMessages.Amount)).getValue()), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                        infoTable.addCell(new Phrase(dataContainer.getContainerProperty(next,
+                                myUI.getMessage(IndigoMessages.Currency)).getValue().toString(), tableFont));
                         i++;
                     }
                     infoTable.addCell(new Phrase(" ", ordFontBold));
@@ -136,8 +142,11 @@ public class ClassPaymentsPdf {
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
+                    infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Total) + ": "
-                            + Settings.dFormat2.format(total), ordFontBold));
+                            + Settings.dFormat2.format(total) + " " +
+                            (myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD), ordFontBold));
+                    infoTable.addCell(new Phrase(" ", ordFontBold));
 
                     document.add(infoTable);
 

@@ -303,7 +303,7 @@ public class DiscountsReport implements Button.ClickListener,
                 DbDiscount dbd = new DbDiscount();
                 dbd.connect();
                 discountsTable.setContainerDataSource(
-                        dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue()));
+                        dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue(), myUI.getUser().getSchool().getCurrency_id()));
                 dbd.close();
                 discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
             } catch (Exception e) {

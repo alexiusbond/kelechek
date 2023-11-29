@@ -51,9 +51,9 @@ public class ClassInstPlanReport implements Button.ClickListener,
         this.splitPanel = splitPanel;
         buildLeftPanel();
         NATURAL_COL_ORDER = new String[]{
-            myUI.getMessage(IndigoMessages.FirstName), myUI.getMessage(IndigoMessages.LastName),
-            myUI.getMessage(IndigoMessages.ClassName), myUI.getMessage(IndigoMessages.Phone),
-            myUI.getMessage(IndigoMessages.Date), myUI.getMessage(IndigoMessages.Amount)};
+                myUI.getMessage(IndigoMessages.FirstName), myUI.getMessage(IndigoMessages.LastName),
+                myUI.getMessage(IndigoMessages.ClassName), myUI.getMessage(IndigoMessages.Phone),
+                myUI.getMessage(IndigoMessages.Date), myUI.getMessage(IndigoMessages.Amount)};
     }
 
     private void buildLeftPanel() {
@@ -281,7 +281,8 @@ public class ClassInstPlanReport implements Button.ClickListener,
         }
         dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
         dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount),
-                myUI.getMessage(IndigoMessages.Total) + ": " + Settings.dFormat2.format(total));
+                myUI.getMessage(IndigoMessages.Total) + ": " + Settings.dFormat2.format(total) + " " +
+                        (myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD));
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);

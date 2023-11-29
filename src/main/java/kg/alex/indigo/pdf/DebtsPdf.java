@@ -28,20 +28,22 @@ public class DebtsPdf {
 
     static final Logger logger = LogManager.getLogger(DebtsPdf.class);
     private byte[] b = null;
-    private   ByteArrayOutputStream buffer = null;
+    private ByteArrayOutputStream buffer = null;
     private Document document = null;
     private final Date aDate = new Date(System.currentTimeMillis());
     private final Date fromDate, tillDate;
-    
+
+    private String currency;
 
 
     public DebtsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
                     final Date fDate, final Date tDate, final StudentInfoPdf studentInfo, final double ttl_plan,
                     final double total_paid, final double total_debt) {
         this.fromDate = fDate;
-        this.tillDate = tDate; 
+        this.tillDate = tDate;
+        this.currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
- 
+
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/indigo/PT_Sans-Web-Regular.ttf";
             private final static String FONT_LOCATION2 = "/home/indigo/PT_Sans-Web-Bold.ttf";
@@ -119,13 +121,13 @@ public class DebtsPdf {
                                 myUI.getMessage(IndigoMessages.ClassName)).getValue().toString(), tableFont));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         table_plan.addCell(new Phrase(Settings.dFormat2.format(
-                               planCont.getContainerProperty(next,
+                                planCont.getContainerProperty(next,
                                         myUI.getMessage(IndigoMessages.InstallmentPlan)).getValue()), tableFont));
                         table_plan.addCell(new Phrase(Settings.dFormat2.format(
-                                 planCont.getContainerProperty(next,
+                                planCont.getContainerProperty(next,
                                         myUI.getMessage(IndigoMessages.Paid)).getValue()), tableFont));
                         table_plan.addCell(new Phrase(Settings.dFormat2.format(
-                                  planCont.getContainerProperty(next,
+                                planCont.getContainerProperty(next,
                                         myUI.getMessage(IndigoMessages.Debt)).getValue()), tableFont));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         i++;
@@ -134,9 +136,9 @@ public class DebtsPdf {
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(" ", ordFontBold));
-                    table_plan.addCell(new Phrase(Settings.dFormat2.format(ttl_plan), ordFontBold));
-                    table_plan.addCell(new Phrase(Settings.dFormat2.format(total_paid), ordFontBold));
-                    table_plan.addCell(new Phrase(Settings.dFormat2.format(total_debt), ordFontBold));
+                    table_plan.addCell(new Phrase(Settings.dFormat2.format(ttl_plan) + " " + currency, ordFontBold));
+                    table_plan.addCell(new Phrase(Settings.dFormat2.format(total_paid) + " " + currency, ordFontBold));
+                    table_plan.addCell(new Phrase(Settings.dFormat2.format(total_debt) + " " + currency, ordFontBold));
 
                     document.add(table_plan);
 

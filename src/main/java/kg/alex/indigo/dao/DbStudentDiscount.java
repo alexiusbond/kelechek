@@ -163,7 +163,6 @@ public class DbStudentDiscount extends BaseDb {
     public void execSQL_Discounts_by_classes(MyVaadinUI myUI, int year_id,
                                              String edu_statuses_ids, ClassDiscountsReport cdr) throws SQLException {
 
-
         StringBuilder sql = new StringBuilder("SELECT sd.discount_id, COUNT(sd.discount_id) AS disc_quantity, "
                 + "SUM(sd.discount_value) AS disc_amount, "
                 + "SUM(c.amount) AS contr_amount");

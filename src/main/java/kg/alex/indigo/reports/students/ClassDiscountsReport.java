@@ -41,9 +41,11 @@ public class ClassDiscountsReport implements Button.ClickListener,
     private ComboBoxMultiselect educationStatusMCB;
     public FormattedTable dataTable;
     public FilterTable classTable, discountsTable;
+    private String currency;
 
     public ClassDiscountsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
+        currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
         this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
@@ -298,8 +300,8 @@ public class ClassDiscountsReport implements Button.ClickListener,
             try {
                 DbDiscount dbd = new DbDiscount();
                 dbd.connect();
-                discountsTable.setContainerDataSource(
-                        dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue()));
+                discountsTable.setContainerDataSource(dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue(),
+                        myUI.getUser().getSchool().getCurrency_id()));
                 dbd.close();
                 discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
             } catch (Exception e) {

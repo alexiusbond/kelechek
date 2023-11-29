@@ -16,9 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 
-/**
- * @author alex
- */
 public class DbDiscount extends BaseDb {
 
     static final Logger logger = LogManager.getLogger(DbDiscount.class);
@@ -119,9 +116,7 @@ public class DbDiscount extends BaseDb {
     }
 
     public IndexedContainer execSQL_for_year_sel(MyVaadinUI myUi, int cur_year) throws SQLException {
-        String sql = "SELECT  distinct(d.year_id), y.name "
-                + "FROM discount as d left join year as y on y.id = d.year_id "
-                + "where d.year_id != ?";
+        String sql = "SELECT  distinct(d.year_id), y.name FROM discount as d left join year as y on y.id = d.year_id where d.year_id != ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cur_year);
         ResultSet result = stat.executeQuery();
@@ -146,14 +141,21 @@ public class DbDiscount extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public IndexedContainer exec_disc_select(MyVaadinUI myUi, int year_id) throws SQLException {
+    public IndexedContainer exec_disc_select(MyVaadinUI myUi, int year_id, int currency_id) throws SQLException {
 
-        String sql = "select t.id, t.name, t.amount, t.discount_type_id "
-                + "from discount as t "
-                + "where t.year_id = ? and t.activity_status_id = 2 "
-                + "order by t.name, t.amount";
+        String sql = "select t.id, t.name, t.amount, t.discount_type_id, cur.name " +
+                "from discount as t " +
+                "left join acc_currency as cur on cur.id = t.acc_currency_id " +
+                "where t.year_id = ? and t.activity_status_id = 2 ";
+        if (currency_id != 0) {
+            sql += "and (t.acc_currency_id = ? or t.acc_currency_id IS NULL) ";
+        }
+        sql += "order by t.name, t.amount";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
+        if (currency_id != 0) {
+            stat.setInt(2, currency_id);
+        }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
@@ -167,13 +169,14 @@ public class DbDiscount extends BaseDb {
             } else if (result.getInt("t.discount_type_id") == 4) {
                 item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
                         result.getString("t.name") + " - (max " + result.getString("t.amount")
-                                + "$)");
+                                + " " + result.getString("cur.name") + ")");
             } else if (result.getInt("t.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount") + "%");
             } else if (result.getInt("t.discount_type_id") == 2) {
                 item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
-                        result.getString("t.name") + " - " + result.getString("t.amount") + "$");
+                        result.getString("t.name") + " - " + result.getString("t.amount")
+                                + " " + result.getString("cur.name") + ")");
             }
             item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(
                     result.getDouble("t.amount"));

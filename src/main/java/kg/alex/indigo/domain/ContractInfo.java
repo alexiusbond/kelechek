@@ -19,6 +19,8 @@ public class ContractInfo implements Serializable {
     private Double correction;
     private String correctionStr;
     private Double paid;
+    private String totalPayments;
+    private String totalInstallments;
     private Double initialPayment;
     private Double left;
     private Double net;
@@ -26,6 +28,22 @@ public class ContractInfo implements Serializable {
     private int duration;
     private int contractNumber;
     private Date creationDate;
+
+    public String getTotalPayments() {
+        return totalPayments;
+    }
+
+    public void setTotalPayments(String totalPayments) {
+        this.totalPayments = totalPayments;
+    }
+
+    public String getTotalInstallments() {
+        return totalInstallments;
+    }
+
+    public void setTotalInstallments(String totalInstallments) {
+        this.totalInstallments = totalInstallments;
+    }
 
     public int getDuration() {
         return duration;

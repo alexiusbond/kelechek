@@ -66,9 +66,9 @@ public class StudentReportsView extends HorizontalSplitPanel implements Property
         if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmDebtReport)) {
             repTypeSelect.addItem(myUI.getMessage(IndigoMessages.DebtReport));
         }
-        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmSchoolDiscounts)) {
+        /*if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmSchoolDiscounts)) {
             repTypeSelect.addItem(myUI.getMessage(IndigoMessages.SchoolDiscounts));
-        }
+        }*/
         if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmClassDiscounts)) {
             repTypeSelect.addItem(myUI.getMessage(IndigoMessages.ClassDiscounts));
         }

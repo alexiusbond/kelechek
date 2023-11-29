@@ -231,10 +231,10 @@ public class DbStudentPayment extends BaseDb {
     public IndexedContainer execSQL_Payment(MyVaadinUI myUI, int stud_id, int year_id,
                                             InstallmentPlanPaymentsReport ip) throws SQLException {
 
-
-        String sql = "SELECT sp.id, sp.amount, sp.who_paid, sp.modification_date, "
-                + "pc.id, pc.name FROM student_payments as sp "
+        String sql = "SELECT sp.id, sp.amount, sp.who_paid, sp.modification_date, sp.dollar_rate, "
+                + "pc.id, pc.name, sp.acc_currency_id, cur.name FROM student_payments as sp "
                 + "left join payment_category as pc on sp.payment_category_id = pc.id "
+                + "left join acc_currency as cur on sp.acc_currency_id = cur.id "
                 + "where sp.student_id = ? and sp.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
@@ -242,7 +242,9 @@ public class DbStudentPayment extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Rate), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Currency), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.WhoPaid), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.PaymentCategoryType), String.class, null);
         container.addContainerProperty(Settings.payment_category_id, Integer.class, 0);
@@ -250,18 +252,30 @@ public class DbStudentPayment extends BaseDb {
             Item item = container.addItem(result.getInt("sp.id"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
                     Settings.df.format((result.getDate("sp.modification_date"))));
+            item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(
+                    result.getDouble("sp.dollar_rate"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
                     result.getDouble("sp.amount"));
+            item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue(
+                    result.getString("cur.name"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.PaymentCategoryType)).setValue(
                     result.getString("pc.name"));
             item.getItemProperty(Settings.payment_category_id).setValue(
                     result.getInt("pc.id"));
-            if (result.getInt("pc.id") != 3) {
-                ip.total_pay += result.getDouble("sp.amount");
+            double amount;
+            if (myUI.getUser().getSchool().getCurrency_id() == result.getInt("acc_currency_id")) {
+                amount = result.getDouble("sp.amount");
+            } else if (result.getInt("acc_currency_id") == 1) {
+                amount = result.getDouble("sp.amount") / result.getDouble("sp.dollar_rate");
             } else {
-                ip.total_pay -= result.getDouble("sp.amount");
+                amount = result.getDouble("sp.amount") * result.getDouble("sp.dollar_rate");
+            }
+            if (result.getInt("pc.id") != 3) {
+                ip.total_pay += amount;
+            } else {
+                ip.total_pay -= amount;
             }
         }
         return container;
@@ -271,10 +285,11 @@ public class DbStudentPayment extends BaseDb {
                                                     Date till, int year_id, String class_ids, String edu_statuses_ids,
                                                     ClassPaymentsReport cpr) throws SQLException {
 
-        String sql = "SELECT sp.id, sp.modification_date, vcs.class_name, "
+        String sql = "SELECT sp.id, sp.modification_date, vcs.class_name, cur.name, sp.dollar_rate, sp.acc_currency_id, "
                 + "st.name, st.surname, sp.amount, pc.name, sp.who_paid, sp.payment_category_id "
                 + "FROM student_payments AS sp "
                 + "LEFT JOIN student AS st ON st.id = sp.student_id "
+                + "LEFT JOIN acc_currency AS cur ON cur.id = sp.acc_currency_id "
                 + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
                 + "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id "
                 + "WHERE vcs.class_name_id IN (" + class_ids + ") "
@@ -292,7 +307,9 @@ public class DbStudentPayment extends BaseDb {
         container.addContainerProperty(myUI.getMessage(IndigoMessages.ClassName), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.FirstName), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Rate), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Currency), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.PaymentCategoryType), String.class, null);
         container.addContainerProperty(Settings.payment_category_id, Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.WhoPaid), String.class, null);
@@ -304,8 +321,12 @@ public class DbStudentPayment extends BaseDb {
                     result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.ClassName)).setValue(
                     result.getString("vcs.class_name"));
+            item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(
+                    result.getDouble("sp.dollar_rate"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
                     result.getDouble("sp.amount"));
+            item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue(
+                    result.getString("cur.name"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
                     Settings.df.format((result.getDate("sp.modification_date"))));
             item.getItemProperty(myUI.getMessage(IndigoMessages.PaymentCategoryType)).setValue(
@@ -314,10 +335,18 @@ public class DbStudentPayment extends BaseDb {
                     result.getInt("sp.payment_category_id"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
-            if (result.getInt("sp.payment_category_id") != 3) {
-                cpr.total += result.getDouble("sp.amount");
+            double amount;
+            if (myUI.getUser().getSchool().getCurrency_id() == result.getInt("acc_currency_id")) {
+                amount = result.getDouble("sp.amount");
+            } else if (result.getInt("acc_currency_id") == 1) {
+                amount = result.getDouble("sp.amount") / result.getDouble("sp.dollar_rate");
             } else {
-                cpr.total -= result.getDouble("sp.amount");
+                amount = result.getDouble("sp.amount") * result.getDouble("sp.dollar_rate");
+            }
+            if (result.getInt("sp.payment_category_id") != 3) {
+                cpr.total += amount;
+            } else {
+                cpr.total -= amount;
             }
         }
         return container;

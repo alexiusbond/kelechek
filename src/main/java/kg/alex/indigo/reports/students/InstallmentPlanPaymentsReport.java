@@ -44,6 +44,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private String corrections;
     private StudentInfoPdf studInfo;
     private FormattedTable installmentTable, paymentsTable;
+    private Label instCaption, paymentsCaption;
     private FilterTable studentsTable, classTable;
     private ComboBox yearSelect;
     private IndexedContainer installmentCont, paymentsCont;
@@ -59,14 +60,16 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
 
     private final String[] NATURAL_COL_ORDER;
     public double total_inst, total_pay;
+    private String currency;
 
     public InstallmentPlanPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
+        currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
         this.splitPanel = splitPanel;
         buildLeftPanel();
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Date),
-                myUI.getMessage(IndigoMessages.Amount),
-                myUI.getMessage(IndigoMessages.WhoPaid),
+                myUI.getMessage(IndigoMessages.Rate), myUI.getMessage(IndigoMessages.Amount),
+                myUI.getMessage(IndigoMessages.Currency), myUI.getMessage(IndigoMessages.WhoPaid),
                 myUI.getMessage(IndigoMessages.PaymentCategoryType)};
     }
 
@@ -209,6 +212,14 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                     studInfo.getContractInfo().setNet(to_pay);
                     studInfo.getContractInfo().setLeft(ttl_left);
                     studInfo.getContractInfo().setPaid(ttl_payment);
+                    if (instPlanCkb.getValue()) {
+                        studInfo.getContractInfo().setTotalInstallments(
+                                installmentTable.getColumnFooter(myUI.getMessage(IndigoMessages.Amount)));
+                    }
+                    if (paymentsCkb.getValue()) {
+                        studInfo.getContractInfo().setTotalPayments(
+                                paymentsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Amount)));
+                    }
                     studInfo.setYear(yearSelect.getContainerProperty(yearSelect.getValue(),
                             myUI.getMessage(IndigoMessages.Title)).getValue().toString());
                     makePdfBtn.setEnabled(true);
@@ -221,8 +232,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         } else if (source == makePdfBtn) {
             if (studInfo.getAccountant() != null) {
                 if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
-                    new InstallmentPlanPaymentsPdf(myUI, studInfo, installmentCont, paymentsCont, total_inst,
-                            total_pay);
+                    new InstallmentPlanPaymentsPdf(myUI, studInfo, installmentCont, paymentsCont);
                 } else {
                     Notification.show(myUI.getMessage(IndigoMessages.FillSchoolInfo),
                             Notification.Type.WARNING_MESSAGE);
@@ -293,7 +303,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     }
 
     private void buildRightPanel() {
-        rightGrid = new GridLayout(7, 5);
+        rightGrid = new GridLayout(7, 6);
         rightGrid.setSizeFull();
         rightGrid.setMargin(true);
         buildStudInfo();
@@ -302,8 +312,10 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         installmentCont = null;
         paymentsCont = null;
         if (instPlanCkb.getValue()) {
+            instCaption = new Label(myUI.getMessage(IndigoMessages.InstallmentPlan));
+            instCaption.setStyleName(ValoTheme.LABEL_LARGE);
+
             installmentTable = new FormattedTable(myUI);
-            installmentTable.setCaption(myUI.getMessage(IndigoMessages.InstallmentPlan));
             installmentTable.setFooterVisible(true);
             installmentTable.setSizeFull();
             installmentTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -321,18 +333,29 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 logger.catching(e);
             }
             installmentTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
-            installmentTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount), "Total "
-                    + Settings.dFormat2.format(total_inst));
+            installmentTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount),
+                    myUI.getMessage(IndigoMessages.Total) + ": "
+                            + Settings.dFormat2.format(total_inst) + " " + currency);
             if (!paymentsCkb.getValue()) {
-                rightGrid.addComponent(installmentTable, 0, 4, 6, 4);
+                rightGrid.addComponent(instCaption, 0, 4, 6, 4);
+                rightGrid.addComponent(installmentTable, 0, 5, 6, 5);
             } else {
-                rightGrid.addComponent(installmentTable, 0, 4, 2, 4);
+                rightGrid.addComponent(instCaption, 0, 4, 2, 4);
+                rightGrid.addComponent(installmentTable, 0, 5, 2, 5);
             }
-            rightGrid.setRowExpandRatio(4, 1);
+            rightGrid.setRowExpandRatio(5, 1);
+            rightGrid.setColumnExpandRatio(0, 0.05f);
+            rightGrid.setColumnExpandRatio(1, 0.1f);
+            rightGrid.setColumnExpandRatio(2, 0.1f);
+            rightGrid.setColumnExpandRatio(3, 0.18f);
+            rightGrid.setColumnExpandRatio(4, 0.18f);
+            rightGrid.setColumnExpandRatio(5, 0.36f);
         }
         if (paymentsCkb.getValue()) {
+            paymentsCaption = new Label(myUI.getMessage(IndigoMessages.Payments));
+            paymentsCaption.setStyleName(ValoTheme.LABEL_LARGE);
+
             paymentsTable = new FormattedTable(myUI);
-            paymentsTable.setCaption(myUI.getMessage(IndigoMessages.Payments));
             paymentsTable.setFooterVisible(true);
             paymentsTable.setSizeFull();
             paymentsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -341,8 +364,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 DbStudentPayment dbsp = new DbStudentPayment();
                 dbsp.connect();
                 total_pay = 0;
-                paymentsCont = dbsp.execSQL_Payment(myUI,
-                        (Integer) studentsTable.getValue(),
+                paymentsCont = dbsp.execSQL_Payment(myUI, (Integer) studentsTable.getValue(),
                         (Integer) yearSelect.getValue(), this);
                 paymentsTable.setContainerDataSource(paymentsCont);
                 dbsp.close();
@@ -351,16 +373,18 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 logger.catching(e);
             }
             paymentsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
-            paymentsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount), "Total "
-                    + Settings.dFormat2.format(total_pay));
+            paymentsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount), myUI.getMessage(IndigoMessages.Total) + ": "
+                    + Settings.dFormat2.format(total_pay) + " " + currency);
 
             if (!instPlanCkb.getValue()) {
-                rightGrid.addComponent(paymentsTable, 0, 4, 6, 4);
+                rightGrid.addComponent(paymentsCaption, 0, 4, 6, 4);
+                rightGrid.addComponent(paymentsTable, 0, 5, 6, 5);
             } else {
-                rightGrid.addComponent(paymentsTable, 3, 4, 6, 4);
+                rightGrid.addComponent(paymentsCaption, 3, 4, 6, 4);
+                rightGrid.addComponent(paymentsTable, 3, 5, 6, 5);
             }
             paymentsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-            rightGrid.setRowExpandRatio(4, 1);
+            rightGrid.setRowExpandRatio(5, 1);
         }
         splitPanel.setSecondComponent(rightGrid);
     }
@@ -502,7 +526,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 2) {
                 discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.Amount)).getValue())).append("$");
+                        myUI.getMessage(IndigoMessages.Amount)).getValue())).append(" ").append(currency);
                 if (iter.hasNext()) {
                     discounts.append(", ");
                 }
@@ -516,14 +540,14 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 4) {
                 discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.FreeAmount)).getValue())).append("$");
+                        myUI.getMessage(IndigoMessages.FreeAmount)).getValue())).append(" ").append(currency);
                 if (iter.hasNext()) {
                     discounts.append(", ");
                 }
             }
         }
-        corrections = c.getCorrectionDetails() == null ? "0.00$" : c.getCorrectionDetails();
-        contractLab.setValue(myUI.getMessage(IndigoMessages.Contract) + ": " + Settings.dFormat2.format(c.getAmount()) + "$");
+        corrections = c.getCorrectionDetails() == null ? "0.00 " + currency : c.getCorrectionDetails();
+        contractLab.setValue(myUI.getMessage(IndigoMessages.Contract) + ": " + Settings.dFormat2.format(c.getAmount()) + " " + currency);
         discountLab.setValue(myUI.getMessage(IndigoMessages.Discount) + ": " + discounts.toString());
         correctionLab.setValue(myUI.getMessage(IndigoMessages.Correction) + ": " + corrections);
         if (debt > 0) {
@@ -531,18 +555,19 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         } else {
             debtLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         }
-        debtLab.setValue(myUI.getMessage(IndigoMessages.PreviousYearDebt) + ": " + Settings.dFormat2.format(debt) + "$");
-        netLab.setValue(myUI.getMessage(IndigoMessages.Net) + ": " + Settings.dFormat2.format(c.getContr_with_disc() + debt + c.getCorrection()) + "$");
-        paidLab.setValue(myUI.getMessage(IndigoMessages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + "$");
+        debtLab.setValue(myUI.getMessage(IndigoMessages.PreviousYearDebt) + ": " + Settings.dFormat2.format(debt) + " " + currency);
+        netLab.setValue(myUI.getMessage(IndigoMessages.Net) + ": " + Settings.dFormat2.format(c.getContr_with_disc() + debt
+                + c.getCorrection()) + " " + currency);
+        paidLab.setValue(myUI.getMessage(IndigoMessages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + " " + currency);
         leftLab.setValue(myUI.getMessage(IndigoMessages.Left) + ": " + Settings.dFormat2.format(
-                (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection()) + "$");
+                (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection()) + " " + currency);
         if ((c.getPlan_debt() - ttl_payment) > 0) {
             planDebt.setStyleName(ValoTheme.LABEL_FAILURE);
             planDebt.setValue(myUI.getMessage(IndigoMessages.InstPlanDebt) + ": " + Settings.dFormat2.format(
-                    c.getPlan_debt() - ttl_payment + c.getCorrection()) + "$");
+                    c.getPlan_debt() - ttl_payment + c.getCorrection()) + " " + currency);
         } else {
             planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
-            planDebt.setValue(myUI.getMessage(IndigoMessages.InstPlanDebt) + ": " + Settings.dFormat2.format(0.0) + "$");
+            planDebt.setValue(myUI.getMessage(IndigoMessages.InstPlanDebt) + ": " + Settings.dFormat2.format(0.0) + " " + currency);
         }
     }
 }

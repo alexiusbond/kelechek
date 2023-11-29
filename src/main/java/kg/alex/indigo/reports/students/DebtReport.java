@@ -45,9 +45,11 @@ public class DebtReport implements Button.ClickListener,
     private IndexedContainer installmentCont;
     private final String[] NATURAL_COL_ORDER;
     public double inst_total, paid_total, debt_total;
+    private String currency;
 
     public DebtReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
+        currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
         this.splitPanel = splitPanel;
         buildLeftPanel();
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.FirstName),
@@ -284,11 +286,11 @@ public class DebtReport implements Button.ClickListener,
         dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Paid), Table.Align.RIGHT);
         dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Debt), Table.Align.RIGHT);
         dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.InstallmentPlan),
-                Settings.dFormat2.format(inst_total));
+                Settings.dFormat2.format(inst_total) + " " + currency);
         dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Paid),
-                Settings.dFormat2.format(paid_total));
+                Settings.dFormat2.format(paid_total) + " " + currency);
         dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Debt),
-                Settings.dFormat2.format(debt_total));
+                Settings.dFormat2.format(debt_total) + " " + currency);
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);

@@ -45,16 +45,20 @@ public class ClassPaymentsReport implements Button.ClickListener,
     private final String[] NATURAL_COL_ORDER;
 
     public double total;
+    private String currency;
 
     public ClassPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
+        this.currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
         this.splitPanel = splitPanel;
         buildLeftPanel();
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.FirstName),
-                myUI.getMessage(IndigoMessages.LastName),
+        NATURAL_COL_ORDER = new String[]{
+                myUI.getMessage(IndigoMessages.FirstName), myUI.getMessage(IndigoMessages.LastName),
                 myUI.getMessage(IndigoMessages.ClassName), myUI.getMessage(IndigoMessages.PaymentCategoryType),
                 myUI.getMessage(IndigoMessages.WhoPaid), myUI.getMessage(IndigoMessages.Date),
-                myUI.getMessage(IndigoMessages.Amount)};
+                myUI.getMessage(IndigoMessages.Rate), myUI.getMessage(IndigoMessages.Amount),
+                myUI.getMessage(IndigoMessages.Currency)
+        };
     }
 
     private void buildLeftPanel() {
@@ -281,7 +285,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
         }
         dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
         dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount),
-                myUI.getMessage(IndigoMessages.Total) + ": " + Settings.dFormat2.format(total));
+                myUI.getMessage(IndigoMessages.Total) + ": " + Settings.dFormat2.format(total) + " " + currency);
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);
