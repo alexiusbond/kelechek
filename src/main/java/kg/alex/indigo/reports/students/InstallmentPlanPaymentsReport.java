@@ -81,7 +81,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
-        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -146,6 +146,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
@@ -153,7 +154,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         makePdfBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
         makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.setEnabled(false);
-        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); makePdfBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
         makePdfBtn.addClickListener(this);
 
@@ -161,7 +162,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 

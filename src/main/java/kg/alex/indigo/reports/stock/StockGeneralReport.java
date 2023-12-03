@@ -65,6 +65,7 @@ public class StockGeneralReport implements Button.ClickListener,
         generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
@@ -72,13 +73,13 @@ public class StockGeneralReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
         fromDateDF = new DateField(myUI.getMessage(IndigoMessages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
-        fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         fromDateDF.setDateFormat(Settings.datePattern);
@@ -87,7 +88,7 @@ public class StockGeneralReport implements Button.ClickListener,
 
         tillDateDF = new DateField(myUI.getMessage(IndigoMessages.TillDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
-        tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         tillDateDF.setDateFormat(Settings.datePattern);
@@ -104,7 +105,7 @@ public class StockGeneralReport implements Button.ClickListener,
 
         stocksMSB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Stocks));
         stocksMSB.setRequired(true);
-        stocksMSB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        stocksMSB.setStyleName(ValoTheme.COMBOBOX_TINY);
         stocksMSB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         stocksMSB.setWidth(Settings.PERCENTS100);
         stocksMSB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -117,7 +118,7 @@ public class StockGeneralReport implements Button.ClickListener,
         schoolSelect = new ComboBox(myUI.getMessage(IndigoMessages.School));
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setRequired(true);
-        schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        schoolSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         schoolSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         schoolSelect.setWidth(Settings.PERCENTS100);
         schoolSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));

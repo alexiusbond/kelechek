@@ -57,7 +57,7 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
         yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
-        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -65,7 +65,7 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
 
         educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.EducationStatus));
         educationStatusMCB.setRequired(true);
-        educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         educationStatusMCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         educationStatusMCB.setWidth(Settings.PERCENTS100);
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -93,7 +93,7 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
         fromDateDF = new PopupDateField(myUI.getMessage(IndigoMessages.FromDate));
         fromDateDF.setInputPrompt(myUI.getMessage(IndigoMessages.AnyDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
-        fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setResolution(Resolution.DAY);
         fromDateDF.addValueChangeListener(this);
@@ -101,7 +101,7 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
         tillDateDF = new PopupDateField(myUI.getMessage(IndigoMessages.TillDate));
         tillDateDF.setInputPrompt(myUI.getMessage(IndigoMessages.AnyDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
-        tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setResolution(Resolution.DAY);
         tillDateDF.addValueChangeListener(this);
@@ -144,6 +144,7 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
         generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
@@ -151,7 +152,7 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 

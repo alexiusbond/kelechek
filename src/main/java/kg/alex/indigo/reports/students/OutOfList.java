@@ -71,7 +71,7 @@ public class OutOfList implements Button.ClickListener,
 
         yearSelectMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Year));
         yearSelectMCB.setRequired(true);
-        yearSelectMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelectMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelectMCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         yearSelectMCB.setWidth(Settings.PERCENTS100);
         yearSelectMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -81,7 +81,7 @@ public class OutOfList implements Button.ClickListener,
         yearSelectMCB.setSelectAllButtonCaption(myUI.getMessage(IndigoMessages.SelectAll));
 
         reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Reasons));
-        reasonsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        reasonsMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         reasonsMCB.setWidth(Settings.PERCENTS100);
         reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -143,6 +143,7 @@ public class OutOfList implements Button.ClickListener,
         generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
@@ -150,7 +151,7 @@ public class OutOfList implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 

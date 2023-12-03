@@ -50,7 +50,7 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         repTypeSelect.setNullSelectionAllowed(false);
         repTypeSelect.setRequired(true);
         repTypeSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
-        repTypeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        repTypeSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         repTypeSelect.setWidth(Settings.PERCENTS100);
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);

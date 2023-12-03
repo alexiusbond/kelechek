@@ -45,7 +45,7 @@ public class GeneralReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(GeneralReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, PDFBtn;
+    private Button generateBtn, pdfBtn;
     private final HorizontalSplitPanel splitPanel;
     private GridLayout totalsGrid;
     private VerticalLayout rightLay;
@@ -81,7 +81,7 @@ public class GeneralReport implements Button.ClickListener,
         yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
-        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -89,7 +89,7 @@ public class GeneralReport implements Button.ClickListener,
 
         educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.EducationStatus));
         educationStatusMCB.setRequired(true);
-        educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         educationStatusMCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         educationStatusMCB.setWidth(Settings.PERCENTS100);
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -140,16 +140,18 @@ public class GeneralReport implements Button.ClickListener,
         generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
-        PDFBtn = new Button();
-        PDFBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
-        PDFBtn.setWidth(Settings.PERCENTS100);
-        PDFBtn.setEnabled(false);
-        PDFBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        PDFBtn.setIcon(FontAwesome.FILE_PDF_O);
-        PDFBtn.addClickListener(this);
+        pdfBtn = new Button();
+        pdfBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
+        pdfBtn.setWidth(Settings.PERCENTS100);
+        pdfBtn.setEnabled(false);
+        pdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        pdfBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        pdfBtn.setIcon(FontAwesome.FILE_PDF_O);
+        pdfBtn.addClickListener(this);
 
         leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
         leftGrid.addComponent(educationStatusMCB, 0, 1, 3, 1);
@@ -161,7 +163,7 @@ public class GeneralReport implements Button.ClickListener,
             schoolsTable.setValue(myUI.getUser().getSchool().getId());
         }
         leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
-        leftGrid.addComponent(PDFBtn, 3, 3);
+        leftGrid.addComponent(pdfBtn, 3, 3);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
 
@@ -210,7 +212,7 @@ public class GeneralReport implements Button.ClickListener,
                     logger.catching(e);
                 }
             }
-        } else if (source == PDFBtn) {
+        } else if (source == pdfBtn) {
             try {
                 String svgPayments = SVGGenerator.getInstance().generate(confPayments);
                 String svgDiscounts = SVGGenerator.getInstance().withWidth(355).withHeight(100).generate(confDisc);
@@ -227,8 +229,8 @@ public class GeneralReport implements Button.ClickListener,
     }
 
     @Override
-    public void valueChange(Property.ValueChangeEvent event) {        
-        if (PDFBtn.isEnabled()) {
+    public void valueChange(Property.ValueChangeEvent event) {
+        if (pdfBtn.isEnabled()) {
             setSchoolAccounting(null);
             transactionsTable.setContainerDataSource(null);
             paymentsTable.setContainerDataSource(null);
@@ -239,7 +241,7 @@ public class GeneralReport implements Button.ClickListener,
             chartPaid.drawChart(c);
             chartPayments.getConfiguration().setSeries(new ListSet<>());
             chartPayments.drawChart(c);
-            PDFBtn.setEnabled(false);
+            pdfBtn.setEnabled(false);
         }
         if (event.getProperty() == yearSelect) {
             prevDayCal.setTime((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(IndigoMessages.StartDate)).getValue());
@@ -429,9 +431,9 @@ public class GeneralReport implements Button.ClickListener,
     private void buildTransactionsTable() {
 
         NATURAL_COL_ORDER_TRANSACTIONS = new String[]{myUI.getMessage(IndigoMessages.Month),
-            myUI.getMessage(IndigoMessages.InstallmentPlan), myUI.getMessage(IndigoMessages.Payments),
-            myUI.getMessage(IndigoMessages.Incomes),
-            myUI.getMessage(IndigoMessages.Expenses), myUI.getMessage(IndigoMessages.Difference)};
+                myUI.getMessage(IndigoMessages.InstallmentPlan), myUI.getMessage(IndigoMessages.Payments),
+                myUI.getMessage(IndigoMessages.Incomes),
+                myUI.getMessage(IndigoMessages.Expenses), myUI.getMessage(IndigoMessages.Difference)};
 
         Label caption = new Label();
         caption.setWidth(Settings.PERCENTS100);
@@ -453,8 +455,8 @@ public class GeneralReport implements Button.ClickListener,
     private void buildPaymentsLayout() {
 
         NATURAL_COL_ORDER_PAYMENTS = new String[]{myUI.getMessage(IndigoMessages.Month),
-            myUI.getMessage(IndigoMessages.InstallmentPlan), myUI.getMessage(IndigoMessages.Payments),
-            myUI.getMessage(IndigoMessages.Debt)};
+                myUI.getMessage(IndigoMessages.InstallmentPlan), myUI.getMessage(IndigoMessages.Payments),
+                myUI.getMessage(IndigoMessages.Debt)};
 
         Label caption = new Label();
         caption.setWidth(Settings.PERCENTS100);
@@ -592,7 +594,7 @@ public class GeneralReport implements Button.ClickListener,
             transactionsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Difference), Table.Align.RIGHT);
             transactionsTable.setPageLength(transactionsTable.size());
             if (transactionsTable.getContainerDataSource().size() != 0) {
-                PDFBtn.setEnabled(true);
+                pdfBtn.setEnabled(true);
             }
             dbsc.close();
         } catch (Exception e) {
@@ -615,7 +617,7 @@ public class GeneralReport implements Button.ClickListener,
         paymentsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Debt),
                 transactionsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Debt)));
         if (paymentsTable.getContainerDataSource().size() != 0) {
-            PDFBtn.setEnabled(true);
+            pdfBtn.setEnabled(true);
         }
     }
 

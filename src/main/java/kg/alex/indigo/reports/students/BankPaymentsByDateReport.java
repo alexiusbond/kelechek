@@ -53,6 +53,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
         generateBtn.setWidth("100%");
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
@@ -60,13 +61,13 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth("100%");
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
         fromDateDF = new DateField(myUI.getMessage(IndigoMessages.FromDate));
         fromDateDF.setWidth("100%");
-        fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         fromDateDF.setDateFormat(Settings.datePattern);
@@ -75,7 +76,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
 
         tillDateDF = new DateField(myUI.getMessage(IndigoMessages.TillDate));
         tillDateDF.setWidth("100%");
-        tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         tillDateDF.setDateFormat(Settings.datePattern);
@@ -94,7 +95,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         schoolSelect = new ComboBox(myUI.getMessage(IndigoMessages.School));
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setRequired(true);
-        schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        schoolSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         schoolSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         schoolSelect.setWidth("100%");
         schoolSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -117,7 +118,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         currencySelect = new ComboBox(myUI.getMessage(IndigoMessages.Currency));
         currencySelect.setNullSelectionAllowed(false);
         currencySelect.setRequired(true);
-        currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        currencySelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         currencySelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         currencySelect.setWidth("100%");
         currencySelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));

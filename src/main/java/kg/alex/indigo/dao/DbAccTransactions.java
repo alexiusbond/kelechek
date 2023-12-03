@@ -337,26 +337,26 @@ public class DbAccTransactions extends BaseDb {
         return container;
     }
 
-    public void execSQL_by_months(MyVaadinUI myUI, int type_id, int school_id,
+    public void execSQL_by_months(MyVaadinUI myUI, int type_id, int school_id, int currency_id,
                                   FilterTreeTable categoriesTable, Calendar from, Calendar till, FormattedTreeTable t)
             throws SQLException {
 
         Set<Integer> selectedIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
-        String sql = "SELECT cat.id, cat.parent_id, sum(if(tr.acc_currency_id = 2, tr.amount, "
-                + "ROUND(tr.amount/tr.currency_rate,2))) as amount, DATE(tr.date_time) AS dt "
+        String sql = "SELECT cat.id, cat.parent_id, sum(tr.amount) as amount, DATE(tr.date_time) AS dt "
                 + "FROM acc_category AS cat "
                 + "LEFT JOIN acc_transactions AS tr ON tr.acc_category_id = cat.id "
                 + "WHERE cat.id IN ("
                 + Settings.convertCollectionToStr(selectedIds)
                 + ") AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? AND cat.acc_type_id = ? "
-                + "AND tr.school_id = ? "
+                + "AND tr.school_id = ? and tr.acc_currency_id = ? "
                 + "GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time) ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(from.getTime().getTime()));
         stat.setDate(2, new java.sql.Date(till.getTime().getTime()));
         stat.setInt(3, type_id);
         stat.setInt(4, school_id);
+        stat.setInt(5, currency_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
@@ -422,13 +422,12 @@ public class DbAccTransactions extends BaseDb {
         }
     }
 
-    public void execSQL_by_months(MyVaadinUI myUI, int type_id, FilterTable schoolsTable, FilterTreeTable categoriesTable,
+    public void execSQL_by_months(MyVaadinUI myUI, int type_id, int currency_id, FilterTable schoolsTable, FilterTreeTable categoriesTable,
                                   Calendar from, Calendar till, FormattedTreeTable t) throws SQLException {
 
         Set<Integer> selectedCategoryIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
         Set<Integer> selectedSchoolIds = new HashSet<>((Set<Integer>) schoolsTable.getValue());
-        String sql = "SELECT cat.id, cat.parent_id, sum(if(tr.acc_currency_id = 2, tr.amount, "
-                + "ROUND(tr.amount/tr.currency_rate,2))) as amount, DATE(tr.date_time) AS dt, tr.school_id  "
+        String sql = "SELECT cat.id, cat.parent_id, sum(tr.amount) as amount, DATE(tr.date_time) AS dt, tr.school_id  "
                 + "FROM acc_category AS cat "
                 + "LEFT JOIN acc_transactions AS tr ON tr.acc_category_id = cat.id "
                 + "WHERE cat.id IN ("
@@ -436,12 +435,13 @@ public class DbAccTransactions extends BaseDb {
                 + ") AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? AND cat.acc_type_id = ? "
                 + "AND tr.school_id IN ("
                 + Settings.convertCollectionToStr(selectedSchoolIds)
-                + ") GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time), tr.school_id " +
+                + ") AND tr.acc_currency_id = ? GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time), tr.school_id " +
                 "ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(from.getTime().getTime()));
         stat.setDate(2, new java.sql.Date(till.getTime().getTime()));
         stat.setInt(3, type_id);
+        stat.setInt(4, currency_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
@@ -1153,7 +1153,7 @@ public class DbAccTransactions extends BaseDb {
         }
     }
 
-    public IndexedContainer exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id, Date from_date, Date till_date,
+    public IndexedContainer exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id, int currency_id, Date from_date, Date till_date,
                                                 FilterTreeTable categoriesTable) throws SQLException {
 
         Set<Integer> selectedIds = new HashSet<>((Set<Integer>) categoriesTable.getValue());
@@ -1170,13 +1170,14 @@ public class DbAccTransactions extends BaseDb {
                 + "left join acc_currency as acu on acu.id = t.acc_currency_id  "
                 + "left join employee as e on e.id = t.employee_id "
                 + "where t.school_id = ? and date(t.date_time) >= ? and date(t.date_time) <= ? "
-                + "and t.acc_type_id = ? and t.acc_category_id in (" + Settings.convertCollectionToStr(selectedIds) + ") "
+                + "and t.acc_type_id = ? and t.acc_currency_id = ? and t.acc_category_id in (" + Settings.convertCollectionToStr(selectedIds) + ") "
                 + "order by t.date_time asc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setDate(2, new java.sql.Date(from_date.getTime()));
         stat.setDate(3, new java.sql.Date(till_date.getTime()));
         stat.setInt(4, type_id);
+        stat.setInt(5, currency_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);

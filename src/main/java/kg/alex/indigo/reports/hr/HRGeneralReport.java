@@ -78,6 +78,7 @@ public class HRGeneralReport implements Button.ClickListener,
         generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
@@ -85,7 +86,7 @@ public class HRGeneralReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
@@ -110,7 +111,7 @@ public class HRGeneralReport implements Button.ClickListener,
         schoolsMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Schools));
         schoolsMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         schoolsMCB.addValueChangeListener(this);
-        schoolsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        schoolsMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         schoolsMCB.setWidth(Settings.PERCENTS100);
         schoolsMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         schoolsMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -121,19 +122,19 @@ public class HRGeneralReport implements Button.ClickListener,
 
         nameTF = new TextField(myUI.getMessage(IndigoMessages.FirstName));
         nameTF.setInputPrompt(myUI.getMessage(IndigoMessages.Any));
-        nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        nameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         nameTF.setWidth(Settings.PERCENTS100);
         leftLay.addComponent(nameTF);
 
         surnameTF = new TextField(myUI.getMessage(IndigoMessages.LastName));
         surnameTF.setInputPrompt(myUI.getMessage(IndigoMessages.Any));
-        surnameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        surnameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         surnameTF.setWidth(Settings.PERCENTS100);
         leftLay.addComponent(surnameTF);
 
         fromAge = new TextField(myUI.getMessage(IndigoMessages.FromAge), new ObjectProperty<>(0));
         fromAge.setInputPrompt(myUI.getMessage(IndigoMessages.Any));
-        fromAge.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        fromAge.setStyleName(ValoTheme.TEXTFIELD_TINY);
         fromAge.setNullRepresentation("");
         fromAge.setConverter(Settings.getStringToIntegerConverter());
         fromAge.setWidth(Settings.PERCENTS100);
@@ -143,7 +144,7 @@ public class HRGeneralReport implements Button.ClickListener,
 
         toAge = new TextField(myUI.getMessage(IndigoMessages.ToAge), new ObjectProperty<>(0));
         toAge.setInputPrompt(myUI.getMessage(IndigoMessages.Any));
-        toAge.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        toAge.setStyleName(ValoTheme.TEXTFIELD_TINY);
         toAge.setNullRepresentation("");
         toAge.setConverter(Settings.getStringToIntegerConverter());
         toAge.setWidth(Settings.PERCENTS100);
@@ -161,7 +162,7 @@ public class HRGeneralReport implements Button.ClickListener,
         positionsMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Positions));
         positionsMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         positionsMCB.addValueChangeListener(this);
-        positionsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        positionsMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         positionsMCB.setWidth(Settings.PERCENTS100);
         positionsMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         positionsMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -173,7 +174,7 @@ public class HRGeneralReport implements Button.ClickListener,
         extraPositionsMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.ExtraPositions));
         extraPositionsMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         extraPositionsMCB.addValueChangeListener(this);
-        extraPositionsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        extraPositionsMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         extraPositionsMCB.setWidth(Settings.PERCENTS100);
         extraPositionsMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         extraPositionsMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -186,7 +187,7 @@ public class HRGeneralReport implements Button.ClickListener,
         workingStatusesMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.WorkingStatuses));
         workingStatusesMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         workingStatusesMCB.addValueChangeListener(this);
-        workingStatusesMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        workingStatusesMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         workingStatusesMCB.setWidth(Settings.PERCENTS100);
         workingStatusesMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         workingStatusesMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -198,7 +199,7 @@ public class HRGeneralReport implements Button.ClickListener,
         contractTypeMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.ContractTypes));
         contractTypeMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         contractTypeMCB.addValueChangeListener(this);
-        contractTypeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        contractTypeMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         contractTypeMCB.setWidth(Settings.PERCENTS100);
         contractTypeMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         contractTypeMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -210,7 +211,7 @@ public class HRGeneralReport implements Button.ClickListener,
         genderMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Genders));
         genderMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         genderMCB.addValueChangeListener(this);
-        genderMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        genderMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         genderMCB.setWidth(Settings.PERCENTS100);
         genderMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         genderMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -222,7 +223,7 @@ public class HRGeneralReport implements Button.ClickListener,
         nationalityMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Nationalities));
         nationalityMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         nationalityMCB.addValueChangeListener(this);
-        nationalityMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        nationalityMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         nationalityMCB.setWidth(Settings.PERCENTS100);
         nationalityMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         nationalityMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -234,7 +235,7 @@ public class HRGeneralReport implements Button.ClickListener,
         citizenshipMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Citizenships));
         citizenshipMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         citizenshipMCB.addValueChangeListener(this);
-        citizenshipMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        citizenshipMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         citizenshipMCB.setWidth(Settings.PERCENTS100);
         citizenshipMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         citizenshipMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -246,7 +247,7 @@ public class HRGeneralReport implements Button.ClickListener,
         martialStatusMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.MartialStatuses));
         martialStatusMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         martialStatusMCB.addValueChangeListener(this);
-        martialStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        martialStatusMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         martialStatusMCB.setWidth(Settings.PERCENTS100);
         martialStatusMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         martialStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -258,7 +259,7 @@ public class HRGeneralReport implements Button.ClickListener,
         healthStatusMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.HealthStatuses));
         healthStatusMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         healthStatusMCB.addValueChangeListener(this);
-        healthStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        healthStatusMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         healthStatusMCB.setWidth(Settings.PERCENTS100);
         healthStatusMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         healthStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -270,7 +271,7 @@ public class HRGeneralReport implements Button.ClickListener,
         gradSchoolMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.GraduationSchools));
         gradSchoolMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         gradSchoolMCB.addValueChangeListener(this);
-        gradSchoolMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        gradSchoolMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         gradSchoolMCB.setWidth(Settings.PERCENTS100);
         gradSchoolMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         gradSchoolMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -282,7 +283,7 @@ public class HRGeneralReport implements Button.ClickListener,
         universityMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Education));
         universityMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         universityMCB.addValueChangeListener(this);
-        universityMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        universityMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         universityMCB.setWidth(Settings.PERCENTS100);
         universityMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         universityMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -294,7 +295,7 @@ public class HRGeneralReport implements Button.ClickListener,
         workPlaceMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.WorkPlaces));
         workPlaceMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         workPlaceMCB.addValueChangeListener(this);
-        workPlaceMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        workPlaceMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         workPlaceMCB.setWidth(Settings.PERCENTS100);
         workPlaceMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         workPlaceMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -306,7 +307,7 @@ public class HRGeneralReport implements Button.ClickListener,
         languageMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Languages));
         languageMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         languageMCB.addValueChangeListener(this);
-        languageMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        languageMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         languageMCB.setWidth(Settings.PERCENTS100);
         languageMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         languageMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -318,7 +319,7 @@ public class HRGeneralReport implements Button.ClickListener,
         examMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Exams));
         examMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         examMCB.addValueChangeListener(this);
-        examMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        examMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         examMCB.setWidth(Settings.PERCENTS100);
         examMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         examMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -330,7 +331,7 @@ public class HRGeneralReport implements Button.ClickListener,
         certificateMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Certificates));
         certificateMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         certificateMCB.addValueChangeListener(this);
-        certificateMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        certificateMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         certificateMCB.setWidth(Settings.PERCENTS100);
         certificateMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         certificateMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -342,7 +343,7 @@ public class HRGeneralReport implements Button.ClickListener,
         mainBranchMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.MainBranches));
         mainBranchMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         mainBranchMCB.addValueChangeListener(this);
-        mainBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        mainBranchMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         mainBranchMCB.setWidth(Settings.PERCENTS100);
         mainBranchMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         mainBranchMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -354,7 +355,7 @@ public class HRGeneralReport implements Button.ClickListener,
         ComboBoxMultiselect extraBranchMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.ExtraBranches));
         extraBranchMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         extraBranchMCB.addValueChangeListener(this);
-        extraBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        extraBranchMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         extraBranchMCB.setWidth(Settings.PERCENTS100);
         extraBranchMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         extraBranchMCB.setFilteringMode(FilteringMode.CONTAINS);
@@ -367,7 +368,7 @@ public class HRGeneralReport implements Button.ClickListener,
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.addValueChangeListener(this);
-        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -377,7 +378,7 @@ public class HRGeneralReport implements Button.ClickListener,
         canBeAdvisorMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.CanBeAdvisors));
         canBeAdvisorMCB.setInputPrompt(myUI.getMessage(IndigoMessages.All));
         canBeAdvisorMCB.addValueChangeListener(this);
-        canBeAdvisorMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        canBeAdvisorMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         canBeAdvisorMCB.setWidth(Settings.PERCENTS100);
         canBeAdvisorMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
         canBeAdvisorMCB.setFilteringMode(FilteringMode.CONTAINS);

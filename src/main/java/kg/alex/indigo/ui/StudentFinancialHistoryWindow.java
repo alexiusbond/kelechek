@@ -35,7 +35,7 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
 
         excelBtn = new Button(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
         mainLay.addComponent(excelBtn);

@@ -71,7 +71,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.LessonsYear));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
-        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -229,7 +229,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
 
         workingStatusesMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.WorkingStatus));
         workingStatusesMCB.setRequired(true);
-        workingStatusesMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        workingStatusesMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         workingStatusesMCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         workingStatusesMCB.setWidth(Settings.PERCENTS100);
         workingStatusesMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
@@ -265,6 +265,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
@@ -272,7 +273,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 

@@ -8,6 +8,7 @@ package kg.alex.indigo.reports.accounting;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -15,6 +16,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbAccCategory;
 import kg.alex.indigo.dao.DbAccTransactions;
+import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.dao.DbSchool;
 import kg.alex.indigo.domain.SchoolAccounting;
 import kg.alex.indigo.i18n.IndigoMessages;
@@ -41,6 +43,7 @@ public class MonthReport implements Button.ClickListener,
             selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
     private DateField fromDateDF, tillDateDF;
+    private ComboBox cashBoxSelect;
     public FormattedTreeTable incomesDataTable, outcomesDataTable;
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
     public FilterTable schoolsTable;
@@ -58,7 +61,7 @@ public class MonthReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        GridLayout leftGrid = new GridLayout(4, 8);
+        GridLayout leftGrid = new GridLayout(4, 9);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -167,6 +170,7 @@ public class MonthReport implements Button.ClickListener,
         generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
@@ -175,12 +179,13 @@ public class MonthReport implements Button.ClickListener,
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
         fromDateDF = new DateField(myUI.getMessage(IndigoMessages.FromDate));
         fromDateDF.setRequired(true);
-        fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setResolution(Resolution.MONTH);
@@ -190,7 +195,7 @@ public class MonthReport implements Button.ClickListener,
 
         tillDateDF = new DateField(myUI.getMessage(IndigoMessages.TillDate));
         tillDateDF.setRequired(true);
-        tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setResolution(Resolution.MONTH);
@@ -203,24 +208,48 @@ public class MonthReport implements Button.ClickListener,
         tillDate.setTime(tillDateDF.getValue());
         tillDate.set(Calendar.DAY_OF_MONTH, tillDate.getActualMaximum(Calendar.DAY_OF_MONTH));
 
-        leftGrid.addComponent(fromDateDF, 0, 0, 1, 0);
-        leftGrid.addComponent(tillDateDF, 2, 0, 3, 0);
-        if (currentUser.hasRole(Settings.rnAdmin)) {
-            leftGrid.addComponent(selectAllSchoolsBtn, 0, 1, 1, 1);
-            leftGrid.addComponent(deselectAllSchoolsBtn, 2, 1, 3, 1);
-            leftGrid.addComponent(schoolsTable, 0, 2, 3, 2);
-            leftGrid.setRowExpandRatio(2, 1);
+        cashBoxSelect = new ComboBox(myUI.getMessage(IndigoMessages.CashBox));
+        cashBoxSelect.setNullSelectionAllowed(false);
+        cashBoxSelect.setRequired(true);
+        cashBoxSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
+        cashBoxSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        cashBoxSelect.setWidth(Settings.PERCENTS100);
+        cashBoxSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        cashBoxSelect.setFilteringMode(FilteringMode.CONTAINS);
+        cashBoxSelect.addValueChangeListener(this);
+        try {
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
+            cashBoxSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAcc_currency, true));
+            dbd.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
         }
-        leftGrid.addComponent(selectAllIncomesBtn, 0, 3, 1, 3);
-        leftGrid.addComponent(deselectAllIncomesBtn, 2, 3, 3, 3);
-        leftGrid.addComponent(incomeCategoriesTable, 0, 4, 3, 4);
-        leftGrid.addComponent(selectAllOutcomesBtn, 0, 5, 1, 5);
-        leftGrid.addComponent(deselectAllOutcomesBtn, 2, 5, 3, 5);
-        leftGrid.addComponent(outcomeCategoriesTable, 0, 6, 3, 6);
-        leftGrid.addComponent(generateBtn, 0, 7, 2, 7);
-        leftGrid.addComponent(excelBtn, 3, 7);
-        leftGrid.setRowExpandRatio(4, 1);
-        leftGrid.setRowExpandRatio(6, 1);
+        if (!currentUser.hasRole(Settings.rnAdmin) && myUI.getUser().getSchool().getCurrency_id() == 1) {
+            cashBoxSelect.setEnabled(false);
+            cashBoxSelect.setValue(1);
+        }
+
+        leftGrid.addComponent(cashBoxSelect, 0, 0, 3, 0);
+        leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
+        leftGrid.addComponent(tillDateDF, 2, 1, 3, 1);
+        if (currentUser.hasRole(Settings.rnAdmin)) {
+            leftGrid.addComponent(selectAllSchoolsBtn, 0, 2, 1, 2);
+            leftGrid.addComponent(deselectAllSchoolsBtn, 2, 2, 3, 2);
+            leftGrid.addComponent(schoolsTable, 0, 3, 3, 3);
+            leftGrid.setRowExpandRatio(3, 1);
+        }
+        leftGrid.addComponent(selectAllIncomesBtn, 0, 4, 1, 4);
+        leftGrid.addComponent(deselectAllIncomesBtn, 2, 4, 3, 4);
+        leftGrid.addComponent(incomeCategoriesTable, 0, 5, 3, 5);
+        leftGrid.addComponent(selectAllOutcomesBtn, 0, 6, 1, 6);
+        leftGrid.addComponent(deselectAllOutcomesBtn, 2, 6, 3, 6);
+        leftGrid.addComponent(outcomeCategoriesTable, 0, 7, 3, 7);
+        leftGrid.addComponent(generateBtn, 0, 8, 2, 8);
+        leftGrid.addComponent(excelBtn, 3, 8);
+        leftGrid.setRowExpandRatio(5, 1);
+        leftGrid.setRowExpandRatio(7, 1);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
 
@@ -270,11 +299,11 @@ public class MonthReport implements Button.ClickListener,
                                 rightLayout.addComponent(incomesDataTable);
                                 rightLayout.setExpandRatio(incomesDataTable, 1);
                                 if (currentUser.hasRole(Settings.rnAdmin)) {
-                                    dbTr.execSQL_by_months(myUI, 1,
+                                    dbTr.execSQL_by_months(myUI, 1, (Integer) cashBoxSelect.getValue(),
                                             schoolsTable, incomeCategoriesTable, fromDate, tillDate, incomesDataTable);
                                 } else {
                                     dbTr.execSQL_by_months(myUI, 1,
-                                            myUI.getUser().getSchool().getId(),
+                                            myUI.getUser().getSchool().getId(), (Integer) cashBoxSelect.getValue(),
                                             incomeCategoriesTable, fromDate, tillDate, incomesDataTable);
                                 }
                                 if (incomesDataTable.getContainerDataSource().size() != 0) {
@@ -286,10 +315,10 @@ public class MonthReport implements Button.ClickListener,
                                 rightLayout.addComponent(outcomesDataTable);
                                 rightLayout.setExpandRatio(outcomesDataTable, 1);
                                 if (currentUser.hasRole(Settings.rnAdmin)) {
-                                    dbTr.execSQL_by_months(myUI, 2, schoolsTable,
+                                    dbTr.execSQL_by_months(myUI, 2, (Integer) cashBoxSelect.getValue(), schoolsTable,
                                             outcomeCategoriesTable, fromDate, tillDate, outcomesDataTable);
                                 } else {
-                                    dbTr.execSQL_by_months(myUI, 2, myUI.getUser().getSchool().getId(),
+                                    dbTr.execSQL_by_months(myUI, 2, myUI.getUser().getSchool().getId(), (Integer) cashBoxSelect.getValue(),
                                             outcomeCategoriesTable, fromDate, tillDate, outcomesDataTable);
                                 }
                                 if (outcomesDataTable.getContainerDataSource().size() != 0) {
@@ -512,7 +541,7 @@ public class MonthReport implements Button.ClickListener,
         }
         if (excelBtn.isEnabled()) {
             if (property == incomeCategoriesTable || property == outcomeCategoriesTable
-                    || property == fromDateDF || property == tillDateDF) {
+                    || property == fromDateDF || property == tillDateDF || property == cashBoxSelect) {
                 excelBtn.setEnabled(false);
                 rightLayout.removeAllComponents();
             }
