@@ -12,6 +12,9 @@ import kg.alex.indigo.dao.DbRelative;
 import kg.alex.indigo.domain.StudentInfoPdf;
 import kg.alex.indigo.i18n.IndigoMessages;
 import kg.alex.indigo.utils.Decliner;
+import kg.alex.indigo.utils.money.WritableSummRu;
+import kg.alex.indigo.utils.money.WritableSummRuSOM;
+import kg.alex.indigo.utils.money.WritableSummRuUSD;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,9 +22,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 
-public class ContractSchoolPdf_2024_ru {
+public class ContractIndigoWestPdf {
 
-    static final Logger logger = LogManager.getLogger(ContractSchoolPdf_2024_ru.class);
+    static final Logger logger = LogManager.getLogger(ContractIndigoWestPdf.class);
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
@@ -32,7 +35,7 @@ public class ContractSchoolPdf_2024_ru {
     private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
-    public ContractSchoolPdf_2024_ru(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractIndigoWestPdf(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.studentInfo = st_info;
 
@@ -81,7 +84,7 @@ public class ContractSchoolPdf_2024_ru {
                 table_date.setWidths(table_date_colsWidth);
                 table_date.getDefaultCell().setBorder(0);
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                table_date.addCell(new Phrase("г. " + studentInfo.getSchool().getCity(), ordBoldFont));
+                table_date.addCell(new Phrase("г. " + studentInfo.getSchool().getCity().toUpperCase(), ordBoldFont));
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                 table_date.addCell(new Phrase(Settings.dateRu.format(studentInfo.getContractInfo().getCreationDate()), ordBoldFont));
                 document.add(table_date);
@@ -95,14 +98,14 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("Учреждение " + studentInfo.getSchool().getName_ru()
-                        + " именуемая в дальнейшем «Школа», в лице директора ", ordFont));
+                paragraph.add(new Phrase(studentInfo.getSchool().getName_ru()
+                        + ", именуемая в дальнейшем «Школа» в лице директора ", ordFont));
                 String fullName = null;
                 try {
                     boolean isFeminine = studentInfo.getDirector().getGender_id() == 2;
                     fullName = dcl.DeclineSurnameGenitive(studentInfo.getDirector().getSurname(), isFeminine)
                             + " " + dcl.DeclineNameGenitive(studentInfo.getDirector().getName(), isFeminine, false);
-                    if (studentInfo.getDirector().getMiddle_name()!=null && !studentInfo.getDirector().getMiddle_name().equals("")) {
+                    if (studentInfo.getDirector().getMiddle_name() != null && !studentInfo.getDirector().getMiddle_name().equals("")) {
                         fullName += " " + dcl.DeclinePatronymicGenitive(studentInfo.getDirector().getMiddle_name(),
                                 null, isFeminine, false);
                     }
@@ -111,30 +114,110 @@ public class ContractSchoolPdf_2024_ru {
                     logger.catching(e);
                 }
                 paragraph.add(new Phrase(fullName, ordBoldFont));
-                paragraph.add(new Phrase(", действующего на основании Устава, утвержденного согласно ст.10 Закона Кыргызской Республики «Об образовании», с одной стороны, и ", ordFont));
-                paragraph.add(new Phrase(studentInfo.getRelative().getFullName() + ", ", ordBoldFont));
-                paragraph.add(new Phrase(" являющаяся(щийся) ", ordFont));
-                paragraph.add(new Phrase(studentInfo.getRelative().getRelativeDeclarative(), ordBoldFont));
-                paragraph.add(new Phrase(" Обучающегося " + studentInfo.getStudent().getClass_name() + " класса ", ordFont));
+                paragraph.add(new Phrase(" с одной стороны и родители (законные представители) ученика: " +
+                        studentInfo.getRelative().getFullName(), ordFont));
+
+                paragraph.add(new Phrase(" Именуемый в дальнейшем «Родители», с другой стороны, заключили в соответствии с Гражданским Кодексом КР, Законами КР «Об образовании» и «Защите прав потребителей», а также Положением о формировании и применении тарифов на платные образовательные услуги в КР, утверждённом Постановлением Правительства КР от 10.052009 г.№300 в ред. Постановления Правительства КР от 10.07 2012 г.№817) настоящий Договор о нижеследующем:", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.add(new Phrase("1. Предмет договора", boldFont));
+                paragraph.setAlignment(Element.ALIGN_LEFT);
+                document.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("Школа предоставляет, а родители оплачивают образовательные услуги, соответствующие требованиям Государственного образовательного стандарта среднего общего образования КР, утверждённого Постановлением Правительства КР от 21.07.2014 г. №403", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.add(new Phrase("2. Обязанности школы", boldFont));
+                paragraph.setAlignment(Element.ALIGN_LEFT);
+                document.add(paragraph);
 
                 fullName = studentInfo.getStudent().getSurname() + " " + studentInfo.getStudent().getName();
                 try {
-                    boolean isFeminine = studentInfo.getStudent().getGender_id() == 2;
-                    fullName = dcl.DeclineSurnameGenitive(studentInfo.getStudent().getSurname(), isFeminine) + " "
-                            + dcl.DeclineNameGenitive(studentInfo.getStudent().getName(), isFeminine, false);
-                    if (!studentInfo.getStudent().getMiddle_name().equals("")) {
-                        fullName = fullName + " "
-                                + dcl.DeclinePatronymicGenitive(studentInfo.getStudent().getMiddle_name(),
-                                null, isFeminine, false);
-                    }
+                    fullName = dcl.Decline(studentInfo.getStudent().getSurname() + " " + studentInfo.getStudent().getName()
+                            + " " + studentInfo.getStudent().getMiddle_name(), 4, studentInfo.getStudent().getGender_id(), false);
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);
                 }
-                paragraph.add(new Phrase(fullName, ordBoldFont));
-                paragraph.add(new Phrase(", именуемый(ая) в дальнейшем ", ordFont));
-                paragraph.add(new Phrase("«" + studentInfo.getRelative().getRelativeTitle() + "» ", ordBoldFont));
-                paragraph.add(new Phrase("с другой стороны, в интересах обучающегося, в соответствии со ст.4 Закона Кыргызской Республики «Об образовании», заключили настоящий Договор о нижеследующем:", ordFont));
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.add(new Phrase("2.1. Зачислить ученика ", ordFont));
+                paragraph.add(new Phrase(fullName, boldFont));
+                paragraph.add(new Phrase(" в " + studentInfo.getSchool().getName_ru() + " в " + studentInfo.getStudent().getClass_name() + " класс в соответствии с возрастом и на основании заявления о приёме.", ordFont));
+                document.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("2.2. Обучать ученика в соответствии с Государственным образовательным стандартом, предметными стандартами и учебными программами КР, другими программами по физическому, культурно-эстетическому воспитанию и интеллектуальному развитию.", ordFont));
+                document.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("2.3. Оказывать образовательные услуги в соответствии с учебным планом, годовым календарным графиком и расписанием занятий, разрабатываемыми Школой", ordFont));
+                document.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("2.4. Обеспечивать условия для укрепления нравственного, физического и психологического здоровья ученика, его интеллектуального, физического и личностного развития творческих способностей и интересов, эмоционального благополучия ученика с учётом его индивидуальных особенностей.", ordFont));
+                document.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.add(new Phrase("2.5. Обеспечить для проведения занятий помещения, соответствующие санитарным и гигиеническим требованиям, а также оснащение, соответствующие обязательным нормам и правилам, предъявляемым к образовательному процессу.", ordFont));
+                document.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("2.6. Выдать учащемуся соответствующий документ об освоении тех или иных компонентов программ среднего общего образования (за класс, за освоенные предметы) в случае ухода учащегося из школы до завершения им обучения в полном объёме, предусмотренном настоящим Договором.", ordFont));
+                document.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("2.7. Обеспечивать учащихся питанием.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -143,27 +226,64 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.add(new Phrase("1. ПРЕДМЕТ ДОГОВОРА", boldFont));
-                paragraph.setAlignment(Element.ALIGN_CENTER);
+                paragraph.setAlignment(Element.ALIGN_LEFT);
+                paragraph.add(new Phrase("3. Обязанности родителей", boldFont));
                 document.add(paragraph);
-
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.1. Предметом Договора является образовательная деятельность, предоставляемая школой в рамках государственного образовательного стандарта и программ соответствующего уровня образования на платной основе на период ", ordFont));
-                paragraph.add(new Phrase(studentInfo.getPeriod() + ".", ordBoldFont));
+                paragraph.add(new Phrase("3.1. Своевременно вносить оплату за обучение (с 25-го по 1 число текущего месяца)", ordFont));
                 document.add(paragraph);
-
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.2. Родители обязуются вносить оплату за образовательные услуги согласно пункту 3 (Условия оплаты Родителей за образовательные услуги) данного Договора.", ordFont));
+                paragraph.add(new Phrase("3.2. При поступлении ученика в Школу предоставить: заявление, медицинские документы, фотографию ученика, личное дело учащегося, копию свидетельства о рождении, копию паспорта одного из родителей (законного представителя). В процессе обучения своевременно предоставлять все необходимые документы, запрашиваемые Школой.", ordFont));
+                document.add(paragraph);
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("3.3. Родители должны предоставить в письменном виде в Школу любые сведения о физических, психических или эмоциональных особенностях ученика или любых других его поведенческих качествах ,которые могут повлиять на зачисление ученика в школу, его обучение или воспитание в школе. В противном случае, подписание настоящего договора означает, что ученик физически и психологически способен участвовать во всех аспектах обучения и воспитания в школе.", ordFont));
+                document.add(paragraph);
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("3.4. Отправлять ученика в школу в опрятном виде, чистой одежде и обуви, обеспечить учащихся сменной одеждой, формой для занятий физкультурой и ритмикой в зале и на улице, необходимыми канцтоварами.", ordFont));
+                document.add(paragraph);
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("3.5. Проявлять уважение к администрации, учителям и техническому персоналу Школы.", ordFont));
+                document.add(paragraph);
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("3.6. По просьбе учителя или администрации школы приходить для беседы при наличии претензий школы к поведению ученика или его отношению к обучению.", ordFont));
+                document.add(paragraph);
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("3.7. Возмещать ущерб, причиненный учеником имуществу Школы в соответствии с законодательством КР.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -172,15 +292,16 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.add(new Phrase("2. ПРАВА И ОБЯЗАННОСТИ СТОРОН", boldFont));
-                paragraph.setAlignment(Element.ALIGN_CENTER);
+                paragraph.setAlignment(Element.ALIGN_LEFT);
+                paragraph.add(new Phrase("4. Права школы", boldFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.add(new Phrase("2.1. Школа обязуется:", boldUnderlinedFont));
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("Школа вправе:", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -189,7 +310,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.1.1. Организовать и обеспечить надлежащее исполнение образовательной деятельности, предусмотренной в пункте 1.1. настоящего Договора, согласно Устава Общеобразовательной Школы, ст.10 Закона Кыргызской Республики «Об образовании».", ordFont));
+                paragraph.add(new Phrase("4.1. Провести диагностическое оценивание учебных достижений учащегося при приёме ученика в школу и ознакомить родителей с результатами данного оценивания. По результатам оценивания определить требования к родителям о необходимости организации дополнительных занятий сверх тех, которые предлагает Школа по учебным предметам для учеников с низкими результатами диагностического оценивания.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -198,7 +319,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.1.2. При первоначальном поступлении в Школу разово обеспечить Обучающегося школьной формой, которая в последующем, по мере необходимости должна приобретаться за счет Родителя.", ordFont));
+                paragraph.add(new Phrase("4.2. Не допускать ученика к занятиям при наличии первых признаков заболевания (насморк, кашель, покраснение глаз, сыпь по телу.) При возникновении признаков заболевания вызывать родителей в школу с целью передачи ученика родителям для организации обследования и лечения.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -207,15 +328,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.1.3. Обеспечить безопасность Учащегося во взаимодействии со структурными подразделениями Школы, осуществляющими организацию внутриобъектного и пропускного режимов.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.add(new Phrase("2.2 Школа имеет право:", boldUnderlinedFont));
+                paragraph.add(new Phrase("4.3. Не допускать ученика к занятиям при отсутствии оплаты за текущий месяц. В случае неоплаты за 1 и более месяцев, Школа имеет право не допускать ученика к переводным экзаменами и отчислить учащегося из школы", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -224,7 +337,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.1. Самостоятельно устанавливать и изменять размер родительских взносов, согласно годовой смете расходов.", ordFont));
+                paragraph.add(new Phrase("4.4. В случае, если ученик пропускает занятия, школа не несёт ответственности за результаты обучения ученика.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -233,227 +346,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.2. Школа имеет право ежегодно изменять процентные ставки льготникам, при этом предоставленные скидки действуют только в течении данного учебного года. Установленные льготы ", ordFont));
-                paragraph.add(new Phrase("аннулируются ", ordBoldFont));
-                paragraph.add(new Phrase("в случае наличия у Обучающегося дисциплинарного взыскания. А также в случае нарушения графика оплаты Родителем 3 раза, все ранее предоставленные скидки ", ordFont));
-                paragraph.add(new Phrase("аннулируются ", ordBoldFont));
-                paragraph.add(new Phrase("без предупреждения.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.3. При несвоевременной оплате Родителями образовательных услуг (пункт 3 данного Договора) Обучающийся не допускается к переводным экзаменам из класса в класс (Приказ №281/1 от 10.03.2017 г., п.70 Положения МОиН КР).", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.4. При несвоевременной оплате Родителем взноса, с извещением Родителя ограничить доступ посещения Обучающегося ко всем формам учебных и не учебных занятий и использования материально-технических условий (занятий, библиотеки, столовой, кружков, этюдов и тд., не допускать на экзамены, не выставлять оценки “Эдупэйдж”, “Emektep”). Помимо этого без предупреждения Родителя ", ordFont));
-                paragraph.add(new Phrase("аннулируются ", ordBoldFont));
-                paragraph.add(new Phrase("предоставленные Школой скидки (скидки за успеваемость, призерам олимпиад, скидка за высший балл при поступлении и тд).", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.5. Отчислить Обучающегося из Школы согласно Устава Школы:", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("а) грубого, систематического нарушения «Правил внутреннего распорядка» по решению педагогического совета Школы;", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("б) противозаконных действий по отношению к сверстникам и персоналу Школы.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.6. Удержать сумму родительского взноса за текующую четверть, при расторжении настоящего договора по инициативе Родителя, при этом ранее предусмотренные скидки не учитываются.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.7. При расторжении настоящего договора по непредвиденным обстоятельствам, с учетом всех понесенных расходов школы, сумма подлежащяя к возврату, возвращается по мере возможности Школы, но не позднее мая следующего года.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.8. В целях оповещения образовательного процесса и деятельности Лицея без уведомления учащегося и родителей размещать фото и видеоматериалы в своих интернет страницах и СМИ.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.add(new Phrase("2.3. Родители обязаны:", boldUnderlinedFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3.1. Ознакомиться и утвердить свое согласие с Уставом и локальными актами Школы, регламентирующими правила поведения Обучающегося, взаимоотношений участников образовательного процесса, распорядка дня и т.д.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3.2. Провести медицинский осмотр по форме М-86, и предоставить заключение о состоянии здоровья Обучающегося на начало нового учебного года.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3.3. Согласовать с медслужбой Школы постановку на учет Обучающегося с хроническим заболеванием и последующие совместные действия.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3.4. Обеспечить Обучающегося всеми необходимыми канцелярскими принадлежностями для собственного использования (тетради, альбомы, ручки, цветные карандаши, точилки и т.д.).", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3.5. Компенсировать материальный ущерб за причиненный Обучающимся ущерб имуществу Школы.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3.6. Содействовать и участвовать в традиционных мероприятиях Школы, предусматривающих участие всех участников образовательного процесса.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3.7. Согласовать с Администрацией Школы осуществление подвоза детей в Школу и обратно.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3.8. Родители ответственны за сохранность учебников, выданных Школой. В случае порчи или утери, возмещают полностью.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3.9. Известить Администрацию Школы в течении 5 рабочих дней об изменении места жительства и/или контактных телефонов.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3.10. Вне территории Школы, ответственность за жизнь и безопасность Учащегося Школа не несет.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.add(new Phrase("2.4. Родители имеют право:", boldUnderlinedFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.4.1. Требовать от Администрации Школы выполнения условий согласно настоящего Договора.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.4.2. На защиту законных прав интересов детей.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.4.3. На ознакомление с содержанием, реализацией и результатами образовательного процесса.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.4.4. Избираться в состав Школьного или классного родительского комитета.", ordFont));
+                paragraph.add(new Phrase("4.5. Школа в праве отказать Родителям в заключении Договора на новый срок по истечении действия настоящего Договора, письменно уведомив Родителей об этом за 1 месяц, если Родители и/или ученик в период его действия допускали нарушения, предусмотренные гражданским законодательством и настоящим Договором, и дающие Школе право в одностороннем порядке отказаться от исполнения Договора.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -462,8 +355,8 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_CENTER);
-                paragraph.add(new Phrase("3. УСЛОВИЯ ОПЛАТЫ РОДИТЕЛЕЙ ЗА ОБРАЗОВАТЕЛЬНЫЕ УСЛУГИ", boldFont));
+                paragraph.setAlignment(Element.ALIGN_LEFT);
+                paragraph.add(new Phrase("5. Права родителей", boldFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
@@ -471,8 +364,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.1. Ежегодно с 1 апреля по 15 мая Родители обязаны заключить договор на образовательные услуги на следующий учебный год, ", ordFont));
-                paragraph.add(new Phrase("с обязательным внесением 30% предоплаты родительского взноса.", ordBoldUnderlinedFont));
+                paragraph.add(new Phrase("Родители вправе:", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
@@ -480,7 +372,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("В случае не заключения договора в указанные сроки место Обучающегося будет предоставлено другим желающим.", ordFont));
+                paragraph.add(new Phrase("5.1. Осмотреть школу и удостовериться. Что условия являются достаточными и приемлемыми для обучения их ребёнка.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
@@ -488,9 +380,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.2. Своевременно вносить оплату за образовательные услуги Обучающегося в Школе, ", ordFont));
-                paragraph.add(new Phrase("согласно настоящему договору и индивидуального графика оплаты", ordBoldUnderlinedFont));
-                paragraph.add(new Phrase(" между Школой и Родителями.", ordFont));
+                paragraph.add(new Phrase("5.2. Получать от Школы(учителя)полную и достоверную информацию об оценке знаний, умений, иных образовательных достижений ученика, а также о критериях этой оценки, о поведении и отношении ученика к учёбе и его способностях в отношении обучения по отдельным предметам учебного плана.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
@@ -498,7 +388,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.2.1. Родительская плата производится согласно Графику, подписанному обеими сторонами, являющегося неотъемлемой частью настоящего договора. При этом последний взнос должен быть внесен не позднее 28го февраля следующего года. Размер родительского взноса не изменяется даже при условии перехода Школы на дистанционную форму обучения.", ordFont));
+                paragraph.add(new Phrase("5.3. Выбирать различные виды дополнительного образования в школе за дополнительную оплату.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
@@ -506,29 +396,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.2.2. Общая стоимость платы за образовательные услуги Обучающегося (родительские взносы) составляет ", ordFont));
-                paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getContract()), ordBoldFont));
-                paragraph.add(new Phrase(" долларов США, которая производится строго в сомах на день оплаты по курсы НБ КР.", ordFont));
-                document.add(paragraph);
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.2.3. Родительская плата производится ", ordFont));
-                paragraph.add(new Phrase("в сомах на банковский счет Школы,", ordBoldFont));
-                paragraph.add(new Phrase(" не позднее 3 календарных дней с даты, указанной в официальном счете/invoice.", ordFont));
-                document.add(paragraph);
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.3. Школа удерживает ", ordFont));
-                paragraph.add(new Phrase("сумму за одну четверть", ordBoldFont));
-                paragraph.add(new Phrase(" оплаты за образовательные услуги при расторжении настоящего договора по инициативе Родителей.", ordFont));
+                paragraph.add(new Phrase("5.4. Расторгнуть настоящий договор досрочно в одностороннем порядке при условии предварительного письменного уведомления об этом Школы за 1 месяц. Внесённая оплата за текущий месяц возврату не подлежит.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -537,8 +405,33 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_CENTER);
-                paragraph.add(new Phrase("4. ФОРС-МАЖОР", boldFont));
+                paragraph.setAlignment(Element.ALIGN_LEFT);
+                paragraph.add(new Phrase("6. Оплата услуг", boldFont));
+                document.add(paragraph);
+
+                WritableSummRu convertToLetters = null;
+                if (studentInfo.getContractInfo().getCurrency() == Settings.KGS) {
+                    convertToLetters = new WritableSummRuSOM();
+                } else {
+                    convertToLetters = new WritableSummRuUSD();
+                }
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("6.1. Родители оплачивают за обучение ученика "
+                        + Settings.dFormat2.format(studentInfo.getContractInfo().getContract()) + " " + studentInfo.getContractInfo().getCurrency()
+                        + " (" + convertToLetters.numberToString(
+                        Math.round(studentInfo.getContractInfo().getContract())) + ") в год. Или в размере "
+                        + Settings.dFormat2.format(studentInfo.getContractInfo().getContract() / 9) + " " + studentInfo.getContractInfo().getCurrency()
+                        + " (" + convertToLetters.numberToString(
+                        Math.round(studentInfo.getContractInfo().getContract() / 9)) + ") в месяц Или "
+                        + Settings.dFormat2.format(studentInfo.getContractInfo().getContract() / 10) + " " + studentInfo.getContractInfo().getCurrency()
+                        + " (" + convertToLetters.numberToString(
+                        Math.round(studentInfo.getContractInfo().getContract() / 10)) + ") в месяц включая июнь (с сентября по июнь)", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
@@ -546,7 +439,23 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("4.1. Ни одна из сторон не несет ответственности за полное или частичное неисполнение своих обязательств при возникновении обстоятельств, которые делают полностью или частично невозможным выполнение Договора одной из сторон, а именно: пожар, стихийное природное бедствие (землетрясение, наводнение и др.), война, военные действия всех видов, забастовка, блокада, эпидемия, изменение текущего Законодательства Кыргызской Республики и другие возможные обстоятельства непреодолимой силы, не зависящие от сторон, подписавших Договор.", ordFont));
+                paragraph.add(new Phrase("6.2. В случае несвоевременной оплаты (задержке) взымается пеня в размере 200 сом за каждый просроченный день.", ordFont));
+                document.add(paragraph);
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("6.3. В случае отсутствия ученика на занятиях перерасчёт месячной оплаты не производится.", ordFont));
+                document.add(paragraph);
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("6.4. По инициативе Школы допускается изменение стоимости услуг с начала любого календарного месяца в течении срока действия договора при изменении внешних экономических условий. При этом Школа обязана предупредить Родителей информационным письмом не позднее, чем за 10 календарных дней до начала месяца. При несогласии Родителей с изменением размеров оплаты настоящий Договор подлежит расторжению. В случае несвоевременного информирования Родителей об изменении размеров оплаты договор подлежит исполнению в течении следующего календарного месяца на раннее принятых условиях.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -555,8 +464,17 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_CENTER);
-                paragraph.add(new Phrase("5. СРОК ДЕЙСТВИЯ ДОГОВОРА, ПОРЯДОК ИЗМЕНЕНИЯ, ДОПОЛНЕНИЯ И РАСТОРЖЕНИЯ", boldFont));
+                paragraph.setAlignment(Element.ALIGN_LEFT);
+                paragraph.add(new Phrase("7. Основания изменения и расторжения договора", boldFont));
+                document.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("7.1. Условия, на которых заключён настоящий договор, могут быть изменены либо по соглашению сторон, либо в соответствии с действующим законодательством КР.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
@@ -564,7 +482,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.1. Настоящий Договор вступает в силу с момента его подписания обеими сторонами.", ordFont));
+                paragraph.add(new Phrase("7.2. Школа вправе отказаться от исполнения своих обязательств по настоящему Договору, если Родители нарушили сроки оплаты услуг по настоящему Договору на 2 недели однократно, либо неоднократно нарушили иные обязательства, предусмотренные в разделе 3 «Обязанности Родителей» настоящего Договора, что явно затрудняет исполнение обязательств Школой и нарушает права и законные интересы учеников и работников Школы.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
@@ -572,7 +490,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.2. Настоящий Договор может быть расторгнут досрочно, согласно п.2.2.2.", ordFont));
+                paragraph.add(new Phrase("7.3. Если ученик своим поведением систематически нарушает права и законные интересы других учеников и работников Школы, расписание занятий или препятствует нормальному осуществлению образовательного процесса, Школа вправе отказаться от исполнения Договора, когда после 3 –х письменных уведомлений Родители не устранят указанные нарушения.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
@@ -580,7 +498,26 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.3. Любые дополнения и изменения к настоящему Договору действительны лишь при условии, что они совершены в письменной форме и подписаны обеими сторонами.", ordFont));
+                paragraph.add(new Phrase("7.4. Договор считается расторгнутым со дня письменного уведомления Школой Родителей об отказе от исполнения Договора.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_LEFT);
+                paragraph.add(new Phrase("8. Срок действия договора и другие условия", boldFont));
+                document.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(25);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("8.1. Договор действует с момента его подписания в течении " + studentInfo.getYear() + " учебного года.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(25);
@@ -588,32 +525,7 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.4. Все разногласия по данному Договору решаются сторонами в порядке переговоров. В случае невозможности разрешения спора путем переговоров, они решаются в судебном порядке, установленном законодательством Кыргызской Республики.", ordFont));
-                document.add(paragraph);
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.5. Стороны договорились, что деловая корреспонденция и иные документы, касающиеся настоящего Договора, отправленные и полученные посредством факсимильной, электронной связи или иным способом, позволяющим достоверно установить, что документ исходит от стороны по Договору, признаются имеющими юридическую силу.", ordFont));
-                document.add(paragraph);
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.6. Настоящий Договор составлен в двух экземплярах на русском (кыргызском) языке и подписан обеими сторонами. Оба экземпляра идентичны и имеют одинаковую юридическую силу. У каждой из сторон находится один экземпляр настоящего Договора.", ordFont));
-                document.add(paragraph);
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(25);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.7. Срок действия настоящего договора ", ordFont));
-                paragraph.add(new Phrase("один учебный год.", ordBoldUnderlinedFont));
+                paragraph.add(new Phrase("8.2. Договор составлен в двух экземплярах, имеющих равную юридическую силу.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -623,8 +535,8 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_CENTER);
-                paragraph.add(new Phrase("6. РЕКВИЗИТЫ СТОРОН", boldFont));
+                paragraph.setAlignment(Element.ALIGN_LEFT);
+                paragraph.add(new Phrase("9. Реквизиты сторон", boldFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -746,7 +658,7 @@ public class ContractSchoolPdf_2024_ru {
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("ИТОГО взноса: ", ordFont));
                 text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getContract()) + ""), ordBoldFont));
-                text15.add(new Phrase(" долларов США.", ordFont));
+                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 text15.add(Chunk.NEWLINE);
                 if (studentInfo.getContractInfo().getDebt() >= 0) {
                     text15.add(new Phrase("Долг с предыдущего года: ", ordFont));
@@ -754,7 +666,7 @@ public class ContractSchoolPdf_2024_ru {
                     text15.add(new Phrase("Переплата с предыдущего года: ", ordFont));
                 }
                 text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getDebt()) + ""), ordBoldFont));
-                text15.add(new Phrase(" долларов США.", ordFont));
+                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Скидка: ", ordFont));
                 if (studentInfo.getContractInfo().getDiscountStr() != null) {
@@ -770,11 +682,11 @@ public class ContractSchoolPdf_2024_ru {
                 text15.add(new Phrase("Предоплата: ", ordFont));
                 text15.add(new Phrase(studentInfo.getContractInfo().getInitialPayment() == null ? "0.00" :
                         Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()) + "", ordBoldFont));
-                text15.add(new Phrase(" долларов США.", ordFont));
+                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Остаток: ", ordFont));
                 text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()) + "", ordBoldFont));
-                text15.add(new Phrase(" долларов США.", ordFont));
+                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 document.add(text15);
                 document.add(new Paragraph(10, " "));
 
@@ -808,7 +720,8 @@ public class ContractSchoolPdf_2024_ru {
                 }
                 TContract.addCell(new Phrase("", ordFont));
                 TContract.addCell(new Phrase("Итого:", ordBoldFont));
-                TContract.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getNet()) + "", ordBoldFont));
+                TContract.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getNet()) + " "
+                        + studentInfo.getContractInfo().getCurrency(), ordBoldFont));
                 TContract.addCell(new Phrase("", ordFont));
                 TContract.addCell(new Phrase("", ordFont));
 

@@ -18,9 +18,9 @@ import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-public class ContractAsylkech_Pdf {
+public class ContractAsylkechPdf {
 
-    static final Logger logger = LogManager.getLogger(ContractAsylkech_Pdf.class);
+    static final Logger logger = LogManager.getLogger(ContractAsylkechPdf.class);
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
@@ -31,7 +31,7 @@ public class ContractAsylkech_Pdf {
     private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
 
-    public ContractAsylkech_Pdf(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractAsylkechPdf(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.studentInfo = st_info;
 

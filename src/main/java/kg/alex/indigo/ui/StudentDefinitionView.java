@@ -498,6 +498,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG.setNullSelectionAllowed(true);
         contractTypeOG.addValueChangeListener(this);
         contractTypeOG.addItem(myUI.getMessage(IndigoMessages.AsylkechContract));
+        contractTypeOG.addItem(myUI.getMessage(IndigoMessages.IndigoWestContract));
         contractTypeOG.addItem(myUI.getMessage(IndigoMessages.KidsContract));
         contractTypeOG.addItem(myUI.getMessage(IndigoMessages.SchoolContrRu));
         contractTypeOG.addItem(myUI.getMessage(IndigoMessages.SchoolContrKg));
@@ -1090,6 +1091,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             correctionsTable.removeItem(event.getButton().getData().toString());
             recountInstPlanLabel();
         } else if (tabs.getSelectedTab() == tabs.getTab(payTableLay).getComponent() && source.getCaption() == null) {
+            delPayIds.add(source.getData().toString());
             paymentsTable.removeItem(event.getButton().getData().toString());
         }
     }
@@ -1299,7 +1301,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 allDisc.append(" - ").append(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue().toString()).append("% (").append(Settings.dFormat2.format(count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue()) / 100)).append(" долларов США)");
+                                        .getPropertyDataSource().getValue()) / 100)).append(" ").append(currency).append(")");
                                 count_amount -= count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue()) / 100;
@@ -1312,7 +1314,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     .getContainerProperty(next, myUI.getMessage(IndigoMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(IndigoMessages.DiscountType)).getValue() == 4)) {
                                 allDisc.append("(").append(Settings.dFormat2.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue())).append(" долларов США)");
+                                        .getPropertyDataSource().getValue())).append(" ").append(currency).append(")");
                                 count_amount -= (Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue();
                             }
@@ -1335,7 +1337,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                             myUI.getMessage(IndigoMessages.Title)).getValue().toString()));
                             allCorrections.append(dis);
                             allCorrections.append(" (").append(Settings.dFormat2.format(((TextField) correctionsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Amount)).getValue())
-                                    .getPropertyDataSource().getValue())).append(" долларов США)");
+                                    .getPropertyDataSource().getValue())).append(" ").append(currency).append(")");
                             if (iter.hasNext()) {
                                 allCorrections.append(", ");
                             }
@@ -1344,14 +1346,17 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     }
                     studInfo.getContractInfo().setNet(toPay);
                     studInfo.getContractInfo().setLeft(ttl_left);
+                    studInfo.getContractInfo().setCurrency(currency);
                     if (studInfo.getRelative() != null && studInfo.getRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
                                 saveBtn.click();
                                 if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.AsylkechContract))) {
-                                    new ContractAsylkech_Pdf(myUI, studInfo, instPlanCont);
+                                    new ContractAsylkechPdf(myUI, studInfo, instPlanCont);
+                                }else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.IndigoWestContract))) {
+                                    new ContractIndigoWestPdf(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.KidsContract))) {
-                                    new ContractKidsPdf(myUI, studInfo);
+                                    new ContractKidsPdf(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.SchoolContrRu))) {
                                     if (myUI.getUser().getCurrent_year().getId() == 9) {
                                         new ContractSchoolPdf_2024_ru(myUI, studInfo, instPlanCont);
@@ -2717,25 +2722,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void setPaymentsTable() {
         if (NATURAL_COL_ORDER_PAYMENTS == null) {
-
-            if (myUI.getUser().getSchool().getCurrency_id() == 1) {
-                NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
-                        myUI.getMessage(IndigoMessages.PaymentCategoryType),
-                        myUI.getMessage(IndigoMessages.PaymentType),
-                        myUI.getMessage(IndigoMessages.Rate),
-                        myUI.getMessage(IndigoMessages.AmountKGS),
-                        myUI.getMessage(IndigoMessages.WhoPaid), myUI.getMessage(IndigoMessages.Date),
-                        myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Print)};
-            } else {
-                NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
-                        myUI.getMessage(IndigoMessages.PaymentCategoryType),
-                        myUI.getMessage(IndigoMessages.PaymentType),
-                        myUI.getMessage(IndigoMessages.Rate),
-                        myUI.getMessage(IndigoMessages.AmountUSD),
-                        myUI.getMessage(IndigoMessages.AmountKGS),
-                        myUI.getMessage(IndigoMessages.WhoPaid), myUI.getMessage(IndigoMessages.Date),
-                        myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Print)};
-            }
+            NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
+                    myUI.getMessage(IndigoMessages.PaymentCategoryType),
+                    myUI.getMessage(IndigoMessages.PaymentType),
+                    myUI.getMessage(IndigoMessages.Rate),
+                    myUI.getMessage(IndigoMessages.AmountUSD),
+                    myUI.getMessage(IndigoMessages.AmountKGS),
+                    myUI.getMessage(IndigoMessages.WhoPaid), myUI.getMessage(IndigoMessages.Date),
+                    myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Print)};
         }
         try {
             DbStudentPayment dbsa = new DbStudentPayment();
@@ -3007,24 +3001,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void addPaymentsItem() {
         if (NATURAL_COL_ORDER_PAYMENTS == null) {
-            if (myUI.getUser().getSchool().getCurrency_id() == 1) {
-                NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
-                        myUI.getMessage(IndigoMessages.PaymentCategoryType),
-                        myUI.getMessage(IndigoMessages.PaymentType),
-                        myUI.getMessage(IndigoMessages.Rate),
-                        myUI.getMessage(IndigoMessages.AmountKGS),
-                        myUI.getMessage(IndigoMessages.WhoPaid), myUI.getMessage(IndigoMessages.Date),
-                        myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Print)};
-            } else {
-                NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
-                        myUI.getMessage(IndigoMessages.PaymentCategoryType),
-                        myUI.getMessage(IndigoMessages.PaymentType),
-                        myUI.getMessage(IndigoMessages.Rate),
-                        myUI.getMessage(IndigoMessages.AmountUSD),
-                        myUI.getMessage(IndigoMessages.AmountKGS),
-                        myUI.getMessage(IndigoMessages.WhoPaid), myUI.getMessage(IndigoMessages.Date),
-                        myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Print)};
-            }
+            NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
+                    myUI.getMessage(IndigoMessages.PaymentCategoryType),
+                    myUI.getMessage(IndigoMessages.PaymentType),
+                    myUI.getMessage(IndigoMessages.Rate),
+                    myUI.getMessage(IndigoMessages.AmountUSD),
+                    myUI.getMessage(IndigoMessages.AmountKGS),
+                    myUI.getMessage(IndigoMessages.WhoPaid), myUI.getMessage(IndigoMessages.Date),
+                    myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Print)};
         }
         String id = Settings.FreshItem + (--r_table_counter);
         if (paymentsTable.getContainerDataSource().size() == 0) {

@@ -929,7 +929,7 @@ public class Decliner {
             switch (end) {
                 case "а":
 
-                    switch (Surname.substring(Surname.length() - 2, 1)) {
+                    switch (Surname.substring(Surname.length() - 2)) {
                         case "а":
                         case "е":
                         case "ё":
@@ -983,7 +983,7 @@ public class Decliner {
         } else {
             switch (end) {
                 case "а":
-                    switch (Surname.substring(Surname.length() - 2, 1)) {
+                    switch (Surname.substring(Surname.length() - 2)) {
                         case "а":
                         case "е":
                         case "ё":
@@ -1120,7 +1120,7 @@ public class Decliner {
         if (!IsFeminine) {
             switch (end) {
                 case "а":
-                    switch (Surname.substring(Surname.length() - 2, 1)) {
+                    switch (Surname.substring(Surname.length() - 2)) {
                         case "а":
                         case "е":
                         case "ё":
@@ -1174,7 +1174,7 @@ public class Decliner {
         } else {
             switch (end) {
                 case "а":
-                    switch (Surname.substring(Surname.length() - 2, 1)) {
+                    switch (Surname.substring(Surname.length() - 2)) {
                         case "а":
                         case "е":
                         case "ё":
@@ -1294,7 +1294,7 @@ public class Decliner {
         if (!IsFeminine) {
             switch (end) {
                 case "а":
-                    switch (Surname.substring(Surname.length() - 2, 1)) {
+                    switch (Surname.substring(Surname.length() - 2)) {
                         case "а":
                         case "е":
                         case "ё":
@@ -1348,7 +1348,7 @@ public class Decliner {
         } else {
             switch (end) {
                 case "а":
-                    switch (Surname.substring(Surname.length() - 2, 1)) {
+                    switch (Surname.substring(Surname.length() - 2)) {
                         case "а":
                         case "е":
                         case "ё":
@@ -1506,7 +1506,7 @@ public class Decliner {
         if (!IsFeminine) {
             switch (end) {
                 case "а":
-                    switch (Surname.substring(Surname.length() - 2, 1)) {
+                    switch (Surname.substring(Surname.length() - 2)) {
                         case "а":
                         case "е":
                         case "ё":
@@ -1562,7 +1562,7 @@ public class Decliner {
         } else {
             switch (end) {
                 case "а":
-                    switch (Surname.substring(Surname.length() - 2, 1)) {
+                    switch (Surname.substring(Surname.length() - 2)) {
                         case "а":
                         case "е":
                         case "ё":
@@ -1699,7 +1699,7 @@ public class Decliner {
         if (!IsFeminine) {
             switch (end) {
                 case "а":
-                    switch (Surname.substring(Surname.length() - 2, 1)) {
+                    switch (Surname.substring(Surname.length() - 2)) {
                         case "а":
                         case "е":
                         case "ё":
@@ -1753,7 +1753,7 @@ public class Decliner {
         } else {
             switch (end) {
                 case "а":
-                    switch (Surname.substring(Surname.length() - 2, 1)) {
+                    switch (Surname.substring(Surname.length() - 2)) {
                         case "а":
                         case "е":
                         case "ё":

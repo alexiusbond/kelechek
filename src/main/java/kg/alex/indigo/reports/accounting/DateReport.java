@@ -196,10 +196,6 @@ public class DateReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        if (!currentUser.hasRole(Settings.rnAdmin) && myUI.getUser().getSchool().getCurrency_id() == 1) {
-            cashBoxSelect.setEnabled(false);
-            cashBoxSelect.setValue(1);
-        }
 
         leftGrid.addComponent(cashBoxSelect, 0, 0, 3, 0);
         leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);

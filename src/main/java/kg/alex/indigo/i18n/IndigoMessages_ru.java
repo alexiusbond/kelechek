@@ -477,6 +477,7 @@ public class IndigoMessages_ru extends IndigoMessages {
             {Report, "Отчет"},
             {ToPlan, "К плану"},
             {AsylkechContract, "Договор Asylkech"},
+            {IndigoWestContract, "Договор Indigo West"},
             {KidsContract, "Договор Детсад"},
             {SchoolContrRu, "Договор Сапат (RU)"},
             {SchoolContrKg, "Договор Сапат (KG)"},

@@ -14,6 +14,7 @@ public class ContractInfo implements Serializable {
     private Double debt;
     private Double installmentPlanDebt;
     private Double discount;
+    private String currency;
     private String discountStr;
     private String discountPercentage;
     private Double correction;
@@ -28,6 +29,14 @@ public class ContractInfo implements Serializable {
     private int duration;
     private int contractNumber;
     private Date creationDate;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 
     public String getTotalPayments() {
         return totalPayments;

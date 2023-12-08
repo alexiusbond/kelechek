@@ -236,9 +236,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 recount();
             }
         });
-        if (myUI.getUser().getSchool().getCurrency_id() == 1) {
-            cashBoxesOG.setEnabled(false);
-        }
 
         addComponent(hl, 0, 0);
         addComponent(addButton, 0, 1);
