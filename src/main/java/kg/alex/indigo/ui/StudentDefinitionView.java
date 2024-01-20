@@ -1353,7 +1353,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 saveBtn.click();
                                 if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.AsylkechContract))) {
                                     new ContractAsylkechPdf(myUI, studInfo, instPlanCont);
-                                }else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.IndigoWestContract))) {
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.IndigoWestContract))) {
                                     new ContractIndigoWestPdf(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.KidsContract))) {
                                     new ContractKidsPdf(myUI, studInfo, instPlanCont);
@@ -2557,7 +2557,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     dbip.exec_insert(ip);
                 }
             }
-            diff = dbsp.exec_get_difference(student_id, myUI.getUser().getCurrent_year().getId());
+            diff = dbsp.exec_get_difference(student_id, myUI.getUser().getCurrent_year().getId(),
+                    myUI.getUser().getSchool().getCurrency_id());
             if (diff != 0) {
                 dbip.exec_insert_notVisible(student_id, myUI.getUser().getCurrent_year().getId(), diff);
             }

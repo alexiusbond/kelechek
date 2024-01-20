@@ -29,6 +29,7 @@ public class Invoice2023PDF {
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
+    private String paymentCurrency, contractCurrency;
 
     public Invoice2023PDF(final MyVaadinUI myUI, final InvoiceInfoPdf invoiceInfo) {
 
@@ -37,7 +38,8 @@ public class Invoice2023PDF {
             buffer = new ByteArrayOutputStream();
 
             try {
-
+                paymentCurrency = invoiceInfo.getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
+                contractCurrency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
                 SimpleDateFormat dateRu = new SimpleDateFormat(
                         "«dd» MMMMM yyyy г.", myDateFormatSymbols);
 
@@ -210,7 +212,7 @@ public class Invoice2023PDF {
 
                 Paragraph leftPar = new Paragraph();
                 leftPar.add(new Chunk("Остаток: ", bold_font));
-                leftPar.add(new Chunk(Settings.dFormat2.format(invoiceInfo.getLeft()) + " USD", underlined_font));
+                leftPar.add(new Chunk(Settings.dFormat2.format(invoiceInfo.getLeft()) + " " + contractCurrency, underlined_font));
                 cell = new PdfPCell(leftPar);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setBorder(Rectangle.NO_BORDER);
@@ -250,7 +252,7 @@ public class Invoice2023PDF {
                                     myUI.getMessage(IndigoMessages.Date)).getValue().toString(), table_font));
                             table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             table_plan.addCell(new Phrase(Settings.dFormat2.format(installmentCont.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Amount)).getValue()) + "$", table_font));
+                                    myUI.getMessage(IndigoMessages.Amount)).getValue()) + " " + contractCurrency, table_font));
                             table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             i++;
                         }
