@@ -501,7 +501,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                     (Integer) yearSelect.getValue(), myUI.getUser().getSchool().getCurrency_id());
             amount = c.getAmount();
             debt = dbsc.exec_get_debt((Integer) studentsTable.getValue(),
-                    (Integer) yearSelect.getValue());
+                    (Integer) yearSelect.getValue(), myUI.getUser().getSchool().getCurrency_id());
             ttl_payment = sp.getTtl_pay();
             plan_debt = c.getPlan_debt() - total_pay;
             to_pay = c.getContr_with_disc() + debt + c.getCorrection();

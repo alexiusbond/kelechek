@@ -47,6 +47,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.0.0</version>
                         <executions>
                             <execution>
                                 <phase>prepare-package</phase>
@@ -305,7 +306,7 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
                 <configuration>
-                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=fdb28525-55f0-4604-a3f1-4c7fed36ba57
+                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=918eb36d-2bf1-450f-b323-33044a31cfc1
                     </extraJvmArgs>
                     <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
                     <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>

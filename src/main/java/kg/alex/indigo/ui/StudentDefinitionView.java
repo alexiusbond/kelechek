@@ -3526,7 +3526,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbStudentContract dbsc = new DbStudentContract();
             dbsc.connect();
             debt = dbsc.exec_get_debt((Integer) studDataTable.getValue(),
-                    myUI.getUser().getCurrent_year().getId());
+                    myUI.getUser().getCurrent_year().getId(), myUI.getUser().getSchool().getCurrency_id());
             dbsc.close();
         } catch (Exception e) {
             logger.error(e);
@@ -3642,7 +3642,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             discCont = dbsd.exec_disc_strCont(myUI, (Integer) studDataTable.getValue(),
                     myUI.getUser().getCurrent_year().getId());
             debt = dbsc.exec_get_debt((Integer) studDataTable.getValue(),
-                    myUI.getUser().getCurrent_year().getId());
+                    myUI.getUser().getCurrent_year().getId(), myUI.getUser().getSchool().getCurrency_id());
             sp = dbsp.exec_recount_payment((Integer) studDataTable.getValue(),
                     myUI.getUser().getCurrent_year().getId(), myUI.getUser().getSchool().getCurrency_id());
             ttl_payment = sp.getTtl_pay();

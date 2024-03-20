@@ -745,7 +745,8 @@ public class ContractSchoolPdf_2023_ru {
                 }
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Предоплата: ", ordFont));
-                text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()) + "", ordBoldFont));
+                text15.add(new Phrase(studentInfo.getContractInfo().getInitialPayment() == null ? "0.00" :
+                        Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()) + "", ordBoldFont));
                 text15.add(new Phrase(" долларов США.", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Остаток: ", ordFont));
