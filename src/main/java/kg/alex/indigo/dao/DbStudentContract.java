@@ -157,20 +157,18 @@ public class DbStudentContract extends BaseDb {
     public Double exec_get_debt(int st_id, int year_id, int school_currency_id) throws SQLException {
         double debt = 0.0;
         String sql = "SELECT ROUND(IFNULL((SELECT SUM(sc.contr_with_disc) FROM student_contract AS sc "
-                + "WHERE sc.student_id = ? and sc.year_id < ?), 0.0), 2) - "
-                + "ROUND(IFNULL((SELECT SUM(if(sp.payment_category_id != 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) - "
+                + "WHERE sc.student_id = ? and sc.year_id < ?), 0.0), 2) + IFNULL((SELECT SUM(vc.amount) FROM view_corrections AS vc WHERE vc.student_id = ? and vc.year_id < ?), 0.0) "
+                + "- ROUND(IFNULL((SELECT SUM(if(sp.payment_category_id != 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) - "
                 + "sum(if(sp.payment_category_id = 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) "
                 + "FROM student_payments AS sp "
-                + "WHERE sp.student_id = ? and sp.year_id < ?), 0.0) + "
-                + "IFNULL((SELECT SUM(vc.amount) FROM view_corrections AS vc "
-                + "WHERE vc.student_id = ? and vc.year_id < ?), 0.0), 2) AS debt";
+                + "WHERE sp.student_id = ? and sp.year_id < ?), 0.0), 2) AS debt";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         stat.setInt(2, year_id);
-        stat.setInt(3, school_currency_id);
-        stat.setInt(4, school_currency_id);
-        stat.setInt(5, st_id);
-        stat.setInt(6, year_id);
+        stat.setInt(3, st_id);
+        stat.setInt(4, year_id);
+        stat.setInt(5, school_currency_id);
+        stat.setInt(6, school_currency_id);
         stat.setInt(7, st_id);
         stat.setInt(8, year_id);
         System.out.println(stat);
