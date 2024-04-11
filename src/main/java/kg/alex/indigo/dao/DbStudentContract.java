@@ -171,7 +171,6 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(6, school_currency_id);
         stat.setInt(7, st_id);
         stat.setInt(8, year_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             if (!result.wasNull()) {
@@ -799,7 +798,6 @@ public class DbStudentContract extends BaseDb {
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
         }
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         int school_id = 0;
         Table t = null;

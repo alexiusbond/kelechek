@@ -299,7 +299,6 @@ public class DbAccTransactions extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         stat.setInt(2, currency_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             if (result.getInt("sp.payment_category_id") != 3) {

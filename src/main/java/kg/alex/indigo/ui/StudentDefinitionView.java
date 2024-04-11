@@ -1358,7 +1358,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.KidsContract))) {
                                     new ContractKidsPdf(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.SchoolContrRu))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 9) {
+                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
+                                        new ContractSchoolPdf_2025_ru(myUI, studInfo, instPlanCont);
+                                    } else if (myUI.getUser().getCurrent_year().getId() == 9) {
                                         new ContractSchoolPdf_2024_ru(myUI, studInfo, instPlanCont);
                                     } else {
                                         new ContractSchoolPdf_2023_ru(myUI, studInfo, instPlanCont);

@@ -362,7 +362,6 @@ public class DbStudentPayment extends BaseDb {
         stat.setInt(2, currency_id);
         stat.setInt(3, st_id);
         stat.setInt(4, year_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             ip = (result.getDouble("total"));

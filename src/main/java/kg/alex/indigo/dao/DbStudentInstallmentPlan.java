@@ -72,7 +72,6 @@ public class DbStudentInstallmentPlan extends BaseDb {
 
     public int exec_insert_notVisible(int st_id, int year_id, double amount)
             throws SQLException {
-        System.out.println(amount);
         String sql = "INSERT INTO student_installement_plan (student_id, year_id, "
                 + "amount, date_of_payment, is_visible) "
                 + "VALUES(?,?,?,NOW(),0)";
