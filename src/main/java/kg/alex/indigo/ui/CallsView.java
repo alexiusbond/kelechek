@@ -35,14 +35,13 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
     static final Logger logger = LogManager.getLogger(CallsView.class);
     private final MyVaadinUI myUI;
+    public double total;
     private GridLayout leftLay;
     private FormattedTable dataTable;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private FilterTable classTable;
     private Button generateBtn, excelBtn, makePdfBtn, selectAllBtn, deselectAllBtn;
-
-    public double total;
 
     public CallsView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -262,7 +261,8 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
@@ -270,7 +270,8 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         makePdfBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
         makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.setEnabled(false);
-        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); makePdfBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        makePdfBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
         makePdfBtn.addClickListener(this);
 

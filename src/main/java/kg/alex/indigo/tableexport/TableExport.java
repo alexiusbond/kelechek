@@ -19,21 +19,23 @@ public abstract class TableExport implements Serializable {
 
     public static String EXCEL_MIME_TYPE = "application/vnd.ms-excel";
     public static String CSV_MIME_TYPE = "text/cvs";
-
-    /** The Table to export. */
+    /**
+     * The window to send the export result
+     */
+    protected String exportWindow = "_self";
+    protected String mimeType;
+    /**
+     * The Table to export.
+     */
     private Table table;
-    /** The Property ids of the Items in the Table. */
+    /**
+     * The Property ids of the Items in the Table.
+     */
     private LinkedList<Object> propIds;
-
     /**
      * Whether the Container is a HierarchicalContainer or an extension thereof.
      */
     private boolean hierarchical;
-
-    /** The window to send the export result */
-    protected String exportWindow = "_self";
-
-    protected String mimeType;
 
     public TableExport(final Table table) {
         this.setTable(table);
@@ -41,10 +43,6 @@ public abstract class TableExport implements Serializable {
 
     public Table getTable() {
         return table;
-    }
-
-    public List<Object> getPropIds() {
-        return propIds;
     }
 
     public void setTable(final Table table) {
@@ -58,6 +56,10 @@ public abstract class TableExport implements Serializable {
         }
     }
 
+    public List<Object> getPropIds() {
+        return propIds;
+    }
+
     public boolean isHierarchical() {
         return hierarchical;
     }
@@ -67,6 +69,7 @@ public abstract class TableExport implements Serializable {
     }
 
     public abstract void convertTable();
+
     public abstract boolean sendConverted();
 
     /**
@@ -84,20 +87,20 @@ public abstract class TableExport implements Serializable {
     /**
      * Utility method to send the converted object to the user, if it has been written to a
      * temporary File.
-     * 
+     * <p>
      * Code obtained from: http://vaadin.com/forum/-/message_boards/view_message/159583
-     * 
+     *
      * @return true, if successful
      */
     public boolean sendConvertedFileToUser(final UI app, final File fileToExport,
-            final String exportFileName, final String mimeType) {
+                                           final String exportFileName, final String mimeType) {
         setMimeType(mimeType);
         return sendConvertedFileToUser(app, fileToExport, exportFileName);
 
     }
 
     protected boolean sendConvertedFileToUser(final UI app, final File fileToExport,
-            final String exportFileName) {
+                                              final String exportFileName) {
         TemporaryFileDownloadResource resource;
         try {
             resource =

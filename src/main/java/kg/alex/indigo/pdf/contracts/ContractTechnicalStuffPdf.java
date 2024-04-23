@@ -16,13 +16,12 @@ import java.io.ByteArrayOutputStream;
 public class ContractTechnicalStuffPdf {
 
     static final Logger logger = LogManager.getLogger(ContractTechnicalStuffPdf.class);
+    private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
+    private final EmployeeInfoPdf employeeInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final EmployeeInfoPdf employeeInfo;
-
-    private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
 
     public ContractTechnicalStuffPdf(final MyVaadinUI myUi, EmployeeInfoPdf employeeInfo) {
         this.employeeInfo = employeeInfo;
@@ -90,7 +89,7 @@ public class ContractTechnicalStuffPdf {
                     boolean isFeminine = employeeInfo.getDirector().getGender_id() == 2;
                     fullName = dcl.DeclineSurnameGenitive(employeeInfo.getDirector().getSurname(), isFeminine)
                             + " " + dcl.DeclineNameGenitive(employeeInfo.getDirector().getName(), isFeminine, false);
-                    if (employeeInfo.getDirector().getMiddle_name()!=null && !employeeInfo.getDirector().getMiddle_name().equals("")) {
+                    if (employeeInfo.getDirector().getMiddle_name() != null && !employeeInfo.getDirector().getMiddle_name().equals("")) {
                         fullName += " " + dcl.DeclinePatronymicGenitive(employeeInfo.getDirector().getMiddle_name(),
                                 null, isFeminine, false);
                     }

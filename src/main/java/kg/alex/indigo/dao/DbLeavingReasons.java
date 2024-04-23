@@ -24,7 +24,7 @@ public class DbLeavingReasons extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi)
             throws SQLException {
-        
+
 
         String sql = "SELECT lr.id, lr.name, lr.activity_status_id, ac.name FROM order_reason as lr "
                 + "left join activity_status as ac on ac.id = lr.activity_status_id "

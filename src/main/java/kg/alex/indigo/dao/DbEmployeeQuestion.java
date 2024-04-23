@@ -51,8 +51,8 @@ public class DbEmployeeQuestion extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
-            EmployeeDefinitionView edv) throws SQLException {
-        
+                                    EmployeeDefinitionView edv) throws SQLException {
+
 
         String sql = "SELECT q.id, eq.id, q.name, eq.answer FROM hr_question as q "
                 + "left join hr_employee_question as eq on eq.question_id = q.id and eq.employee_id = ?";

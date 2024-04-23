@@ -10,7 +10,9 @@ import org.apache.poi.ss.usermodel.*;
  */
 public class EnhancedFormatExcelExport extends ExcelExport {
 
-    /** The Constant serialVersionUID. */
+    /**
+     * The Constant serialVersionUID.
+     */
     private static final long serialVersionUID = 9113961084041090666L;
 
     public EnhancedFormatExcelExport(final Table table) {

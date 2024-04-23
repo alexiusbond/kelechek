@@ -39,14 +39,14 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
 
     static final Logger logger = LogManager.getLogger(EmployeeTransferView.class);
     private final MyVaadinUI myUI;
-    private Button saveBtn, cancelBtn;
-    private ComboBox school1Select, school2Select;
     private final Table data1Table;
     private final Table data2Table;
     private final TextField search1TF;
     private final TextField search2TF;
-    private GridLayout settingsLay;
     private final String[] NATURAL_COL_ORDER;
+    private Button saveBtn, cancelBtn;
+    private ComboBox school1Select, school2Select;
+    private GridLayout settingsLay;
 
     public EmployeeTransferView(MyVaadinUI myUI) {
         this.myUI = myUI;

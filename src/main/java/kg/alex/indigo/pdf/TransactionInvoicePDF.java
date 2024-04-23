@@ -23,7 +23,7 @@ public class TransactionInvoicePDF {
 
     static final Logger logger = LogManager.getLogger(TransactionInvoicePDF.class);
     private byte[] b = null;
-    private  ByteArrayOutputStream buffer = null;
+    private ByteArrayOutputStream buffer = null;
     private Document document = null;
 
     public TransactionInvoicePDF(final MyVaadinUI myUI, final AccTransaction tr, final String school,

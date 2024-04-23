@@ -38,11 +38,11 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
 
     static final Logger logger = LogManager.getLogger(ImportBranchesFromExcelView.class);
     private final MyVaadinUI myUI;
-    private Button deleteBtn, saveBtn, templateBtn, branchesPDF_Btn;
-    private ComboBox yearSelect;
     private final FormattedFilterTable dataTable;
     private final FormattedTable importTable;
     private final Subject currentUser = SecurityUtils.getSubject();
+    private Button deleteBtn, saveBtn, templateBtn, branchesPDF_Btn;
+    private ComboBox yearSelect;
     private VerticalLayout settingsLay;
 
     public ImportBranchesFromExcelView(MyVaadinUI myUI) {

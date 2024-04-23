@@ -19,8 +19,8 @@ public class ChangeUserData extends VerticalLayout implements Button.ClickListen
     static final Logger logger = LogManager.getLogger(ChangeUserData.class);
     private final Subject currentUser = SecurityUtils.getSubject();
     private final MyVaadinUI myUI;
-    private Form userForm;
     private final String name;
+    private Form userForm;
 
     public ChangeUserData(MyVaadinUI myUI) {
         this.myUI = myUI;

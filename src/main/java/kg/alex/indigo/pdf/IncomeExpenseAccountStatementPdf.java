@@ -27,10 +27,10 @@ import java.util.Iterator;
 public class IncomeExpenseAccountStatementPdf {
 
     static final Logger logger = LogManager.getLogger(IncomeExpenseAccountStatementPdf.class);
+    private final Date aDate = new Date(System.currentTimeMillis());
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final Date aDate = new Date(System.currentTimeMillis());
 
 
     public IncomeExpenseAccountStatementPdf(final MyVaadinUI myUI, final Table t,

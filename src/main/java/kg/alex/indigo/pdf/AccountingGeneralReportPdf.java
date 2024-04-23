@@ -33,18 +33,18 @@ import java.util.Iterator;
 public class AccountingGeneralReportPdf {
 
     static final Logger logger = LogManager.getLogger(AccountingGeneralReportPdf.class);
-    private byte[] b = null;
-    private  ByteArrayOutputStream buffer = null;
-    private Document document = null;
     private final String svgStrPayments;
     private final String svgStrDiscounts;
     private final String svgStrPaid;
-    private PdfWriter writer;
     private final Date aDate = new Date(System.currentTimeMillis());
     private final SchoolAccounting sclAccInfo;
     private final FormattedTable accTransactionsTable;
     private final FormattedTable paymentsTable;
     private final ContractInfo contrTtl;
+    private byte[] b = null;
+    private ByteArrayOutputStream buffer = null;
+    private Document document = null;
+    private PdfWriter writer;
 
     public AccountingGeneralReportPdf(final MyVaadinUI myUI, String svgPms, String svgPaid, String svgDisc,
                                       SchoolAccounting schoolAcc, FormattedTable transactionsTable, ContractInfo contractTtl,

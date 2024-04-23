@@ -29,10 +29,10 @@ import java.util.Iterator;
 public class SummaryReportPdf {
 
     static final Logger logger = LogManager.getLogger(SummaryReportPdf.class);
+    private final Date aDate = new Date(System.currentTimeMillis());
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final Date aDate = new Date(System.currentTimeMillis());
 
 
     public SummaryReportPdf(final MyVaadinUI myUI, final ComponentContainer layout,

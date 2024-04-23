@@ -16,13 +16,12 @@ import java.io.ByteArrayOutputStream;
 public class ServiceAgreementAcademicStuffPdf {
 
     static final Logger logger = LogManager.getLogger(ServiceAgreementAcademicStuffPdf.class);
+    private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
+    private final EmployeeInfoPdf employeeInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final EmployeeInfoPdf employeeInfo;
-
-    private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
 
     public ServiceAgreementAcademicStuffPdf(final MyVaadinUI myUi, EmployeeInfoPdf employeeInfo) {
         this.employeeInfo = employeeInfo;

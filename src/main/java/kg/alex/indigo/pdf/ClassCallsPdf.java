@@ -27,12 +27,12 @@ import java.util.Iterator;
 public class ClassCallsPdf {
 
     static final Logger logger = LogManager.getLogger(ClassCallsPdf.class);
-    private byte[] b = null;
-    private ByteArrayOutputStream buffer = null;
-    private Document document = null;
     private final Date aDate = new Date(System.currentTimeMillis());
     private final Date fromDate;
     private final Date tillDate;
+    private byte[] b = null;
+    private ByteArrayOutputStream buffer = null;
+    private Document document = null;
 
 
     public ClassCallsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,

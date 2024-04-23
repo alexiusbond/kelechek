@@ -39,18 +39,17 @@ public class MonthReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(MonthReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn,
-            selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
-    private DateField fromDateDF, tillDateDF;
-    private ComboBox cashBoxSelect;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final Calendar fromDate = Calendar.getInstance(), tillDate = Calendar.getInstance();
     public FormattedTreeTable incomesDataTable, outcomesDataTable;
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
     public FilterTable schoolsTable;
-
+    private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn,
+            selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn;
+    private DateField fromDateDF, tillDateDF;
+    private ComboBox cashBoxSelect;
     private VerticalLayout rightLayout;
-    private final Subject currentUser = SecurityUtils.getSubject();
-    private final Calendar fromDate = Calendar.getInstance(), tillDate = Calendar.getInstance();
 
     public MonthReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

@@ -37,6 +37,7 @@ public class DbAccType extends BaseDb {
         }
         return container;
     }
+
     public int exec_update(int cat_id, int id) throws SQLException {
         String sql = "update acc_type set acc_category_id = ? where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);

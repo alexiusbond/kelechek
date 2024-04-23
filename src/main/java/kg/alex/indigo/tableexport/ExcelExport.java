@@ -32,47 +32,39 @@ public class ExcelExport extends TableExport {
      */
     private static final long serialVersionUID = -8404407996727936497L;
     private static final Logger LOGGER = Logger.getLogger(ExcelExport.class.getName());
-
+    /**
+     * The workbook that contains the sheet containing the report with the table contents.
+     */
+    protected final Workbook workbook;
     /**
      * The name of the sheet in the workbook the table contents will be written to.
      */
     protected String sheetName;
     protected int rowNum = 0;
     protected HashMap<Integer, Integer> rowsForGroupping;
-
     /**
      * The title of the "report" of the table contents.
      */
     protected String reportTitle;
-
     /**
      * The filename of the workbook that will be sent to the user.
      */
     protected String exportFileName;
-
     /**
      * Flag indicating whether we will add a totals row to the Table. A totals row in the Table is
      * typically implemented as a footer and therefore is not part of the data source.
      */
     protected boolean displayTotals;
-
     /**
      * Flag indicating whether the first column should be treated as row headers. They will then be
      * formatted either like the column headers or a special row headers CellStyle can be specified.
      */
     protected boolean rowHeaders = false;
-
     /**
      * Flag indicating whether we should use table.formatPropertyValue() as the cell value instead
      * of the property value using the specified data formats.
      */
     protected boolean useTableFormatPropertyValue = false;
-
-    /**
-     * The workbook that contains the sheet containing the report with the table contents.
-     */
-    protected final Workbook workbook;
-
     /**
      * The Sheet object that will contain the table contents report.
      */
@@ -898,52 +890,21 @@ public class ExcelExport extends TableExport {
     }
 
     /**
-     * Gets the export file name.
-     *
-     * @return the export file name
-     */
-    public String getExportFileName() {
-        return this.exportFileName;
-    }
-
-    /**
-     * Gets the cell style used for report data..
-     *
-     * @return the cell style
-     */
-    public CellStyle getDoubleDataStyle() {
-        return this.doubleCellStyle;
-    }
-
-    public CellStyle getDateDataStyle() {
-        return this.dateCellStyle;
-    }
-
-    /**
-     * Gets the cell style used for the report headers.
-     *
-     * @return the column header style
-     */
-    public CellStyle getColumnHeaderStyle() {
-        return this.columnHeaderCellStyle;
-    }
-
-    /**
-     * Gets the cell title used for the report title.
-     *
-     * @return the title style
-     */
-    public CellStyle getTitleStyle() {
-        return this.titleCellStyle;
-    }
-
-    /**
      * Sets the text used for the report title.
      *
      * @param reportTitle the new report title
      */
     public void setReportTitle(final String reportTitle) {
         this.reportTitle = reportTitle;
+    }
+
+    /**
+     * Gets the export file name.
+     *
+     * @return the export file name
+     */
+    public String getExportFileName() {
+        return this.exportFileName;
     }
 
     /**
@@ -955,16 +916,47 @@ public class ExcelExport extends TableExport {
         this.exportFileName = exportFileName;
     }
 
+    /**
+     * Gets the cell style used for report data..
+     *
+     * @return the cell style
+     */
+    public CellStyle getDoubleDataStyle() {
+        return this.doubleCellStyle;
+    }
+
     public void setDoubleDataStyle(final CellStyle doubleDataStyle) {
         this.doubleCellStyle = doubleDataStyle;
+    }
+
+    public CellStyle getDateDataStyle() {
+        return this.dateCellStyle;
     }
 
     public void setDateDataStyle(final CellStyle dateDataStyle) {
         this.dateCellStyle = dateDataStyle;
     }
 
+    /**
+     * Gets the cell style used for the report headers.
+     *
+     * @return the column header style
+     */
+    public CellStyle getColumnHeaderStyle() {
+        return this.columnHeaderCellStyle;
+    }
+
     public void setColumnHeaderStyle(final CellStyle columnHeaderStyle) {
         this.columnHeaderCellStyle = columnHeaderStyle;
+    }
+
+    /**
+     * Gets the cell title used for the report title.
+     *
+     * @return the title style
+     */
+    public CellStyle getTitleStyle() {
+        return this.titleCellStyle;
     }
 
     public void setTitleStyle(final CellStyle titleStyle) {
@@ -1052,6 +1044,10 @@ public class ExcelExport extends TableExport {
         return this.rowHeaderCellStyle;
     }
 
+    public void setRowHeaderStyle(final CellStyle rowHeaderStyle) {
+        this.rowHeaderCellStyle = rowHeaderStyle;
+    }
+
     /**
      * Set value of flag indicating whether the first column should be treated as row headers.
      *
@@ -1059,10 +1055,6 @@ public class ExcelExport extends TableExport {
      */
     public void setRowHeaders(final boolean rowHeaders) {
         this.rowHeaders = rowHeaders;
-    }
-
-    public void setRowHeaderStyle(final CellStyle rowHeaderStyle) {
-        this.rowHeaderCellStyle = rowHeaderStyle;
     }
 
 }

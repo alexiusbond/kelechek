@@ -28,8 +28,8 @@ public class ProductMovementsReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(ProductMovementsReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
+    private Button generateBtn, excelBtn;
     private ComboBox schoolSelect, stockSelect, categorySelect;
     private DateField fromDateDF, tillDateDF;
     private FormattedTable dataTable;

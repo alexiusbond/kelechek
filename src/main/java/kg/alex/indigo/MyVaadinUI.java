@@ -47,19 +47,17 @@ import java.util.ResourceBundle;
 public class MyVaadinUI extends UI {
 
     static final Logger logger = LogManager.getLogger(MyVaadinUI.class);
+    public VaadinRequest r;
     private ResourceBundle i18nBundle;
     private UserDetails user;
-    public VaadinRequest r;
     private IndexedContainer schoolCont;
     private double currency_rate;
     private Date nbkr_time = new Date();
     private boolean isManualRate;
     private Button messagesBtn;
 
-    @WebServlet(value = {"/*", "/VAADIN/*"}, asyncSupported = true)
-    @VaadinServletConfiguration(productionMode = true,
-            ui = MyVaadinUI.class, widgetset = "kg.alex.indigo.AppWidgetSet")
-    public static class Servlet extends VaadinServlet {
+    public static MyVaadinUI getInstance() {
+        return (MyVaadinUI) MyVaadinUI.getCurrent();
     }
 
     @Override
@@ -94,10 +92,6 @@ public class MyVaadinUI extends UI {
         token.setRememberMe(true);
         Subject currentUser = SecurityUtils.getSubject();
         currentUser.login(token);
-    }
-
-    public static MyVaadinUI getInstance() {
-        return (MyVaadinUI) MyVaadinUI.getCurrent();
     }
 
     @Override
@@ -159,21 +153,6 @@ public class MyVaadinUI extends UI {
         this.user = user;
     }
 
-    public static class LogoutListener implements Button.ClickListener {
-
-        private static final long serialVersionUID = 1L;
-        private MyVaadinUI myUI;
-
-        public LogoutListener(MyVaadinUI myUi) {
-            this.myUI = myUi;
-        }
-
-        @Override
-        public void buttonClick(ClickEvent event) {
-            this.myUI.logout();
-        }
-    }
-
     public IndexedContainer getSchoolCont() {
         return schoolCont;
     }
@@ -230,7 +209,7 @@ public class MyVaadinUI extends UI {
                 org.jsoup.nodes.Document doc = Jsoup.connect("https://www.optimabank.kg/index.php?lang=ru").get();
                 org.jsoup.nodes.Element elem = doc.getElementById("tab-cash");
                 Elements elements = elem.getElementsByClass("up");
-                currency_rate =format.parse( elements.get(1).text()).doubleValue();
+                currency_rate = format.parse(elements.get(1).text()).doubleValue();
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -293,5 +272,26 @@ public class MyVaadinUI extends UI {
 
     public void setMessagesBtn(Button messagesBtn) {
         this.messagesBtn = messagesBtn;
+    }
+
+    @WebServlet(value = {"/*", "/VAADIN/*"}, asyncSupported = true)
+    @VaadinServletConfiguration(productionMode = true,
+            ui = MyVaadinUI.class, widgetset = "kg.alex.indigo.AppWidgetSet")
+    public static class Servlet extends VaadinServlet {
+    }
+
+    public static class LogoutListener implements Button.ClickListener {
+
+        private static final long serialVersionUID = 1L;
+        private MyVaadinUI myUI;
+
+        public LogoutListener(MyVaadinUI myUi) {
+            this.myUI = myUi;
+        }
+
+        @Override
+        public void buttonClick(ClickEvent event) {
+            this.myUI.logout();
+        }
     }
 }

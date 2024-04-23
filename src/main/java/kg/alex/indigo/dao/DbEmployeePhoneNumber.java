@@ -51,8 +51,8 @@ public class DbEmployeePhoneNumber extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
-            EmployeeDefinitionView edv) throws SQLException {
-        
+                                    EmployeeDefinitionView edv) throws SQLException {
+
 
         String sql = "SELECT epn.id, epn.hr_phone_type_id, epn.number "
                 + "FROM hr_employee_phone_number as epn where epn.employee_id = ?";

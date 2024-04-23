@@ -31,9 +31,9 @@ import java.util.Iterator;
 public class InventoryOrganizationPdf {
 
     static final Logger logger = LogManager.getLogger(InventoryOrganizationPdf.class);
-    private byte[] b = null;
-    private  ByteArrayOutputStream buffer = null;
     private final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+    private byte[] b = null;
+    private ByteArrayOutputStream buffer = null;
     private Document document = null;
 
 

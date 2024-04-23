@@ -50,6 +50,17 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
     static final Logger logger = LogManager.getLogger(TransfersView.class);
     private final MyVaadinUI myUI;
+    private final Button addBtn;
+    private final FormattedTable transfersTable;
+    private final String[] NATURAL_COL_ORDER;
+    private final GridLayout rightLay;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final ArrayList<String> delTransferIds = new ArrayList<>();
+    private final String caption;
+    private final String viewName;
+    private final int acc_category_type_id;
+    private final int acc_invoice_type_id;
+    private final SimpleDateFormat df;
     private Button createBtn;
     private Button modifyBtn;
     private Button deleteBtn;
@@ -57,30 +68,18 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     private Button cancelBtn;
     private Button excelBtn;
     private Button copyBtn;
-    private final Button addBtn;
     private Button confirmBtn;
     private PopupButton searchBtn;
-    private final FormattedTable transfersTable;
     private TextField invoiceNumberTF;
     private TextArea noteTF, note2TF;
     private DateField dateDF;
     private boolean isNew;
-
-    private final String[] NATURAL_COL_ORDER;
     private String[] NATURAL_COL_ORDER_TRANSFERS;
     private GridLayout settingsLay;
-    private final GridLayout rightLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
     private FormattedFilterTable invoicesTable;
     private IndexedContainer transfersCont;
     private int r_table_counter = 1000;
-    private final ArrayList<String> delTransferIds = new ArrayList<>();
     private int invID;
-    private final String caption;
-    private final String viewName;
-    private final int acc_category_type_id;
-    private final int acc_invoice_type_id;
-    private final SimpleDateFormat df;
 
     public TransfersView(MyVaadinUI myUI, String caption, String viewName,
                          int acc_category_type_id, int acc_invoice_type_id) {

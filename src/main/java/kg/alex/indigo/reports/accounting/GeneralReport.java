@@ -45,8 +45,10 @@ public class GeneralReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(GeneralReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, pdfBtn;
     private final HorizontalSplitPanel splitPanel;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final Calendar prevDayCal;
+    private Button generateBtn, pdfBtn;
     private GridLayout totalsGrid;
     private VerticalLayout rightLay;
     private FormattedTable transactionsTable, paymentsTable;
@@ -55,14 +57,11 @@ public class GeneralReport implements Button.ClickListener,
     private Configuration confDisc, confPaid, confPayments;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
-
-    private final Subject currentUser = SecurityUtils.getSubject();
     private String[] NATURAL_COL_ORDER_TRANSACTIONS;
     private String[] NATURAL_COL_ORDER_PAYMENTS;
     private Label outcomeLastDateLbl, outcomeTotalLbl, incTotalLbl, incLastDateLbl, prevBalanceLbl, totalLbl;
     private SchoolAccounting schoolAcc;
     private ContractInfo contractTtl;
-    private final Calendar prevDayCal;
 
     public GeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

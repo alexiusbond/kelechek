@@ -12,7 +12,6 @@ import org.tepi.filtertable.FilterGenerator;
 import org.tepi.filtertable.FilterTable;
 
 /**
- *
  * @author alex
  */
 public class ResetableFilterGenerator implements FilterGenerator {

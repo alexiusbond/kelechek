@@ -43,30 +43,29 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
 
     static final Logger logger = LogManager.getLogger(InventoryLiquidationView.class);
     private final MyVaadinUI myUI;
+    private final Button addBtn;
+    private final FormattedTable inventoriesTable;
+    private final String[] NATURAL_COL_ORDER;
+    private final GridLayout rightLay;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final ArrayList<String> delInventoryIds = new ArrayList<>();
     private Button createBtn;
     private Button modifyBtn;
     private Button deleteBtn;
     private Button saveBtn;
     private Button cancelBtn;
     private Button printBtn;
-    private final Button addBtn;
     private PopupButton searchBtn;
     private ComboBox blockSelect, floorSelect, roomSelect;
-    private final FormattedTable inventoriesTable;
     private TextField invoiceNumberTF, codeTF;
     private TextArea noteTF;
     private DateField dateDF;
     private boolean isNew;
-
-    private final String[] NATURAL_COL_ORDER;
     private String[] NATURAL_COL_ORDER_INVENTORIES;
     private GridLayout settingsLay;
-    private final GridLayout rightLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
     private FormattedFilterTable invoicesTable;
     private IndexedContainer inventoriesCont;
     private int r_table_counter = 1000;
-    private final ArrayList<String> delInventoryIds = new ArrayList<>();
     private int invID;
     private String[] parsedValues = null;
 

@@ -34,17 +34,16 @@ public class CallsReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(CallsReport.class);
     private final MyVaadinUI myUI;
+    private final HorizontalSplitPanel splitPanel;
+    public int total;
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn,
             excelBtn;
-    private final HorizontalSplitPanel splitPanel;
     private FilterTable classTable;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private DateField tillDateDF, fromDateDF;
     private FormattedTable dataTable;
     private IndexedContainer callsCont;
-
-    public int total;
 
     public CallsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -156,7 +155,8 @@ public class CallsReport implements Button.ClickListener,
         makePdfBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
         makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.setEnabled(false);
-        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); makePdfBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        makePdfBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
         makePdfBtn.addClickListener(this);
 
@@ -164,7 +164,8 @@ public class CallsReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 

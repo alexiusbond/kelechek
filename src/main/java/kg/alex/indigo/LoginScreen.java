@@ -10,11 +10,11 @@ public class LoginScreen extends VerticalLayout {
 
         setSizeFull();
         setStyleName("mainLayout");
-        
+
         Label captionLbl = new Label(myUI.getMessage(IndigoMessages.AppTitle));
         captionLbl.setStyleName("mainPage");
         captionLbl.setSizeUndefined();
-        
+
         Label footerLbl = new Label("<i class=\"fa fa-copyright\"></i>&emsp;Copyright 2017");
         footerLbl.setStyleName("h3");
         footerLbl.setContentMode(ContentMode.HTML);
@@ -36,7 +36,7 @@ public class LoginScreen extends VerticalLayout {
 
         hl.addComponent(loginPanel);
         hl.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
-        
+
         addComponent(captionLbl);
         setComponentAlignment(captionLbl, Alignment.MIDDLE_CENTER);
         addComponent(hl);

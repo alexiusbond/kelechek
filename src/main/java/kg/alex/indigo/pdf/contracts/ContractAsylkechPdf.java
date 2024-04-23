@@ -21,15 +21,13 @@ import java.io.ByteArrayOutputStream;
 public class ContractAsylkechPdf {
 
     static final Logger logger = LogManager.getLogger(ContractAsylkechPdf.class);
+    private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
+    private final MyVaadinUI myUI;
+    private final StudentInfoPdf studentInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final MyVaadinUI myUI;
-    private final StudentInfoPdf studentInfo;
-
-
-    private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
 
     public ContractAsylkechPdf(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;

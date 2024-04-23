@@ -23,9 +23,9 @@ import java.io.InputStream;
 public class OrderPdf {
 
     static final Logger logger = LogManager.getLogger(OrderPdf.class);
+    private final Subject currentUser = SecurityUtils.getSubject();
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public OrderPdf(final MyVaadinUI myUI, final OrderMessage orderMessage) {
 

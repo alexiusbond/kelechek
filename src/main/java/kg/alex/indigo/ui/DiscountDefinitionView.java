@@ -36,16 +36,15 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
 
     static final Logger logger = LogManager.getLogger(DiscountDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final FormattedFilterTable dataTable;
+    private final String[] NATURAL_COL_ORDER;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox currencySelect, discTypeSelect, statusSelect, yearSelect;
-    private final FormattedFilterTable dataTable;
     private TextField nameTF, valueTF;
     private PopupButton copyButton;
     private boolean isNew;
-
-    private final String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public DiscountDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;

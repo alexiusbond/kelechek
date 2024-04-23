@@ -43,7 +43,7 @@ public class HeaderFooterLandscape extends PdfPageEventHelper {
 
             ColumnText ct = new ColumnText(writer.getDirectContent());
             Rectangle rect = new Rectangle(32, 0, 810, 575);
-            
+
             ct.setSimpleColumn(rect);
             ct.setAlignment(Element.ALIGN_CENTER);
             ct.addText(new Phrase(myUI.getMessage(IndigoMessages.MinistryOfEducation), fontGray));
@@ -52,7 +52,7 @@ public class HeaderFooterLandscape extends PdfPageEventHelper {
             ct.addText(Chunk.NEWLINE);
             ct.addText(SEPARATOR);
             ct.go();
-            
+
             Rectangle rect2 = new Rectangle(32, 0, 810, 50);
             ColumnText ct2 = new ColumnText(writer.getDirectContent());
             ct2.setAlignment(Element.ALIGN_CENTER);
@@ -61,10 +61,10 @@ public class HeaderFooterLandscape extends PdfPageEventHelper {
             ct2.addText(Chunk.NEWLINE);
             ct2.addText(new Phrase("Address: " + address + ", Tel: " + phone, footerFontGray));
             ct2.go();
-            
-            
+
+
         } catch (Exception e) {
-                        logger.error(e);
+            logger.error(e);
             logger.catching(e);
         }
     }

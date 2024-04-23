@@ -22,15 +22,13 @@ import java.util.Iterator;
 public class ContractSchoolPdf_2025_ru {
 
     static final Logger logger = LogManager.getLogger(ContractSchoolPdf_2025_ru.class);
+    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
+    private final MyVaadinUI myUI;
+    private final StudentInfoPdf studentInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final MyVaadinUI myUI;
-    private final StudentInfoPdf studentInfo;
-
-
-    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
     public ContractSchoolPdf_2025_ru(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
@@ -102,7 +100,7 @@ public class ContractSchoolPdf_2025_ru {
                     boolean isFeminine = studentInfo.getDirector().getGender_id() == 2;
                     fullName = dcl.DeclineSurnameGenitive(studentInfo.getDirector().getSurname(), isFeminine)
                             + " " + dcl.DeclineNameGenitive(studentInfo.getDirector().getName(), isFeminine, false);
-                    if (studentInfo.getDirector().getMiddle_name()!=null && !studentInfo.getDirector().getMiddle_name().equals("")) {
+                    if (studentInfo.getDirector().getMiddle_name() != null && !studentInfo.getDirector().getMiddle_name().equals("")) {
                         fullName += " " + dcl.DeclinePatronymicGenitive(studentInfo.getDirector().getMiddle_name(),
                                 null, isFeminine, false);
                     }
@@ -224,16 +222,7 @@ public class ContractSchoolPdf_2025_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.1. Самостоятельно устанавливать и изменять размер родительских взносов, согласно годовой смете расходов.", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(20);
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.2. Школа имеет право ежегодно изменять процентные ставки льготникам, при этом предоставленные скидки действуют только в течении данного учебного года. Установленные льготы ", ordFont));
+                paragraph.add(new Phrase("2.2.1. Школа имеет право ежегодно изменять процентные ставки льготникам, при этом предоставленные скидки действуют только в течении данного учебного года. Установленные льготы ", ordFont));
                 paragraph.add(new Phrase("аннулируются ", ordBoldFont));
                 paragraph.add(new Phrase("в случае наличия у Обучающегося дисциплинарного взыскания. А также в случае нарушения графика оплаты Родителем 3 раза, все ранее предоставленные скидки ", ordFont));
                 paragraph.add(new Phrase("аннулируются ", ordBoldFont));
@@ -246,7 +235,7 @@ public class ContractSchoolPdf_2025_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.3. При несвоевременной оплате Родителями образовательных услуг (пункт 3 данного Договора) Обучающийся не допускается к переводным экзаменам из класса в класс (Приказ №281/1 от 10.03.2017 г., п.70 Положения МОиН КР).", ordFont));
+                paragraph.add(new Phrase("2.2.2. При несвоевременной оплате Родителями образовательных услуг (пункт 3 данного Договора) Обучающийся не допускается к переводным экзаменам из класса в класс (Приказ №281/1 от 10.03.2017 г., п.70 Положения МОиН КР).", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -255,7 +244,7 @@ public class ContractSchoolPdf_2025_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.4. При несвоевременной оплате ", ordFont));
+                paragraph.add(new Phrase("2.2.3. При несвоевременной оплате ", ordFont));
                 paragraph.add(new Phrase("или при задержке оплаты на 15-дней со дня выплаты по графику ", ordBoldFont));
                 paragraph.add(new Phrase("Родителем взноса, с извещением Родителя ограничить доступ посещения Обучающегося ко всем формам учебных и не учебных занятий и использования материально-технических условий (занятий, библиотеки, столовой, кружков, этюдов и тд., не допускать на экзамены, не выставлять оценки “Эдупэйдж”, ). Помимо этого без предупреждения Родителя ", ordFont));
                 paragraph.add(new Phrase("аннулируются ", ordBoldFont));
@@ -268,7 +257,7 @@ public class ContractSchoolPdf_2025_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.5. Отчислить Обучающегося из Школы согласно Устава Школы:", ordFont));
+                paragraph.add(new Phrase("2.2.4. Отчислить Обучающегося из Школы согласно Устава Школы:", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -295,7 +284,7 @@ public class ContractSchoolPdf_2025_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.6. Удержать сумму родительского взноса за текующую четверть, при расторжении настоящего договора по инициативе Родителя, при этом ранее предусмотренные скидки не учитываются.", ordFont));
+                paragraph.add(new Phrase("2.2.5. Удержать сумму родительского взноса за текующую четверть, при расторжении настоящего договора по инициативе Родителя, при этом ранее предусмотренные скидки не учитываются.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -304,7 +293,7 @@ public class ContractSchoolPdf_2025_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.7. При расторжении настоящего договора по непредвиденным обстоятельствам, с учетом всех понесенных расходов школы, сумма подлежащяя к возврату, возвращается по мере возможности Школы, но не позднее мая следующего года.", ordFont));
+                paragraph.add(new Phrase("2.2.6. При расторжении настоящего договора по непредвиденным обстоятельствам, с учетом всех понесенных расходов школы, сумма подлежащяя к возврату, возвращается по мере возможности Школы, но не позднее мая следующего года.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -313,7 +302,7 @@ public class ContractSchoolPdf_2025_ru {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.8. В целях оповещения образовательного процесса и деятельности школы без уведомления учащегося и родителей размещать фото и видеоматериалы в своих интернет страницах и СМИ.", ordFont));
+                paragraph.add(new Phrase("2.2.7. В целях оповещения образовательного процесса и деятельности школы без уведомления учащегося и родителей размещать фото и видеоматериалы в своих интернет страницах и СМИ.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();

@@ -43,30 +43,29 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
 
     static final Logger logger = LogManager.getLogger(StockIncomeView.class);
     private final MyVaadinUI myUI;
+    private final Button addBtn;
+    private final FormattedTable movementsTable;
+    private final String[] NATURAL_COL_ORDER;
+    private final GridLayout rightLay;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final ArrayList<String> delMovementIds = new ArrayList<>();
     private Button createBtn;
     private Button modifyBtn;
     private Button deleteBtn;
     private Button saveBtn;
     private Button cancelBtn;
     private Button printBtn;
-    private final Button addBtn;
     private PopupButton searchBtn;
     private ComboBox stockSelect, fromEmployeeSelect, toEmployeeSelect, productCategorySelect;
-    private final FormattedTable movementsTable;
     private TextField invoiceNumberTF;
     private TextArea noteTF;
     private DateField dateDF;
     private boolean isNew;
-
-    private final String[] NATURAL_COL_ORDER;
     private String[] NATURAL_COL_ORDER_MOVEMENTS;
     private GridLayout settingsLay;
-    private final GridLayout rightLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
     private FormattedFilterTable invoicesTable;
     private IndexedContainer movementsCont;
     private int r_table_counter = 1000;
-    private final ArrayList<String> delMovementIds = new ArrayList<>();
     private int invID;
     private IndexedContainer originalCont;
 

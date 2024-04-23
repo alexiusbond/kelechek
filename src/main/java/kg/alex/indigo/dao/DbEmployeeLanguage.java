@@ -50,8 +50,8 @@ public class DbEmployeeLanguage extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
-            EmployeeDefinitionView edv) throws SQLException {
-        
+                                    EmployeeDefinitionView edv) throws SQLException {
+
 
         String sql = "SELECT el.id, el.hr_language_id, el.hr_language_level_id FROM hr_employee_language as el "
                 + "where el.employee_id = ?";

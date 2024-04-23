@@ -34,12 +34,12 @@ public class IncomeExpenseAccountStatementReport implements Button.ClickListener
 
     static final Logger logger = LogManager.getLogger(IncomeExpenseAccountStatementReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, pdfBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
-    private ComboBox currencySelect;
-    private DateField fromDateDF, tillDateDF;
     public FormattedTable dataTable;
     public FilterTreeTable categoriesTable;
+    private Button generateBtn, pdfBtn, excelBtn;
+    private ComboBox currencySelect;
+    private DateField fromDateDF, tillDateDF;
 
     public IncomeExpenseAccountStatementReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

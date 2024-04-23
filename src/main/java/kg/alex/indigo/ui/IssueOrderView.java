@@ -29,13 +29,12 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
 
     static final Logger logger = LogManager.getLogger(IssueOrderView.class);
     private final MyVaadinUI myUI;
+    private final FilterTable studentsTable;
+    private final Table historyTable;
+    private final String[] HISTORY_NATURAL_COL_ORDER;
     private Button saveBtn;
     private ComboBox classSelect, orderSelect;
     private ComboBoxMultiselect reasonsMCB;
-    private final FilterTable studentsTable;
-    private final Table historyTable;
-
-    private final String[] HISTORY_NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
     private int selected_student_id = 0;
 
@@ -296,7 +295,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                                             myUI.getMessage(IndigoMessages.EducationStatus)).getValue());
                                         }
                                     }
-                                   dbsc.exec_update_status(so.getStudent_id(), 1, myUI.getUser().getId());
+                                    dbsc.exec_update_status(so.getStudent_id(), 1, myUI.getUser().getId());
                                     counter++;
                                 }
                             }

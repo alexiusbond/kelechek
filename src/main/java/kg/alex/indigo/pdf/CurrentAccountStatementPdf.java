@@ -27,10 +27,10 @@ import java.util.Iterator;
 public class CurrentAccountStatementPdf {
 
     static final Logger logger = LogManager.getLogger(CurrentAccountStatementPdf.class);
+    private final Date aDate = new Date(System.currentTimeMillis());
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final Date aDate = new Date(System.currentTimeMillis());
 
 
     public CurrentAccountStatementPdf(final MyVaadinUI myUI, final Table t, final String acc_category, final String currency,

@@ -13,7 +13,6 @@ import org.tepi.filtertable.FilterGenerator;
 import org.tepi.filtertable.FilterTable;
 
 /**
- *
  * @author alex
  */
 public class DefinitionsFilterGenerator implements FilterGenerator {

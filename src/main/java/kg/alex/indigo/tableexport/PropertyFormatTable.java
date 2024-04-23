@@ -8,7 +8,7 @@ public class PropertyFormatTable extends Table implements ExportableFormattedPro
 
     @Override
     public String getFormattedPropertyValue(final Object rowId, final Object colId,
-            final Property property) {
+                                            final Property property) {
         return this.formatPropertyValue(rowId, colId, property);
     }
 }

@@ -35,15 +35,15 @@ public class ClassListReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(ClassListReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
+    public int activeStudents, discountedStudents, males;
+    public double contracts, discounts, corrections, prevYearDebts, prevYearOverpays, nets, paid_amounts, debts, overPays;
+    private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private FormattedFilterTable dataTable;
     private FilterTable classTable;
     private IndexedContainer dataCont;
-    public int activeStudents, discountedStudents, males;
-    public double contracts, discounts, corrections, prevYearDebts, prevYearOverpays, nets, paid_amounts, debts, overPays;
     private PopupDateField fromDateDF, tillDateDF;
 
     public ClassListReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
@@ -157,7 +157,8 @@ public class ClassListReport implements Button.ClickListener,
         makePdfBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
         makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.setEnabled(false);
-        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); makePdfBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        makePdfBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
         makePdfBtn.addClickListener(this);
 
@@ -165,7 +166,8 @@ public class ClassListReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 

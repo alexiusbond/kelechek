@@ -40,18 +40,17 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
 
     static final Logger logger = LogManager.getLogger(SendOrderView.class);
     private final MyVaadinUI myUI;
-    private Button sendBtn;
     private final Button excelBtn;
-    private ComboBox schoolSelect, studentSelect, yearSelect, unitSelect;
-    private ComboBoxMultiselect employeeMCB;
     private final FormattedFilterTable dataTable;
     private final Table tableForExport;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private Button sendBtn;
+    private ComboBox schoolSelect, studentSelect, yearSelect, unitSelect;
+    private ComboBoxMultiselect employeeMCB;
     private TextField orderNumberTF, discountTF, studentTF;
     private DateField dateDF;
     private TextArea contentRTA, messageTA, headlineTA;
-
     private GridLayout settingsLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public SendOrderView(MyVaadinUI myUI) {
         this.myUI = myUI;

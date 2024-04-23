@@ -8,22 +8,21 @@ import java.io.IOException;
 /**
  * This input stream deletes the given file when the InputStream is closed; intended to be used with
  * temporary files.
- * 
+ * <p>
  * Code obtained from: http://vaadin.com/forum/-/message_boards/view_message/159583
- * 
  */
 class DeletingFileInputStream extends FileInputStream {
 
-    /** The file. */
+    /**
+     * The file.
+     */
     protected File file = null;
 
     /**
      * Instantiates a new deleting file input stream.
-     * 
-     * @param file
-     *            the file
-     * @throws FileNotFoundException
-     *             the file not found exception
+     *
+     * @param file the file
+     * @throws FileNotFoundException the file not found exception
      */
     public DeletingFileInputStream(final File file) throws FileNotFoundException {
         super(file);
@@ -32,7 +31,7 @@ class DeletingFileInputStream extends FileInputStream {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.io.FileInputStream#close()
      */
     @Override

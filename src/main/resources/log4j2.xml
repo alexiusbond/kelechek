@@ -11,7 +11,7 @@
                      filePattern="/home/indigo/indigo-%d{MM-dd-yyyy}-%i.log">
             <PatternLayout pattern="%d %d{Z} [%t] %-5p (%F:%L) - %m%n"/>
             <Policies>
-                <TimeBasedTriggeringPolicy />
+                <TimeBasedTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="10MB"/>
             </Policies>
         </RollingFile>

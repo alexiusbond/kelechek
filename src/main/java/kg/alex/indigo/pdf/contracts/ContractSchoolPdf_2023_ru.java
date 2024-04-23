@@ -22,15 +22,13 @@ import java.util.Iterator;
 public class ContractSchoolPdf_2023_ru {
 
     static final Logger logger = LogManager.getLogger(ContractSchoolPdf_2023_ru.class);
+    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
+    private final MyVaadinUI myUI;
+    private final StudentInfoPdf studentInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final MyVaadinUI myUI;
-    private final StudentInfoPdf studentInfo;
-
-
-    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
     public ContractSchoolPdf_2023_ru(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
@@ -100,7 +98,7 @@ public class ContractSchoolPdf_2023_ru {
                     boolean isFeminine = studentInfo.getDirector().getGender_id() == 2;
                     fullName = dcl.DeclineSurnameGenitive(studentInfo.getDirector().getSurname(), isFeminine)
                             + " " + dcl.DeclineNameGenitive(studentInfo.getDirector().getName(), isFeminine, false);
-                    if (studentInfo.getDirector().getMiddle_name()!=null && !studentInfo.getDirector().getMiddle_name().equals("")) {
+                    if (studentInfo.getDirector().getMiddle_name() != null && !studentInfo.getDirector().getMiddle_name().equals("")) {
                         fullName += " " + dcl.DeclinePatronymicGenitive(studentInfo.getDirector().getMiddle_name(),
                                 null, isFeminine, false);
                     }

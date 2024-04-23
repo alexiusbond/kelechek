@@ -29,14 +29,13 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
 
     static final Logger logger = LogManager.getLogger(ClassNameDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final Table dataTable;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox classNumberSelect, classTypeSelect, statusSelect;
-    private final Table dataTable;
     private TextField nameTF;
     private boolean isNew;
-
     private VerticalLayout settingsLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public ClassNameDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;

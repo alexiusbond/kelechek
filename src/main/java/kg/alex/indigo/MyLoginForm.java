@@ -11,7 +11,6 @@ import com.vaadin.ui.*;
 import kg.alex.indigo.i18n.IndigoMessages;
 
 /**
- *
  * @author alex
  */
 public class MyLoginForm extends LoginForm {
@@ -25,7 +24,7 @@ public class MyLoginForm extends LoginForm {
 
     @Override
     protected Component createContent(TextField userNameField,
-            PasswordField passwordField, Button loginButton) {
+                                      PasswordField passwordField, Button loginButton) {
         GridLayout layout = new GridLayout(3, 5);
         layout.setSizeFull();
         layout.setSpacing(true);

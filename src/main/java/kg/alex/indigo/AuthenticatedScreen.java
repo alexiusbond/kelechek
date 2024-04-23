@@ -30,8 +30,153 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     private final Subject currentUser = SecurityUtils.getSubject();
     private final VerticalSplitPanel verticalPanel;
     private final Button changePassBtn;
-    public ComboBox yearSelect, schoolSelect;
     private final Label header = new Label();
+    private final Command menuCommand = new Command() {
+
+        @Override
+        public void menuSelected(MenuItem selectedItem) {
+            if (selectedItem != null) {
+                if (!currentUser.hasRole(Settings.rnBank)) {
+                    myUI.repaintMessagesButton();
+                }
+                String eventPressed = selectedItem.getText();
+                if (eventPressed.equals(myUI.getMessage(IndigoMessages.ClassNumberDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.classTable, null, null, false, Settings.cnDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.YearDefinition))) {
+                    verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.LanguageDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbLanguageTable, null, null, false, Settings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ExamDefinition))) {
+                    verticalPanel.setSecondComponent(new ExamDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.UniversityDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbUniversityTable, Settings.dbEmployeeEducation, Settings.dbColumnUniversityId,
+                            false, Settings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.CertificateDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbCertificateTable, Settings.dbEmployeeCertificate, Settings.dbColumnCertificateId,
+                            false, Settings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.WorkPlacesDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbWork_placeTable, Settings.dbEmployeeWork, Settings.dbColumnEmployeeWorkId, false, Settings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.QuestionDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbQuestion, null, null, true, Settings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.EmployeeTransfer))) {
+                    verticalPanel.setSecondComponent(new EmployeeTransferView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.LessonAssessment))) {
+                    verticalPanel.setSecondComponent(new LessonAssessmentView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.BranchDefinition))) {
+                    verticalPanel.setSecondComponent(new BranchDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.InventoryCategoryDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbInventoryCategoryTable, null, null, false, Settings.cnInventoryDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ClassNameDefinition))) {
+                    verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.BlockDefinition))) {
+                    verticalPanel.setSecondComponent(new BlockDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.RoomDefinition))) {
+                    verticalPanel.setSecondComponent(new RoomDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.PositionDefinition))) {
+                    verticalPanel.setSecondComponent(new PositionDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.DiscountDefinition))) {
+                    verticalPanel.setSecondComponent(new DiscountDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.AccessoriesDefinition))) {
+                    verticalPanel.setSecondComponent(new AccessoriesDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.LeavingReasonsDefinition))) {
+                    verticalPanel.setSecondComponent(new LeavingReasonsDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ContractDefinition))) {
+                    verticalPanel.setSecondComponent(new ContractDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.SchoolDefinition))) {
+                    verticalPanel.setSecondComponent(new SchoolDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.EmployeeDefinition))) {
+                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, false));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.MyInfo))) {
+                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, true));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.SchoolModification))) {
+                    verticalPanel.setSecondComponent(new SchoolModificationView(
+                            myUI, myUI.getUser().getSchool().getId()));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.StudentDefinition))) {
+                    verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.IssueStudentOrder))) {
+                    verticalPanel.setSecondComponent(new IssueOrderView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ImportBranchesFromExcel))) {
+                    verticalPanel.setSecondComponent(new ImportBranchesFromExcelView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.SendOrders))) {
+                    verticalPanel.setSecondComponent(new SendOrderView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Reports))) {
+                    if (currentUser.hasRole(Settings.rnBank)) {
+                        verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
+                    } else {
+                        verticalPanel.setSecondComponent(new StudentReportsView(myUI));
+                    }
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.AccountingReports))) {
+                    verticalPanel.setSecondComponent(new AccountingReportsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.AccountingBankReport))) {
+                    verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.StockReports))) {
+                    verticalPanel.setSecondComponent(new StockReportsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.HRReports))) {
+                    verticalPanel.setSecondComponent(new HRReportsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Templates))) {
+                    verticalPanel.setSecondComponent(new TemplatesView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Backup))) {
+                    verticalPanel.setSecondComponent(new BackupView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Calls))) {
+                    verticalPanel.setSecondComponent(new CallsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.HomePage))) {
+                    verticalPanel.setSecondComponent(new HomePageView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.CashBox))) {
+                    verticalPanel.setSecondComponent(new CashBoxView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Accruals))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(IndigoMessages.Accruals),
+                            Settings.cnAccrualsView, 2, 1));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ShortTermDebts))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(IndigoMessages.ShortTermDebts),
+                            Settings.cnShortTermDebtsView, 4, 4));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.BalanceAccounts))) {
+                    verticalPanel.setSecondComponent(new BalanceAccountsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ReturnableAssets))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(IndigoMessages.ReturnableAssets),
+                            Settings.cnReturnableAssetsView, 3, 3));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Payouts))) {
+                    verticalPanel.setSecondComponent(new PayoutsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.StocksDefinition))) {
+                    verticalPanel.setSecondComponent(new StockDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.StockIncome))) {
+                    verticalPanel.setSecondComponent(new StockIncomeView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.InventoryOrganization))) {
+                    verticalPanel.setSecondComponent(new InventoryOrganizationView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.InventoryLiquidation))) {
+                    verticalPanel.setSecondComponent(new InventoryLiquidationView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.StockOutcome))) {
+                    verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Settings))) {
+                    verticalPanel.setSecondComponent(new SettingsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.IncomesDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            1, Settings.cnIncomesDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ExpensesDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            2, Settings.cnExpensesDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.IncomesExpensesDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            5, Settings.cnIncomesExpensesDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ReturnableAssetsDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            3, Settings.cnReturnableAssetsDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ShortTermDebtsDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            4, Settings.cnShortTermDebtsDefinitionView));
+                }
+
+                header.setValue(eventPressed.toUpperCase());
+            }
+        }
+    };
+    public ComboBox yearSelect, schoolSelect;
     private Label infoLabel;
 
     public AuthenticatedScreen(MyVaadinUI myUi) {
@@ -419,152 +564,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         return menubar;
 
     }
-
-    private final Command menuCommand = new Command() {
-
-        @Override
-        public void menuSelected(MenuItem selectedItem) {
-            if (selectedItem != null) {
-                if (!currentUser.hasRole(Settings.rnBank)) {
-                    myUI.repaintMessagesButton();
-                }
-                String eventPressed = selectedItem.getText();
-                if (eventPressed.equals(myUI.getMessage(IndigoMessages.ClassNumberDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.classTable, null, null, false, Settings.cnDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.YearDefinition))) {
-                    verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.LanguageDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbLanguageTable, null, null, false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ExamDefinition))) {
-                    verticalPanel.setSecondComponent(new ExamDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.UniversityDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbUniversityTable, Settings.dbEmployeeEducation, Settings.dbColumnUniversityId,
-                            false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.CertificateDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbCertificateTable, Settings.dbEmployeeCertificate, Settings.dbColumnCertificateId,
-                            false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.WorkPlacesDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbWork_placeTable, Settings.dbEmployeeWork, Settings.dbColumnEmployeeWorkId, false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.QuestionDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbQuestion, null, null, true, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.EmployeeTransfer))) {
-                    verticalPanel.setSecondComponent(new EmployeeTransferView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.LessonAssessment))) {
-                    verticalPanel.setSecondComponent(new LessonAssessmentView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.BranchDefinition))) {
-                    verticalPanel.setSecondComponent(new BranchDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.InventoryCategoryDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbInventoryCategoryTable, null, null, false, Settings.cnInventoryDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ClassNameDefinition))) {
-                    verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.BlockDefinition))) {
-                    verticalPanel.setSecondComponent(new BlockDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.RoomDefinition))) {
-                    verticalPanel.setSecondComponent(new RoomDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.PositionDefinition))) {
-                    verticalPanel.setSecondComponent(new PositionDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.DiscountDefinition))) {
-                    verticalPanel.setSecondComponent(new DiscountDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.AccessoriesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccessoriesDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.LeavingReasonsDefinition))) {
-                    verticalPanel.setSecondComponent(new LeavingReasonsDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ContractDefinition))) {
-                    verticalPanel.setSecondComponent(new ContractDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.SchoolDefinition))) {
-                    verticalPanel.setSecondComponent(new SchoolDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.EmployeeDefinition))) {
-                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, false));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.MyInfo))) {
-                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, true));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.SchoolModification))) {
-                    verticalPanel.setSecondComponent(new SchoolModificationView(
-                            myUI, myUI.getUser().getSchool().getId()));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.StudentDefinition))) {
-                    verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.IssueStudentOrder))) {
-                    verticalPanel.setSecondComponent(new IssueOrderView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ImportBranchesFromExcel))) {
-                    verticalPanel.setSecondComponent(new ImportBranchesFromExcelView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.SendOrders))) {
-                    verticalPanel.setSecondComponent(new SendOrderView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Reports))) {
-                    if (currentUser.hasRole(Settings.rnBank)) {
-                        verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
-                    } else {
-                        verticalPanel.setSecondComponent(new StudentReportsView(myUI));
-                    }
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.AccountingReports))) {
-                    verticalPanel.setSecondComponent(new AccountingReportsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.AccountingBankReport))) {
-                    verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.StockReports))) {
-                    verticalPanel.setSecondComponent(new StockReportsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.HRReports))) {
-                    verticalPanel.setSecondComponent(new HRReportsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Templates))) {
-                    verticalPanel.setSecondComponent(new TemplatesView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Backup))) {
-                    verticalPanel.setSecondComponent(new BackupView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Calls))) {
-                    verticalPanel.setSecondComponent(new CallsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.HomePage))) {
-                    verticalPanel.setSecondComponent(new HomePageView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.CashBox))) {
-                    verticalPanel.setSecondComponent(new CashBoxView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Accruals))) {
-                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(IndigoMessages.Accruals),
-                            Settings.cnAccrualsView, 2, 1));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ShortTermDebts))) {
-                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(IndigoMessages.ShortTermDebts),
-                            Settings.cnShortTermDebtsView, 4, 4));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.BalanceAccounts))) {
-                    verticalPanel.setSecondComponent(new BalanceAccountsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ReturnableAssets))) {
-                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(IndigoMessages.ReturnableAssets),
-                            Settings.cnReturnableAssetsView, 3, 3));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Payouts))) {
-                    verticalPanel.setSecondComponent(new PayoutsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.StocksDefinition))) {
-                    verticalPanel.setSecondComponent(new StockDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.StockIncome))) {
-                    verticalPanel.setSecondComponent(new StockIncomeView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.InventoryOrganization))) {
-                    verticalPanel.setSecondComponent(new InventoryOrganizationView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.InventoryLiquidation))) {
-                    verticalPanel.setSecondComponent(new InventoryLiquidationView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.StockOutcome))) {
-                    verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.Settings))) {
-                    verticalPanel.setSecondComponent(new SettingsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.IncomesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
-                            1, Settings.cnIncomesDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ExpensesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
-                            2, Settings.cnExpensesDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.IncomesExpensesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
-                            5, Settings.cnIncomesExpensesDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ReturnableAssetsDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
-                            3, Settings.cnReturnableAssetsDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(IndigoMessages.ShortTermDebtsDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
-                            4, Settings.cnShortTermDebtsDefinitionView));
-                }
-
-                header.setValue(eventPressed.toUpperCase());
-            }
-        }
-    };
 
     @Override
     public void buttonClick(Button.ClickEvent event) {

@@ -43,6 +43,9 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
 
     static final Logger logger = LogManager.getLogger(BalanceAccountsView.class);
     private final MyVaadinUI myUI;
+    private final String[] NATURAL_COL_ORDER;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final SimpleDateFormat df;
     private Button createBtn;
     private Button modifyBtn;
     private Button deleteBtn;
@@ -54,14 +57,10 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
     private TextArea noteTF, note2TF;
     private DateField dateDF;
     private boolean isNew;
-
-    private final String[] NATURAL_COL_ORDER;
     private GridLayout settingsLay;
     private GridLayout rightLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
     private FormattedFilterTable invoicesTable;
     private int invID;
-    private final SimpleDateFormat df;
 
     public BalanceAccountsView(MyVaadinUI myUI) {
         this.myUI = myUI;

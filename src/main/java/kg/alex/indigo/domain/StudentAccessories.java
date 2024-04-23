@@ -8,7 +8,6 @@ package kg.alex.indigo.domain;
 import java.io.Serializable;
 
 /**
- *
  * @author alex
  */
 public class StudentAccessories implements Serializable {

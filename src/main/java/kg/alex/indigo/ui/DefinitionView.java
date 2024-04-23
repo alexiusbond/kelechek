@@ -30,18 +30,17 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
 
     static final Logger logger = LogManager.getLogger(DefinitionView.class);
     private final MyVaadinUI myUI;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, replaceSaveBtn;
-    private PopupButton replaceBtn;
     private final Table dataTable;
-    private TextField nameTF;
-    private ComboBox statusSelect, replaceItemSelect;
     private final boolean withActivityStatus;
     private final String dbTableName, dbTableReplaceIn, dbReplaceColumn;
-    private boolean isNew;
-
-    private VerticalLayout settingsLay;
     private final Subject currentUser = SecurityUtils.getSubject();
     private final String permissionView;
+    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, replaceSaveBtn;
+    private PopupButton replaceBtn;
+    private TextField nameTF;
+    private ComboBox statusSelect, replaceItemSelect;
+    private boolean isNew;
+    private VerticalLayout settingsLay;
 
     public DefinitionView(MyVaadinUI myUI, String dbTable, String dbTableReplaceIn, String dbReplaceColumn,
                           boolean withActivityStatus, String permissionView) {

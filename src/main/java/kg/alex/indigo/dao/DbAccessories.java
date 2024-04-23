@@ -23,7 +23,7 @@ public class DbAccessories extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
-        
+
 
         String sql = "SELECT ac.id, ac.name, ac.activity_status_id, a.name, "
                 + "ac.accessories_category_id, c.name FROM accessories as ac "

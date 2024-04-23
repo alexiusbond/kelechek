@@ -51,17 +51,49 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         Property.ValueChangeListener {
     static final Logger logger = LogManager.getLogger(StudentDefinitionView.class);
     private final MyVaadinUI myUI;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, divideBtn;
     private final FilterTable studDataTable;
     private final OptionGroup statusesOG;
+    private final int receive = 2;
+    private final int give = 1;
+    private final Button plusRelButton;
+    private final Button plusMatGiveButton;
+    private final Button plusInstButton;
+    private final Button plusPayButton;
+    private final Button plusMatReceiveButton;
+    private final Button plusDiscButton;
+    private final Button plusCorrectionButton;
+    private final Button plusCallButton;
+    private final FormattedTable relativesTable;
+    private final FormattedTable acsGiveTable;
+    private final FormattedTable paymentsTable;
+    private final FormattedTable acsReceiveTable;
+    private final FormattedTable callsTable;
+    private final TabSheet tabs;
+    private final ArrayList<String> delPayIds = new ArrayList<>();
+    private final ArrayList<String> delCallIds = new ArrayList<>();
+    private final ArrayList<String> delCorrectionIds = new ArrayList<>();
+    private final ArrayList<String> delDiscIds = new ArrayList<>();
+    private final ArrayList<String> delRelIds = new ArrayList<>();
+    private final Label eduStatTtlLab;
+    private final String[] NATURAL_COL_ORDER;
+    private final VerticalLayout famTableLay;
+    private final VerticalLayout acsGiveTableLay;
+    private final VerticalLayout payTableLay;
+    private final VerticalLayout acsReceiveTableLay;
+    private final VerticalLayout callsTableLay;
+    private final GridLayout studSearchLay;
+    private final HorizontalSplitPanel horSplitPanel;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final String currency;
+    public IndexedContainer eduStatCont;
+    StringBuilder discountsStr = new StringBuilder();
+    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, divideBtn;
     private TextField nameTF, loginTF, surnameTF, middleNameTF, divideTF;
     private DateField birthDate, currDate;
     private ComboBox genderCB, classCB, statusCB, contractCB;
     private OptionGroup contractTypeOG;
     private FormLayout fieldsLay1, fieldsLay2;
     private int r_table_counter = 1000;
-    private final int receive = 2;
-    private final int give = 1;
     private int discCounter;
     private int contr_id;
     private Double instCtrAmount;
@@ -74,28 +106,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Double discountAmount;
     private Double debt;
     private Double toPay;
-    private final Button plusRelButton;
-    private final Button plusMatGiveButton;
-    private final Button plusInstButton;
-    private final Button plusPayButton;
-    private final Button plusMatReceiveButton;
-    private final Button plusDiscButton;
-    private final Button plusCorrectionButton;
-    private final Button plusCallButton;
-    private final FormattedTable relativesTable;
-    private final FormattedTable acsGiveTable;
     private FormattedTable installmentTable;
-    private final FormattedTable paymentsTable;
-    private final FormattedTable acsReceiveTable;
     private FormattedTable discountsTable;
     private FormattedTable correctionsTable;
-    private final FormattedTable callsTable;
-    private final TabSheet tabs;
-    private final ArrayList<String> delPayIds = new ArrayList<>();
-    private final ArrayList<String> delCallIds = new ArrayList<>();
-    private final ArrayList<String> delCorrectionIds = new ArrayList<>();
-    private final ArrayList<String> delDiscIds = new ArrayList<>();
-    private final ArrayList<String> delRelIds = new ArrayList<>();
     private PopupButton printButton;
     private Button financialHistoryButton;
     private Button changeIdButton;
@@ -114,11 +127,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Label netIPlanTtlLab;
     private Label planDebt;
     private Label instPlanDifLab;
-    private final Label eduStatTtlLab;
     private Label tabContractLab;
     private Label tabContractNetLab;
-
-    private final String[] NATURAL_COL_ORDER;
     private String[] NATURAL_COL_ORDER_PAYMENTS;
     private String[] NATURAL_COL_ORDER_CALLS;
     private String[] NATURAL_COL_ORDER_INST_PLAN;
@@ -126,16 +136,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private String[] NATURAL_COL_ORDER_CORRECTIONS;
     private String[] NATURAL_COL_ORDER_RELATIVES;
     private VerticalLayout contractLay;
-    private final VerticalLayout famTableLay;
-    private final VerticalLayout acsGiveTableLay;
-    private final VerticalLayout payTableLay;
-    private final VerticalLayout acsReceiveTableLay;
-    private final VerticalLayout callsTableLay;
     private GridLayout gridStudLay;
     private GridLayout contractTabLay;
     private GridLayout instPlanLay;
-    private final GridLayout studSearchLay;
-    private final HorizontalSplitPanel horSplitPanel;
     private HorizontalLayout buttonsLay;
     private Upload photoUpl;
     private File myFile;
@@ -143,12 +146,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Button cancelButton;
     private ProgressBar uploadProgressBar;
     private String photoName, fileName, mimeType;
-    StringBuilder discountsStr = new StringBuilder();
     private Embedded photoEmb;
-    private final Subject currentUser = SecurityUtils.getSubject();
-    public IndexedContainer eduStatCont;
     private SimpleFileDownloader downloader = null;
-    private final String currency;
 
     public StudentDefinitionView(final MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -1811,39 +1810,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
-        }
-    }
-
-    public class MyReceiver implements Upload.Receiver {
-        boolean isPhoto;
-
-        public MyReceiver(boolean isPhoto) {
-            this.isPhoto = isPhoto;
-        }
-
-        @Override
-        public OutputStream receiveUpload(String filename, String mimetype) {
-            fileName = filename;
-            mimeType = mimetype;
-            FileOutputStream fos; // Output stream to write to
-            if (isPhoto) {
-                photoName = loginTF.getValue() + ".jpg";
-            }
-            try {
-                if (isPhoto) {
-                    myFile = new File(Settings.PATH_TO_UPLOADS + photoName);
-                } else {
-                    myFile = new File(Settings.PATH_TO_UPLOADS + System.currentTimeMillis() + "_" + filename);
-                }
-
-                fos = new FileOutputStream(myFile);
-            } catch (Exception ex) {
-                // Error while opening the file. Not reported here.
-                logger.error(ex);
-                logger.catching(ex);
-                return null;
-            }
-            return fos; // Return the output stream to write tou
         }
     }
 
@@ -4467,5 +4433,38 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private void refreshValidators(TextField tf) {
         tf.removeAllValidators();
         tf.addValidator(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 0.01, null));
+    }
+
+    public class MyReceiver implements Upload.Receiver {
+        boolean isPhoto;
+
+        public MyReceiver(boolean isPhoto) {
+            this.isPhoto = isPhoto;
+        }
+
+        @Override
+        public OutputStream receiveUpload(String filename, String mimetype) {
+            fileName = filename;
+            mimeType = mimetype;
+            FileOutputStream fos; // Output stream to write to
+            if (isPhoto) {
+                photoName = loginTF.getValue() + ".jpg";
+            }
+            try {
+                if (isPhoto) {
+                    myFile = new File(Settings.PATH_TO_UPLOADS + photoName);
+                } else {
+                    myFile = new File(Settings.PATH_TO_UPLOADS + System.currentTimeMillis() + "_" + filename);
+                }
+
+                fos = new FileOutputStream(myFile);
+            } catch (Exception ex) {
+                // Error while opening the file. Not reported here.
+                logger.error(ex);
+                logger.catching(ex);
+                return null;
+            }
+            return fos; // Return the output stream to write tou
+        }
     }
 }

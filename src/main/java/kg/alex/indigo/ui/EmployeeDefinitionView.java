@@ -60,11 +60,34 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     static final Logger logger = LogManager.getLogger(EmployeeDefinitionView.class);
     private final MyVaadinUI myUI;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, generateBtn, cvBtn;
     private final FilterTable employeesDataTable;
+    private final OptionGroup optionGroup;
+    private final TabSheet tabs;
+    private final Label workingStatTtlLb;
+    private final String[] NATURAL_COL_ORDER;
+    private final GridLayout empSearchLay;
+    private final VerticalLayout contractExtraInfoLay = new VerticalLayout();
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final ArrayList<String> delPhoneIds = new ArrayList<>();
+    private final ArrayList<String> delContractIds = new ArrayList<>();
+    private final ArrayList<String> delChildIds = new ArrayList<>();
+    private final ArrayList<EmployeeEducation> delSpouseEducationIds = new ArrayList<>();
+    private final ArrayList<String> delSpouseWorkIds = new ArrayList<>();
+    private final ArrayList<String> delLanguagesIds = new ArrayList<>();
+    private final ArrayList<String> delSeminarsIds = new ArrayList<>();
+    private final ArrayList<EmployeeCertificate> delCertificatesIds = new ArrayList<>();
+    private final ArrayList<EmployeeExam> delExamsIds = new ArrayList<>();
+    private final ArrayList<EmployeeEducation> delEducationIds = new ArrayList<>();
+    private final ArrayList<String> delWorkPlacesIds = new ArrayList<>();
+    private final ArrayList<String> delBranchesIds = new ArrayList<>();
+    private final ArrayList<String> delLessonIds = new ArrayList<>();
+    private final ArrayList<String> delSupervisionIds = new ArrayList<>();
+    private final ArrayList<EmployeeOrder> delOrderIds = new ArrayList<>();
+    private final boolean isMyProfile;
+    private final Date today = new Date();
+    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, generateBtn, cvBtn;
     private Table documentsDataTable;
     private int employeeID;
-    private final OptionGroup optionGroup;
     private CheckBox canBeAdvisorCkb, noPhonesCkb, noBranchesCkb, noEducationCkb, noWorkPlacesCkb, noExamsCkb,
             noSeminarsCkb, noCertificatesCkb, noLanguagesCkb, noSpouseEducationCkb, noSpouseWorkPlacesCkb, noChildrenCkb;
     private TextField nameTF, loginTF, passwordTF, surnameTF, middleNameTF,
@@ -76,7 +99,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             spouseHealthCB, healthCB, contractCategoryCB, gradSchoolCB;
     private FormLayout formLay;
     private FormLayout fieldsLayFamily;
-    private final TabSheet tabs;
     private boolean isNew;
     private Label workingStatusLb;
     private Label mainPositionLb;
@@ -84,10 +106,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private Label mainBranchLb;
     private Label extraBranchesLb;
     private Label totalHoursLb;
-    private final Label workingStatTtlLb;
     private Label captionSpouseInfo;
-
-    private final String[] NATURAL_COL_ORDER;
     private String[] NATURAL_COL_ORDER_PHONES;
     private String[] NATURAL_COL_ORDER_CONTRACTS;
     private String[] NATURAL_COL_ORDER_CHILDREN;
@@ -102,10 +121,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private String[] NATURAL_COL_ORDER_SUPERVISION;
     private String[] NATURAL_COL_ORDER_ORDERS;
     private VerticalLayout infoLay, documentsLay;
-    private final GridLayout empSearchLay;
     private GridLayout contactInfoLay;
     private VerticalLayout contractInfoLay;
-    private final VerticalLayout contractExtraInfoLay = new VerticalLayout();
     private Button printContractBtn;
     private GridLayout familyInfoLay;
     private GridLayout extraInfoLay;
@@ -122,7 +139,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private String photoName, fileName, mimeType;
     private Embedded photoEmb;
     private IndexedContainer workingStatCont;
-    private final Subject currentUser = SecurityUtils.getSubject();
     private FormattedTable phonesTable, contractsTable, childrenTable, spouseEducationTable, spouseWorkPlacesTable, questioningTable,
             examsTable, seminarsTable, certificatesTable, languagesTable, educationTable, workPlacesTable, branchesTable, lessonsTable,
             supervisionTable, permissionTable, ordersTable;
@@ -133,24 +149,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private IndexedContainer phonesCont, contractsCont, childrenCont, spouseEducationCont, spouseWorkCont,
             educationCont, workPlacesCont, examsCont, languagesCont, seminarsCont,
             certificatesCont, branchesCont, lessonsCont, supervisionCont, permissionCont, ordersCont;
-    private final ArrayList<String> delPhoneIds = new ArrayList<>();
-    private final ArrayList<String> delContractIds = new ArrayList<>();
-    private final ArrayList<String> delChildIds = new ArrayList<>();
-    private final ArrayList<EmployeeEducation> delSpouseEducationIds = new ArrayList<>();
-    private final ArrayList<String> delSpouseWorkIds = new ArrayList<>();
-    private final ArrayList<String> delLanguagesIds = new ArrayList<>();
-    private final ArrayList<String> delSeminarsIds = new ArrayList<>();
-    private final ArrayList<EmployeeCertificate> delCertificatesIds = new ArrayList<>();
-    private final ArrayList<EmployeeExam> delExamsIds = new ArrayList<>();
-    private final ArrayList<EmployeeEducation> delEducationIds = new ArrayList<>();
-    private final ArrayList<String> delWorkPlacesIds = new ArrayList<>();
-    private final ArrayList<String> delBranchesIds = new ArrayList<>();
-    private final ArrayList<String> delLessonIds = new ArrayList<>();
-    private final ArrayList<String> delSupervisionIds = new ArrayList<>();
-    private final ArrayList<EmployeeOrder> delOrderIds = new ArrayList<>();
     private SimpleFileDownloader downloader = null;
-    private final boolean isMyProfile;
-    private final Date today = new Date();
 
     public EmployeeDefinitionView(final MyVaadinUI myUI, boolean isMyProfile) {
         this.myUI = myUI;
@@ -2233,39 +2232,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             }
         }
         return true;
-    }
-
-    public class MyReceiver implements Upload.Receiver {
-        boolean isPhoto;
-
-        public MyReceiver(boolean isPhoto) {
-            this.isPhoto = isPhoto;
-        }
-
-        @Override
-        public OutputStream receiveUpload(String filename, String mimetype) {
-            fileName = filename;
-            mimeType = mimetype;
-            FileOutputStream fos; // Output stream to write to
-            if (isPhoto) {
-                photoName = loginTF.getValue() + ".jpg";
-            }
-            try {
-                if (isPhoto) {
-                    myFile = new File(Settings.PATH_TO_UPLOADS_HR + photoName);
-                } else {
-                    myFile = new File(Settings.PATH_TO_UPLOADS_HR + System.currentTimeMillis() + "_" + filename);
-                }
-
-                fos = new FileOutputStream(myFile);
-            } catch (Exception ex) {
-                // Error while opening the file. Not reported here.
-                logger.error(ex);
-                logger.catching(ex);
-                return null;
-            }
-            return fos; // Return the output stream to write tou
-        }
     }
 
     private void buildUploadWindow() {
@@ -5763,5 +5729,38 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     public VerticalLayout getContractExtraInfoLay() {
         return contractExtraInfoLay;
+    }
+
+    public class MyReceiver implements Upload.Receiver {
+        boolean isPhoto;
+
+        public MyReceiver(boolean isPhoto) {
+            this.isPhoto = isPhoto;
+        }
+
+        @Override
+        public OutputStream receiveUpload(String filename, String mimetype) {
+            fileName = filename;
+            mimeType = mimetype;
+            FileOutputStream fos; // Output stream to write to
+            if (isPhoto) {
+                photoName = loginTF.getValue() + ".jpg";
+            }
+            try {
+                if (isPhoto) {
+                    myFile = new File(Settings.PATH_TO_UPLOADS_HR + photoName);
+                } else {
+                    myFile = new File(Settings.PATH_TO_UPLOADS_HR + System.currentTimeMillis() + "_" + filename);
+                }
+
+                fos = new FileOutputStream(myFile);
+            } catch (Exception ex) {
+                // Error while opening the file. Not reported here.
+                logger.error(ex);
+                logger.catching(ex);
+                return null;
+            }
+            return fos; // Return the output stream to write tou
+        }
     }
 }

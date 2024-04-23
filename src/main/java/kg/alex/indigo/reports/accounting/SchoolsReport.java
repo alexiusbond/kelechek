@@ -31,11 +31,11 @@ public class SchoolsReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(SchoolsReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
     public FormattedTable dataTable;
-    private DateField fromDateDF, tillDateDF;
     public FilterTable schoolTable;
+    private Button generateBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
+    private DateField fromDateDF, tillDateDF;
 
     public SchoolsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -115,7 +115,8 @@ public class SchoolsReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 

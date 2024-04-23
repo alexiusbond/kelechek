@@ -27,11 +27,11 @@ import java.util.Iterator;
 public class InstallmentPlanPaymentsPdf {
 
     static final Logger logger = LogManager.getLogger(InstallmentPlanPaymentsPdf.class);
+    private final Date aDate = new Date(System.currentTimeMillis());
+    private final StudentInfoPdf studentInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final Date aDate = new Date(System.currentTimeMillis());
-    private final StudentInfoPdf studentInfo;
 
 
     public InstallmentPlanPaymentsPdf(final MyVaadinUI myUI, StudentInfoPdf s, final IndexedContainer planCont,

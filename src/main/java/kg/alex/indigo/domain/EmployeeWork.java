@@ -11,6 +11,7 @@ import java.util.Set;
 
 public class EmployeeWork implements Serializable {
 
+    boolean isSapat;
     private int id;
     private int employee_id;
     private int own_id;
@@ -18,7 +19,6 @@ public class EmployeeWork implements Serializable {
     private int work_place_id;
     private int main_position_id;
     private Set<?> extra_position_ids;
-    boolean isSapat;
     private Date start;
     private Date end;
 

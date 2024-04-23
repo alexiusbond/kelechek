@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>kg.alex.indigo</groupId>
@@ -261,10 +261,10 @@
             <version>1.0.3</version>
         </dependency>
         <dependency>
-        <groupId>com.vaadin</groupId>
-        <artifactId>grid-renderers-collection-addon</artifactId>
-        <version>1.2.4</version>
-    </dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>grid-renderers-collection-addon</artifactId>
+            <version>1.2.4</version>
+        </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
@@ -306,7 +306,7 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
                 <configuration>
-                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=918eb36d-2bf1-450f-b323-33044a31cfc1
+                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=460fa0cc-e994-47c0-be4d-7f3be1d5ba05
                     </extraJvmArgs>
                     <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
                     <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>

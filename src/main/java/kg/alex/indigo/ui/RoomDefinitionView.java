@@ -29,14 +29,13 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
 
     static final Logger logger = LogManager.getLogger(RoomDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final Table dataTable;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox blockSelect, floorSelect, statusSelect;
-    private final Table dataTable;
     private TextField nameTF, descriptionTF;
     private boolean isNew;
-
     private VerticalLayout settingsLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public RoomDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;

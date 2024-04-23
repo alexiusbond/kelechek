@@ -15,7 +15,7 @@ public class TextFieldValidated extends TextField {
         Validator textFieldValidator = new Validator() {
 
             public boolean isValid(Object value) {
-                
+
                 int number;
                 try {
                     number = Integer.parseInt(value.toString());

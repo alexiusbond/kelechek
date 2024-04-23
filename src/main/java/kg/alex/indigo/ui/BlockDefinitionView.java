@@ -29,14 +29,13 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
 
     static final Logger logger = LogManager.getLogger(BlockDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final Table dataTable;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect;
-    private final Table dataTable;
     private TextField nameTF;
     private boolean isNew;
-
     private VerticalLayout settingsLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public BlockDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;

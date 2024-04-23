@@ -28,6 +28,9 @@ public class School implements Serializable {
     private int currency_id;
     private String photo;
 
+    public School() {
+    }
+
     public int getCurrency_id() {
         return currency_id;
     }
@@ -90,9 +93,6 @@ public class School implements Serializable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
-    }
-
-    public School() {
     }
 
     public int getId() {

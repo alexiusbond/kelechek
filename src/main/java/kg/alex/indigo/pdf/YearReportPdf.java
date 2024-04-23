@@ -29,10 +29,10 @@ import java.util.Iterator;
 public class YearReportPdf {
 
     static final Logger logger = LogManager.getLogger(YearReportPdf.class);
+    private final Date aDate = new Date(System.currentTimeMillis());
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final Date aDate = new Date(System.currentTimeMillis());
 
 
     public YearReportPdf(final MyVaadinUI myUI, final ComponentContainer layout,

@@ -29,14 +29,13 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
 
     static final Logger logger = LogManager.getLogger(StockDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final Table dataTable;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect;
-    private final Table dataTable;
     private TextField nameTF;
     private boolean isNew;
-
     private VerticalLayout settingsLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public StockDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -290,14 +289,14 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
                 myUI.getMessage(IndigoMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect
-                        .getValue());
+                .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(IndigoMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(IndigoMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.school_id).setValue(
-                        myUI.getUser().getSchool().getId());
+                myUI.getUser().getSchool().getId());
     }
 
     private void addDataContainerItem(int id) {

@@ -29,9 +29,9 @@ import java.util.Iterator;
 public class InventoryLiquidationPdf {
 
     static final Logger logger = LogManager.getLogger(InventoryLiquidationPdf.class);
+    private final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
-    private final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private Document document = null;
 
 

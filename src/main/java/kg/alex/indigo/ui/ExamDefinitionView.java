@@ -28,10 +28,10 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
 
     static final Logger logger = LogManager.getLogger(ExamDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final Table dataTable;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect;
     private TextField validityTF;
-    private final Table dataTable;
     private TextField nameTF;
     private boolean isNew;
 

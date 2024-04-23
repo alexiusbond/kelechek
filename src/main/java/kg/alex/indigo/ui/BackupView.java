@@ -66,7 +66,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
         } else {
             try {
                 myUI.getPage().open(new FileResource(
-                        new File("/home/indigo/backups/" + source.getData())),
+                                new File("/home/indigo/backups/" + source.getData())),
                         "_blank", false);
             } catch (Exception e) {
                 logger.error(e);

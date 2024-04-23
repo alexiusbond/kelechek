@@ -19,7 +19,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
  * @author alex
  */
 public class DbStudentRelative extends BaseDb {
@@ -29,8 +28,8 @@ public class DbStudentRelative extends BaseDb {
     }
 
     public IndexedContainer execSQL_St_Rel(MyVaadinUI myUi, int stud_id,
-            StudentDefinitionView dw) throws SQLException {
-        
+                                           StudentDefinitionView dw) throws SQLException {
+
 
         String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.work_place, "
                 + "sr.phone, sr.address, sr.passport, sr.is_main, sr.relatives_id "
@@ -113,7 +112,7 @@ public class DbStudentRelative extends BaseDb {
         stat.setString(1, id);
         return stat.executeUpdate();
     }
-    
+
     public int exec_update(StudentRelative sr) throws SQLException {
         String sql = "Update student_relatives set student_id = ?, "
                 + "fullname = ?, work_place = ?, phone = ?, address = ?, "

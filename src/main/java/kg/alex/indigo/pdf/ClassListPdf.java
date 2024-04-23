@@ -28,10 +28,10 @@ import java.util.Iterator;
 public class ClassListPdf {
 
     static final Logger logger = LogManager.getLogger(ClassListPdf.class);
+    private final Date aDate = new Date(System.currentTimeMillis());
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final Date aDate = new Date(System.currentTimeMillis());
 
     public ClassListPdf(final MyVaadinUI myUI, final IndexedContainer dataCont,
                         final StudentInfoPdf studentInfo, final ClassListReport clr) {

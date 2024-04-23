@@ -54,7 +54,7 @@ public class DbStudentCorrection extends BaseDb {
             ComboBox cb = dw.createComboboxCorr(result.getInt("t.correction_type_id"),
                     myUI.getMessage(IndigoMessages.Title), id);
             item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(cb);
-            TextField discTf = dw.createTextFieldDouble(result.getDouble("t.amount"),2,
+            TextField discTf = dw.createTextFieldDouble(result.getDouble("t.amount"), 2,
                     myUI.getMessage(IndigoMessages.CorrectionAmount), id);
             item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(discTf);
             TextField tf = dw.createTextField(result.getString("t.note"),

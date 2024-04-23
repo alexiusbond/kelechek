@@ -31,17 +31,17 @@ import java.util.logging.Logger;
 public class YearDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(YearDefinitionView         .class);
+    static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(YearDefinitionView.class);
     private final MyVaadinUI myUI;
     private final AuthenticatedScreen as;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private final Table dataTable;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private TextField nameTF;
     private TextField period, periodKg;
     private DateField start_date, end_date;
     private boolean isNew;
     private VerticalLayout settingsLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public YearDefinitionView(MyVaadinUI myUI, AuthenticatedScreen as) {
         this.myUI = myUI;
@@ -341,10 +341,10 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         periodKg.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(IndigoMessages.PeriodKg)).getValue().toString());
         start_date.setValue(Settings.df.parse(dataTable.getContainerProperty(
-                dataTable.getValue(), myUI.getMessage(IndigoMessages.StartDate))
+                        dataTable.getValue(), myUI.getMessage(IndigoMessages.StartDate))
                 .getValue().toString()));
         end_date.setValue(Settings.df.parse(dataTable.getContainerProperty(
-                dataTable.getValue(), myUI.getMessage(IndigoMessages.EndDate))
+                        dataTable.getValue(), myUI.getMessage(IndigoMessages.EndDate))
                 .getValue().toString()));
 
     }
@@ -396,8 +396,8 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         y.setName(nameTF.getValue());
         y.setPeriod(period.getValue());
         y.setPeriod_kg(periodKg.getValue());
-        y.setStart_date(  start_date.getValue());
-        y.setEnd_date(  end_date.getValue());
+        y.setStart_date(start_date.getValue());
+        y.setEnd_date(end_date.getValue());
         y.setId(i);
         return y;
     }

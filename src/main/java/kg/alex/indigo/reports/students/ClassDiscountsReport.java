@@ -34,13 +34,13 @@ public class ClassDiscountsReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(ClassDiscountsReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
-            selectAllDiscountsBtn, deselectAllDiscountsBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
-    private ComboBox yearSelect;
-    private ComboBoxMultiselect educationStatusMCB;
     public FormattedTable dataTable;
     public FilterTable classTable, discountsTable;
+    private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
+            selectAllDiscountsBtn, deselectAllDiscountsBtn, excelBtn;
+    private ComboBox yearSelect;
+    private ComboBoxMultiselect educationStatusMCB;
     private String currency;
 
     public ClassDiscountsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
@@ -130,7 +130,8 @@ public class ClassDiscountsReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 

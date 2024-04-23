@@ -27,12 +27,11 @@ import java.util.Iterator;
 public class DebtsPdf {
 
     static final Logger logger = LogManager.getLogger(DebtsPdf.class);
+    private final Date aDate = new Date(System.currentTimeMillis());
+    private final Date fromDate, tillDate;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final Date aDate = new Date(System.currentTimeMillis());
-    private final Date fromDate, tillDate;
-
     private String currency;
 
 

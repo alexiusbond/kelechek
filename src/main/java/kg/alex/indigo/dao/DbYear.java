@@ -18,7 +18,7 @@ public class DbYear extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
-        
+
 
         String sql = "SELECT y.id, y.name, y.period, y.period_kg, y.start_date, y.end_date "
                 + "FROM year as y order by y.id desc";

@@ -24,7 +24,7 @@ public class DbStockInvoice extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int service_type_id) throws SQLException {
-        
+
 
         String sql = "SELECT t.id, LPAD(t.invoice_number, 7, 0) as inv_num, t.creation_date, sum(mov.amount * mov.price) as amount, "
                 + "stock.name, stock.id, from_e.id, to_e.id, t.note, t.acc_category_id, "

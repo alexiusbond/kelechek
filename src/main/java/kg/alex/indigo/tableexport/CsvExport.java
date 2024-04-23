@@ -23,19 +23,19 @@ public class CsvExport extends ExcelExport {
     }
 
     public CsvExport(final Table table, final String sheetName, final String reportTitle,
-            final String exportFileName) {
+                     final String exportFileName) {
         super(table, sheetName, reportTitle, exportFileName);
     }
 
     public CsvExport(final Table table, final String sheetName, final String reportTitle,
-            final String exportFileName, final boolean hasTotalsRow) {
+                     final String exportFileName, final boolean hasTotalsRow) {
         super(table, sheetName, reportTitle, exportFileName, hasTotalsRow);
     }
 
     @Override
     /**
      * Convert Excel to CSV and send to user. 
-     * 
+     *
      */
     public boolean sendConverted() {
         File tempXlsFile, tempCsvFile;

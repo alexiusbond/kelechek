@@ -22,6 +22,13 @@ import java.text.SimpleDateFormat;
 public class InvoicePDF {
 
     static final Logger logger = LogManager.getLogger(InvoicePDF.class);
+    private static final DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols() {
+        @Override
+        public String[] getMonths() {
+            return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
+                    "июля", "августа", "сентября", "октября", "ноября", "декабря"};
+        }
+    };
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
@@ -266,13 +273,5 @@ public class InvoicePDF {
         resource.setMIMEType("application/pdf");
         myUI.getPage().open(resource, nameOf, false);
     }
-
-    private static final DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols() {
-        @Override
-        public String[] getMonths() {
-            return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
-                    "июля", "августа", "сентября", "октября", "ноября", "декабря"};
-        }
-    };
 
 }

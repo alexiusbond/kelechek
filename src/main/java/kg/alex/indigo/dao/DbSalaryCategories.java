@@ -49,9 +49,9 @@ public class DbSalaryCategories extends BaseDb {
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
         while (result.next()) {
-                Item item = container.addItem(result.getInt("c.id"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(result.getString("sc.name"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Code)).setValue(result.getString("code"));
+            Item item = container.addItem(result.getInt("c.id"));
+            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(result.getString("sc.name"));
+            item.getItemProperty(myUI.getMessage(IndigoMessages.Code)).setValue(result.getString("code"));
         }
         return container;
     }

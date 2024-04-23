@@ -33,7 +33,7 @@ public class StudentExcel implements Serializable {
     private int school_id;
     private int entering_year_id;
     private int employee_id;
-    
+
     private int relative_type_id;
     @ExcelColumn("Relative")
     private String relative_type;

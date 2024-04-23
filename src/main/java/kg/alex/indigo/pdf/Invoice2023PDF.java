@@ -26,6 +26,13 @@ import java.util.Iterator;
 public class Invoice2023PDF {
 
     static final Logger logger = LogManager.getLogger(Invoice2023PDF.class);
+    private static final DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols() {
+        @Override
+        public String[] getMonths() {
+            return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
+                    "июля", "августа", "сентября", "октября", "ноября", "декабря"};
+        }
+    };
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
@@ -333,13 +340,5 @@ public class Invoice2023PDF {
                 open(resource, nameOf, false);
 
     }
-
-    private static final DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols() {
-        @Override
-        public String[] getMonths() {
-            return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
-                    "июля", "августа", "сентября", "октября", "ноября", "декабря"};
-        }
-    };
 
 }

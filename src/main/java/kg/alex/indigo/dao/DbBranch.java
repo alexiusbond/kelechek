@@ -21,6 +21,7 @@ public class DbBranch extends BaseDb {
     public DbBranch() throws Exception {
         super();
     }
+
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
 
         String sql = "SELECT b.id, b.name, b.code, b.activity_status_id, ac.name FROM hr_branch as b "

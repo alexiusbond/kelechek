@@ -18,13 +18,12 @@ import java.io.ByteArrayOutputStream;
 public class ContractAcademicStuffPdf {
 
     static final Logger logger = LogManager.getLogger(ContractAcademicStuffPdf.class);
+    private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
+    private final EmployeeInfoPdf employeeInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final EmployeeInfoPdf employeeInfo;
-
-    private final static String FONT_LOCATION = "/home/indigo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/indigo/TimesNewRomanBold.ttf";
 
     public ContractAcademicStuffPdf(final MyVaadinUI myUi, EmployeeInfoPdf employeeInfo) {
         this.employeeInfo = employeeInfo;
@@ -949,7 +948,7 @@ public class ContractAcademicStuffPdf {
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("Директор: ", ordBoldFont));
-                text10.add(new Phrase( employeeInfo.getDirector().getSurname() + " "
+                text10.add(new Phrase(employeeInfo.getDirector().getSurname() + " "
                         + employeeInfo.getDirector().getName() + " " +
                         (employeeInfo.getDirector().getMiddle_name() == null ?
                                 "" : employeeInfo.getDirector().getMiddle_name()), ordFont));

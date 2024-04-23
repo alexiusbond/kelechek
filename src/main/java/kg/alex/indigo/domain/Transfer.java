@@ -16,6 +16,7 @@ public class Transfer implements Serializable {
     private int acc_category_id;
     private int invoice_id;
     private int acc_balance_settings_id;
+    private String note;
 
     public int getAcc_balance_settings_id() {
         return acc_balance_settings_id;
@@ -24,8 +25,6 @@ public class Transfer implements Serializable {
     public void setAcc_balance_settings_id(int acc_balance_settings_id) {
         this.acc_balance_settings_id = acc_balance_settings_id;
     }
-
-    private String note;
 
     public int getId() {
         return id;

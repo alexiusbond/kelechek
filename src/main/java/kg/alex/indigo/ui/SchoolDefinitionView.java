@@ -33,13 +33,13 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
     static final Logger logger = LogManager.getLogger(SchoolDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final Table dataTable;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect, typeSelect;
-    private final Table dataTable;
     private TextField nameKgTF, nameEnTF, codeTF, nameRuTF, addressTF, innTF, bankTF,
             bankAccountTF, phoneTF, cityTF;
     private boolean isNew;
-
     private Upload photoUpl;
     private File myFile;
     private Window statusWindow;
@@ -48,7 +48,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     private String photoName, mimeType;
     private Embedded photoEmb;
     private GridLayout settingsLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public SchoolDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -688,28 +687,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         }
     }
 
-    public class MyReceiver implements Upload.Receiver {
-
-        @Override
-        public OutputStream receiveUpload(String filename, String mimetype) {
-            mimeType = mimetype;
-            FileOutputStream fos; // Output stream to write to
-            photoName = codeTF.getValue() + ".jpg";
-            try {
-                myFile = new File(Settings.PATH_TO_UPLOADS + photoName);
-
-                // Open the file for writing.
-                fos = new FileOutputStream(myFile);
-            } catch (Exception e) {
-                // Error while opening the file. Not reported here.
-                logger.error(e);
-                logger.catching(e);
-                return null;
-            }
-            return fos; // Return the output stream to write tou
-        }
-    }
-
     private void buildUploadWindow() {
         uploadProgressBar = new ProgressBar();
         uploadProgressBar.setWidth("90%");
@@ -810,5 +787,27 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                 statusWindow.close();
             }
         });
+    }
+
+    public class MyReceiver implements Upload.Receiver {
+
+        @Override
+        public OutputStream receiveUpload(String filename, String mimetype) {
+            mimeType = mimetype;
+            FileOutputStream fos; // Output stream to write to
+            photoName = codeTF.getValue() + ".jpg";
+            try {
+                myFile = new File(Settings.PATH_TO_UPLOADS + photoName);
+
+                // Open the file for writing.
+                fos = new FileOutputStream(myFile);
+            } catch (Exception e) {
+                // Error while opening the file. Not reported here.
+                logger.error(e);
+                logger.catching(e);
+                return null;
+            }
+            return fos; // Return the output stream to write tou
+        }
     }
 }

@@ -26,9 +26,9 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
 
     static final Logger logger = LogManager.getLogger(BranchDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final Table dataTable;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect;
-    private final Table dataTable;
     private TextField nameTF, codeTF;
     private boolean isNew;
 

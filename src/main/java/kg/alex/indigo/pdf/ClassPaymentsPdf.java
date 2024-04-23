@@ -27,10 +27,10 @@ import java.util.Iterator;
 public class ClassPaymentsPdf {
 
     static final Logger logger = LogManager.getLogger(ClassPaymentsPdf.class);
+    private final Date aDate = new Date(System.currentTimeMillis());
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final Date aDate = new Date(System.currentTimeMillis());
 
 
     public ClassPaymentsPdf(final MyVaadinUI myUI, final IndexedContainer dataContainer, final String year,

@@ -29,13 +29,13 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
 
     static final Logger logger = LogManager.getLogger(AccessoriesDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final Table dataTable;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect, categorySelect;
-    private final Table dataTable;
     private TextField nameTF;
     private boolean isNew;
     private VerticalLayout settingsLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public AccessoriesDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;

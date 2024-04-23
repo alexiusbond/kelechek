@@ -30,9 +30,9 @@ import java.util.Iterator;
 public class StockMovementsPdf {
 
     static final Logger logger = LogManager.getLogger(StockMovementsPdf.class);
+    private final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
-    private final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private Document document = null;
 
 

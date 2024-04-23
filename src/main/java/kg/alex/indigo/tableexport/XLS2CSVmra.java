@@ -1,19 +1,19 @@
 /*
  * ====================================================================
- * 
+ *
  * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
  * agreements. See the NOTICE file distributed with this work for additional information regarding
  * copyright ownership. The ASF licenses this file to You under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License. You may obtain a
  * copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * ====================================================================
  */
 package kg.alex.indigo.tableexport;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 /**
  * A XLS -> CSV processor, that uses the MissingRecordAware EventModel code to ensure it outputs all
  * columns and rows.
- * 
+ *
  * @author Nick Burch
  */
 public class XLS2CSVmra implements HSSFListener {
@@ -47,10 +47,14 @@ public class XLS2CSVmra implements HSSFListener {
     private int lastRowNumber;
     private int lastColumnNumber;
 
-    /** Should we output the formula, or the value it has? */
+    /**
+     * Should we output the formula, or the value it has?
+     */
     private boolean outputFormulaValues = true;
 
-    /** For parsing Formulas */
+    /**
+     * For parsing Formulas
+     */
     private SheetRecordCollectingListener workbookBuildingListener;
     private HSSFWorkbook stubWorkbook;
 
@@ -58,7 +62,9 @@ public class XLS2CSVmra implements HSSFListener {
     private SSTRecord sstRecord;
     private FormatTrackingHSSFListener formatListener;
 
-    /** So we known which sheet we're on */
+    /**
+     * So we known which sheet we're on
+     */
     @SuppressWarnings("unused")
     private int sheetIndex = -1;
     private BoundSheetRecord[] orderedBSRs;
@@ -72,13 +78,10 @@ public class XLS2CSVmra implements HSSFListener {
 
     /**
      * Creates a new XLS -> CSV converter
-     * 
-     * @param fs
-     *            The POIFSFileSystem to process
-     * @param output
-     *            The PrintStream to output the CSV to
-     * @param minColumns
-     *            The minimum number of columns to output, or -1 for no minimum
+     *
+     * @param fs         The POIFSFileSystem to process
+     * @param output     The PrintStream to output the CSV to
+     * @param minColumns The minimum number of columns to output, or -1 for no minimum
      */
     public XLS2CSVmra(final POIFSFileSystem fs, final PrintStream output, final int minColumns) {
         this.fs = fs;
@@ -88,17 +91,31 @@ public class XLS2CSVmra implements HSSFListener {
 
     /**
      * Creates a new XLS -> CSV converter
-     * 
-     * @param filename
-     *            The file to process
-     * @param minColumns
-     *            The minimum number of columns to output, or -1 for no minimum
+     *
+     * @param filename   The file to process
+     * @param minColumns The minimum number of columns to output, or -1 for no minimum
      * @throws IOException
      * @throws FileNotFoundException
      */
     public XLS2CSVmra(final String filename, final int minColumns) throws IOException,
             FileNotFoundException {
         this(new POIFSFileSystem(new FileInputStream(filename)), System.out, minColumns);
+    }
+
+    public static void main(final String[] args) throws Exception {
+        if (args.length < 1) {
+            System.err.println("Use:");
+            System.err.println("  XLS2CSVmra <xls file> [min columns]");
+            System.exit(1);
+        }
+
+        int minColumns = -1;
+        if (args.length >= 2) {
+            minColumns = Integer.parseInt(args[1]);
+        }
+
+        final XLS2CSVmra xls2csv = new XLS2CSVmra(args[0], minColumns);
+        xls2csv.process();
     }
 
     /**
@@ -132,10 +149,10 @@ public class XLS2CSVmra implements HSSFListener {
         String thisStr = null;
 
         switch (record.getSid()) {
-            case BoundSheetRecord.sid :
+            case BoundSheetRecord.sid:
                 boundSheetRecords.add(record);
                 break;
-            case BOFRecord.sid :
+            case BOFRecord.sid:
                 final BOFRecord br = (BOFRecord) record;
                 if (br.getType() == BOFRecord.TYPE_WORKSHEET) {
                     // Create sub workbook if required
@@ -159,18 +176,18 @@ public class XLS2CSVmra implements HSSFListener {
                 }
                 break;
 
-            case SSTRecord.sid :
+            case SSTRecord.sid:
                 sstRecord = (SSTRecord) record;
                 break;
 
-            case BlankRecord.sid :
+            case BlankRecord.sid:
                 final BlankRecord brec = (BlankRecord) record;
 
                 thisRow = brec.getRow();
                 thisColumn = brec.getColumn();
                 thisStr = "";
                 break;
-            case BoolErrRecord.sid :
+            case BoolErrRecord.sid:
                 final BoolErrRecord berec = (BoolErrRecord) record;
 
                 thisRow = berec.getRow();
@@ -178,7 +195,7 @@ public class XLS2CSVmra implements HSSFListener {
                 thisStr = "";
                 break;
 
-            case FormulaRecord.sid :
+            case FormulaRecord.sid:
                 final FormulaRecord frec = (FormulaRecord) record;
 
                 thisRow = frec.getRow();
@@ -200,7 +217,7 @@ public class XLS2CSVmra implements HSSFListener {
                                     frec.getParsedExpression()) + '"';
                 }
                 break;
-            case StringRecord.sid :
+            case StringRecord.sid:
                 if (outputNextStringRecord) {
                     // String for formula
                     final StringRecord srec = (StringRecord) record;
@@ -211,14 +228,14 @@ public class XLS2CSVmra implements HSSFListener {
                 }
                 break;
 
-            case LabelRecord.sid :
+            case LabelRecord.sid:
                 final LabelRecord lrec = (LabelRecord) record;
 
                 thisRow = lrec.getRow();
                 thisColumn = lrec.getColumn();
                 thisStr = '"' + lrec.getValue() + '"';
                 break;
-            case LabelSSTRecord.sid :
+            case LabelSSTRecord.sid:
                 final LabelSSTRecord lsrec = (LabelSSTRecord) record;
 
                 thisRow = lsrec.getRow();
@@ -229,7 +246,7 @@ public class XLS2CSVmra implements HSSFListener {
                     thisStr = '"' + sstRecord.getString(lsrec.getSSTIndex()).toString() + '"';
                 }
                 break;
-            case NoteRecord.sid :
+            case NoteRecord.sid:
                 final NoteRecord nrec = (NoteRecord) record;
 
                 thisRow = nrec.getRow();
@@ -237,7 +254,7 @@ public class XLS2CSVmra implements HSSFListener {
                 // TODO: Find object to match nrec.getShapeId()
                 thisStr = '"' + "(TODO)" + '"';
                 break;
-            case NumberRecord.sid :
+            case NumberRecord.sid:
                 final NumberRecord numrec = (NumberRecord) record;
 
                 thisRow = numrec.getRow();
@@ -246,14 +263,14 @@ public class XLS2CSVmra implements HSSFListener {
                 // Format
                 thisStr = formatListener.formatNumberDateCell(numrec);
                 break;
-            case RKRecord.sid :
+            case RKRecord.sid:
                 final RKRecord rkrec = (RKRecord) record;
 
                 thisRow = rkrec.getRow();
                 thisColumn = rkrec.getColumn();
                 thisStr = '"' + "(TODO)" + '"';
                 break;
-            default :
+            default:
                 break;
         }
 
@@ -303,21 +320,5 @@ public class XLS2CSVmra implements HSSFListener {
             // End the row
             output.println();
         }
-    }
-
-    public static void main(final String[] args) throws Exception {
-        if (args.length < 1) {
-            System.err.println("Use:");
-            System.err.println("  XLS2CSVmra <xls file> [min columns]");
-            System.exit(1);
-        }
-
-        int minColumns = -1;
-        if (args.length >= 2) {
-            minColumns = Integer.parseInt(args[1]);
-        }
-
-        final XLS2CSVmra xls2csv = new XLS2CSVmra(args[0], minColumns);
-        xls2csv.process();
     }
 }

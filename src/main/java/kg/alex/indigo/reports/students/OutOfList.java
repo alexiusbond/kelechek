@@ -35,14 +35,13 @@ public class OutOfList implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(OutOfList.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
+    private final String[] NATURAL_COL_ORDER;
+    public double nets, paid_amounts;
+    private Button generateBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private ComboBoxMultiselect yearSelectMCB, reasonsMCB;
     private FormattedTable dataTable;
     private FilterTable fromClassTable;
-
-    private final String[] NATURAL_COL_ORDER;
-    public double nets, paid_amounts;
 
     public OutOfList(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -151,7 +150,8 @@ public class OutOfList implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 

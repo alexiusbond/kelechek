@@ -29,20 +29,19 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
 
     static final Logger logger = LogManager.getLogger(AccCategoriesDefinitionView.class);
     private final MyVaadinUI myUI;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBox parentSelect, statusSelect;
     private final TreeTable dataTable;
-    private TextField nameTF, codeTF;
-    private TextArea noteTF;
-    private boolean isNew;
-
     private final String[] NATURAL_COL_ORDER;
-    private String parent_code = "";
-    private Label parent_code_label;
-    private VerticalLayout settingsLay;
     private final Subject currentUser = SecurityUtils.getSubject();
     private final int movement_type_id;
     private final String permission;
+    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
+    private ComboBox parentSelect, statusSelect;
+    private TextField nameTF, codeTF;
+    private TextArea noteTF;
+    private boolean isNew;
+    private String parent_code = "";
+    private Label parent_code_label;
+    private VerticalLayout settingsLay;
 
     public AccCategoriesDefinitionView(MyVaadinUI myUI, int movement_type_id, String permission) {
         this.myUI = myUI;

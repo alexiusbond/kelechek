@@ -49,17 +49,17 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         Property.ValueChangeListener, FieldGroup.CommitHandler {
     static final Logger logger = LogManager.getLogger(CashBoxView.class);
     private final MyVaadinUI myUI;
+    private final Grid expensesGrid, incomesGrid;
+    private final Accordion accordion;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    public SchoolAccounting schoolAcc;
     private Button addButton, saveButton, searchButton;
     private OptionGroup currencySettingsOG, cashBoxesOG;
     private TextField currencyTF;
     private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab;
-    public SchoolAccounting schoolAcc;
     private DateField fromDateDF, tillDateDF;
-    private final Grid expensesGrid, incomesGrid;
     private GeneratedPropertyContainer incomesCont = null, expensesCont = null;
     private int r_table_counter = 1000;
-    private final Accordion accordion;
-    private final Subject currentUser = SecurityUtils.getSubject();
     private HorizontalLayout currencyHl;
     private ComboBox expensesCategoryCb, incomesCategoryCb, toEmployeesCb;
     private Date today;

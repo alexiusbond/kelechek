@@ -10,36 +10,37 @@ import java.io.InputStream;
 
 /**
  * The Class TemporaryFileDownloadResource.
- * 
+ * <p>
  * Code obtained from: http://vaadin.com/forum/-/message_boards/view_message/159583
  */
 public class TemporaryFileDownloadResource extends StreamResource {
 
-    /** The Constant serialVersionUID. */
+    /**
+     * The Constant serialVersionUID.
+     */
     private static final long serialVersionUID = 476307190141362413L;
 
-    /** The filename. */
+    /**
+     * The filename.
+     */
     private final String filename;
 
-    /** The content type. */
+    /**
+     * The content type.
+     */
     private String contentType;
 
     /**
      * Instantiates a new temporary file download resource.
-     * 
-     * @param application
-     *            the application
-     * @param fileName
-     *            the file name
-     * @param contentType
-     *            the content type
-     * @param tempFile
-     *            the temp file
-     * @throws FileNotFoundException
-     *             the file not found exception
+     *
+     * @param application the application
+     * @param fileName    the file name
+     * @param contentType the content type
+     * @param tempFile    the temp file
+     * @throws FileNotFoundException the file not found exception
      */
     public TemporaryFileDownloadResource(final UI application, final String fileName,
-            final String contentType, final File tempFile) throws FileNotFoundException {
+                                         final String contentType, final File tempFile) throws FileNotFoundException {
         super(new FileStreamResource(tempFile), fileName);
         this.filename = fileName;
         this.contentType = contentType;
@@ -47,7 +48,7 @@ public class TemporaryFileDownloadResource extends StreamResource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.StreamResource#getStream()
      */
     @Override
@@ -68,19 +69,21 @@ public class TemporaryFileDownloadResource extends StreamResource {
      */
     private static class FileStreamResource implements StreamResource.StreamSource {
 
-        /** The Constant serialVersionUID. */
+        /**
+         * The Constant serialVersionUID.
+         */
         private static final long serialVersionUID = 3801605481686085335L;
 
-        /** The input stream. */
+        /**
+         * The input stream.
+         */
         private final InputStream inputStream;
 
         /**
          * Instantiates a new file stream resource.
-         * 
-         * @param fileToDownload
-         *            the file to download
-         * @throws FileNotFoundException
-         *             the file not found exception
+         *
+         * @param fileToDownload the file to download
+         * @throws FileNotFoundException the file not found exception
          */
         public FileStreamResource(final File fileToDownload) throws FileNotFoundException {
             inputStream = new DeletingFileInputStream(fileToDownload);
@@ -88,7 +91,7 @@ public class TemporaryFileDownloadResource extends StreamResource {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.vaadin.terminal.StreamResource.StreamSource#getStream()
          */
         @Override

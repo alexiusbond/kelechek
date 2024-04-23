@@ -44,17 +44,16 @@ public class BalanceReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(BalanceReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllAssertsBtn, deselectAllAssertsBtn,
-            selectAllDebtsBtn, deselectAllDebtsBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
-    private DateField fromDateDF, tillDateDF;
-    public FormattedTreeTable assertsDataTable, debtsDataTable;
-    public FilterTreeTable assertsCategoriesTable, debtsCategoriesTable;
-
-    private Label assertsTtlLab, debtsTtlLab, ttlLab;
-    private HorizontalLayout infoLay;
     private final TabSheet tabSheet;
     private final Calendar fromDate = Calendar.getInstance(), tillDate = Calendar.getInstance();
+    public FormattedTreeTable assertsDataTable, debtsDataTable;
+    public FilterTreeTable assertsCategoriesTable, debtsCategoriesTable;
+    private Button generateBtn, selectAllAssertsBtn, deselectAllAssertsBtn,
+            selectAllDebtsBtn, deselectAllDebtsBtn, excelBtn;
+    private DateField fromDateDF, tillDateDF;
+    private Label assertsTtlLab, debtsTtlLab, ttlLab;
+    private HorizontalLayout infoLay;
     private FileDownloader fd;
 
     public BalanceReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {

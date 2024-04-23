@@ -19,10 +19,10 @@ import org.apache.shiro.subject.Subject;
 public class StockReportsView extends HorizontalSplitPanel implements Property.ValueChangeListener {
 
     private final MyVaadinUI myUI;
-    private ComboBox repTypeSelect;
-
-    private GridLayout leftGrid, rightGrid;
     private final Subject currentUser = SecurityUtils.getSubject();
+    private ComboBox repTypeSelect;
+    private GridLayout leftGrid, rightGrid;
+
     public StockReportsView(MyVaadinUI myUI) {
         this.myUI = myUI;
         buildGridLayouts();

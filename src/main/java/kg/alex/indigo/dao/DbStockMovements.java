@@ -580,7 +580,6 @@ public class DbStockMovements extends BaseDb {
                                        Table t, int stock_id) throws SQLException {
 
 
-
         String sql = "SELECT inv.creation_date, LPAD(inv.invoice_number, 7, 0) as invoice_number, "
                 + "sm.note, sum(sm.amount) as amount, sum(sm.amount * sm.price) as total, "
                 + "sum(sm.currency_rate * sm.amount) as currency_rate, inv.service_type_id, "

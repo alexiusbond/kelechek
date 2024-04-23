@@ -36,15 +36,14 @@ public class StatusesReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(StatusesReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
-            selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
-    private ComboBox yearSelect;
+    private final Subject currentUser = SecurityUtils.getSubject();
     public ComboBoxMultiselect statusMS;
     public FormattedTable dataTable;
     public FilterTable classTable, schoolsTable;
-
-    private final Subject currentUser = SecurityUtils.getSubject();
+    private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
+            selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
+    private ComboBox yearSelect;
 
     public StatusesReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -173,7 +172,8 @@ public class StatusesReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
@@ -234,9 +234,9 @@ public class StatusesReport implements Button.ClickListener,
                         while (status_iter.hasNext()) {
                             Object nextStatus = status_iter.next();
                             dataTable.setColumnAlignment(classTable.getContainerProperty(
-                                    nextClass, myUI.getMessage(IndigoMessages.Title)).getValue() + " "
-                                    + myUI.getMessage(IndigoMessages.ClassName) + " "
-                                    + statusMS.getContainerProperty(
+                                            nextClass, myUI.getMessage(IndigoMessages.Title)).getValue() + " "
+                                            + myUI.getMessage(IndigoMessages.ClassName) + " "
+                                            + statusMS.getContainerProperty(
                                             nextStatus, myUI.getMessage(IndigoMessages.Title)).getValue(),
                                     Table.Align.RIGHT);
                         }

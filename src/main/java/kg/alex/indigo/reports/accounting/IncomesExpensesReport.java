@@ -30,12 +30,12 @@ public class IncomesExpensesReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(IncomesExpensesReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private final HorizontalSplitPanel splitPanel;
-    private ComboBox currencySelect;
-    private PopupDateField fromDateDF, tillDateDF;
     public FormattedTreeTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
+    private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
+    private ComboBox currencySelect;
+    private PopupDateField fromDateDF, tillDateDF;
 
     public IncomesExpensesReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -87,7 +87,8 @@ public class IncomesExpensesReport implements Button.ClickListener,
         excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY); excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
