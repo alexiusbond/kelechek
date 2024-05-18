@@ -1351,7 +1351,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             if (studInfo.getDirector() != null) {
                                 saveBtn.click();
                                 if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.AsylkechContract))) {
-                                    new ContractAsylkechPdf(myUI, studInfo, instPlanCont);
+                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
+                                        new ContractAsylkechPdf_2025_ru(myUI, studInfo, instPlanCont);
+                                    } else {
+                                        new ContractAsylkechPdf_2024_ru(myUI, studInfo, instPlanCont);
+                                    }
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.IndigoWestContract))) {
                                     new ContractIndigoWestPdf(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(IndigoMessages.KidsContract))) {
@@ -3160,7 +3164,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 dateLimit.setTimeInMillis(myUI.getUser().getCurrent_year().getInstallment_date_limit());
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(currDate.getValue());
-                cal.add(Calendar.MONTH, i + 1);
+                cal.add(Calendar.MONTH, i);
                 if (installmentTable.getContainerDataSource().size() == 0) {
                     installmentTable.setContainerDataSource(prepareInstPlanContainer());
                 }
