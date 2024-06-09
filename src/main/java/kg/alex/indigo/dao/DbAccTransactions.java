@@ -315,9 +315,9 @@ public class DbAccTransactions extends BaseDb {
     public IndexedContainer exec_for_select(MyVaadinUI myUI, int type_id, int school_id, int id) throws SQLException {
         String sql = "select ac.id, concat(ifnull(concat(ac.parent_code,'.',ac.code), ac.code), ' - ', ac.name) as name "
                 + "from acc_category as ac where (ac.acc_type_id = ? or ac.acc_type_id = 5) "
-                /*+ "and (ac.activity_status_id = 2 or ac.id = ? "
-                + "or round((select t.amount_usd from view_accurals as t where t.acc_category_id = ac.id), 2)  "
-                + "> round((select t.amount_usd from view_total_transactions as t where t.acc_category_id = ac.id), 2)) "*/
+ /*+ "and (ac.activity_status_id = 2 or ac.id = ? "
+ + "or round((select t.amount_usd from view_accurals as t where t.acc_category_id = ac.id), 2) "
+ + "> round((select t.amount_usd from view_total_transactions as t where t.acc_category_id = ac.id), 2)) "*/
                 + "and ac.parent_id is not null and (ac.school_id is null or ac.school_id = ?) "
                 + "and ac.parent_id not in (select acc_category_id from dp_product_category) "
                 + "order by ifnull(concat(ac.parent_code,'.',ac.code), ac.code) asc";
@@ -426,7 +426,7 @@ public class DbAccTransactions extends BaseDb {
 
         Set<Integer> selectedCategoryIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
         Set<Integer> selectedSchoolIds = new HashSet<>((Set<Integer>) schoolsTable.getValue());
-        String sql = "SELECT cat.id, cat.parent_id, sum(tr.amount) as amount, DATE(tr.date_time) AS dt, tr.school_id  "
+        String sql = "SELECT cat.id, cat.parent_id, sum(tr.amount) as amount, DATE(tr.date_time) AS dt, tr.school_id "
                 + "FROM acc_category AS cat "
                 + "LEFT JOIN acc_transactions AS tr ON tr.acc_category_id = cat.id "
                 + "WHERE cat.id IN ("
@@ -816,7 +816,7 @@ public class DbAccTransactions extends BaseDb {
                 + "IF(t.acc_currency_id != ?, t.amount " + sign + " t.currency_rate, t.amount) AS amount, "
                 + "t.currency_rate as rate, t.note as note, if(t.acc_type_id = 1, ?, ?) as type "
                 + "FROM acc_transactions AS t "
-                + "WHERE t.acc_category_id = ? AND (date(t.date_time) BETWEEN ? AND ?) AND t.school_id = ?  "
+                + "WHERE t.acc_category_id = ? AND (date(t.date_time) BETWEEN ? AND ?) AND t.school_id = ? "
                 + "ORDER BY t.date_time";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, currency_id);
@@ -1152,9 +1152,10 @@ public class DbAccTransactions extends BaseDb {
         }
     }
 
-    public IndexedContainer exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id, int currency_id, Date from_date, Date till_date,
-                                                FilterTreeTable categoriesTable) throws SQLException {
-
+    public IndexedContainer exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id,
+                                                Date from_date, Date till_date,
+                                                FilterTreeTable categoriesTable, Table dataTable) throws SQLException {
+        double totalKgs = 0.0, totalUsd = 0.0;
         Set<Integer> selectedIds = new HashSet<>((Set<Integer>) categoriesTable.getValue());
         for (Object next : (Set<Integer>) categoriesTable.getValue()) {
             if (categoriesTable.getChildren(next) != null) {
@@ -1163,28 +1164,28 @@ public class DbAccTransactions extends BaseDb {
             }
         }
         String sql = "SELECT t.id, date(t.date_time), ifnull(concat(ac.parent_code,'.',ac.code), ac.code) as code, ac.name as category, "
-                + "acu.name, t.currency_rate,t.amount,t.note, concat(e.name, ' ', e.surname) as fullname "
-                + "FROM acc_transactions as t  "
-                + "left join acc_category as ac on ac.id = t.acc_category_id  "
-                + "left join acc_currency as acu on acu.id = t.acc_currency_id  "
+                + "t.acc_currency_id, t.currency_rate, t.amount,t.note, concat(e.name, ' ', e.surname) as fullname "
+                + "FROM acc_transactions as t "
+                + "left join acc_category as ac on ac.id = t.acc_category_id "
                 + "left join employee as e on e.id = t.employee_id "
                 + "where t.school_id = ? and date(t.date_time) >= ? and date(t.date_time) <= ? "
-                + "and t.acc_type_id = ? and t.acc_currency_id = ? and t.acc_category_id in (" + Settings.convertCollectionToStr(selectedIds) + ") "
+                + "and t.acc_type_id = ? and t.acc_category_id in (" + Settings.convertCollectionToStr(selectedIds) + ") "
                 + "order by t.date_time asc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setDate(2, new java.sql.Date(from_date.getTime()));
         stat.setDate(3, new java.sql.Date(till_date.getTime()));
         stat.setInt(4, type_id);
-        stat.setInt(5, currency_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Category), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount)
+                + "(" + Settings.USD + ")", Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount)
+                + "(" + Settings.KGS + ")", Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Rate), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Note), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Accountant), String.class, null);
         while (result.next()) {
@@ -1195,17 +1196,26 @@ public class DbAccTransactions extends BaseDb {
                     result.getString("code"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Category)).setValue(
                     result.getString("category"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue(
-                    result.getString("acu.name"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(
                     result.getDouble("t.currency_rate"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
-                    result.getDouble("t.amount"));
+            if (result.getInt("t.acc_currency_id") == 1) {
+                totalKgs += result.getDouble("t.amount");
+                item.getItemProperty(myUI.getMessage(IndigoMessages.Amount) + "(" + Settings.KGS + ")").setValue(
+                        result.getDouble("t.amount"));
+            } else {
+                totalUsd += result.getDouble("t.amount");
+                item.getItemProperty(myUI.getMessage(IndigoMessages.Amount) + "(" + Settings.USD + ")").setValue(
+                        result.getDouble("t.amount"));
+            }
             item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(
                     result.getString("t.note"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Accountant)).setValue(
                     result.getString("fullname"));
         }
+        dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount) + "(" + Settings.KGS + ")",
+                Settings.dFormat2.format(totalKgs));
+        dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount) + "(" + Settings.USD + ")",
+                Settings.dFormat2.format(totalUsd));
         return container;
     }
 
