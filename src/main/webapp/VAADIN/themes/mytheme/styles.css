@@ -5001,7 +5001,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .v-margin-bottom {
-	padding-bottom: 30px;
+	padding-bottom: 10px;
 }
 
 .mytheme .v-margin-left {
@@ -7045,7 +7045,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme [class*="margin-bottom"] > tbody > [class*="lastrow"] > td {
-	padding-bottom: 30px;
+	padding-bottom: 10px;
 }
 
 .mytheme [class*="margin-left"] > tbody > [class*="row"] > [class*="captioncell"] {
@@ -10216,7 +10216,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .v-gridlayout-margin-bottom {
-	padding-bottom: 30px;
+	padding-bottom: 10px;
 }
 
 .mytheme .v-gridlayout-margin-left {
@@ -16324,10 +16324,6 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .v-gridlayout-spacing-on {
 	padding-left: 5px;
 	padding-top: 5px;
-}
-
-.mytheme .v-tabsheet-content > div > .v-scrollable > .v-margin-bottom {
-	padding-bottom: 30px;
 }
 
 .mytheme .v-accordion-item-caption > .v-caption {
