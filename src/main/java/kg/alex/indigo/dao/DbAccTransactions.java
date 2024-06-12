@@ -24,7 +24,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.tepi.filtertable.FilterTable;
 import org.tepi.filtertable.FilterTreeTable;
 
 import java.sql.*;
@@ -336,26 +335,35 @@ public class DbAccTransactions extends BaseDb {
         return container;
     }
 
-    public void execSQL_by_months(MyVaadinUI myUI, int type_id, int school_id, int currency_id,
+    public void execSQL_by_months(MyVaadinUI myUI, int type_id, int currency_id, int school_currency_id, int school_id,
                                   FilterTreeTable categoriesTable, Calendar from, Calendar till, FormattedTreeTable t)
             throws SQLException {
-
+        if (currency_id != 0 && currency_id != school_currency_id) {
+            school_currency_id = currency_id;
+        }
         Set<Integer> selectedIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
-        String sql = "SELECT cat.id, cat.parent_id, sum(tr.amount) as amount, DATE(tr.date_time) AS dt "
-                + "FROM acc_category AS cat "
+        String sql = "SELECT cat.id, cat.parent_id, "
+                + "sum(CASE WHEN ? = tr.acc_currency_id THEN tr.amount WHEN tr.acc_currency_id = 1 THEN tr.amount / tr.currency_rate ELSE tr.amount * tr.currency_rate END) as amount, "
+                + "DATE(tr.date_time) AS dt  FROM acc_category AS cat "
                 + "LEFT JOIN acc_transactions AS tr ON tr.acc_category_id = cat.id "
                 + "WHERE cat.id IN ("
                 + Settings.convertCollectionToStr(selectedIds)
                 + ") AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? AND cat.acc_type_id = ? "
-                + "AND tr.school_id = ? and tr.acc_currency_id = ? "
-                + "GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time) ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code)";
+                + "AND tr.school_id = ? ";
+        if (currency_id != 0) {
+            sql += "and tr.acc_currency_id = ? ";
+        }
+        sql += "GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time) ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setDate(1, new java.sql.Date(from.getTime().getTime()));
-        stat.setDate(2, new java.sql.Date(till.getTime().getTime()));
-        stat.setInt(3, type_id);
-        stat.setInt(4, school_id);
-        stat.setInt(5, currency_id);
+        stat.setInt(1, school_currency_id);
+        stat.setDate(2, new java.sql.Date(from.getTime().getTime()));
+        stat.setDate(3, new java.sql.Date(till.getTime().getTime()));
+        stat.setInt(4, type_id);
+        stat.setInt(5, school_id);
+        if (currency_id != 0) {
+            stat.setInt(6, currency_id);
+        }
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
@@ -421,160 +429,44 @@ public class DbAccTransactions extends BaseDb {
         }
     }
 
-    public void execSQL_by_months(MyVaadinUI myUI, int type_id, int currency_id, FilterTable schoolsTable, FilterTreeTable categoriesTable,
-                                  Calendar from, Calendar till, FormattedTreeTable t) throws SQLException {
-
-        Set<Integer> selectedCategoryIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
-        Set<Integer> selectedSchoolIds = new HashSet<>((Set<Integer>) schoolsTable.getValue());
-        String sql = "SELECT cat.id, cat.parent_id, sum(tr.amount) as amount, DATE(tr.date_time) AS dt, tr.school_id "
-                + "FROM acc_category AS cat "
-                + "LEFT JOIN acc_transactions AS tr ON tr.acc_category_id = cat.id "
-                + "WHERE cat.id IN ("
-                + Settings.convertCollectionToStr(selectedCategoryIds)
-                + ") AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? AND cat.acc_type_id = ? "
-                + "AND tr.school_id IN ("
-                + Settings.convertCollectionToStr(selectedSchoolIds)
-                + ") AND tr.acc_currency_id = ? GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time), tr.school_id " +
-                "ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code)";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setDate(1, new java.sql.Date(from.getTime().getTime()));
-        stat.setDate(2, new java.sql.Date(till.getTime().getTime()));
-        stat.setInt(3, type_id);
-        stat.setInt(4, currency_id);
-        ResultSet result = stat.executeQuery();
-        HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Category), String.class, null);
-        Calendar current = Calendar.getInstance();
-        current.setTime(from.getTime());
-        Set<Integer> selectedSchools = (Set<Integer>) schoolsTable.getValue();
-        Iterator schools_iter;
-        while (current.before(till)) {
-            schools_iter = (schoolsTable.getContainerDataSource().getItemIds()).iterator();
-            while (schools_iter.hasNext()) {
-                Object nextSchool = schools_iter.next();
-                if (selectedSchools.contains((Integer) nextSchool)) {
-                    container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue() + " - "
-                            + Settings.ymdf.format(current.getTime()), Double.class, 0.0);
-                }
-            }
-            current.add(Calendar.MONTH, 1);
+    public SchoolAccounting exec_get_totals(int scl_id, int school_currency_id,
+                                            int currency_id, Date from, Date till, String cat_ids) throws SQLException {
+        if (currency_id != 0 && currency_id != school_currency_id) {
+            school_currency_id = currency_id;
         }
-        schools_iter = ((Set<?>) schoolsTable.getValue()).iterator();
-        while (schools_iter.hasNext()) {
-            Object nextSchool = schools_iter.next();
-            if (selectedSchools.contains((Integer) nextSchool)) {
-                container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue() + " - "
-                        + myUI.getMessage(IndigoMessages.Total), Double.class, 0.0);
-            }
-        }
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Total), Double.class, 0.0);
-        t.setContainerDataSource(container);
-
-        current.setTime(from.getTime());
-        while (current.before(till)) {
-            schools_iter = ((Set<?>) schoolsTable.getValue()).iterator();
-            while (schools_iter.hasNext()) {
-                Object nextSchool = schools_iter.next();
-                t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue() + " - "
-                        + Settings.ymdf.format(current.getTime()), "0.00");
-                t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue() + " - " + myUI.getMessage(IndigoMessages.Total), "0.00");
-            }
-            current.add(Calendar.MONTH, 1);
-        }
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.Total), "0.00");
-        for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
-            if (selectedCategoryIds.contains(catNext)) {
-                Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Code))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(IndigoMessages.Code)).getValue().toString());
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Category))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(IndigoMessages.Category)).getValue().toString());
-                container.setChildrenAllowed(catNext, false);
-                Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
-                if (parent != null) {
-                    container.setParent(catNext, parent);
-                }
-                if (categoriesTable.getContainerDataSource().getChildren(catNext) != null) {
-                    container.setChildrenAllowed(catNext, true);
-                    t.setCollapsed(catNext, false);
-                }
-            }
-        }
-        while (result.next()) {
-            Item item = container.getItem(result.getInt("cat.id"));
-            Object month = Settings.ymdf.format(result.getDate("dt"));
-            Object school = schoolsTable.getContainerProperty(result.getInt("tr.school_id"), myUI.getMessage(IndigoMessages.Title)).getValue();
-            item.getItemProperty(school + " - " + month).setValue(result.getDouble("amount"));
-            try {
-                t.setColumnFooter(myUI.getMessage(IndigoMessages.Total),
-                        Settings.dFormat2.format(Settings.dFormat2.parse(t.getColumnFooter(myUI.getMessage(IndigoMessages.Total))).doubleValue()
-                                + result.getDouble("amount")));
-                t.setColumnFooter(school + " - " + myUI.getMessage(IndigoMessages.Total),
-                        Settings.dFormat2.format(Settings.dFormat2.parse(t.getColumnFooter(school
-                                + " - " + myUI.getMessage(IndigoMessages.Total))).doubleValue()
-                                + result.getDouble("amount")));
-                t.setColumnFooter(school + " - " + month,
-                        Settings.dFormat2.format(
-                                Settings.dFormat2.parse(t.getColumnFooter(school + " - " + month)).doubleValue()
-                                        + result.getDouble("amount")));
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
-            }
-            item.getItemProperty(school + " - " + myUI.getMessage(IndigoMessages.Total)).setValue((Double) item.getItemProperty(school + " - " + myUI.getMessage(IndigoMessages.Total)).getValue()
-                    + result.getDouble("amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Total)).setValue((Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Total)).getValue()
-                    + result.getDouble("amount"));
-            Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
-            while (parent_id != null) {
-                item = container.getItem(parent_id);
-                item.getItemProperty(school + " - " + month).setValue(
-                        (Double) item.getItemProperty(school + " - " + month).getValue()
-                                + result.getDouble("amount"));
-                item.getItemProperty(school + " - " + myUI.getMessage(IndigoMessages.Total)).setValue((Double) item.getItemProperty(school + " - " + myUI.getMessage(IndigoMessages.Total)).getValue()
-                        + result.getDouble("amount"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Total)).setValue((Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Total)).getValue()
-                        + result.getDouble("amount"));
-                parent_id = (Integer) container.getParent(parent_id);
-            }
-        }
-    }
-
-    public SchoolAccounting exec_get_totals(int scl_id, int currency_id, Date from, Date till, String cat_ids) throws SQLException {
-
         String sql = "SELECT " +
-                "MAX(IF(tr.acc_type_id = 2, DATE(tr.date_time), null)) as max_exp, " +
-                "MAX(IF(tr.acc_type_id = 1, DATE(tr.date_time), null)) as max_inc, " +
                 "SUM(IF(tr.acc_type_id = 1 AND DATE(tr.date_time) >= ? " +
-                "AND DATE(tr.date_time) <= ?, tr.amount, 0.0)) AS incTtl, " +
+                "AND DATE(tr.date_time) <= ?, CASE WHEN ? = tr.acc_currency_id THEN tr.amount WHEN tr.acc_currency_id = 1 THEN tr.amount / tr.currency_rate ELSE tr.amount * tr.currency_rate END, 0.0)) AS incTtl, " +
                 "SUM(IF(tr.acc_type_id = 2 AND DATE(tr.date_time) >= ? " +
-                "AND DATE(tr.date_time) <= ?, tr.amount, 0.0)) AS expTtl, " +
-                "SUM(IF(DATE(tr.date_time) < ?, IF(tr.acc_type_id = 1, tr.amount, -tr.amount), 0.0)) AS prev_balance " +
-                "FROM acc_transactions AS tr WHERE tr.school_id = ? and tr.acc_currency_id = ? ";
+                "AND DATE(tr.date_time) <= ?, CASE WHEN ? = tr.acc_currency_id THEN tr.amount WHEN tr.acc_currency_id = 1 THEN tr.amount / tr.currency_rate ELSE tr.amount * tr.currency_rate END, 0.0)) AS expTtl, " +
+                "SUM(IF(DATE(tr.date_time) < ?, IF(tr.acc_type_id = 1, CASE WHEN ? = tr.acc_currency_id THEN tr.amount WHEN tr.acc_currency_id = 1 THEN tr.amount / tr.currency_rate ELSE tr.amount * tr.currency_rate END, -(CASE WHEN ? = tr.acc_currency_id THEN tr.amount WHEN tr.acc_currency_id = 1 THEN tr.amount / tr.currency_rate ELSE tr.amount * tr.currency_rate END)), 0.0)) AS prev_balance " +
+                "FROM acc_transactions AS tr WHERE tr.school_id = ? ";
+        if (currency_id != 0) {
+            sql += "and tr.acc_currency_id = ? ";
+        }
         if (cat_ids != null) {
             sql += "and tr.acc_category_id in (" + cat_ids + ")";
         }
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(from.getTime()));
         stat.setDate(2, new java.sql.Date(till.getTime()));
-        stat.setDate(3, new java.sql.Date(from.getTime()));
-        stat.setDate(4, new java.sql.Date(till.getTime()));
-        stat.setDate(5, new java.sql.Date(from.getTime()));
-        stat.setInt(6, scl_id);
-        stat.setInt(7, currency_id);
+        stat.setInt(3, school_currency_id);
+        stat.setDate(4, new java.sql.Date(from.getTime()));
+        stat.setDate(5, new java.sql.Date(till.getTime()));
+        stat.setInt(6, school_currency_id);
+        stat.setDate(7, new java.sql.Date(from.getTime()));
+        stat.setInt(8, school_currency_id);
+        stat.setInt(9, school_currency_id);
+        stat.setInt(10, scl_id);
+        if (currency_id != 0) {
+            stat.setInt(11, currency_id);
+        }
         ResultSet result = stat.executeQuery();
         SchoolAccounting acc = new SchoolAccounting();
         while (result.next()) {
             acc.setTotal_income(result.getDouble("incTtl"));
             acc.setTotal_outcome(result.getDouble("expTtl"));
             acc.setPrevious_balance(result.getDouble("prev_balance"));
-            if (result.getDate("max_inc") != null) {
-                acc.setLast_income_date(Settings.df.format(result.getDate("max_inc")));
-            }
-            if (result.getDate("max_exp") != null) {
-                acc.setLast_outcome_date(Settings.df.format(result.getDate("max_exp")));
-            }
         }
         return acc;
     }
@@ -1152,10 +1044,8 @@ public class DbAccTransactions extends BaseDb {
         }
     }
 
-    public IndexedContainer exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id,
-                                                Date from_date, Date till_date,
-                                                FilterTreeTable categoriesTable, Table dataTable) throws SQLException {
-        double totalKgs = 0.0, totalUsd = 0.0;
+    public IndexedContainer exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id, int currency_id, Date from_date, Date till_date,
+                                                FilterTreeTable categoriesTable) throws SQLException {
         Set<Integer> selectedIds = new HashSet<>((Set<Integer>) categoriesTable.getValue());
         for (Object next : (Set<Integer>) categoriesTable.getValue()) {
             if (categoriesTable.getChildren(next) != null) {
@@ -1164,27 +1054,33 @@ public class DbAccTransactions extends BaseDb {
             }
         }
         String sql = "SELECT t.id, date(t.date_time), ifnull(concat(ac.parent_code,'.',ac.code), ac.code) as code, ac.name as category, "
-                + "t.acc_currency_id, t.currency_rate, t.amount,t.note, concat(e.name, ' ', e.surname) as fullname "
+                + "acu.name, t.currency_rate, t.amount, t.note, concat(e.name, ' ', e.surname) as fullname "
                 + "FROM acc_transactions as t "
                 + "left join acc_category as ac on ac.id = t.acc_category_id "
+                + "left join acc_currency as acu on acu.id = t.acc_currency_id "
                 + "left join employee as e on e.id = t.employee_id "
                 + "where t.school_id = ? and date(t.date_time) >= ? and date(t.date_time) <= ? "
-                + "and t.acc_type_id = ? and t.acc_category_id in (" + Settings.convertCollectionToStr(selectedIds) + ") "
+                + "and t.acc_type_id = ? ";
+        if (currency_id != 0) {
+            sql += "and t.acc_currency_id = ? ";
+        }
+        sql += "and t.acc_category_id in (" + Settings.convertCollectionToStr(selectedIds) + ") "
                 + "order by t.date_time asc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setDate(2, new java.sql.Date(from_date.getTime()));
         stat.setDate(3, new java.sql.Date(till_date.getTime()));
         stat.setInt(4, type_id);
+        if (currency_id != 0) {
+            stat.setInt(5, currency_id);
+        }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Category), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount)
-                + "(" + Settings.USD + ")", Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount)
-                + "(" + Settings.KGS + ")", Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Rate), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Note), String.class, null);
         container.addContainerProperty(myUI.getMessage(IndigoMessages.Accountant), String.class, null);
@@ -1196,26 +1092,17 @@ public class DbAccTransactions extends BaseDb {
                     result.getString("code"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Category)).setValue(
                     result.getString("category"));
+            item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue(
+                    result.getString("acu.name"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(
                     result.getDouble("t.currency_rate"));
-            if (result.getInt("t.acc_currency_id") == 1) {
-                totalKgs += result.getDouble("t.amount");
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Amount) + "(" + Settings.KGS + ")").setValue(
-                        result.getDouble("t.amount"));
-            } else {
-                totalUsd += result.getDouble("t.amount");
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Amount) + "(" + Settings.USD + ")").setValue(
-                        result.getDouble("t.amount"));
-            }
+            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
+                    result.getDouble("t.amount"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(
                     result.getString("t.note"));
             item.getItemProperty(myUI.getMessage(IndigoMessages.Accountant)).setValue(
                     result.getString("fullname"));
         }
-        dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount) + "(" + Settings.KGS + ")",
-                Settings.dFormat2.format(totalKgs));
-        dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount) + "(" + Settings.USD + ")",
-                Settings.dFormat2.format(totalUsd));
         return container;
     }
 

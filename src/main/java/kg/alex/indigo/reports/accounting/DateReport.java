@@ -6,17 +6,18 @@
 package kg.alex.indigo.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
-import kg.alex.indigo.dao.DbAccCategory;
-import kg.alex.indigo.dao.DbAccTransactions;
-import kg.alex.indigo.dao.DbEmployee;
-import kg.alex.indigo.dao.DbSchool;
+import kg.alex.indigo.dao.*;
+import kg.alex.indigo.domain.SchoolAccounting;
 import kg.alex.indigo.domain.StudentInfoPdf;
 import kg.alex.indigo.i18n.IndigoMessages;
 import kg.alex.indigo.pdf.AccountingByDatesPdf;
@@ -29,6 +30,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTreeTable;
 
 import java.util.Calendar;
@@ -40,13 +44,18 @@ public class DateReport implements Button.ClickListener,
     static final Logger logger = LogManager.getLogger(DateReport.class);
     private final MyVaadinUI myUI;
     private final HorizontalSplitPanel splitPanel;
+    private final Subject currentUser = SecurityUtils.getSubject();
     public FormattedTable incomesDataTable, outcomesDataTable;
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
     private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn,
             selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn, pdfBtn;
     private DateField fromDateDF, tillDateDF;
+    private ComboBox cashBoxSelect;
     private EnhancedFormatExcelExport excelReport;
     private VerticalLayout rightLayout;
+    private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab;
+    private HorizontalLayout infoLay;
+    private SchoolAccounting schoolAcc;
 
     public DateReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -57,7 +66,7 @@ public class DateReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        GridLayout leftGrid = new GridLayout(4, 6);
+        GridLayout leftGrid = new GridLayout(4, 7);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -169,19 +178,41 @@ public class DateReport implements Button.ClickListener,
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
-        leftGrid.addComponent(fromDateDF, 0, 0, 1, 0);
-        leftGrid.addComponent(tillDateDF, 2, 0, 3, 0);
-        leftGrid.addComponent(selectAllIncomesBtn, 0, 1, 1, 1);
-        leftGrid.addComponent(deselectAllIncomesBtn, 2, 1, 3, 1);
-        leftGrid.addComponent(incomeCategoriesTable, 0, 2, 3, 2);
-        leftGrid.addComponent(selectAllOutcomesBtn, 0, 3, 1, 3);
-        leftGrid.addComponent(deselectAllOutcomesBtn, 2, 3, 3, 3);
-        leftGrid.addComponent(outcomeCategoriesTable, 0, 4, 3, 4);
-        leftGrid.addComponent(generateBtn, 0, 5, 1, 5);
-        leftGrid.addComponent(pdfBtn, 2, 5);
-        leftGrid.addComponent(excelBtn, 3, 5);
-        leftGrid.setRowExpandRatio(2, 1);
-        leftGrid.setRowExpandRatio(4, 1);
+        cashBoxSelect = new ComboBox(myUI.getMessage(IndigoMessages.CashBox));
+        cashBoxSelect.setNullSelectionAllowed(false);
+        cashBoxSelect.setRequired(true);
+        cashBoxSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
+        cashBoxSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        cashBoxSelect.setWidth(Settings.PERCENTS100);
+        cashBoxSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        cashBoxSelect.setFilteringMode(FilteringMode.CONTAINS);
+        cashBoxSelect.addValueChangeListener(this);
+        try {
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
+            cashBoxSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAcc_currency, true));
+            dbd.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        Item item = cashBoxSelect.getContainerDataSource().addItem(0);
+        item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(myUI.getMessage(IndigoMessages.All));
+
+        leftGrid.addComponent(cashBoxSelect, 0, 0, 3, 0);
+        leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
+        leftGrid.addComponent(tillDateDF, 2, 1, 3, 1);
+        leftGrid.addComponent(selectAllIncomesBtn, 0, 2, 1, 2);
+        leftGrid.addComponent(deselectAllIncomesBtn, 2, 2, 3, 2);
+        leftGrid.addComponent(incomeCategoriesTable, 0, 3, 3, 3);
+        leftGrid.addComponent(selectAllOutcomesBtn, 0, 4, 1, 4);
+        leftGrid.addComponent(deselectAllOutcomesBtn, 2, 4, 3, 4);
+        leftGrid.addComponent(outcomeCategoriesTable, 0, 5, 3, 5);
+        leftGrid.addComponent(generateBtn, 0, 6, 1, 6);
+        leftGrid.addComponent(pdfBtn, 2, 6);
+        leftGrid.addComponent(excelBtn, 3, 6);
+        leftGrid.setRowExpandRatio(3, 1);
+        leftGrid.setRowExpandRatio(5, 1);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
@@ -199,7 +230,6 @@ public class DateReport implements Button.ClickListener,
         incomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         incomesDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         incomesDataTable.addStyleName("noWrapHeader");
-        incomesDataTable.setFooterVisible(true);
 
         outcomesDataTable = new FormattedTable(myUI);
         outcomesDataTable.setCaption(myUI.getMessage(IndigoMessages.Expenses));
@@ -207,7 +237,42 @@ public class DateReport implements Button.ClickListener,
         outcomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         outcomesDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         outcomesDataTable.addStyleName("noWrapHeader");
-        outcomesDataTable.setFooterVisible(true);
+
+        infoLay = new HorizontalLayout();
+        infoLay.setSpacing(true);
+        infoLay.setWidth(Settings.PERCENTS100);
+
+        incomeTtlLab = new Label();
+        incomeTtlLab.setContentMode(ContentMode.HTML);
+        incomeTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
+        incomeTtlLab.setImmediate(true);
+        incomeTtlLab.setWidth(Settings.PERCENTS100);
+        infoLay.addComponent(incomeTtlLab);
+        infoLay.setExpandRatio(incomeTtlLab, 25);
+
+        expenseTtlLab = new Label();
+        expenseTtlLab.setContentMode(ContentMode.HTML);
+        expenseTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
+        expenseTtlLab.setImmediate(true);
+        expenseTtlLab.setWidth(Settings.PERCENTS100);
+        infoLay.addComponent(expenseTtlLab);
+        infoLay.setExpandRatio(expenseTtlLab, 25);
+
+        prev_balanceLab = new Label();
+        prev_balanceLab.setContentMode(ContentMode.HTML);
+        prev_balanceLab.setStyleName(ValoTheme.LABEL_SUCCESS);
+        prev_balanceLab.setImmediate(true);
+        prev_balanceLab.setSizeFull();
+        infoLay.addComponent(prev_balanceLab);
+        infoLay.setExpandRatio(prev_balanceLab, 30);
+
+        ttlLab = new Label();
+        ttlLab.setContentMode(ContentMode.HTML);
+        ttlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
+        ttlLab.setImmediate(true);
+        ttlLab.setWidth(Settings.PERCENTS100);
+        infoLay.addComponent(ttlLab);
+        infoLay.setExpandRatio(ttlLab, 20);
 
         splitPanel.setSecondComponent(rightLayout);
     }
@@ -216,7 +281,7 @@ public class DateReport implements Button.ClickListener,
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == generateBtn) {
-            if (fromDateDF.isValid() && tillDateDF.isValid()) {
+            if (fromDateDF.isValid() && tillDateDF.isValid() && cashBoxSelect.isValid()) {
                 if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()
                         || !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     rightLayout.removeAllComponents();
@@ -235,8 +300,8 @@ public class DateReport implements Button.ClickListener,
                             DbAccTransactions dbsc = new DbAccTransactions();
                             dbsc.connect();
                             incomesDataTable.setContainerDataSource(dbsc.exec_report_by_date(myUI, 1,
-                                    myUI.getUser().getSchool().getId(), fromDateDF.getValue(), tillDateDF.getValue(),
-                                    incomeCategoriesTable, incomesDataTable));
+                                    myUI.getUser().getSchool().getId(), (Integer) cashBoxSelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(),
+                                    incomeCategoriesTable));
                             incomesDataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
                             incomesDataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Rate), Table.Align.RIGHT);
                             if (incomesDataTable.getContainerDataSource().size() != 0) {
@@ -265,9 +330,8 @@ public class DateReport implements Button.ClickListener,
                             DbAccTransactions dbsc = new DbAccTransactions();
                             dbsc.connect();
                             outcomesDataTable.setContainerDataSource(dbsc.exec_report_by_date(myUI, 2,
-                                    myUI.getUser().getSchool().getId(),
-                                    fromDateDF.getValue(), tillDateDF.getValue(),
-                                    outcomeCategoriesTable, outcomesDataTable));
+                                    myUI.getUser().getSchool().getId(), (Integer) cashBoxSelect.getValue(),
+                                    fromDateDF.getValue(), tillDateDF.getValue(), outcomeCategoriesTable));
                             outcomesDataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
                             outcomesDataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Rate), Table.Align.RIGHT);
                             if (outcomesDataTable.getContainerDataSource().size() != 0) {
@@ -282,6 +346,30 @@ public class DateReport implements Button.ClickListener,
                     } else {
                         outcomesDataTable.setContainerDataSource(null);
                     }
+                    try {
+                        DbAccTransactions dbtr = new DbAccTransactions();
+                        dbtr.connect();
+                        schoolAcc = dbtr.exec_get_totals(myUI.getUser().getSchool().getId(),
+                                myUI.getUser().getSchool().getCurrency_id(), (Integer) cashBoxSelect.getValue(),
+                                fromDateDF.getValue(), tillDateDF.getValue(), Settings.convertCollectionToStr(catIds));
+
+                        incomeTtlLab.setValue("<b>" + myUI.getMessage(IndigoMessages.IncomesTotal) + ": " + Settings.dFormat2.format(
+                                schoolAcc.getTotal_income()) + getCurrency() + "</b>");
+                        expenseTtlLab.setValue("<b>" + myUI.getMessage(IndigoMessages.ExpensesTotal) + ": " + Settings.dFormat2.format(
+                                schoolAcc.getTotal_outcome()) + getCurrency() + "</b>");
+                        ttlLab.setValue("<b>" + myUI.getMessage(IndigoMessages.CashBox) + ": " + Settings.dFormat2.format(
+                                (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + getCurrency() + "</b>");
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(fromDateDF.getValue());
+                        c.add(Calendar.DAY_OF_MONTH, -1);
+                        prev_balanceLab.setValue("<b>" + myUI.getMessage(IndigoMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + "): " + Settings.dFormat2.format(
+                                schoolAcc.getPrevious_balance()) + getCurrency() + "</b>");
+                        dbtr.close();
+                    } catch (Exception e) {
+                        logger.error(e);
+                        logger.catching(e);
+                    }
+                    rightLayout.addComponent(infoLay);
                 }
             }
         } else if (source == excelBtn) {
@@ -342,6 +430,18 @@ public class DateReport implements Button.ClickListener,
                                             + studentInfo.getDirector().getName() + " " +
                                             (studentInfo.getDirector().getMiddle_name() == null ?
                                                     "" : studentInfo.getDirector().getMiddle_name()));
+
+                                    excelReport.getWorkbook().getSheet(sheet).addMergedRegion(
+                                            new CellRangeAddress(excelReport.getTotalsRow().getRowNum(), excelReport.getTotalsRow().getRowNum(),
+                                                    excelReport.getTotalsRow().getFirstCellNum(), excelReport.getTotalsRow().getLastCellNum() - 1));
+                                    excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getFirstCellNum()).setCellValue(
+                                            myUI.getMessage(IndigoMessages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + getCurrency() + "\t "
+                                                    + myUI.getMessage(IndigoMessages.ExpensesTotal) + ": " + Settings.dFormat2.format(
+                                                    schoolAcc.getTotal_outcome()) + getCurrency() + "\t "
+                                                    + myUI.getMessage(IndigoMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime())
+                                                    + "): " + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + getCurrency() + "\t "
+                                                    + myUI.getMessage(IndigoMessages.CashBox) + ": " + Settings.dFormat2.format(
+                                                    (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + getCurrency() + "\t ");
                                 }
                             }
                         }
@@ -407,11 +507,16 @@ public class DateReport implements Button.ClickListener,
         Property property = event.getProperty();
         if (excelBtn.isEnabled()) {
             if (property == incomeCategoriesTable || property == outcomeCategoriesTable
-                    || property == tillDateDF || property == fromDateDF) {
+                    || property == tillDateDF || property == fromDateDF || property == cashBoxSelect) {
                 excelBtn.setEnabled(false);
                 pdfBtn.setEnabled(false);
                 rightLayout.removeAllComponents();
             }
         }
+    }
+
+    private String getCurrency() {
+        return " " + ((Integer) cashBoxSelect.getValue() != 0 ? cashBoxSelect.getItemCaption(cashBoxSelect.getValue()) :
+                myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD);
     }
 }

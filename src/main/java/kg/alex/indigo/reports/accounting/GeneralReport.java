@@ -59,7 +59,7 @@ public class GeneralReport implements Button.ClickListener,
     private ComboBoxMultiselect educationStatusMCB;
     private String[] NATURAL_COL_ORDER_TRANSACTIONS;
     private String[] NATURAL_COL_ORDER_PAYMENTS;
-    private Label outcomeLastDateLbl, outcomeTotalLbl, incTotalLbl, incLastDateLbl, prevBalanceLbl, totalLbl;
+    private Label outcomeTotalLbl, incTotalLbl, prevBalanceLbl, totalLbl;
     private SchoolAccounting schoolAcc;
     private ContractInfo contractTtl;
 
@@ -191,7 +191,7 @@ public class GeneralReport implements Button.ClickListener,
                 try {
                     DbAccTransactions dbacc = new DbAccTransactions();
                     dbacc.connect();
-                    schoolAcc = dbacc.exec_get_totals((Integer) schoolsTable.getValue(), 2,
+                    schoolAcc = dbacc.exec_get_totals((Integer) schoolsTable.getValue(), 2, 2,
                             ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(IndigoMessages.StartDate)).getValue()),
                             ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(IndigoMessages.TillDate)).getValue()), null);
                     dbacc.close();
@@ -392,23 +392,11 @@ public class GeneralReport implements Button.ClickListener,
         incTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.IncomesTotal) + ": </b>");
         hl.addComponent(incTotalLbl);
 
-        incLastDateLbl = new Label();
-        incLastDateLbl.setContentMode(ContentMode.HTML);
-        incLastDateLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        incLastDateLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.LastIncomeDate) + ": </b>");
-        hl.addComponent(incLastDateLbl);
-
         outcomeTotalLbl = new Label();
         outcomeTotalLbl.setContentMode(ContentMode.HTML);
         outcomeTotalLbl.setStyleName(ValoTheme.LABEL_SMALL);
         outcomeTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.ExpensesTotal) + ": </b>");
         hl.addComponent(outcomeTotalLbl);
-
-        outcomeLastDateLbl = new Label();
-        outcomeLastDateLbl.setContentMode(ContentMode.HTML);
-        outcomeLastDateLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.LastExpenseDate) + ": </b>");
-        hl.addComponent(outcomeLastDateLbl);
 
         prevBalanceLbl = new Label();
         prevBalanceLbl.setContentMode(ContentMode.HTML);
@@ -508,12 +496,8 @@ public class GeneralReport implements Button.ClickListener,
         if (schoolAcc != null) {
             incTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.IncomesTotal)
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$");
-            incLastDateLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.LastIncomeDate)
-                    + ": </b>" + schoolAcc.getLast_income_date());
             outcomeTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.ExpensesTotal)
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + "$");
-            outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.LastExpenseDate)
-                    + ": </b>" + schoolAcc.getLast_outcome_date());
             prevBalanceLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.PreviousBalance)
                     + " (" + Settings.df.format(prevDayCal.getTime())
                     + "): </b>" + schoolAcc.getPrevious_balance() + "$");
@@ -521,9 +505,7 @@ public class GeneralReport implements Button.ClickListener,
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + "$");
         } else {
             incTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.IncomesTotal) + ": </b>");
-            incLastDateLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.LastIncomeDate) + ": </b>");
             outcomeTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.ExpensesTotal) + ": </b>");
-            outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.LastExpenseDate) + ": </b>");
             prevBalanceLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
             totalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.CashBox) + ": </b>");
         }

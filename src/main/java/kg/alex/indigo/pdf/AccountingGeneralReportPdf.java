@@ -116,8 +116,8 @@ public class AccountingGeneralReportPdf {
                 document.add(caption1);
                 document.add(new Paragraph(10, " "));
 
-                float[] accTrInfo_colsWidth = {0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f};
-                PdfPTable accInfoTable = new PdfPTable(6);
+                float[] accTrInfo_colsWidth = {0.1f, 0.1f, 0.1f, 0.1f};
+                PdfPTable accInfoTable = new PdfPTable(4);
                 accInfoTable.setWidthPercentage(90f);
                 accInfoTable.setWidths(accTrInfo_colsWidth);
                 accInfoTable.getDefaultCell().setBorder(0);
@@ -133,9 +133,7 @@ public class AccountingGeneralReportPdf {
 
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_income()) + "$", normal_font));
-                accInfoTable.addCell(new Phrase(sclAccInfo.getLast_income_date(), normal_font));
                 accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_outcome()) + "$", normal_font));
-                accInfoTable.addCell(new Phrase(sclAccInfo.getLast_outcome_date(), normal_font));
                 accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance()) + "$", normal_font));
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                 accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance() + sclAccInfo.getTotal_income()

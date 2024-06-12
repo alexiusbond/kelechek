@@ -293,14 +293,14 @@ public class MonthReportOld implements Button.ClickListener,
                             if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                                 rightLayout.addComponent(incomesDataTable);
                                 rightLayout.setExpandRatio(incomesDataTable, 1);
-                                if (currentUser.hasRole(Settings.rnAdmin)) {
+                                /*if (currentUser.hasRole(Settings.rnAdmin)) {
                                     dbTr.execSQL_by_months(myUI, 1, (Integer) cashBoxSelect.getValue(),
                                             schoolsTable, incomeCategoriesTable, fromDate, tillDate, incomesDataTable);
                                 } else {
                                     dbTr.execSQL_by_months(myUI, 1,
                                             myUI.getUser().getSchool().getId(), (Integer) cashBoxSelect.getValue(),
                                             incomeCategoriesTable, fromDate, tillDate, incomesDataTable);
-                                }
+                                }*/
                                 if (incomesDataTable.getContainerDataSource().size() != 0) {
                                     excelBtn.setEnabled(true);
                                 }
@@ -309,13 +309,13 @@ public class MonthReportOld implements Button.ClickListener,
                             if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                                 rightLayout.addComponent(outcomesDataTable);
                                 rightLayout.setExpandRatio(outcomesDataTable, 1);
-                                if (currentUser.hasRole(Settings.rnAdmin)) {
+                                /*if (currentUser.hasRole(Settings.rnAdmin)) {
                                     dbTr.execSQL_by_months(myUI, 2, (Integer) cashBoxSelect.getValue(), schoolsTable,
                                             outcomeCategoriesTable, fromDate, tillDate, outcomesDataTable);
                                 } else {
                                     dbTr.execSQL_by_months(myUI, 2, myUI.getUser().getSchool().getId(), (Integer) cashBoxSelect.getValue(),
                                             outcomeCategoriesTable, fromDate, tillDate, outcomesDataTable);
-                                }
+                                }*/
                                 if (outcomesDataTable.getContainerDataSource().size() != 0) {
                                     excelBtn.setEnabled(true);
                                 }
@@ -352,7 +352,7 @@ public class MonthReportOld implements Button.ClickListener,
                                                         nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue()
                                                         + " - " + myUI.getMessage(IndigoMessages.Total),
                                                 Table.Align.RIGHT);
-                                        SchoolAccounting scAcc = dbTr.exec_get_totals((Integer) nextSchool, 2, current.getTime(),
+                                        SchoolAccounting scAcc = dbTr.exec_get_totals((Integer) nextSchool, 2, 2, current.getTime(),
                                                 tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                         incomesDataTable.setColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue() + " - "
@@ -364,7 +364,7 @@ public class MonthReportOld implements Button.ClickListener,
                                     }
                                 }
                                 if (!currentUser.hasRole(Settings.rnAdmin)) {
-                                    SchoolAccounting scAcc = dbTr.exec_get_totals(myUI.getUser().getSchool().getId(), 2, current.getTime(),
+                                    SchoolAccounting scAcc = dbTr.exec_get_totals(myUI.getUser().getSchool().getId(), 2, 2, current.getTime(),
                                             tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
                                             Settings.ymdf.format(current.getTime()), myUI.getMessage(IndigoMessages.PreviousBalance) + " ("

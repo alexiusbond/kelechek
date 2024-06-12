@@ -965,7 +965,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             DbAccTransactions dbAc = new DbAccTransactions();
             dbAc.connect();
             schoolAcc = dbAc.exec_get_totals(myUI.getUser().getSchool().getId(),
-                    (Integer) cashBoxesOG.getValue(),
+                    (Integer) cashBoxesOG.getValue(), (Integer) cashBoxesOG.getValue(),
                     fromDateDF.getValue(), tillDateDF.getValue(), null);
             dbAc.close();
         } catch (Exception e) {
@@ -1001,7 +1001,8 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                 Item item = grid.getContainerDataSource().getItem(itemId);
                 item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullName());
-                schoolAcc = dbCon.exec_get_totals(myUI.getUser().getSchool().getId(), (Integer) cashBoxesOG.getValue(),
+                schoolAcc = dbCon.exec_get_totals(myUI.getUser().getSchool().getId(),
+                        (Integer) cashBoxesOG.getValue(), (Integer) cashBoxesOG.getValue(),
                         fromDateDF.getValue(), tillDateDF.getValue(), null);
                 recount();
             }

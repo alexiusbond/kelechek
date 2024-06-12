@@ -346,7 +346,8 @@ public class DateReportOld implements Button.ClickListener,
                     try {
                         DbAccTransactions dbtr = new DbAccTransactions();
                         dbtr.connect();
-                        schoolAcc = dbtr.exec_get_totals(myUI.getUser().getSchool().getId(), (Integer) cashBoxSelect.getValue(), fromDateDF.getValue(),
+                        schoolAcc = dbtr.exec_get_totals(myUI.getUser().getSchool().getId(),
+                                (Integer) cashBoxSelect.getValue(), (Integer) cashBoxSelect.getValue(), fromDateDF.getValue(),
                                 tillDateDF.getValue(), Settings.convertCollectionToStr(catIds));
                         incomeTtlLab.setValue("<b>" + myUI.getMessage(IndigoMessages.IncomesTotal) + ": " + Settings.dFormat2.format(
                                 schoolAcc.getTotal_income()) + "$</b>");
