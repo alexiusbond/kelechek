@@ -1136,9 +1136,6 @@ public class ContractAsylkechPdf_2024_ru {
                 paragraph.add(new Phrase("Директор: ", ordBoldFont));
                 paragraph.add(Chunk.NEWLINE);
                 paragraph.add(Chunk.NEWLINE);
-                paragraph.add(new Phrase("Гл. бухгалтер: ", ordBoldFont));
-                paragraph.add(Chunk.NEWLINE);
-                paragraph.add(Chunk.NEWLINE);
                 paragraph.add(new Phrase("Печать ", ordBoldFont));
                 signaturesTable.addCell(paragraph);
 

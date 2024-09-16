@@ -828,12 +828,6 @@ public class ContractSchoolPdf_2024_ru {
                 paragraph = new Paragraph();
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
-                paragraph.add(new Phrase("Гл. бухгалтер: ", ordBoldFont));
-                document.add(paragraph);
-                document.add(new Paragraph(5, " "));
-                paragraph = new Paragraph();
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
                 paragraph.add(new Phrase("Печать ", ordBoldFont));
                 document.add(paragraph);
             } catch (Exception e) {

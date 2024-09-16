@@ -90,7 +90,7 @@ public class Invoice2023PDF {
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 invoiceTable.addCell(cell);
 
-                cell = new PdfPCell(new Phrase("КВИТАНЦИЯ", bold_font));
+                cell = new PdfPCell(new Phrase("Выписка по платежам", bold_font));
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setPaddingTop(2);
@@ -288,7 +288,7 @@ public class Invoice2023PDF {
                 invoiceTable.addCell(cell);
 
                 par = new Paragraph();
-                par.add(new Chunk("Кассир: __________________", bold_font));
+                par.add(new Chunk("Выдал: __________________", bold_font));
                 cell = new PdfPCell(par);
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setPaddingTop(3);
