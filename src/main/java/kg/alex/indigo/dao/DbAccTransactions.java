@@ -10,6 +10,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.*;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.event.LayoutEvents;
 import com.vaadin.ui.*;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
@@ -172,6 +173,7 @@ public class DbAccTransactions extends BaseDb {
                         (Boolean) item.getItemProperty(Settings.is_disabled).getValue(), FontAwesome.MINUS_SQUARE, "min-padding"));
                 hl.addComponent(cbv.createButton(myUI.getMessage(IndigoMessages.Print), itemId,
                         myUI.getMessage(IndigoMessages.Print), false, FontAwesome.FILE_PDF_O, "min-padding"));
+                hl.addLayoutClickListener((LayoutEvents.LayoutClickListener) layoutClickEvent -> grid.setEditorEnabled(false));
                 return hl;
             }
 
@@ -183,7 +185,7 @@ public class DbAccTransactions extends BaseDb {
         grid.setContainerDataSource(container);
     }
 
-    public int exec_insert_new(AccTransaction t, Connection conn) throws SQLException {
+    public int exec_insert(AccTransaction t, Connection conn) throws SQLException {
         String sql = "INSERT INTO acc_transactions (date_time, amount, acc_currency_id, currency_rate, note, "
                 + "acc_category_id, employee_id, school_id, modification_date, dp_invoice_id, student_payments_id, "
                 + "from_to_employee_id, acc_invoice_id, acc_type_id) VALUES(?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?)";
@@ -229,7 +231,7 @@ public class DbAccTransactions extends BaseDb {
         }
     }
 
-    public int exec_update_new(AccTransaction t) throws SQLException {
+    public int exec_update(AccTransaction t) throws SQLException {
         String sql = "UPDATE acc_transactions set date_time = ?, amount = ?, acc_currency_id = ?, " +
                 "currency_rate = ?, note = ?, acc_category_id = ?, employee_id = ?, school_id = ?, " +
                 "modification_date = NOW(), from_to_employee_id = ? WHERE id = ?";
@@ -255,7 +257,7 @@ public class DbAccTransactions extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int exec_update_new(AccTransaction t, String by_column_name, int by_column_value, Connection conn) throws SQLException {
+    public int exec_update(AccTransaction t, String by_column_name, int by_column_value, Connection conn) throws SQLException {
 
         String sql = "update acc_transactions set date_time = ?, amount = ?, acc_currency_id = ?, currency_rate = ?, " +
                 "note = ?, acc_category_id = ?, acc_type_id = ?, modification_date = NOW() " +
