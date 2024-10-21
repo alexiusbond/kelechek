@@ -11,7 +11,7 @@ import kg.alex.indigo.dao.DbSchool;
 import kg.alex.indigo.domain.ContractInfo;
 import kg.alex.indigo.domain.School;
 import kg.alex.indigo.domain.SchoolAccounting;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.utils.FormattedTable;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.bridge.*;
@@ -106,12 +106,12 @@ public class AccountingGeneralReportPdf {
                 document.add(table_date);
 
                 //информация по кассе
-                Paragraph header = new Paragraph(myUI.getMessage(IndigoMessages.GeneralAccountingReport) + " (" + year + ")", title_font);
+                Paragraph header = new Paragraph(myUI.getMessage(Messages.GeneralAccountingReport) + " (" + year + ")", title_font);
                 header.setAlignment(Element.ALIGN_CENTER);
 //                    document.add(new Paragraph(45, " "));
                 document.add(header);
                 document.add(new Paragraph(15, " "));
-                Paragraph caption1 = new Paragraph(myUI.getMessage(IndigoMessages.AccountingInformationCaption), caption_bold_font);
+                Paragraph caption1 = new Paragraph(myUI.getMessage(Messages.AccountingInformationCaption), caption_bold_font);
                 caption1.setIndentationLeft(30);
                 document.add(caption1);
                 document.add(new Paragraph(10, " "));
@@ -123,13 +123,13 @@ public class AccountingGeneralReportPdf {
                 accInfoTable.getDefaultCell().setBorder(0);
 
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                accInfoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.IncomesTotal) + ":", normal_font));
-                accInfoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.LastIncomeDate) + ":", normal_font));
-                accInfoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.ExpensesTotal) + ":", normal_font));
-                accInfoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.LastExpenseDate) + ":", normal_font));
-                accInfoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.PreviousBalance) + " (" + prevDay + "):", normal_font));
+                accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.IncomesTotal) + ":", normal_font));
+                accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.LastIncomeDate) + ":", normal_font));
+                accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.ExpensesTotal) + ":", normal_font));
+                accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.LastExpenseDate) + ":", normal_font));
+                accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.PreviousBalance) + " (" + prevDay + "):", normal_font));
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                accInfoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.CashBox) + ":", normal_font));
+                accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.CashBox) + ":", normal_font));
 
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_income()) + "$", normal_font));
@@ -143,7 +143,7 @@ public class AccountingGeneralReportPdf {
 
                 //Сумма доходов и расходов по месяцам
                 document.add(new Paragraph(20, " "));
-                Paragraph caption2 = new Paragraph(myUI.getMessage(IndigoMessages.IncomeOutcomeMonthlyCaption), caption_bold_font);
+                Paragraph caption2 = new Paragraph(myUI.getMessage(Messages.IncomeOutcomeMonthlyCaption), caption_bold_font);
                 caption2.setIndentationLeft(30);
                 document.add(caption2);
                 document.add(new Paragraph(10, " "));
@@ -154,13 +154,13 @@ public class AccountingGeneralReportPdf {
                 accTransTable.setWidths(accTrans_colsWidth);
 
                 accTransTable.addCell(new Phrase(" "));
-                accTransTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Month), normal_bold_font));
+                accTransTable.addCell(new Phrase(myUI.getMessage(Messages.Month), normal_bold_font));
                 accTransTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                accTransTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.InstallmentPlan), normal_bold_font));
-                accTransTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Payments), normal_bold_font));
-                accTransTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Incomes), normal_bold_font));
-                accTransTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Expenses), normal_bold_font));
-                accTransTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Difference), normal_bold_font));
+                accTransTable.addCell(new Phrase(myUI.getMessage(Messages.InstallmentPlan), normal_bold_font));
+                accTransTable.addCell(new Phrase(myUI.getMessage(Messages.Payments), normal_bold_font));
+                accTransTable.addCell(new Phrase(myUI.getMessage(Messages.Incomes), normal_bold_font));
+                accTransTable.addCell(new Phrase(myUI.getMessage(Messages.Expenses), normal_bold_font));
+                accTransTable.addCell(new Phrase(myUI.getMessage(Messages.Difference), normal_bold_font));
 
                 Iterator<?> iter = accTransactionsTable.getItemIds().iterator();
                 int i = 0;
@@ -172,29 +172,29 @@ public class AccountingGeneralReportPdf {
                     accTransTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                     accTransTable.addCell(new Phrase(i + "", normal_font));
                     accTransTable.addCell(new Phrase(accTransactionsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Month)).getValue().toString(), normal_font));
+                            myUI.getMessage(Messages.Month)).getValue().toString(), normal_font));
                     accTransTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                     accTransTable.addCell(new Phrase(Settings.dFormat2.format(accTransactionsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.InstallmentPlan)).getValue()), normal_font));
+                            myUI.getMessage(Messages.InstallmentPlan)).getValue()), normal_font));
                     accTransTable.addCell(new Phrase(Settings.dFormat2.format(accTransactionsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Payments)).getValue()), normal_font));
+                            myUI.getMessage(Messages.Payments)).getValue()), normal_font));
                     accTransTable.addCell(new Phrase(Settings.dFormat2.format(accTransactionsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Incomes)).getValue()), normal_font));
+                            myUI.getMessage(Messages.Incomes)).getValue()), normal_font));
                     accTransTable.addCell(new Phrase(Settings.dFormat2.format(accTransactionsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Expenses)).getValue()), normal_font));
+                            myUI.getMessage(Messages.Expenses)).getValue()), normal_font));
                     accTransTable.addCell(new Phrase(Settings.dFormat2.format(accTransactionsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Difference)).getValue()), normal_font));
+                            myUI.getMessage(Messages.Difference)).getValue()), normal_font));
                     i++;
 
                 }
                 accTransTable.addCell(new Phrase(" "));
                 accTransTable.addCell(new Phrase(" "));
                 accTransTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(IndigoMessages.InstallmentPlan)), normal_bold_font));
-                accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Payments)), normal_bold_font));
-                accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Incomes)), normal_bold_font));
-                accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Expenses)), normal_bold_font));
-                accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Difference)), normal_bold_font));
+                accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(Messages.InstallmentPlan)), normal_bold_font));
+                accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(Messages.Payments)), normal_bold_font));
+                accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(Messages.Incomes)), normal_bold_font));
+                accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(Messages.Expenses)), normal_bold_font));
+                accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(Messages.Difference)), normal_bold_font));
 
                 document.add(accTransTable);
                 //Итого     Скидки   Оплаты
@@ -205,21 +205,21 @@ public class AccountingGeneralReportPdf {
                 ttlContrTable.setWidthPercentage(100f);
                 ttlContrTable.setWidths(ttlContr_colsWidth);
                 ttlContrTable.getDefaultCell().setBorder(0);
-                ttlContrTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Students) + ":", normal_bold_font));
+                ttlContrTable.addCell(new Phrase(myUI.getMessage(Messages.Students) + ":", normal_bold_font));
                 ttlContrTable.addCell(new Phrase(contrTtl.getStudents() + "", normal_font));
-                ttlContrTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.TotalContract), normal_bold_font));
+                ttlContrTable.addCell(new Phrase(myUI.getMessage(Messages.TotalContract), normal_bold_font));
                 ttlContrTable.addCell(new Phrase(contrTtl.getContract() + "", normal_font));
-                ttlContrTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.TotalDebt), normal_bold_font));
+                ttlContrTable.addCell(new Phrase(myUI.getMessage(Messages.TotalDebt), normal_bold_font));
                 ttlContrTable.addCell(new Phrase(contrTtl.getDebt() + "", normal_font));
-                ttlContrTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.TotalDiscount), normal_bold_font));
+                ttlContrTable.addCell(new Phrase(myUI.getMessage(Messages.TotalDiscount), normal_bold_font));
                 ttlContrTable.addCell(new Phrase(contrTtl.getDiscount() + "", normal_font));
-                ttlContrTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.TotalCorrection), normal_bold_font));
+                ttlContrTable.addCell(new Phrase(myUI.getMessage(Messages.TotalCorrection), normal_bold_font));
                 ttlContrTable.addCell(new Phrase(contrTtl.getCorrection() + "", normal_font));
-                ttlContrTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Net), normal_bold_font));
+                ttlContrTable.addCell(new Phrase(myUI.getMessage(Messages.Net), normal_bold_font));
                 ttlContrTable.addCell(new Phrase(contrTtl.getNet() + "", normal_font));
-                ttlContrTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.TotalPayment), normal_bold_font));
+                ttlContrTable.addCell(new Phrase(myUI.getMessage(Messages.TotalPayment), normal_bold_font));
                 ttlContrTable.addCell(new Phrase(contrTtl.getPaid() + "", normal_font));
-                ttlContrTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.TotalLeft), normal_bold_font));
+                ttlContrTable.addCell(new Phrase(myUI.getMessage(Messages.TotalLeft), normal_bold_font));
                 ttlContrTable.addCell(new Phrase(contrTtl.getLeft() + "", normal_font));
 
                 float[] ttl_colsWidth = {0.5f, 0.95f, 1.05f};
@@ -227,9 +227,9 @@ public class AccountingGeneralReportPdf {
                 ttlTable.setWidthPercentage(90f);
                 ttlTable.setWidths(ttl_colsWidth);
                 ttlTable.getDefaultCell().setBorder(0);
-                ttlTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Total), caption_bold_font));
-                ttlTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Discounts), caption_bold_font));
-                ttlTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Payments), caption_bold_font));
+                ttlTable.addCell(new Phrase(myUI.getMessage(Messages.Total), caption_bold_font));
+                ttlTable.addCell(new Phrase(myUI.getMessage(Messages.Discounts), caption_bold_font));
+                ttlTable.addCell(new Phrase(myUI.getMessage(Messages.Payments), caption_bold_font));
                 ttlTable.addCell(ttlContrTable);
                 ttlTable.getDefaultCell().setFixedHeight(75f);
                 ttlTable.addCell(createSvgImage(writer.getDirectContent(), svgStrDiscounts));
@@ -239,7 +239,7 @@ public class AccountingGeneralReportPdf {
                 //Сумма оплат и плана оплат по месяцам
                 //inner table
                 document.add(new Paragraph(20, " "));
-                Paragraph caption3 = new Paragraph(myUI.getMessage(IndigoMessages.PaymentsMonthlyCaption), caption_bold_font);
+                Paragraph caption3 = new Paragraph(myUI.getMessage(Messages.PaymentsMonthlyCaption), caption_bold_font);
                 caption3.setIndentationLeft(30);
                 document.add(caption3);
                 document.add(new Paragraph(10, " "));
@@ -249,11 +249,11 @@ public class AccountingGeneralReportPdf {
                 inPaymentsTable.setWidthPercentage(100f);
                 inPaymentsTable.setWidths(installment_table_plan_colsWidth);
                 inPaymentsTable.addCell(new Phrase(""));
-                inPaymentsTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Month), normal_bold_font));
+                inPaymentsTable.addCell(new Phrase(myUI.getMessage(Messages.Month), normal_bold_font));
                 inPaymentsTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                inPaymentsTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.InstallmentPlan), normal_bold_font));
-                inPaymentsTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Payments), normal_bold_font));
-                inPaymentsTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Debt), normal_bold_font));
+                inPaymentsTable.addCell(new Phrase(myUI.getMessage(Messages.InstallmentPlan), normal_bold_font));
+                inPaymentsTable.addCell(new Phrase(myUI.getMessage(Messages.Payments), normal_bold_font));
+                inPaymentsTable.addCell(new Phrase(myUI.getMessage(Messages.Debt), normal_bold_font));
 
                 Iterator<?> iter1 = paymentsTable.getItemIds().iterator();
                 int x = 0;
@@ -265,23 +265,23 @@ public class AccountingGeneralReportPdf {
                     inPaymentsTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                     inPaymentsTable.addCell(new Phrase(x + "", normal_font));
                     inPaymentsTable.addCell(new Phrase(paymentsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Month)).getValue().toString(), normal_font));
+                            myUI.getMessage(Messages.Month)).getValue().toString(), normal_font));
                     inPaymentsTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                     inPaymentsTable.addCell(new Phrase(Settings.dFormat2.format(paymentsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.InstallmentPlan)).getValue()), normal_font));
+                            myUI.getMessage(Messages.InstallmentPlan)).getValue()), normal_font));
                     inPaymentsTable.addCell(new Phrase(Settings.dFormat2.format(paymentsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Payments)).getValue()), normal_font));
+                            myUI.getMessage(Messages.Payments)).getValue()), normal_font));
                     inPaymentsTable.addCell(new Phrase(Settings.dFormat2.format(paymentsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Debt)).getValue()), normal_font));
+                            myUI.getMessage(Messages.Debt)).getValue()), normal_font));
                     x++;
                 }
 
                 inPaymentsTable.addCell(new Phrase(" "));
                 inPaymentsTable.addCell(new Phrase(" "));
                 inPaymentsTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                inPaymentsTable.addCell(new Phrase(paymentsTable.getColumnFooter(myUI.getMessage(IndigoMessages.InstallmentPlan)), normal_bold_font));
-                inPaymentsTable.addCell(new Phrase(paymentsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Payments)), normal_bold_font));
-                inPaymentsTable.addCell(new Phrase(paymentsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Debt)), normal_bold_font));
+                inPaymentsTable.addCell(new Phrase(paymentsTable.getColumnFooter(myUI.getMessage(Messages.InstallmentPlan)), normal_bold_font));
+                inPaymentsTable.addCell(new Phrase(paymentsTable.getColumnFooter(myUI.getMessage(Messages.Payments)), normal_bold_font));
+                inPaymentsTable.addCell(new Phrase(paymentsTable.getColumnFooter(myUI.getMessage(Messages.Debt)), normal_bold_font));
 
                 //outer table
                 float[] colsWidth = {0.45f, 0.55f};

@@ -30,7 +30,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.*;
 import kg.alex.indigo.domain.*;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.pdf.contracts.*;
 import kg.alex.indigo.utils.FormattedTable;
 import kg.alex.indigo.utils.GenerateRandomString;
@@ -170,22 +170,22 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             logger.catching(ex);
         }
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Id), myUI.getMessage(IndigoMessages.LastName),
-                myUI.getMessage(IndigoMessages.FirstName),
-                myUI.getMessage(IndigoMessages.WorkingStatus),
-                myUI.getMessage(IndigoMessages.MainPosition),
-                myUI.getMessage(IndigoMessages.MainBranch)};
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Id), myUI.getMessage(Messages.LastName),
+                myUI.getMessage(Messages.FirstName),
+                myUI.getMessage(Messages.WorkingStatus),
+                myUI.getMessage(Messages.MainPosition),
+                myUI.getMessage(Messages.MainBranch)};
 
         Label eduStatusLab = new Label();
         eduStatusLab.setSizeUndefined();
         eduStatusLab.setContentMode(ContentMode.HTML);
-        eduStatusLab.setValue(myUI.getMessage(IndigoMessages.ShowByWorkingStatuses) + ": ");
+        eduStatusLab.setValue(myUI.getMessage(Messages.ShowByWorkingStatuses) + ": ");
 
         optionGroup = new OptionGroup();
         optionGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         optionGroup.setMultiSelect(true);
         optionGroup.setContainerDataSource(workingStatCont);
-        optionGroup.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        optionGroup.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         optionGroup.select(2);
         optionGroup.addValueChangeListener(this);
 
@@ -210,11 +210,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         filteredLab.setSizeUndefined();
         filteredLab.setImmediate(true);
         filteredLab.setContentMode(ContentMode.HTML);
-        filteredLab.setValue(myUI.getMessage(IndigoMessages.Filtered) + ": 0");
+        filteredLab.setValue(myUI.getMessage(Messages.Filtered) + ": 0");
         repaint();
 
         employeesDataTable.setFilterGenerator(new MyFilterGenerator(
-                filteredLab, myUI.getMessage(IndigoMessages.Filtered), employeesDataTable));
+                filteredLab, myUI.getMessage(Messages.Filtered), employeesDataTable));
 
         empSearchLay = new GridLayout(2, 3);
         empSearchLay.setSizeFull();
@@ -255,49 +255,49 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         tabs.setSizeFull();
         tabs.addStyleName(ValoTheme.TABSHEET_FRAMED);
         tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
-        tabs.addTab(empSearchLay).setCaption(myUI.getMessage(IndigoMessages.Search));
+        tabs.addTab(empSearchLay).setCaption(myUI.getMessage(Messages.Search));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabSearch) || isMyProfile) {
             tabs.getTab(empSearchLay).setVisible(false);
         }
-        tabs.addTab(contactInfoLay).setCaption(myUI.getMessage(IndigoMessages.ContactInfo));
+        tabs.addTab(contactInfoLay).setCaption(myUI.getMessage(Messages.ContactInfo));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContacts) && !isMyProfile) {
             tabs.getTab(contactInfoLay).setVisible(false);
         }
-        tabs.addTab(contractInfoLay).setCaption(myUI.getMessage(IndigoMessages.Contracts));
+        tabs.addTab(contractInfoLay).setCaption(myUI.getMessage(Messages.Contracts));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContracts)) {
             tabs.getTab(contractInfoLay).setVisible(false);
         }
-        tabs.addTab(profInfoLay).setCaption(myUI.getMessage(IndigoMessages.ProfInfo));
+        tabs.addTab(profInfoLay).setCaption(myUI.getMessage(Messages.ProfInfo));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabProfInfo) && !isMyProfile) {
             tabs.getTab(profInfoLay).setVisible(false);
         }
-        tabs.addTab(achievementsInfoLay).setCaption(myUI.getMessage(IndigoMessages.Achievements));
+        tabs.addTab(achievementsInfoLay).setCaption(myUI.getMessage(Messages.Achievements));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabAchievements) && !isMyProfile) {
             tabs.getTab(achievementsInfoLay).setVisible(false);
         }
-        tabs.addTab(familyInfoLay).setCaption(myUI.getMessage(IndigoMessages.FamilyInfo));
+        tabs.addTab(familyInfoLay).setCaption(myUI.getMessage(Messages.FamilyInfo));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabFamilyInfo) && !isMyProfile) {
             tabs.getTab(familyInfoLay).setVisible(false);
         }
-        tabs.addTab(extraInfoLay).setCaption(myUI.getMessage(IndigoMessages.ExtraInfo));
+        tabs.addTab(extraInfoLay).setCaption(myUI.getMessage(Messages.ExtraInfo));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabExtraInfo) && !isMyProfile) {
             tabs.getTab(extraInfoLay).setVisible(false);
         }
-        tabs.addTab(schoolInfoLay).setCaption(myUI.getMessage(IndigoMessages.EduActivitiesInfo));
+        tabs.addTab(schoolInfoLay).setCaption(myUI.getMessage(Messages.EduActivitiesInfo));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabEduActivities) ||
                 (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision) &&
                         !currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons))) {
             tabs.getTab(schoolInfoLay).setVisible(false);
         }
-        tabs.addTab(permissionsLay).setCaption(myUI.getMessage(IndigoMessages.Permissions));
+        tabs.addTab(permissionsLay).setCaption(myUI.getMessage(Messages.Permissions));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabPermissions)) {
             tabs.getTab(permissionsLay).setVisible(false);
         }
-        tabs.addTab(ordersInfoLay).setCaption(myUI.getMessage(IndigoMessages.OrdersHistory));
+        tabs.addTab(ordersInfoLay).setCaption(myUI.getMessage(Messages.OrdersHistory));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabOrders)) {
             tabs.getTab(ordersInfoLay).setVisible(false);
         }
-        tabs.addTab(documentsLay).setCaption(myUI.getMessage(IndigoMessages.Documents));
+        tabs.addTab(documentsLay).setCaption(myUI.getMessage(Messages.Documents));
 
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabDocuments)) {
             tabs.getTab(documentsLay).setVisible(false);
@@ -331,7 +331,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     } else if (event.getTabSheet().getSelectedTab() == schoolInfoLay && employeeID != 0) {
                         if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision)) {
                             canBeAdvisorCkb.setValue((Boolean) employeesDataTable.getContainerProperty(
-                                    employeeID, myUI.getMessage(IndigoMessages.CanBeAdvisor)).getValue());
+                                    employeeID, myUI.getMessage(Messages.CanBeAdvisor)).getValue());
                             setSupervisionTable();
                         }
                         if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
@@ -340,10 +340,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     } else if (event.getTabSheet().getSelectedTab() == permissionsLay && employeeID != 0) {
                         if (employeesDataTable.getContainerDataSource().
                                 getContainerProperty(employeeID, myUI.getMessage(
-                                        IndigoMessages.Permissions)).getValue() != null) {
+                                        Messages.Permissions)).getValue() != null) {
                             setPermTable_options(employeesDataTable.getContainerDataSource().
                                     getContainerProperty(employeeID, myUI.getMessage(
-                                            IndigoMessages.Permissions)).getValue().toString());
+                                            Messages.Permissions)).getValue().toString());
                         } else {
                             clearPermissionsTable();
                         }
@@ -371,10 +371,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label caption = new Label();
         caption.setSizeFull();
         caption.setContentMode(ContentMode.HTML);
-        caption.setValue(myUI.getMessage(IndigoMessages.Contracts));
+        caption.setValue(myUI.getMessage(Messages.Contracts));
         caption.setStyleName("tableCpt");
 
-        plusContractButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusContractButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusContractButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusContractButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusContractButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -405,46 +405,46 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         fieldsLayContacts.setMargin(false);
 
         birthPlaceTF = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 250, false), true);
-        birthPlaceTF.setCaption(myUI.getMessage(IndigoMessages.BirthPlace));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 250, false), true);
+        birthPlaceTF.setCaption(myUI.getMessage(Messages.BirthPlace));
         fieldsLayContacts.addComponent(birthPlaceTF);
 
-        addressTA = new TextArea(myUI.getMessage(IndigoMessages.Address));
+        addressTA = new TextArea(myUI.getMessage(Messages.Address));
         addressTA.setRequired(true);
         addressTA.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        addressTA.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        addressTA.setRequiredError(myUI.getMessage(Messages.RequiredField));
         addressTA.setWidth(Settings.PERCENTS100);
         addressTA.setRows(7);
         addressTA.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 400, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 400, false));
         fieldsLayContacts.addComponent(addressTA);
 
-        emailTF = createTextField(null, null, new EmailValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue)), false);
+        emailTF = createTextField(null, null, new EmailValidator(myUI.getMessage(Messages.NotificationWrongValue)), false);
         emailTF.setNullRepresentation("");
         emailTF.setCaption(Settings.email);
         fieldsLayContacts.addComponent(emailTF);
 
         passportTF = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 20, true), false);
+                myUI.getMessage(Messages.NotificationWrongValue), null, 20, true), false);
         passportTF.setNullRepresentation("");
-        passportTF.setCaption(myUI.getMessage(IndigoMessages.Passport));
+        passportTF.setCaption(myUI.getMessage(Messages.Passport));
         fieldsLayContacts.addComponent(passportTF);
 
         passportGivenTf = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 45, true), false);
+                myUI.getMessage(Messages.NotificationWrongValue), null, 45, true), false);
         passportGivenTf.setNullRepresentation("");
-        passportGivenTf.setCaption(myUI.getMessage(IndigoMessages.PassportGiven));
+        passportGivenTf.setCaption(myUI.getMessage(Messages.PassportGiven));
         fieldsLayContacts.addComponent(passportGivenTf);
 
-        passportDateDF = createDateField(null, null, myUI.getMessage(IndigoMessages.PassportDate),
+        passportDateDF = createDateField(null, null, myUI.getMessage(Messages.PassportDate),
                 false, Settings.datePattern, Resolution.DAY);
         passportDateDF.setRangeEnd(today);
         fieldsLayContacts.addComponent(passportDateDF);
 
         innTF = createTextField(null, null, new RegexpValidator("[0-9]*",
-                myUI.getMessage(IndigoMessages.NotificationWrongValue)), false);
+                myUI.getMessage(Messages.NotificationWrongValue)), false);
         innTF.setNullRepresentation("");
-        innTF.setCaption(myUI.getMessage(IndigoMessages.INN));
+        innTF.setCaption(myUI.getMessage(Messages.INN));
         fieldsLayContacts.addComponent(innTF);
 
         HorizontalLayout hl = new HorizontalLayout();
@@ -453,19 +453,19 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionPhones = new Label();
         captionPhones.setSizeFull();
         captionPhones.setContentMode(ContentMode.HTML);
-        captionPhones.setValue(myUI.getMessage(IndigoMessages.PhoneNumbers));
+        captionPhones.setValue(myUI.getMessage(Messages.PhoneNumbers));
         captionPhones.setStyleName("tableCpt");
 
         Label captionContactsInfo = new Label();
         captionContactsInfo.setSizeFull();
         captionContactsInfo.setContentMode(ContentMode.HTML);
-        captionContactsInfo.setValue(myUI.getMessage(IndigoMessages.ContactInfo));
+        captionContactsInfo.setValue(myUI.getMessage(Messages.ContactInfo));
         captionContactsInfo.setStyleName("tableCpt");
 
-        noPhonesCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noPhonesCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noPhonesCkb.addValueChangeListener(this);
 
-        plusPhonesButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusPhonesButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusPhonesButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusPhonesButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusPhonesButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -503,7 +503,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionSpouseInfo = new Label();
         captionSpouseInfo.setWidth(Settings.PERCENTS100);
         captionSpouseInfo.setContentMode(ContentMode.HTML);
-        captionSpouseInfo.setValue(myUI.getMessage(IndigoMessages.SpouseInfo));
+        captionSpouseInfo.setValue(myUI.getMessage(Messages.SpouseInfo));
         captionSpouseInfo.setStyleName("tableCpt");
         familyInfoLay.addComponent(captionSpouseInfo, 0, 0, 2, 0);
 
@@ -514,42 +514,42 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         familyInfoLay.addComponent(fieldsLayFamily, 0, 1, 2, 1);
 
         spouseFullNameTF = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true), true);
-        spouseFullNameTF.setCaption(myUI.getMessage(IndigoMessages.FullName));
+                myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), true);
+        spouseFullNameTF.setCaption(myUI.getMessage(Messages.FullName));
         spouseFullNameTF.setWidth("50%");
         fieldsLayFamily.addComponent(spouseFullNameTF);
 
         spousePhoneTF = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 100, true), false);
-        spousePhoneTF.setCaption(myUI.getMessage(IndigoMessages.Phone));
+                myUI.getMessage(Messages.NotificationWrongValue), null, 100, true), false);
+        spousePhoneTF.setCaption(myUI.getMessage(Messages.Phone));
         spousePhoneTF.setWidth("50%");
         fieldsLayFamily.addComponent(spousePhoneTF);
 
         spouseHealthCB = createCombobox(0, null, Settings.dbHealthStatus, true);
-        spouseHealthCB.setCaption(myUI.getMessage(IndigoMessages.HealthStatus));
+        spouseHealthCB.setCaption(myUI.getMessage(Messages.HealthStatus));
         spouseHealthCB.setWidth("50%");
         fieldsLayFamily.addComponent(spouseHealthCB);
 
-        spouseHealthNotesTF = new TextField(myUI.getMessage(IndigoMessages.HealthNotes));
+        spouseHealthNotesTF = new TextField(myUI.getMessage(Messages.HealthNotes));
         spouseHealthNotesTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         spouseHealthNotesTF.setWidth("50%");
         spouseHealthNotesTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 350, true));
+                myUI.getMessage(Messages.NotificationWrongValue), null, 350, true));
         fieldsLayFamily.addComponent(spouseHealthNotesTF);
 
         Label captionSpouseEducation = new Label();
         captionSpouseEducation.setSizeFull();
         captionSpouseEducation.setContentMode(ContentMode.HTML);
-        captionSpouseEducation.setValue(myUI.getMessage(IndigoMessages.SpouseEducation));
+        captionSpouseEducation.setValue(myUI.getMessage(Messages.SpouseEducation));
         captionSpouseEducation.setStyleName("tableCpt");
         familyInfoLay.addComponent(captionSpouseEducation, 0, 2);
 
-        noSpouseEducationCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noSpouseEducationCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noSpouseEducationCkb.addValueChangeListener(this);
         familyInfoLay.addComponent(noSpouseEducationCkb, 2, 2);
         familyInfoLay.setComponentAlignment(noSpouseEducationCkb, Alignment.BOTTOM_RIGHT);
 
-        plusSpouseEducationButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusSpouseEducationButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusSpouseEducationButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusSpouseEducationButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusSpouseEducationButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -564,16 +564,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionSpouseWorkPlaces = new Label();
         captionSpouseWorkPlaces.setSizeFull();
         captionSpouseWorkPlaces.setContentMode(ContentMode.HTML);
-        captionSpouseWorkPlaces.setValue(myUI.getMessage(IndigoMessages.SpouseWorkPlaces));
+        captionSpouseWorkPlaces.setValue(myUI.getMessage(Messages.SpouseWorkPlaces));
         captionSpouseWorkPlaces.setStyleName("tableCpt");
         familyInfoLay.addComponent(captionSpouseWorkPlaces, 0, 4);
 
-        noSpouseWorkPlacesCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noSpouseWorkPlacesCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noSpouseWorkPlacesCkb.addValueChangeListener(this);
         familyInfoLay.addComponent(noSpouseWorkPlacesCkb, 2, 4);
         familyInfoLay.setComponentAlignment(noSpouseWorkPlacesCkb, Alignment.BOTTOM_RIGHT);
 
-        plusSpouseWorkPlacesButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusSpouseWorkPlacesButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusSpouseWorkPlacesButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusSpouseWorkPlacesButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusSpouseWorkPlacesButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -589,16 +589,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionChildren = new Label();
         captionChildren.setSizeFull();
         captionChildren.setContentMode(ContentMode.HTML);
-        captionChildren.setValue(myUI.getMessage(IndigoMessages.Children));
+        captionChildren.setValue(myUI.getMessage(Messages.Children));
         captionChildren.setStyleName("tableCpt");
         familyInfoLay.addComponent(captionChildren, 0, 6);
 
-        noChildrenCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noChildrenCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noChildrenCkb.addValueChangeListener(this);
         familyInfoLay.addComponent(noChildrenCkb, 2, 6);
         familyInfoLay.setComponentAlignment(noChildrenCkb, Alignment.BOTTOM_RIGHT);
 
-        plusChildButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusChildButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusChildButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusChildButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusChildButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -615,7 +615,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionDocuments = new Label();
         captionDocuments.setWidth(Settings.PERCENTS100);
         captionDocuments.setContentMode(ContentMode.HTML);
-        captionDocuments.setValue(myUI.getMessage(IndigoMessages.ListOfDocuments));
+        captionDocuments.setValue(myUI.getMessage(Messages.ListOfDocuments));
         captionDocuments.setStyleName("tableCpt");
 
         documentsDataTable = new Table();
@@ -639,39 +639,39 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         fieldsLayExtra.setMargin(false);
 
         healthCB = createCombobox(0, null, Settings.dbHealthStatus, true);
-        healthCB.setCaption(myUI.getMessage(IndigoMessages.HealthStatus));
+        healthCB.setCaption(myUI.getMessage(Messages.HealthStatus));
         fieldsLayExtra.addComponent(healthCB);
 
-        healthNotesTA = new TextArea(myUI.getMessage(IndigoMessages.HealthNotes));
+        healthNotesTA = new TextArea(myUI.getMessage(Messages.HealthNotes));
         healthNotesTA.setStyleName(ValoTheme.TEXTFIELD_TINY);
         healthNotesTA.setWidth(Settings.PERCENTS100);
         healthNotesTA.setRows(5);
         healthNotesTA.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 350, true));
+                myUI.getMessage(Messages.NotificationWrongValue), null, 350, true));
         fieldsLayExtra.addComponent(healthNotesTA);
 
         hobbiesTF = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 300, true), false);
-        hobbiesTF.setCaption(myUI.getMessage(IndigoMessages.Hobbies));
+                myUI.getMessage(Messages.NotificationWrongValue), null, 300, true), false);
+        hobbiesTF.setCaption(myUI.getMessage(Messages.Hobbies));
         fieldsLayExtra.addComponent(hobbiesTF);
 
         fobbiesTF = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 300, true), false);
-        fobbiesTF.setCaption(myUI.getMessage(IndigoMessages.Phobias));
+                myUI.getMessage(Messages.NotificationWrongValue), null, 300, true), false);
+        fobbiesTF.setCaption(myUI.getMessage(Messages.Phobias));
         fieldsLayExtra.addComponent(fobbiesTF);
 
-        shortNotesTA = new TextArea(myUI.getMessage(IndigoMessages.ShortNote));
+        shortNotesTA = new TextArea(myUI.getMessage(Messages.ShortNote));
         shortNotesTA.setStyleName(ValoTheme.TEXTFIELD_TINY);
         shortNotesTA.setWidth(Settings.PERCENTS100);
         shortNotesTA.setRows(3);
         shortNotesTA.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 300, true));
+                myUI.getMessage(Messages.NotificationWrongValue), null, 300, true));
         fieldsLayExtra.addComponent(shortNotesTA);
 
         Label captionQuestioning = new Label();
         captionQuestioning.setWidth(Settings.PERCENTS100);
         captionQuestioning.setContentMode(ContentMode.HTML);
-        captionQuestioning.setValue(myUI.getMessage(IndigoMessages.Questioning));
+        captionQuestioning.setValue(myUI.getMessage(Messages.Questioning));
         captionQuestioning.setStyleName("tableCpt");
 
         questioningTable = new FormattedTable(myUI);
@@ -681,7 +681,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionExtraInfo = new Label();
         captionExtraInfo.setWidth(Settings.PERCENTS100);
         captionExtraInfo.setContentMode(ContentMode.HTML);
-        captionExtraInfo.setValue(myUI.getMessage(IndigoMessages.ExtraInfo));
+        captionExtraInfo.setValue(myUI.getMessage(Messages.ExtraInfo));
         captionExtraInfo.setStyleName("tableCpt");
 
         extraInfoLay = new GridLayout(2, 2);
@@ -708,16 +708,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionExams = new Label();
         captionExams.setSizeFull();
         captionExams.setContentMode(ContentMode.HTML);
-        captionExams.setValue(myUI.getMessage(IndigoMessages.Exams));
+        captionExams.setValue(myUI.getMessage(Messages.Exams));
         captionExams.setStyleName("tableCpt");
         achievementsInfoLay.addComponent(captionExams, 0, 0);
 
-        noExamsCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noExamsCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noExamsCkb.addValueChangeListener(this);
         achievementsInfoLay.addComponent(noExamsCkb, 2, 0);
         achievementsInfoLay.setComponentAlignment(noExamsCkb, Alignment.BOTTOM_RIGHT);
 
-        plusExamButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusExamButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusExamButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusExamButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusExamButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -732,16 +732,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionSeminars = new Label();
         captionSeminars.setSizeFull();
         captionSeminars.setContentMode(ContentMode.HTML);
-        captionSeminars.setValue(myUI.getMessage(IndigoMessages.Seminars));
+        captionSeminars.setValue(myUI.getMessage(Messages.Seminars));
         captionSeminars.setStyleName("tableCpt");
         achievementsInfoLay.addComponent(captionSeminars, 0, 2);
 
-        noSeminarsCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noSeminarsCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noSeminarsCkb.addValueChangeListener(this);
         achievementsInfoLay.addComponent(noSeminarsCkb, 2, 2);
         achievementsInfoLay.setComponentAlignment(noSeminarsCkb, Alignment.BOTTOM_RIGHT);
 
-        plusSeminarButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusSeminarButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusSeminarButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusSeminarButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusSeminarButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -756,16 +756,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionCertificates = new Label();
         captionCertificates.setSizeFull();
         captionCertificates.setContentMode(ContentMode.HTML);
-        captionCertificates.setValue(myUI.getMessage(IndigoMessages.Certificates));
+        captionCertificates.setValue(myUI.getMessage(Messages.Certificates));
         captionCertificates.setStyleName("tableCpt");
         achievementsInfoLay.addComponent(captionCertificates, 0, 4);
 
-        noCertificatesCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noCertificatesCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noCertificatesCkb.addValueChangeListener(this);
         achievementsInfoLay.addComponent(noCertificatesCkb, 2, 4);
         achievementsInfoLay.setComponentAlignment(noCertificatesCkb, Alignment.BOTTOM_RIGHT);
 
-        plusCertificateButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusCertificateButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusCertificateButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusCertificateButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusCertificateButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -780,16 +780,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionLanguages = new Label();
         captionLanguages.setSizeFull();
         captionLanguages.setContentMode(ContentMode.HTML);
-        captionLanguages.setValue(myUI.getMessage(IndigoMessages.Languages));
+        captionLanguages.setValue(myUI.getMessage(Messages.Languages));
         captionLanguages.setStyleName("tableCpt");
         achievementsInfoLay.addComponent(captionLanguages, 0, 6);
 
-        noLanguagesCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noLanguagesCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noLanguagesCkb.addValueChangeListener(this);
         achievementsInfoLay.addComponent(noLanguagesCkb, 2, 6);
         achievementsInfoLay.setComponentAlignment(noLanguagesCkb, Alignment.BOTTOM_RIGHT);
 
-        plusLanguageButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusLanguageButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusLanguageButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusLanguageButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusLanguageButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -813,18 +813,18 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionGradSchool = new Label();
         captionGradSchool.setWidth(Settings.PERCENTS100);
         captionGradSchool.setContentMode(ContentMode.HTML);
-        captionGradSchool.setValue(myUI.getMessage(IndigoMessages.GraduationSchool));
+        captionGradSchool.setValue(myUI.getMessage(Messages.GraduationSchool));
         captionGradSchool.setStyleName("tableCpt");
         profInfoLay.addComponent(captionGradSchool, 0, 0, 2, 0);
 
         gradSchoolCB = createCombobox(0, null, null, true);
-        gradSchoolCB.setCaption(myUI.getMessage(IndigoMessages.GraduationSchool));
+        gradSchoolCB.setCaption(myUI.getMessage(Messages.GraduationSchool));
         try {
             DbSchool dbCon = new DbSchool();
             dbCon.connect();
             gradSchoolCB.setContainerDataSource(dbCon.execSchoolSel(myUI, "1,3,4"));
             Item item = gradSchoolCB.getContainerDataSource().addItem(0);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(myUI.getMessage(IndigoMessages.OtherSchool));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(myUI.getMessage(Messages.OtherSchool));
             dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
@@ -833,13 +833,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         gradSchoolCB.setValue(0);
         profInfoLay.addComponent(gradSchoolCB, 0, 1);
 
-        gradSchoolStartDF = createDateField(null, null, myUI.getMessage(IndigoMessages.Start),
+        gradSchoolStartDF = createDateField(null, null, myUI.getMessage(Messages.Start),
                 true, Settings.yearPattern, Resolution.YEAR);
         gradSchoolStartDF.setWidth(Settings.PERCENTS100);
         gradSchoolStartDF.setResolution(Resolution.YEAR);
         profInfoLay.addComponent(gradSchoolStartDF, 1, 1);
 
-        gradSchoolEndDF = createDateField(null, null, myUI.getMessage(IndigoMessages.End),
+        gradSchoolEndDF = createDateField(null, null, myUI.getMessage(Messages.End),
                 true, Settings.yearPattern, Resolution.YEAR);
         gradSchoolEndDF.setWidth(Settings.PERCENTS100);
         gradSchoolEndDF.setResolution(Resolution.YEAR);
@@ -848,16 +848,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionBranches = new Label();
         captionBranches.setSizeFull();
         captionBranches.setContentMode(ContentMode.HTML);
-        captionBranches.setValue(myUI.getMessage(IndigoMessages.Branches));
+        captionBranches.setValue(myUI.getMessage(Messages.Branches));
         captionBranches.setStyleName("tableCpt");
         profInfoLay.addComponent(captionBranches, 0, 2);
 
-        noBranchesCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noBranchesCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noBranchesCkb.addValueChangeListener(this);
         profInfoLay.addComponent(noBranchesCkb, 2, 2);
         profInfoLay.setComponentAlignment(noBranchesCkb, Alignment.BOTTOM_RIGHT);
 
-        plusBranchButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusBranchButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusBranchButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusBranchButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusBranchButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -872,16 +872,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionEducation = new Label();
         captionEducation.setSizeFull();
         captionEducation.setContentMode(ContentMode.HTML);
-        captionEducation.setValue(myUI.getMessage(IndigoMessages.Education));
+        captionEducation.setValue(myUI.getMessage(Messages.Education));
         captionEducation.setStyleName("tableCpt");
         profInfoLay.addComponent(captionEducation, 0, 4);
 
-        noEducationCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noEducationCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noEducationCkb.addValueChangeListener(this);
         profInfoLay.addComponent(noEducationCkb, 2, 4);
         profInfoLay.setComponentAlignment(noEducationCkb, Alignment.BOTTOM_RIGHT);
 
-        plusEducationButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusEducationButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusEducationButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusEducationButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusEducationButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -896,16 +896,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionWorkPlaces = new Label();
         captionWorkPlaces.setSizeFull();
         captionWorkPlaces.setContentMode(ContentMode.HTML);
-        captionWorkPlaces.setValue(myUI.getMessage(IndigoMessages.WorkPlaces));
+        captionWorkPlaces.setValue(myUI.getMessage(Messages.WorkPlaces));
         captionWorkPlaces.setStyleName("tableCpt");
         profInfoLay.addComponent(captionWorkPlaces, 0, 6);
 
-        noWorkPlacesCkb = new CheckBox(myUI.getMessage(IndigoMessages.DontHave));
+        noWorkPlacesCkb = new CheckBox(myUI.getMessage(Messages.DontHave));
         noWorkPlacesCkb.addValueChangeListener(this);
         profInfoLay.addComponent(noWorkPlacesCkb, 2, 6);
         profInfoLay.setComponentAlignment(noWorkPlacesCkb, Alignment.BOTTOM_RIGHT);
 
-        plusWorkPlaceButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusWorkPlaceButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusWorkPlaceButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusWorkPlaceButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusWorkPlaceButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -926,10 +926,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Label captionOrders = new Label();
         captionOrders.setSizeFull();
         captionOrders.setContentMode(ContentMode.HTML);
-        captionOrders.setValue(myUI.getMessage(IndigoMessages.OrdersHistory));
+        captionOrders.setValue(myUI.getMessage(Messages.OrdersHistory));
         captionOrders.setStyleName("tableCpt");
 
-        plusOrdersButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+        plusOrdersButton = new Button(myUI.getMessage(Messages.AddRecord));
         plusOrdersButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusOrdersButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusOrdersButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -966,12 +966,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             Label captionSupervision = new Label();
             captionSupervision.setSizeFull();
             captionSupervision.setContentMode(ContentMode.HTML);
-            captionSupervision.setValue(myUI.getMessage(IndigoMessages.Supervision));
+            captionSupervision.setValue(myUI.getMessage(Messages.Supervision));
             captionSupervision.setStyleName("tableCpt");
 
-            canBeAdvisorCkb = new CheckBox(myUI.getMessage(IndigoMessages.CanBeAdvisor));
+            canBeAdvisorCkb = new CheckBox(myUI.getMessage(Messages.CanBeAdvisor));
 
-            plusSupervisionButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+            plusSupervisionButton = new Button(myUI.getMessage(Messages.AddRecord));
             plusSupervisionButton.setStyleName(ValoTheme.BUTTON_SMALL);
             plusSupervisionButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
             plusSupervisionButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -996,10 +996,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             Label captionLessons = new Label();
             captionLessons.setSizeFull();
             captionLessons.setContentMode(ContentMode.HTML);
-            captionLessons.setValue(myUI.getMessage(IndigoMessages.Lessons));
+            captionLessons.setValue(myUI.getMessage(Messages.Lessons));
             captionLessons.setStyleName("tableCpt");
 
-            plusLessonsButton = new Button(myUI.getMessage(IndigoMessages.AddRecord));
+            plusLessonsButton = new Button(myUI.getMessage(Messages.AddRecord));
             plusLessonsButton.setStyleName(ValoTheme.BUTTON_SMALL);
             plusLessonsButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
             plusLessonsButton.setIcon(FontAwesome.PLUS_SQUARE);
@@ -1036,11 +1036,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionPermissions.setWidth(Settings.PERCENTS100);
         captionPermissions.setHeight("27px");
         captionPermissions.setContentMode(ContentMode.HTML);
-        captionPermissions.setValue(myUI.getMessage(IndigoMessages.Permissions));
+        captionPermissions.setValue(myUI.getMessage(Messages.Permissions));
         captionPermissions.setStyleName("tableCpt");
 
         String[] NATURAL_COL_ORDER_PERMISSIONS = new String[]{
-                myUI.getMessage(IndigoMessages.Functions), myUI.getMessage(IndigoMessages.ClassCaption)};
+                myUI.getMessage(Messages.Functions), myUI.getMessage(Messages.ClassCaption)};
         permissionTable = new FormattedTable(myUI);
         permissionTable.setSizeFull();
         permissionTable.setStyleName(ValoTheme.TABLE_SMALL);
@@ -1056,13 +1056,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 permMCB.setPageLength(20);
                 permMCB.setShowSelectAllButton((filter, page) -> true);
                 permMCB.addItems(convertStrToSet(permissionCont.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.Value)).getValue().toString()));
+                        myUI.getMessage(Messages.Value)).getValue().toString()));
                 permissionCont.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.Functions)).setValue(permMCB);
+                        myUI.getMessage(Messages.Functions)).setValue(permMCB);
             }
             permissionTable.setContainerDataSource(permissionCont);
             permissionTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_PERMISSIONS);
-            permissionTable.setColumnWidth(myUI.getMessage(IndigoMessages.ClassCaption), 235);
+            permissionTable.setColumnWidth(myUI.getMessage(Messages.ClassCaption), 235);
             permissionTable.setPageLength(0);
         } catch (Exception ex) {
             logger.error(ex);
@@ -1095,7 +1095,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     Item itm = permissionCont.getItem(byClassName[0]);
                     if (itm != null) {
                         ((ComboBoxMultiselect) itm.getItemProperty(
-                                myUI.getMessage(IndigoMessages.Functions)).getValue())
+                                myUI.getMessage(Messages.Functions)).getValue())
                                 .setValue(convertStrToSet(byClassName[1]));
                     }
                 }
@@ -1111,19 +1111,19 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusContractButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_CONTRACTS = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.AgreementType),
-                    myUI.getMessage(IndigoMessages.SalaryAmount),
-                    myUI.getMessage(IndigoMessages.CreationDate),
-                    myUI.getMessage(IndigoMessages.Start),
-                    myUI.getMessage(IndigoMessages.End)};
+                    myUI.getMessage(Messages.AgreementType),
+                    myUI.getMessage(Messages.SalaryAmount),
+                    myUI.getMessage(Messages.CreationDate),
+                    myUI.getMessage(Messages.Start),
+                    myUI.getMessage(Messages.End)};
             DbEmployeeContract dbCon = new DbEmployeeContract();
             dbCon.connect();
             contractsTable.setContainerDataSource(dbCon.execSQL(myUI, employeeID, this));
             dbCon.close();
             contractsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CONTRACTS);
             contractsTable.setColumnWidth(Settings.button, 60);
-            contractsTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.AgreementType), 1);
-            contractsTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.SalaryAmount), 1);
+            contractsTable.setColumnExpandRatio(myUI.getMessage(Messages.AgreementType), 1);
+            contractsTable.setColumnExpandRatio(myUI.getMessage(Messages.SalaryAmount), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1135,14 +1135,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusPhonesButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_PHONES = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.Type),
-                    myUI.getMessage(IndigoMessages.Number)};
+                    myUI.getMessage(Messages.Type),
+                    myUI.getMessage(Messages.Number)};
             DbEmployeePhoneNumber dbepn = new DbEmployeePhoneNumber();
             dbepn.connect();
             phonesTable.setContainerDataSource(dbepn.execSQL(myUI, employeeID, this));
             dbepn.close();
             phonesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_PHONES);
-            phonesTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Number), 1);
+            phonesTable.setColumnExpandRatio(myUI.getMessage(Messages.Number), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1169,19 +1169,19 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusChildButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_CHILDREN = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.FullName),
-                    myUI.getMessage(IndigoMessages.DateOfBirth),
-                    myUI.getMessage(IndigoMessages.Institution),
-                    myUI.getMessage(IndigoMessages.EducationStatus),
-                    myUI.getMessage(IndigoMessages.HealthStatus)};
+                    myUI.getMessage(Messages.FullName),
+                    myUI.getMessage(Messages.DateOfBirth),
+                    myUI.getMessage(Messages.Institution),
+                    myUI.getMessage(Messages.EducationStatus),
+                    myUI.getMessage(Messages.HealthStatus)};
             DbEmployeeChildren dbech = new DbEmployeeChildren();
             dbech.connect();
             childrenTable.setContainerDataSource(dbech.execSQL(myUI, employeeID, this));
             dbech.close();
             childrenTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CHILDREN);
             childrenTable.setPageLength(childrenTable.size() > 0 ? childrenTable.size() : 1);
-            childrenTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.FullName), 1);
-            childrenTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Institution), 1);
+            childrenTable.setColumnExpandRatio(myUI.getMessage(Messages.FullName), 1);
+            childrenTable.setColumnExpandRatio(myUI.getMessage(Messages.Institution), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1209,22 +1209,22 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             if (own_id == 1) {
                 plusEducationButton.setEnabled(true);
                 NATURAL_COL_ORDER_EDU = new String[]{Settings.button,
-                        myUI.getMessage(IndigoMessages.University),
-                        myUI.getMessage(IndigoMessages.Country),
-                        myUI.getMessage(IndigoMessages.Department),
-                        myUI.getMessage(IndigoMessages.EduLevel),
-                        myUI.getMessage(IndigoMessages.Start),
-                        myUI.getMessage(IndigoMessages.End),
-                        myUI.getMessage(IndigoMessages.Document)};
+                        myUI.getMessage(Messages.University),
+                        myUI.getMessage(Messages.Country),
+                        myUI.getMessage(Messages.Department),
+                        myUI.getMessage(Messages.EduLevel),
+                        myUI.getMessage(Messages.Start),
+                        myUI.getMessage(Messages.End),
+                        myUI.getMessage(Messages.Document)};
             } else {
                 plusSpouseEducationButton.setEnabled(true);
                 NATURAL_COL_ORDER_EDU = new String[]{Settings.button,
-                        myUI.getMessage(IndigoMessages.University),
-                        myUI.getMessage(IndigoMessages.Country),
-                        myUI.getMessage(IndigoMessages.Department),
-                        myUI.getMessage(IndigoMessages.EduLevel),
-                        myUI.getMessage(IndigoMessages.Start),
-                        myUI.getMessage(IndigoMessages.End)};
+                        myUI.getMessage(Messages.University),
+                        myUI.getMessage(Messages.Country),
+                        myUI.getMessage(Messages.Department),
+                        myUI.getMessage(Messages.EduLevel),
+                        myUI.getMessage(Messages.Start),
+                        myUI.getMessage(Messages.End)};
             }
             DbEmployeeEducation dbed = new DbEmployeeEducation();
             dbed.connect();
@@ -1232,8 +1232,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbed.close();
             t.setVisibleColumns((Object[]) NATURAL_COL_ORDER_EDU);
             t.setPageLength(t.size());
-            t.setColumnExpandRatio(myUI.getMessage(IndigoMessages.University), 1);
-            t.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Department), 1);
+            t.setColumnExpandRatio(myUI.getMessage(Messages.University), 1);
+            t.setColumnExpandRatio(myUI.getMessage(Messages.Department), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1271,22 +1271,22 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
         try {
             NATURAL_COL_ORDER_WORK = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.WorkPlace),
-                    myUI.getMessage(IndigoMessages.Sapat),
-                    myUI.getMessage(IndigoMessages.MainPosition),
-                    myUI.getMessage(IndigoMessages.ExtraPositions),
-                    myUI.getMessage(IndigoMessages.WorkingStatus),
-                    myUI.getMessage(IndigoMessages.Start),
-                    myUI.getMessage(IndigoMessages.End)};
+                    myUI.getMessage(Messages.WorkPlace),
+                    myUI.getMessage(Messages.Sapat),
+                    myUI.getMessage(Messages.MainPosition),
+                    myUI.getMessage(Messages.ExtraPositions),
+                    myUI.getMessage(Messages.WorkingStatus),
+                    myUI.getMessage(Messages.Start),
+                    myUI.getMessage(Messages.End)};
             DbEmployeeWork dbew = new DbEmployeeWork();
             dbew.connect();
             t.setContainerDataSource(dbew.execSQL(myUI, employeeID, own_id, this));
             dbew.close();
             t.setVisibleColumns((Object[]) NATURAL_COL_ORDER_WORK);
             t.setPageLength(t.size() > 0 ? t.size() : 1);
-            t.setColumnExpandRatio(myUI.getMessage(IndigoMessages.WorkPlace), 1);
-            t.setColumnExpandRatio(myUI.getMessage(IndigoMessages.MainPosition), 1);
-            t.setColumnExpandRatio(myUI.getMessage(IndigoMessages.ExtraPositions), 1);
+            t.setColumnExpandRatio(myUI.getMessage(Messages.WorkPlace), 1);
+            t.setColumnExpandRatio(myUI.getMessage(Messages.MainPosition), 1);
+            t.setColumnExpandRatio(myUI.getMessage(Messages.ExtraPositions), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1318,15 +1318,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void setQuestioningTable() {
         try {
             String[] NATURAL_COL_ORDER_QUESTIONING = new String[]{
-                    myUI.getMessage(IndigoMessages.Question),
-                    myUI.getMessage(IndigoMessages.Answer)};
+                    myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.Answer)};
             DbEmployeeQuestion dbq = new DbEmployeeQuestion();
             dbq.connect();
             questioningTable.setContainerDataSource(dbq.execSQL(myUI, employeeID, this));
             dbq.close();
             questioningTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_QUESTIONING);
-            questioningTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Question), 1);
-            questioningTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Answer), 1);
+            questioningTable.setColumnExpandRatio(myUI.getMessage(Messages.Question), 1);
+            questioningTable.setColumnExpandRatio(myUI.getMessage(Messages.Answer), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1338,8 +1338,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusLanguageButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_LANGUAGES = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.Language),
-                    myUI.getMessage(IndigoMessages.Level)};
+                    myUI.getMessage(Messages.Language),
+                    myUI.getMessage(Messages.Level)};
             DbEmployeeLanguage dbel = new DbEmployeeLanguage();
             dbel.connect();
             languagesTable.setContainerDataSource(
@@ -1347,8 +1347,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbel.close();
             languagesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_LANGUAGES);
             languagesTable.setPageLength(languagesTable.size() > 0 ? languagesTable.size() : 1);
-            languagesTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Language), 1);
-            languagesTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Level), 1);
+            languagesTable.setColumnExpandRatio(myUI.getMessage(Messages.Language), 1);
+            languagesTable.setColumnExpandRatio(myUI.getMessage(Messages.Level), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1375,11 +1375,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusCertificateButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_CERTIFICATES = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.Certificate),
-                    myUI.getMessage(IndigoMessages.GivenBy),
-                    myUI.getMessage(IndigoMessages.IssueDate),
-                    myUI.getMessage(IndigoMessages.Note),
-                    myUI.getMessage(IndigoMessages.Document)};
+                    myUI.getMessage(Messages.Certificate),
+                    myUI.getMessage(Messages.GivenBy),
+                    myUI.getMessage(Messages.IssueDate),
+                    myUI.getMessage(Messages.Note),
+                    myUI.getMessage(Messages.Document)};
             DbEmployeeCertificate dbec = new DbEmployeeCertificate();
             dbec.connect();
             certificatesTable.setContainerDataSource(
@@ -1387,8 +1387,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbec.close();
             certificatesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CERTIFICATES);
             certificatesTable.setPageLength(certificatesTable.size() > 0 ? certificatesTable.size() : 1);
-            certificatesTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Title), 1);
-            certificatesTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.GivenBy), 1);
+            certificatesTable.setColumnExpandRatio(myUI.getMessage(Messages.Title), 1);
+            certificatesTable.setColumnExpandRatio(myUI.getMessage(Messages.GivenBy), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1415,10 +1415,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusSeminarButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_SEMINARS = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.Title),
-                    myUI.getMessage(IndigoMessages.Subject),
-                    myUI.getMessage(IndigoMessages.Note),
-                    myUI.getMessage(IndigoMessages.IssueDate)};
+                    myUI.getMessage(Messages.Title),
+                    myUI.getMessage(Messages.Subject),
+                    myUI.getMessage(Messages.Note),
+                    myUI.getMessage(Messages.IssueDate)};
             DbEmployeeSeminar dbes = new DbEmployeeSeminar();
             dbes.connect();
             seminarsTable.setContainerDataSource(
@@ -1426,9 +1426,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbes.close();
             seminarsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_SEMINARS);
             seminarsTable.setPageLength(seminarsTable.size() > 0 ? seminarsTable.size() : 1);
-            seminarsTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Title), 1);
-            seminarsTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Subject), 1);
-            seminarsTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Note), 1);
+            seminarsTable.setColumnExpandRatio(myUI.getMessage(Messages.Title), 1);
+            seminarsTable.setColumnExpandRatio(myUI.getMessage(Messages.Subject), 1);
+            seminarsTable.setColumnExpandRatio(myUI.getMessage(Messages.Note), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1455,17 +1455,17 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusExamButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_EXAMS = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.Exam),
-                    myUI.getMessage(IndigoMessages.Score),
-                    myUI.getMessage(IndigoMessages.IssueDate),
-                    myUI.getMessage(IndigoMessages.Document)};
+                    myUI.getMessage(Messages.Exam),
+                    myUI.getMessage(Messages.Score),
+                    myUI.getMessage(Messages.IssueDate),
+                    myUI.getMessage(Messages.Document)};
             DbEmployeeExam dbex = new DbEmployeeExam();
             dbex.connect();
             examsTable.setContainerDataSource(dbex.execSQL(myUI, employeeID, this));
             dbex.close();
             examsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_EXAMS);
             examsTable.setPageLength(examsTable.size() > 0 ? examsTable.size() : 1);
-            examsTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Exam), 1);
+            examsTable.setColumnExpandRatio(myUI.getMessage(Messages.Exam), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1492,8 +1492,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusBranchButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_BRANCHES = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.Branch),
-                    myUI.getMessage(IndigoMessages.Main)};
+                    myUI.getMessage(Messages.Branch),
+                    myUI.getMessage(Messages.Main)};
             DbEmployeeBranch dbeb = new DbEmployeeBranch();
             dbeb.connect();
             branchesTable.setContainerDataSource(
@@ -1501,7 +1501,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbeb.close();
             branchesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_BRANCHES);
             branchesTable.setPageLength(branchesTable.size() > 0 ? branchesTable.size() : 1);
-            branchesTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Branch), 1);
+            branchesTable.setColumnExpandRatio(myUI.getMessage(Messages.Branch), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1526,11 +1526,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void setLessonsTable() {
         try {
             NATURAL_COL_ORDER_LESSONS = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.Lesson),
-                    myUI.getMessage(IndigoMessages.ClassName),
-                    myUI.getMessage(IndigoMessages.AcademicYear),
-                    myUI.getMessage(IndigoMessages.Hours),
-                    myUI.getMessage(IndigoMessages.ExtraHours)};
+                    myUI.getMessage(Messages.Lesson),
+                    myUI.getMessage(Messages.ClassName),
+                    myUI.getMessage(Messages.AcademicYear),
+                    myUI.getMessage(Messages.Hours),
+                    myUI.getMessage(Messages.ExtraHours)};
             DbEmployeeLessons dbel = new DbEmployeeLessons();
             dbel.connect();
             lessonsTable.setContainerDataSource(
@@ -1538,7 +1538,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbel.close();
             lessonsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_LESSONS);
             lessonsTable.setPageLength(lessonsCont.size() > 0 ? lessonsTable.size() : 1);
-            lessonsTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Lessons), 1);
+            lessonsTable.setColumnExpandRatio(myUI.getMessage(Messages.Lessons), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1548,18 +1548,18 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void setSupervisionTable() {
         try {
             NATURAL_COL_ORDER_SUPERVISION = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.ClassName),
-                    myUI.getMessage(IndigoMessages.FromDate),
-                    myUI.getMessage(IndigoMessages.TillDate),
-                    myUI.getMessage(IndigoMessages.Note)};
+                    myUI.getMessage(Messages.ClassName),
+                    myUI.getMessage(Messages.FromDate),
+                    myUI.getMessage(Messages.TillDate),
+                    myUI.getMessage(Messages.Note)};
             DbEmployeeOrder dbeo = new DbEmployeeOrder();
             dbeo.connect();
             supervisionTable.setContainerDataSource(dbeo.execSQL(myUI, employeeID, myUI.getUser().getSchool().getId(), this));
             dbeo.close();
             supervisionTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_SUPERVISION);
             supervisionTable.setPageLength(supervisionTable.size() > 0 ? supervisionTable.size() : 1);
-            supervisionTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.ClassName), 1);
-            supervisionTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Note), 1);
+            supervisionTable.setColumnExpandRatio(myUI.getMessage(Messages.ClassName), 1);
+            supervisionTable.setColumnExpandRatio(myUI.getMessage(Messages.Note), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1569,19 +1569,19 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void setOrdersTable() {
         try {
             NATURAL_COL_ORDER_ORDERS = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.OrderType),
-                    myUI.getMessage(IndigoMessages.Details),
-                    myUI.getMessage(IndigoMessages.FromDate),
-                    myUI.getMessage(IndigoMessages.TillDate),
-                    myUI.getMessage(IndigoMessages.Note)};
+                    myUI.getMessage(Messages.OrderType),
+                    myUI.getMessage(Messages.Details),
+                    myUI.getMessage(Messages.FromDate),
+                    myUI.getMessage(Messages.TillDate),
+                    myUI.getMessage(Messages.Note)};
             DbEmployeeOrder dbeo = new DbEmployeeOrder();
             dbeo.connect();
             ordersTable.setContainerDataSource(
                     dbeo.execSQL(myUI, employeeID, myUI.getUser().getSchool().getId(), currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr), this));
             dbeo.close();
             ordersTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_ORDERS);
-            ordersTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.OrderType), 1);
-            ordersTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Note), 1);
+            ordersTable.setColumnExpandRatio(myUI.getMessage(Messages.OrderType), 1);
+            ordersTable.setColumnExpandRatio(myUI.getMessage(Messages.Note), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1594,8 +1594,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbCon.connect();
             documentsDataTable.setContainerDataSource(dbCon.execSQL(myUI, employeeID, this));
             dbCon.close();
-            documentsDataTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Title), 1);
-            documentsDataTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Details), 1);
+            documentsDataTable.setColumnExpandRatio(myUI.getMessage(Messages.Title), 1);
+            documentsDataTable.setColumnExpandRatio(myUI.getMessage(Messages.Details), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1809,10 +1809,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         int total = 0;
         while (iter.hasNext()) {
             Integer next = iter.next();
-            str.append("&emsp;").append(workingStatCont.getContainerProperty(next, myUI.getMessage(IndigoMessages.Title)).getValue()).append(": ").append(workingStatCont.getContainerProperty(next, Settings.count).getValue());
+            str.append("&emsp;").append(workingStatCont.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).append(": ").append(workingStatCont.getContainerProperty(next, Settings.count).getValue());
             total += (Integer) workingStatCont.getContainerProperty(next, Settings.count).getValue();
         }
-        str.append("&emsp;").append(myUI.getMessage(IndigoMessages.Total)).append(": ").append(total);
+        str.append("&emsp;").append(myUI.getMessage(Messages.Total)).append(": ").append(total);
         workingStatTtlLb.setValue(str.toString());
     }
 
@@ -1844,7 +1844,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         buildFormLayout();
         buildInfoLayout();
 
-        Label lb = new Label(myUI.getMessage(IndigoMessages.MainInfo));
+        Label lb = new Label(myUI.getMessage(Messages.MainInfo));
         lb.setStyleName(ValoTheme.LABEL_LARGE);
         lb.setSizeUndefined();
 
@@ -1901,41 +1901,41 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private void updateInfoLayout() {
         if (employeesDataTable.getValue() != null) {
-            workingStatusLb.setValue("<b>" + myUI.getMessage(IndigoMessages.WorkingStatus) + ": </b>"
-                    + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.WorkingStatus)).getValue());
-            mainPositionLb.setValue("<b>" + myUI.getMessage(IndigoMessages.MainPosition) + ": </b>"
-                    + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.MainPosition)).getValue());
-            if (employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.ExtraPosition)).getValue() != null) {
-                extraPositionsLb.setValue("<b>" + myUI.getMessage(IndigoMessages.ExtraPosition) + ": </b>"
-                        + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.ExtraPosition)).getValue());
+            workingStatusLb.setValue("<b>" + myUI.getMessage(Messages.WorkingStatus) + ": </b>"
+                    + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.WorkingStatus)).getValue());
+            mainPositionLb.setValue("<b>" + myUI.getMessage(Messages.MainPosition) + ": </b>"
+                    + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.MainPosition)).getValue());
+            if (employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.ExtraPosition)).getValue() != null) {
+                extraPositionsLb.setValue("<b>" + myUI.getMessage(Messages.ExtraPosition) + ": </b>"
+                        + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.ExtraPosition)).getValue());
             } else {
-                extraPositionsLb.setValue("<b>" + myUI.getMessage(IndigoMessages.ExtraPosition) + ": </b>");
+                extraPositionsLb.setValue("<b>" + myUI.getMessage(Messages.ExtraPosition) + ": </b>");
             }
-            if (employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.MainBranch)).getValue() != null) {
-                mainBranchLb.setValue("<b>" + myUI.getMessage(IndigoMessages.MainBranch) + ": </b>"
-                        + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.MainBranch)).getValue());
+            if (employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.MainBranch)).getValue() != null) {
+                mainBranchLb.setValue("<b>" + myUI.getMessage(Messages.MainBranch) + ": </b>"
+                        + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.MainBranch)).getValue());
             } else {
-                mainBranchLb.setValue("<b>" + myUI.getMessage(IndigoMessages.MainBranch) + ": </b>");
+                mainBranchLb.setValue("<b>" + myUI.getMessage(Messages.MainBranch) + ": </b>");
             }
-            if (employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.ExtraBranches)).getValue() != null) {
-                extraBranchesLb.setValue("<b>" + myUI.getMessage(IndigoMessages.ExtraBranches) + ": </b>"
-                        + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.ExtraBranches)).getValue());
+            if (employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.ExtraBranches)).getValue() != null) {
+                extraBranchesLb.setValue("<b>" + myUI.getMessage(Messages.ExtraBranches) + ": </b>"
+                        + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.ExtraBranches)).getValue());
             } else {
-                extraBranchesLb.setValue("<b>" + myUI.getMessage(IndigoMessages.ExtraBranches) + ": </b>");
+                extraBranchesLb.setValue("<b>" + myUI.getMessage(Messages.ExtraBranches) + ": </b>");
             }
-            totalHoursLb.setValue("<b>" + myUI.getMessage(IndigoMessages.TotalHours) + myUI.getUser().getCurrent_year().getName() + ": </b>"
-                    + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.Hours)).getValue()
-                    + ", <b>" + myUI.getMessage(IndigoMessages.ExtraHours) + ": </b>"
-                    + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.ExtraHours)).getValue());
+            totalHoursLb.setValue("<b>" + myUI.getMessage(Messages.TotalHours) + myUI.getUser().getCurrent_year().getName() + ": </b>"
+                    + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.Hours)).getValue()
+                    + ", <b>" + myUI.getMessage(Messages.ExtraHours) + ": </b>"
+                    + employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.ExtraHours)).getValue());
             mainPositionCB.setValue(employeesDataTable.getContainerProperty(employeeID, Settings.position_id).getValue());
             contractCategoryCB.setValue(employeesDataTable.getContainerProperty(employeeID, Settings.salary_category_id).getValue());
         } else {
-            workingStatusLb.setValue("<b>" + myUI.getMessage(IndigoMessages.WorkingStatus) + ": </b>");
-            mainPositionLb.setValue("<b>" + myUI.getMessage(IndigoMessages.MainPosition) + ": </b>");
-            extraPositionsLb.setValue("<b>" + myUI.getMessage(IndigoMessages.ExtraPosition) + ": </b>");
-            mainBranchLb.setValue("<b>" + myUI.getMessage(IndigoMessages.MainBranch) + ": </b>");
-            extraBranchesLb.setValue("<b>" + myUI.getMessage(IndigoMessages.ExtraBranches) + ": </b>");
-            totalHoursLb.setValue("<b>" + myUI.getMessage(IndigoMessages.TotalHours) + myUI.getUser().getCurrent_year().getName() + ": </b>");
+            workingStatusLb.setValue("<b>" + myUI.getMessage(Messages.WorkingStatus) + ": </b>");
+            mainPositionLb.setValue("<b>" + myUI.getMessage(Messages.MainPosition) + ": </b>");
+            extraPositionsLb.setValue("<b>" + myUI.getMessage(Messages.ExtraPosition) + ": </b>");
+            mainBranchLb.setValue("<b>" + myUI.getMessage(Messages.MainBranch) + ": </b>");
+            extraBranchesLb.setValue("<b>" + myUI.getMessage(Messages.ExtraBranches) + ": </b>");
+            totalHoursLb.setValue("<b>" + myUI.getMessage(Messages.TotalHours) + myUI.getUser().getCurrent_year().getName() + ": </b>");
             mainPositionCB.setValue(null);
             contractCategoryCB.setValue(((IndexedContainer) contractCategoryCB.getContainerDataSource()).lastItemId());
         }
@@ -1947,24 +1947,24 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         formLay.setMargin(false);
 
         loginTF = createTextField(null, null, new RegexpValidator("^[1-9][0-9][0-9][0-9][0-9][0-9]$", true,
-                myUI.getMessage(IndigoMessages.NotificationWrongValue)), true);
-        loginTF.setCaption(myUI.getMessage(IndigoMessages.Id));
+                myUI.getMessage(Messages.NotificationWrongValue)), true);
+        loginTF.setCaption(myUI.getMessage(Messages.Id));
         loginTF.addValueChangeListener(this);
         formLay.addComponent(loginTF);
 
         HorizontalLayout passwordLay = new HorizontalLayout();
-        passwordLay.setCaption(myUI.getMessage(IndigoMessages.Password));
+        passwordLay.setCaption(myUI.getMessage(Messages.Password));
         passwordLay.setSpacing(true);
         passwordLay.setWidth(Settings.PERCENTS100);
 
         passwordTF = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 20, true), false);
-        passwordTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                myUI.getMessage(Messages.NotificationWrongValue), null, 20, true), false);
+        passwordTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         passwordLay.addComponent(passwordTF);
         passwordLay.setExpandRatio(passwordTF, 1);
 
         generateBtn = new Button();
-        generateBtn.setDescription(myUI.getMessage(IndigoMessages.GenerateButton));
+        generateBtn.setDescription(myUI.getMessage(Messages.GenerateButton));
         generateBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         generateBtn.setIcon(FontAwesome.REFRESH);
@@ -1974,48 +1974,48 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         formLay.addComponent(passwordLay);
 
         surnameTF = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 100, false), true);
-        surnameTF.setCaption(myUI.getMessage(IndigoMessages.LastName));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false), true);
+        surnameTF.setCaption(myUI.getMessage(Messages.LastName));
         formLay.addComponent(surnameTF);
 
         nameTF = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 100, false), true);
-        nameTF.setCaption(myUI.getMessage(IndigoMessages.FirstName));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false), true);
+        nameTF.setCaption(myUI.getMessage(Messages.FirstName));
         formLay.addComponent(nameTF);
 
         middleNameTF = createTextField(null, null, new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 100, true), false);
-        middleNameTF.setCaption(myUI.getMessage(IndigoMessages.MiddleName));
+                myUI.getMessage(Messages.NotificationWrongValue), null, 100, true), false);
+        middleNameTF.setCaption(myUI.getMessage(Messages.MiddleName));
         formLay.addComponent(middleNameTF);
 
-        birthDateDF = createDateField(today, null, myUI.getMessage(IndigoMessages.DateOfBirth),
+        birthDateDF = createDateField(today, null, myUI.getMessage(Messages.DateOfBirth),
                 true, Settings.datePattern, Resolution.DAY);
         formLay.addComponent(birthDateDF);
 
         genderCB = createCombobox(0, null, Settings.dbGender, true);
-        genderCB.setCaption(myUI.getMessage(IndigoMessages.Gender));
+        genderCB.setCaption(myUI.getMessage(Messages.Gender));
         formLay.addComponent(genderCB);
 
         nationalityCB = createCombobox(0, null, Settings.dbNationality, true);
-        nationalityCB.setCaption(myUI.getMessage(IndigoMessages.Nationality));
+        nationalityCB.setCaption(myUI.getMessage(Messages.Nationality));
         formLay.addComponent(nationalityCB);
 
         citizenshipCB = createCombobox(0, null, Settings.dbCountry, true);
-        citizenshipCB.setCaption(myUI.getMessage(IndigoMessages.Citizenship));
+        citizenshipCB.setCaption(myUI.getMessage(Messages.Citizenship));
         formLay.addComponent(citizenshipCB);
 
         martialStatusCB = createCombobox(0, null, Settings.dbMartialStatus, true);
-        martialStatusCB.setCaption(myUI.getMessage(IndigoMessages.MartialStatus));
+        martialStatusCB.setCaption(myUI.getMessage(Messages.MartialStatus));
         martialStatusCB.addValueChangeListener(this);
         formLay.addComponent(martialStatusCB);
 
-        mainPositionCB = new ComboBox(myUI.getMessage(IndigoMessages.MainPosition));
+        mainPositionCB = new ComboBox(myUI.getMessage(Messages.MainPosition));
         mainPositionCB.setNullSelectionAllowed(false);
         mainPositionCB.setRequired(true);
         mainPositionCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-        mainPositionCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        mainPositionCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         mainPositionCB.setWidth(Settings.PERCENTS100);
-        mainPositionCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        mainPositionCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         mainPositionCB.setFilteringMode(FilteringMode.CONTAINS);
         formLay.addComponent(mainPositionCB);
 
@@ -2030,13 +2030,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             logger.catching(ex);
         }
 
-        contractCategoryCB = new ComboBox(myUI.getMessage(IndigoMessages.SalaryCategory));
+        contractCategoryCB = new ComboBox(myUI.getMessage(Messages.SalaryCategory));
         contractCategoryCB.setNullSelectionAllowed(false);
         contractCategoryCB.setRequired(true);
         contractCategoryCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-        contractCategoryCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        contractCategoryCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         contractCategoryCB.setWidth(Settings.PERCENTS100);
-        contractCategoryCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        contractCategoryCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         contractCategoryCB.setFilteringMode(FilteringMode.CONTAINS);
         contractCategoryCB.setEnabled(currentUser.hasRole(Settings.rnAdmin) || currentUser.hasRole(Settings.rnHr));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView
@@ -2064,7 +2064,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         photoEmb.setImmediate(true);
         photoEmb.setHeight("140px");
 
-        photoUpl = createUpload(myUI.getMessage(IndigoMessages.Upload), true);
+        photoUpl = createUpload(myUI.getMessage(Messages.Upload), true);
     }
 
     private void buildButtonsLayout() {
@@ -2074,7 +2074,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(IndigoMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -2082,7 +2082,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(IndigoMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -2090,7 +2090,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(IndigoMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
@@ -2101,14 +2101,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(IndigoMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
@@ -2116,7 +2116,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         cvBtn = new Button();
         cvBtn.setEnabled(false);
-        cvBtn.setDescription(myUI.getMessage(IndigoMessages.CvButton));
+        cvBtn.setDescription(myUI.getMessage(Messages.CvButton));
         cvBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cvBtn.setIcon(FontAwesome.INFO);
         cvBtn.addClickListener(this);
@@ -2152,14 +2152,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             for (Object next : ((IndexedContainer) t
                     .getContainerDataSource()).getItemIds()) {
                 (((HorizontalLayout) t.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.Document)).getValue()).getComponent(1)).setEnabled(true);
+                        myUI.getMessage(Messages.Document)).getValue()).getComponent(1)).setEnabled(true);
             }
         }
     }
 
     private boolean validateTable(Table t, boolean isEmptyAllowed, boolean isDocumentsRequired) {
         if (t.size() == 0 && !isEmptyAllowed) {
-            Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+            Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                     Notification.Type.WARNING_MESSAGE);
             return false;
         } else {
@@ -2190,7 +2190,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         for (Object next : ((IndexedContainer) branchesTable
                 .getContainerDataSource()).getItemIds()) {
             if (((CheckBox) branchesTable.getItem(next).getItemProperty(
-                    myUI.getMessage(IndigoMessages.Main)).getValue()).getValue()) {
+                    myUI.getMessage(Messages.Main)).getValue()).getValue()) {
                 counter++;
             }
             if (counter > 1) {
@@ -2206,7 +2206,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         while (iter2.hasPrevious()) {
             Object next2 = iter2.previous();
             Item lastItem = ordersTable.getItem(next2);
-            int hr_order_id = (Integer) ((ComboBox) lastItem.getItemProperty(myUI.getMessage(IndigoMessages.OrderType)).getValue()).getValue();
+            int hr_order_id = (Integer) ((ComboBox) lastItem.getItemProperty(myUI.getMessage(Messages.OrderType)).getValue()).getValue();
             Iterator<?> iter = ((IndexedContainer) ordersTable.getContainerDataSource()).getItemIds().iterator();
             while (iter.hasNext()) {
                 Object next = iter.next();
@@ -2216,13 +2216,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 if (iter.hasNext()) {
                     if (hr_order_id == 3 || hr_order_id == 1 || hr_order_id == 2 || hr_order_id == 7) {
                         if (hr_order_id != 3 || (Integer) ((ComboBox) ordersCont.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.OrderType)).getValue()).getValue() == hr_order_id) {
-                            if (ordersCont.getContainerProperty(next, myUI.getMessage(IndigoMessages.Details)).getValue() != null
-                                    && lastItem.getItemProperty(myUI.getMessage(IndigoMessages.Details)).getValue() != null
-                                    && ((ComboBox) ordersCont.getContainerProperty(next, myUI.getMessage(IndigoMessages.Details)).getValue()).getValue().equals(((ComboBox) lastItem.getItemProperty(myUI.getMessage(IndigoMessages.Details)).getValue()).getValue())) {
-                                if (((DateField) ordersCont.getContainerProperty(next, myUI.getMessage(IndigoMessages.TillDate)).getValue()).getValue() == null
-                                        || ((DateField) lastItem.getItemProperty(myUI.getMessage(IndigoMessages.FromDate)).getValue()).getValue().before(
-                                        ((DateField) ordersCont.getContainerProperty(next, myUI.getMessage(IndigoMessages.TillDate)).getValue()).getValue())) {
+                                myUI.getMessage(Messages.OrderType)).getValue()).getValue() == hr_order_id) {
+                            if (ordersCont.getContainerProperty(next, myUI.getMessage(Messages.Details)).getValue() != null
+                                    && lastItem.getItemProperty(myUI.getMessage(Messages.Details)).getValue() != null
+                                    && ((ComboBox) ordersCont.getContainerProperty(next, myUI.getMessage(Messages.Details)).getValue()).getValue().equals(((ComboBox) lastItem.getItemProperty(myUI.getMessage(Messages.Details)).getValue()).getValue())) {
+                                if (((DateField) ordersCont.getContainerProperty(next, myUI.getMessage(Messages.TillDate)).getValue()).getValue() == null
+                                        || ((DateField) lastItem.getItemProperty(myUI.getMessage(Messages.FromDate)).getValue()).getValue().before(
+                                        ((DateField) ordersCont.getContainerProperty(next, myUI.getMessage(Messages.TillDate)).getValue()).getValue())) {
                                     return false;
                                 }
                             }
@@ -2238,7 +2238,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         uploadProgressBar = new ProgressBar();
         uploadProgressBar.setWidth("90%");
 
-        statusWindow = new Window(myUI.getMessage(IndigoMessages.UploadStatus));
+        statusWindow = new Window(myUI.getMessage(Messages.UploadStatus));
         statusWindow.setResizable(false);
         statusWindow.setDraggable(false);
         statusWindow.setModal(true);
@@ -2262,7 +2262,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         l.addComponent(cancelButton);
         l.setComponentAlignment(cancelButton, Alignment.MIDDLE_LEFT);
 
-        uploadProgressBar.setCaption(myUI.getMessage(IndigoMessages.Progress));
+        uploadProgressBar.setCaption(myUI.getMessage(Messages.Progress));
         uploadProgressBar.setVisible(false);
         l.addComponent(uploadProgressBar);
         l.setExpandRatio(uploadProgressBar, 1);
@@ -2307,13 +2307,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 }
                 if (isPhoto) {
                     photoName = null;
-                    Notification.show(myUI.getMessage(IndigoMessages.OnlyJpg), Notification.Type.WARNING_MESSAGE);
+                    Notification.show(myUI.getMessage(Messages.OnlyJpg), Notification.Type.WARNING_MESSAGE);
                 } else {
                     fileName = null;
                     Button b = (Button) upl.getData();
                     b.setEnabled(false);
                     b.setData(null);
-                    Notification.show(myUI.getMessage(IndigoMessages.OnlyJpgOrPdf), Notification.Type.WARNING_MESSAGE);
+                    Notification.show(myUI.getMessage(Messages.OnlyJpgOrPdf), Notification.Type.WARNING_MESSAGE);
                 }
             } else if (contentLength >= 15000000) {
                 try {
@@ -2327,7 +2327,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 Button b = (Button) upl.getData();
                 b.setEnabled(false);
                 b.setData(null);
-                Notification.show(myUI.getMessage(IndigoMessages.Maxsize), Notification.Type.WARNING_MESSAGE);
+                Notification.show(myUI.getMessage(Messages.Maxsize), Notification.Type.WARNING_MESSAGE);
             } else {
                 uploadProgressBar.setValue(readBytes / (float) contentLength);
             }
@@ -2364,7 +2364,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 }
                 b.setData(attachment);
             }
-            Notification.show(myUI.getMessage(IndigoMessages.UploadedSuccessfully),
+            Notification.show(myUI.getMessage(Messages.UploadedSuccessfully),
                     Notification.Type.TRAY_NOTIFICATION);
         });
 
@@ -2372,7 +2372,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             if (statusWindow != null) {
                 statusWindow.close();
             }
-            Notification.show(myUI.getMessage(IndigoMessages.UploadFailed), Notification.Type.ERROR_MESSAGE);
+            Notification.show(myUI.getMessage(Messages.UploadFailed), Notification.Type.ERROR_MESSAGE);
             try {
                 myFile.delete();
             } catch (Exception ex) {
@@ -2490,29 +2490,29 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         if (permissionCont != null) {
             for (int i = 0; i < permissionCont.size(); i++) {
                 ((ComboBoxMultiselect) permissionCont.getContainerProperty(permissionCont.getIdByIndex(i),
-                        myUI.getMessage(IndigoMessages.Functions)).getValue()).setValue(null);
+                        myUI.getMessage(Messages.Functions)).getValue()).setValue(null);
             }
         }
     }
 
     private void fillFields() {
         loginTF.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
-                employeeID, myUI.getMessage(IndigoMessages.Id)).getValue().toString());
+                employeeID, myUI.getMessage(Messages.Id)).getValue().toString());
         nameTF.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
-                employeeID, myUI.getMessage(IndigoMessages.FirstName)).getValue().toString());
+                employeeID, myUI.getMessage(Messages.FirstName)).getValue().toString());
         surnameTF.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
-                employeeID, myUI.getMessage(IndigoMessages.LastName)).getValue().toString());
+                employeeID, myUI.getMessage(Messages.LastName)).getValue().toString());
         if (employeesDataTable.getContainerDataSource().getContainerProperty(
-                employeeID, myUI.getMessage(IndigoMessages.MiddleName)).getValue() != null) {
+                employeeID, myUI.getMessage(Messages.MiddleName)).getValue() != null) {
             middleNameTF.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
-                    employeeID, myUI.getMessage(IndigoMessages.MiddleName)).getValue().toString());
+                    employeeID, myUI.getMessage(Messages.MiddleName)).getValue().toString());
         } else {
             middleNameTF.setValue("");
         }
         genderCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 employeeID, Settings.gender_id).getValue());
         birthDateDF.setValue((Date) employeesDataTable.getContainerDataSource().getContainerProperty(
-                employeeID, myUI.getMessage(IndigoMessages.DateOfBirth)).getValue());
+                employeeID, myUI.getMessage(Messages.DateOfBirth)).getValue());
         nationalityCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 employeeID, Settings.nationality_id).getValue());
         citizenshipCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
@@ -2524,12 +2524,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         contractCategoryCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 employeeID, Settings.salary_category_id).getValue());
         if (employeesDataTable.getContainerProperty(employeeID,
-                myUI.getMessage(IndigoMessages.Photo)).getValue() != null) {
+                myUI.getMessage(Messages.Photo)).getValue() != null) {
             photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS_HR
                     + employeesDataTable.getContainerProperty(employeeID,
-                    myUI.getMessage(IndigoMessages.Photo)).getValue().toString())));
+                    myUI.getMessage(Messages.Photo)).getValue().toString())));
             photoName = employeesDataTable.getContainerProperty(employeeID,
-                    myUI.getMessage(IndigoMessages.Photo)).getValue().toString();
+                    myUI.getMessage(Messages.Photo)).getValue().toString();
         } else {
             photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS_HR + "no_photo.jpg")));
             photoName = null;
@@ -2560,7 +2560,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
             if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision)) {
                 canBeAdvisorCkb.setValue((Boolean) employeesDataTable.getContainerProperty(
-                        employeeID, myUI.getMessage(IndigoMessages.CanBeAdvisor)).getValue());
+                        employeeID, myUI.getMessage(Messages.CanBeAdvisor)).getValue());
                 setSupervisionTable();
             }
             if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
@@ -2569,10 +2569,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (tabs.getSelectedTab() == tabs.getTab(permissionsLay).getComponent()) {
             if (employeesDataTable.getContainerDataSource().
                     getContainerProperty(employeeID, myUI.getMessage(
-                            IndigoMessages.Permissions)).getValue() != null) {
+                            Messages.Permissions)).getValue() != null) {
                 setPermTable_options(employeesDataTable.getContainerDataSource().
                         getContainerProperty(employeeID, myUI.getMessage(
-                                IndigoMessages.Permissions)).getValue().toString());
+                                Messages.Permissions)).getValue().toString());
             } else {
                 clearPermissionsTable();
             }
@@ -2614,16 +2614,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 Employee employee = new Employee();
                 Item item = employeesDataTable.getItem(employeeID);
                 employee.setId(employeeID);
-                employee.setLogin(item.getItemProperty(myUI.getMessage(IndigoMessages.Id)).getValue().toString());
-                employee.setName(item.getItemProperty(myUI.getMessage(IndigoMessages.FirstName)).getValue().toString());
-                employee.setSurname(item.getItemProperty(myUI.getMessage(IndigoMessages.LastName)).getValue().toString());
-                if (item.getItemProperty(myUI.getMessage(IndigoMessages.MiddleName)).getValue() != null) {
-                    employee.setMiddle_name(item.getItemProperty(myUI.getMessage(IndigoMessages.MiddleName)).getValue().toString());
+                employee.setLogin(item.getItemProperty(myUI.getMessage(Messages.Id)).getValue().toString());
+                employee.setName(item.getItemProperty(myUI.getMessage(Messages.FirstName)).getValue().toString());
+                employee.setSurname(item.getItemProperty(myUI.getMessage(Messages.LastName)).getValue().toString());
+                if (item.getItemProperty(myUI.getMessage(Messages.MiddleName)).getValue() != null) {
+                    employee.setMiddle_name(item.getItemProperty(myUI.getMessage(Messages.MiddleName)).getValue().toString());
                 }
-                if (item.getItemProperty(myUI.getMessage(IndigoMessages.Photo)).getValue() != null) {
-                    employee.setPhoto(item.getItemProperty(myUI.getMessage(IndigoMessages.Photo)).getValue().toString());
+                if (item.getItemProperty(myUI.getMessage(Messages.Photo)).getValue() != null) {
+                    employee.setPhoto(item.getItemProperty(myUI.getMessage(Messages.Photo)).getValue().toString());
                 }
-                employee.setBirth_date((Date) item.getItemProperty(myUI.getMessage(IndigoMessages.DateOfBirth)).getValue());
+                employee.setBirth_date((Date) item.getItemProperty(myUI.getMessage(Messages.DateOfBirth)).getValue());
 
                 EmployeeExtraInfo employeeExtraInfo = null;
                 try {
@@ -2646,22 +2646,22 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     ex.printStackTrace();
                 }
 
-                employeeExtraInfo.setMainPosition(item.getItemProperty(myUI.getMessage(IndigoMessages.MainPosition)).getValue().toString());
-                if (item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraPosition)).getValue() != null) {
-                    employeeExtraInfo.setExtraPositions(item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraPosition)).getValue().toString());
+                employeeExtraInfo.setMainPosition(item.getItemProperty(myUI.getMessage(Messages.MainPosition)).getValue().toString());
+                if (item.getItemProperty(myUI.getMessage(Messages.ExtraPosition)).getValue() != null) {
+                    employeeExtraInfo.setExtraPositions(item.getItemProperty(myUI.getMessage(Messages.ExtraPosition)).getValue().toString());
                 }
-                if (item.getItemProperty(myUI.getMessage(IndigoMessages.MainBranch)).getValue() != null) {
-                    employeeExtraInfo.setMainBranch(item.getItemProperty(myUI.getMessage(IndigoMessages.MainBranch)).getValue().toString());
+                if (item.getItemProperty(myUI.getMessage(Messages.MainBranch)).getValue() != null) {
+                    employeeExtraInfo.setMainBranch(item.getItemProperty(myUI.getMessage(Messages.MainBranch)).getValue().toString());
                 }
-                if (item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraBranches)).getValue() != null) {
-                    employeeExtraInfo.setExtraBranches(item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraBranches)).getValue().toString());
+                if (item.getItemProperty(myUI.getMessage(Messages.ExtraBranches)).getValue() != null) {
+                    employeeExtraInfo.setExtraBranches(item.getItemProperty(myUI.getMessage(Messages.ExtraBranches)).getValue().toString());
                 }
                 employeeExtraInfo.setSchool(myUI.getUser().getSchool().getName_ru());
-                employeeExtraInfo.setWorkingStatus(item.getItemProperty(myUI.getMessage(IndigoMessages.WorkingStatus)).getValue().toString());
-                employeeExtraInfo.setHours((Integer) item.getItemProperty(myUI.getMessage(IndigoMessages.Hours)).getValue());
-                employeeExtraInfo.setExtraHours((Integer) item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraHours)).getValue());
-                employeeExtraInfo.setCanBeAdvisor((Boolean) item.getItemProperty(myUI.getMessage(IndigoMessages.CanBeAdvisor)).getValue() ?
-                        myUI.getMessage(IndigoMessages.Yes) : myUI.getMessage(IndigoMessages.No));
+                employeeExtraInfo.setWorkingStatus(item.getItemProperty(myUI.getMessage(Messages.WorkingStatus)).getValue().toString());
+                employeeExtraInfo.setHours((Integer) item.getItemProperty(myUI.getMessage(Messages.Hours)).getValue());
+                employeeExtraInfo.setExtraHours((Integer) item.getItemProperty(myUI.getMessage(Messages.ExtraHours)).getValue());
+                employeeExtraInfo.setCanBeAdvisor((Boolean) item.getItemProperty(myUI.getMessage(Messages.CanBeAdvisor)).getValue() ?
+                        myUI.getMessage(Messages.Yes) : myUI.getMessage(Messages.No));
                 myUI.addWindow(new EmployeeCvWindow(myUI, employee, employeeExtraInfo, myUI.getUser().getCurrent_year().getName()));
             }
         } else if (source == cancelBtn) {
@@ -2701,49 +2701,49 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 if (validate(leftLay, false)) {
                     if (tabs.getSelectedTab() == tabs.getTab(contactInfoLay).getComponent()
                             && (!validateTable(phonesTable, noPhonesCkb.getValue(), false) || !validate(contactInfoLay, false))) {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()
                             && (!validateTable(contractsTable, true, false))) {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()
                             && (!validateTable(childrenTable, noChildrenCkb.getValue(), false)
                             || !validateTable(spouseEducationTable, noSpouseEducationCkb.getValue(), false)
                             || !validateTable(spouseWorkPlacesTable, noSpouseWorkPlacesCkb.getValue(), false)
                             || !validate(familyInfoLay, false))) {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(extraInfoLay).getComponent()
                             && (!validateTable(questioningTable, true, false) || !validate(extraInfoLay, false))) {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent()
                             && (!validateTable(languagesTable, noLanguagesCkb.getValue(), false)
                             || !validateTable(examsTable, noExamsCkb.getValue(), true)
                             || !validateTable(certificatesTable, noCertificatesCkb.getValue(), true)
                             || !validateTable(seminarsTable, noSeminarsCkb.getValue(), false))) {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent()
                             && !validateMainBranches()) {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationOnlyOneMain),
+                        Notification.show(myUI.getMessage(Messages.NotificationOnlyOneMain),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent()
                             && (!validateTable(educationTable, noEducationCkb.getValue(), true)
                             || !validateTable(workPlacesTable, noWorkPlacesCkb.getValue(), false)
                             || !validateTable(branchesTable, noBranchesCkb.getValue(), false)
                             || !validate(profInfoLay, false))) {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()
                             && currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":"
                             + Settings.prmOrganizeLessons) && !validateTable(lessonsTable, !canBeAdvisorCkb.getValue(), false)) {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(ordersInfoLay).getComponent()
                             && (!validateTable(ordersTable, true, false) || !validateOrdersTable())) {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else {
                         DbEmployee dbe = new DbEmployee();
@@ -2786,10 +2786,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                         && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), Settings.position_id).getValue() != 115
                                         && (extra_position_ids == null || !extra_position_ids.contains("115"))
                                         && mainPositionCB.getContainerProperty(mainPositionCB.getValue(),
-                                        myUI.getMessage(IndigoMessages.Permissions)).getValue() != null) {
+                                        myUI.getMessage(Messages.Permissions)).getValue() != null) {
                                     insertPermissions(loginTF.getValue(),
                                             mainPositionCB.getContainerProperty(mainPositionCB.getValue(),
-                                                    myUI.getMessage(IndigoMessages.Permissions)).getValue().toString());
+                                                    myUI.getMessage(Messages.Permissions)).getValue().toString());
                                 }
                                 DbAccCategory dba = new DbAccCategory();
                                 dba.connect();
@@ -2801,25 +2801,25 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                 ac.setSchool_id(myUI.getUser().getSchool().getId());
                                 ac.setCode(employee.getLogin());
                                 ac.setParent_code(contractCategoryCB.getContainerProperty(contractCategoryCB.getValue(),
-                                        myUI.getMessage(IndigoMessages.Code)).getValue().toString());
+                                        myUI.getMessage(Messages.Code)).getValue().toString());
                                 ac.setParent_id((Integer) contractCategoryCB.getValue());
                                 ac.setModified_employee_id(myUI.getUser().getId());
                                 int acc_id = dba.exec_insert(ac);
                                 dba.close();
                                 addDataContainerItem(id, acc_id);
-                                Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                                 prepareNormalMode();
                                 passwordTF.setValue("");
                                 workingStatCont.getContainerProperty(2, Settings.count)
                                         .setValue(((Integer) workingStatCont.getContainerProperty(2, Settings.count).getValue()) + 1);
                                 repaint();
                             } else {
-                                Notification.show(myUI.getMessage(IndigoMessages.CanNotSaveIdNumber), Notification.Type.WARNING_MESSAGE);
+                                Notification.show(myUI.getMessage(Messages.CanNotSaveIdNumber), Notification.Type.WARNING_MESSAGE);
                                 prepareModificationMode();
                             }
                         } else {
                             String oldLogin = employeesDataTable.getContainerDataSource()
-                                    .getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.Id)).getValue().toString();
+                                    .getContainerProperty(employeeID, myUI.getMessage(Messages.Id)).getValue().toString();
                             int status = 0;
                             Employee e = getEmployee((Integer) employeesDataTable.getContainerProperty(employeeID, Settings.id).getValue());
                             try {
@@ -2836,7 +2836,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                             ac.setStatus_id(2);
                             ac.setCode(e.getLogin());
                             ac.setParent_code(contractCategoryCB.getContainerProperty(contractCategoryCB.getValue(),
-                                    myUI.getMessage(IndigoMessages.Code)).getValue().toString());
+                                    myUI.getMessage(Messages.Code)).getValue().toString());
                             ac.setParent_id((Integer) contractCategoryCB.getValue());
                             ac.setModified_employee_id(myUI.getUser().getId());
                             dba.exec_update(ac);
@@ -2890,7 +2890,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision)) {
                                         dbe.exec_update(employeeID, canBeAdvisorCkb.getValue());
                                         employeesDataTable.getContainerProperty(employeeID,
-                                                myUI.getMessage(IndigoMessages.CanBeAdvisor)).setValue(canBeAdvisorCkb.getValue());
+                                                myUI.getMessage(Messages.CanBeAdvisor)).setValue(canBeAdvisorCkb.getValue());
                                         insertSupervision(employeeID);
                                         setSupervisionTable();
                                     }
@@ -2916,10 +2916,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     }
                                     if (employeesDataTable.getContainerDataSource().
                                             getContainerProperty(employeeID, myUI.getMessage(
-                                                    IndigoMessages.Permissions)).getValue() != null) {
+                                                    Messages.Permissions)).getValue() != null) {
                                         setPermTable_options(employeesDataTable.getContainerDataSource().
                                                 getContainerProperty(employeeID, myUI.getMessage(
-                                                        IndigoMessages.Permissions)).getValue().toString());
+                                                        Messages.Permissions)).getValue().toString());
                                     } else {
                                         clearPermissionsTable();
                                     }
@@ -2974,17 +2974,17 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     logger.error(ex);
                                     logger.catching(ex);
                                 }
-                                Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                                Notification.show(myUI.getMessage(Messages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
                             } else {
-                                Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                                Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                         Notification.Type.WARNING_MESSAGE);
                             }
                         }
                         dbe.close();
                     }
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception ex) {
@@ -2993,15 +2993,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             }
         } else if (source == deleteBtn) {
             if (employeeID != 0) {
-                ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                        myUI.getMessage(IndigoMessages.ConfirmStudentDeletion)
+                ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                        myUI.getMessage(Messages.ConfirmStudentDeletion)
                                 + " " + employeesDataTable.getContainerProperty(employeeID,
-                                myUI.getMessage(IndigoMessages.FirstName)).getValue().toString()
+                                myUI.getMessage(Messages.FirstName)).getValue().toString()
                                 + " " + employeesDataTable.getContainerProperty(employeeID,
-                                myUI.getMessage(IndigoMessages.LastName)).getValue().toString()
+                                myUI.getMessage(Messages.LastName)).getValue().toString()
                                 + "?",
-                        myUI.getMessage(IndigoMessages.Yes),
-                        myUI.getMessage(IndigoMessages.No),
+                        myUI.getMessage(Messages.Yes),
+                        myUI.getMessage(Messages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 execDelete();
@@ -3052,37 +3052,37 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 logger.catching(ex);
             }
             int type_id = (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
-                    myUI.getMessage(IndigoMessages.AgreementType)).getValue()).getValue();
+                    myUI.getMessage(Messages.AgreementType)).getValue()).getValue();
             if (employeeInfo.getContact() == null || employeeInfo.getContact().getPassport() == null ||
                     employeeInfo.getContact().getPassportGiven() == null ||
                     employeeInfo.getContact().getPassportDate() == null) {
-                Notification.show(myUI.getMessage(IndigoMessages.NotificationNoPassportInfo),
+                Notification.show(myUI.getMessage(Messages.NotificationNoPassportInfo),
                         Notification.Type.WARNING_MESSAGE);
             } else if (!validate(contractExtraInfoLay, false)) {
-                Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                         Notification.Type.WARNING_MESSAGE);
             } else if (type_id == 3 && employeesDataTable.getContainerProperty(employeeID,
-                    myUI.getMessage(IndigoMessages.MainBranch)).getValue() == null) {
-                Notification.show(myUI.getMessage(IndigoMessages.NotificationNoBranchInfo),
+                    myUI.getMessage(Messages.MainBranch)).getValue() == null) {
+                Notification.show(myUI.getMessage(Messages.NotificationNoBranchInfo),
                         Notification.Type.WARNING_MESSAGE);
             } else {
                 employeeInfo.setContract(saveContractExtraInfo(source.getData(), new EmployeeContract()));
                 employeeInfo.getContract().setCreationDate(((DateField) contractsTable.getContainerProperty(source.getData(),
-                        myUI.getMessage(IndigoMessages.CreationDate)).getValue()).getValue());
+                        myUI.getMessage(Messages.CreationDate)).getValue()).getValue());
                 employeeInfo.getContract().setFromDate(((DateField) contractsTable.getContainerProperty(source.getData(),
-                        myUI.getMessage(IndigoMessages.Start)).getValue()).getValue());
+                        myUI.getMessage(Messages.Start)).getValue()).getValue());
                 employeeInfo.getContract().setTillDate(((DateField) contractsTable.getContainerProperty(source.getData(),
-                        myUI.getMessage(IndigoMessages.End)).getValue()).getValue());
+                        myUI.getMessage(Messages.End)).getValue()).getValue());
                 employeeInfo.getContract().setSalary((((TextField) contractsTable.getItem(source.getData()).getItemProperty(
-                        myUI.getMessage(IndigoMessages.SalaryAmount)).getValue()).getValue()));
+                        myUI.getMessage(Messages.SalaryAmount)).getValue()).getValue()));
                 employeeInfo.setEmployeeName(nameTF.getValue());
                 employeeInfo.setEmployeeSurname(surnameTF.getValue());
                 employeeInfo.setEmployeeMiddleName(middleNameTF.getValue());
                 employeeInfo.setEmployeePosition(employeesDataTable.getContainerProperty(employeeID,
-                        myUI.getMessage(IndigoMessages.MainPosition)).getValue().toString());
+                        myUI.getMessage(Messages.MainPosition)).getValue().toString());
                 if (type_id == 3) {
                     employeeInfo.setEmployeeBranch(employeesDataTable.getContainerProperty(employeeID,
-                            myUI.getMessage(IndigoMessages.MainBranch)).getValue().toString());
+                            myUI.getMessage(Messages.MainBranch)).getValue().toString());
                 }
                 try {
                     DbEmployee dbEmployee = new DbEmployee();
@@ -3118,12 +3118,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (source == plusOrdersButton) {
             Object last_id = ((IndexedContainer) ordersTable.getContainerDataSource()).lastItemId();
             if (!(ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
-                    Settings.crud_status).getValue().equals(myUI.getMessage(IndigoMessages.Insert))
+                    Settings.crud_status).getValue().equals(myUI.getMessage(Messages.Insert))
                     && (Integer) ((ComboBox) (ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
-                    myUI.getMessage(IndigoMessages.OrderType)).getValue()).getValue() != 5) {
+                    myUI.getMessage(Messages.OrderType)).getValue()).getValue() != 5) {
                 addOrderItem();
             } else {
-                Notification.show(myUI.getMessage(IndigoMessages.CannotInsertOrder),
+                Notification.show(myUI.getMessage(Messages.CannotInsertOrder),
                         Notification.Type.WARNING_MESSAGE);
             }
         } else if (tabs.getSelectedTab() == tabs.getTab(contactInfoLay).getComponent()) {
@@ -3133,13 +3133,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 noPhonesCkb.setEnabled(true);
             }
         } else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()) {
-            if (source.getDescription().equals(myUI.getMessage(IndigoMessages.DeleteButton))) {
+            if (source.getDescription().equals(myUI.getMessage(Messages.DeleteButton))) {
                 delContractIds.add(source.getData().toString());
                 contractsTable.removeItem(event.getButton().getData().toString());
-            } else if (source.getDescription().equals(myUI.getMessage(IndigoMessages.Print)) &&
+            } else if (source.getDescription().equals(myUI.getMessage(Messages.Print)) &&
                     (printContractBtn == null || !Objects.equals(source.getData(), printContractBtn.getData()))) {
                 int type_id = (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
-                        myUI.getMessage(IndigoMessages.AgreementType)).getValue()).getValue();
+                        myUI.getMessage(Messages.AgreementType)).getValue()).getValue();
                 buildContractExtraInfoLayout(source.getData(), type_id);
                 printContractBtn.setData(source.getData());
                 if (type_id == 2 || type_id == 3) {
@@ -3172,7 +3172,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             EmployeeExam employeeExam = new EmployeeExam();
             employeeExam.setIdStr(source.getData().toString());
             Button b = (Button) ((HorizontalLayout) examsTable.getContainerProperty(employeeExam.getIdStr(),
-                    myUI.getMessage(IndigoMessages.Document)).getValue()).getComponent(0);
+                    myUI.getMessage(Messages.Document)).getValue()).getComponent(0);
             if (b.getData() != null) {
                 employeeExam.setAttachmentUniqueName(((Attachment) b.getData()).getUnique_name());
             }
@@ -3197,7 +3197,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             EmployeeCertificate employeeCertificate = new EmployeeCertificate();
             employeeCertificate.setIdStr(source.getData().toString());
             Button b = (Button) ((HorizontalLayout) certificatesTable.getContainerProperty(employeeCertificate.getIdStr(),
-                    myUI.getMessage(IndigoMessages.Document)).getValue()).getComponent(0);
+                    myUI.getMessage(Messages.Document)).getValue()).getComponent(0);
             if (b.getData() != null) {
                 employeeCertificate.setAttachmentUniqueName(((Attachment) b.getData()).getUnique_name());
             }
@@ -3216,7 +3216,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             EmployeeEducation employeeEducation = new EmployeeEducation();
             employeeEducation.setIdStr(source.getData().toString());
             Button b = (Button) ((HorizontalLayout) educationTable.getContainerProperty(employeeEducation.getIdStr(),
-                    myUI.getMessage(IndigoMessages.Document)).getValue()).getComponent(0);
+                    myUI.getMessage(Messages.Document)).getValue()).getComponent(0);
             if (b.getData() != null) {
                 employeeEducation.setAttachmentUniqueName(((Attachment) b.getData()).getUnique_name());
             }
@@ -3243,13 +3243,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             delOrderIds.add(eo);
             if (eo.getIdStr().startsWith("_")) {
                 eo.setOrder_id((Integer) ((ComboBox) ordersTable.getItem(event.getButton().getData().toString().replace("_", "")).getItemProperty(
-                        myUI.getMessage(IndigoMessages.OrderType)).getValue()).getValue());
+                        myUI.getMessage(Messages.OrderType)).getValue()).getValue());
                 ordersTable.removeItem(event.getButton().getData().toString().replace("_", ""));
             } else {
                 if (((ComboBox) ordersTable.getItem(event.getButton().getData().toString()).getItemProperty(
-                        myUI.getMessage(IndigoMessages.OrderType)).getValue()).getValue() != null) {
+                        myUI.getMessage(Messages.OrderType)).getValue()).getValue() != null) {
                     eo.setOrder_id((Integer) ((ComboBox) ordersTable.getItem(event.getButton().getData().toString()).getItemProperty(
-                            myUI.getMessage(IndigoMessages.OrderType)).getValue()).getValue());
+                            myUI.getMessage(Messages.OrderType)).getValue()).getValue());
                 }
                 ordersTable.removeItem(event.getButton().getData().toString());
             }
@@ -3297,21 +3297,21 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     EmployeeContract ec = new EmployeeContract();
                     ec.setEmployee_id(employee_id);
                     ec.setSalary(((TextField) contractsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.SalaryAmount)).getValue()).getValue());
+                            myUI.getMessage(Messages.SalaryAmount)).getValue()).getValue());
                     ec.setFromDate(((DateField) contractsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Start)).getValue()).getValue());
+                            myUI.getMessage(Messages.Start)).getValue()).getValue());
                     ec.setTillDate(((DateField) contractsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.End)).getValue()).getValue());
+                            myUI.getMessage(Messages.End)).getValue()).getValue());
                     ec.setCreationDate(((DateField) contractsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.CreationDate)).getValue()).getValue());
+                            myUI.getMessage(Messages.CreationDate)).getValue()).getValue());
                     ec.setContract_type_id(((Integer) ((ComboBox) contractsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.AgreementType)).getValue()).getValue()));
+                            myUI.getMessage(Messages.AgreementType)).getValue()).getValue()));
                     if (contractsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         ec.setId(Integer.parseInt(next.toString()));
                         dbCon.exec_update(ec);
                     } else if (contractsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbCon.exec_insert(ec);
                     }
                 }
@@ -3345,15 +3345,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     EmployeePhoneNumber epn = new EmployeePhoneNumber();
                     epn.setEmployee_id(employee_id);
                     epn.setNumber(((TextField) phonesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Number)).getValue()).getValue());
+                            myUI.getMessage(Messages.Number)).getValue()).getValue());
                     epn.setPhone_type_id((Integer) ((ComboBox) phonesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Type)).getValue()).getValue());
+                            myUI.getMessage(Messages.Type)).getValue()).getValue());
                     if (phonesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         epn.setId(Integer.parseInt(next.toString()));
                         dbepn.exec_update(epn);
                     } else if (phonesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbepn.exec_insert(epn);
                     }
                 }
@@ -3387,24 +3387,24 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     EmployeeChildren ec = new EmployeeChildren();
                     ec.setEmployee_id(employee_id);
                     ec.setFullName(((TextField) childrenTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.FullName)).getValue()).getValue());
+                            myUI.getMessage(Messages.FullName)).getValue()).getValue());
                     ec.setInstitution(((TextField) childrenTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Institution)).getValue()).getValue());
+                            myUI.getMessage(Messages.Institution)).getValue()).getValue());
                     ec.setDate_of_birth(((DateField) childrenTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.DateOfBirth)).getValue()).getValue());
+                            myUI.getMessage(Messages.DateOfBirth)).getValue()).getValue());
                     if (((ComboBox) childrenTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.EducationStatus)).getValue()).getValue() != null) {
+                            myUI.getMessage(Messages.EducationStatus)).getValue()).getValue() != null) {
                         ec.setEducation_status_id((Integer) ((ComboBox) childrenTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.EducationStatus)).getValue()).getValue());
+                                myUI.getMessage(Messages.EducationStatus)).getValue()).getValue());
                     }
                     ec.setHealth_status_id((Integer) ((ComboBox) childrenTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.HealthStatus)).getValue()).getValue());
+                            myUI.getMessage(Messages.HealthStatus)).getValue()).getValue());
                     if (childrenTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         ec.setId(Integer.parseInt(next.toString()));
                         dbech.exec_update(ec);
                     } else if (childrenTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbech.exec_insert(ec);
                     }
                 }
@@ -3453,31 +3453,31 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     ed.setEmployee_id(employee_id);
                     ed.setOwn_id(own_id);
                     ed.setDepartment(((TextField) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Department)).getValue()).getValue());
+                            myUI.getMessage(Messages.Department)).getValue()).getValue());
                     ed.setStart(((DateField) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Start)).getValue()).getValue());
+                            myUI.getMessage(Messages.Start)).getValue()).getValue());
                     ed.setEnd(((DateField) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.End)).getValue()).getValue());
+                            myUI.getMessage(Messages.End)).getValue()).getValue());
                     ed.setCountry_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Country)).getValue()).getValue());
+                            myUI.getMessage(Messages.Country)).getValue()).getValue());
                     ed.setEducation_level_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.EduLevel)).getValue()).getValue());
+                            myUI.getMessage(Messages.EduLevel)).getValue()).getValue());
                     ed.setUniversity_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.University)).getValue()).getValue());
+                            myUI.getMessage(Messages.University)).getValue()).getValue());
                     if (t.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Document)).getValue() != null) {
+                            myUI.getMessage(Messages.Document)).getValue() != null) {
                         Button b = (Button) ((HorizontalLayout) t.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Document)).getValue()).getComponent(0);
+                                myUI.getMessage(Messages.Document)).getValue()).getComponent(0);
                         if (b.getData() != null) {
                             ed.setAttachment_id(((Attachment) b.getData()).getId());
                         }
                     }
                     if (t.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         ed.setId(Integer.parseInt(next.toString()));
                         dbed.exec_update(ed);
                     } else if (t.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbed.exec_insert(ed);
                     }
                 }
@@ -3517,32 +3517,32 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     ew.setEmployee_id(employee_id);
                     ew.setOwn_id(own_id);
                     ew.setWork_place_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.WorkPlace)).getValue()).getValue());
+                            myUI.getMessage(Messages.WorkPlace)).getValue()).getValue());
                     ew.setMain_position_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.MainPosition)).getValue()).getValue());
+                            myUI.getMessage(Messages.MainPosition)).getValue()).getValue());
                     if (((ComboBoxMultiselect) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.ExtraPositions)).getValue()).getValue() != null
+                            myUI.getMessage(Messages.ExtraPositions)).getValue()).getValue() != null
                             && !((Set<?>) ((ComboBoxMultiselect) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.ExtraPositions)).getValue()).getValue()).isEmpty()) {
+                            myUI.getMessage(Messages.ExtraPositions)).getValue()).getValue()).isEmpty()) {
                         ew.setExtra_position_ids((Set<?>) ((ComboBoxMultiselect) t.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.ExtraPositions)).getValue()).getValue());
+                                myUI.getMessage(Messages.ExtraPositions)).getValue()).getValue());
                     } else {
                         ew.setExtra_position_ids(null);
                     }
                     ew.setWorking_status_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.WorkingStatus)).getValue()).getValue());
+                            myUI.getMessage(Messages.WorkingStatus)).getValue()).getValue());
                     ew.setStart(((DateField) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Start)).getValue()).getValue());
+                            myUI.getMessage(Messages.Start)).getValue()).getValue());
                     ew.setEnd(((DateField) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.End)).getValue()).getValue());
+                            myUI.getMessage(Messages.End)).getValue()).getValue());
                     ew.setSapat(((CheckBox) t.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Sapat)).getValue()).getValue());
+                            myUI.getMessage(Messages.Sapat)).getValue()).getValue());
                     if (t.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         ew.setId(Integer.parseInt(next.toString()));
                         dbew.exec_update(ew);
                     } else if (t.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         ew.setId(dbew.exec_insert(ew));
                     }
                     DbDefinition dbCon = new DbDefinition();
@@ -3573,14 +3573,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             if (questioningTable.getContainerDataSource().size() > 0) {
                 for (Object next : questioningTable.getItemIds()) {
                     if (((TextField) questioningTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Answer)).getValue()).getValue() != null
+                            myUI.getMessage(Messages.Answer)).getValue()).getValue() != null
                             && !((TextField) questioningTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Answer)).getValue()).getValue().equals("")) {
+                            myUI.getMessage(Messages.Answer)).getValue()).getValue().equals("")) {
                         EmployeeQuestioning eq = new EmployeeQuestioning();
                         eq.setEmployee_id(employee_id);
                         eq.setQuestion_id(Integer.parseInt(next.toString()));
                         eq.setAnswer(((TextField) questioningTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.Answer)).getValue()).getValue());
+                                myUI.getMessage(Messages.Answer)).getValue()).getValue());
                         int st = dbeq.exec_insert(eq);
                         if (st == 0) {
                             dbeq.exec_update(eq);
@@ -3620,15 +3620,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     EmployeeLanguage el = new EmployeeLanguage();
                     el.setEmployee_id(employee_id);
                     el.setLanguage_id((Integer) ((ComboBox) languagesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Language)).getValue()).getValue());
+                            myUI.getMessage(Messages.Language)).getValue()).getValue());
                     el.setLevel_id((Integer) ((ComboBox) languagesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Level)).getValue()).getValue());
+                            myUI.getMessage(Messages.Level)).getValue()).getValue());
                     if (languagesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         el.setId(Integer.parseInt(next.toString()));
                         dbel.exec_update(el);
                     } else if (languagesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbel.exec_insert(el);
                     }
                 }
@@ -3672,24 +3672,24 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     ec = new EmployeeCertificate();
                     ec.setEmployee_id(employee_id);
                     ec.setNote(((TextField) certificatesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Note)).getValue()).getValue());
+                            myUI.getMessage(Messages.Note)).getValue()).getValue());
                     ec.setCertificate_id((Integer) ((ComboBox) certificatesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Certificate)).getValue()).getValue());
+                            myUI.getMessage(Messages.Certificate)).getValue()).getValue());
                     ec.setGiven_by(((TextField) certificatesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.GivenBy)).getValue()).getValue());
+                            myUI.getMessage(Messages.GivenBy)).getValue()).getValue());
                     ec.setDate_of_issue(((DateField) certificatesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.IssueDate)).getValue()).getValue());
+                            myUI.getMessage(Messages.IssueDate)).getValue()).getValue());
                     Button b = (Button) ((HorizontalLayout) certificatesTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Document)).getValue()).getComponent(0);
+                            myUI.getMessage(Messages.Document)).getValue()).getComponent(0);
                     if (b.getData() != null) {
                         ec.setAttachment_id(((Attachment) b.getData()).getId());
                     }
                     if (certificatesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         ec.setId(Integer.parseInt(next.toString()));
                         dbec.exec_update(ec);
                     } else if (certificatesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbec.exec_insert(ec);
                     }
                 }
@@ -3724,19 +3724,19 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     EmployeeSeminar es = new EmployeeSeminar();
                     es.setEmployee_id(employee_id);
                     es.setName(((TextField) seminarsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Title)).getValue()).getValue());
+                            myUI.getMessage(Messages.Title)).getValue()).getValue());
                     es.setSubject(((TextField) seminarsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Subject)).getValue()).getValue());
+                            myUI.getMessage(Messages.Subject)).getValue()).getValue());
                     es.setNote(((TextField) seminarsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Note)).getValue()).getValue());
+                            myUI.getMessage(Messages.Note)).getValue()).getValue());
                     es.setDate_of_issue(((DateField) seminarsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.IssueDate)).getValue()).getValue());
+                            myUI.getMessage(Messages.IssueDate)).getValue()).getValue());
                     if (seminarsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         es.setId(Integer.parseInt(next.toString()));
                         dbes.exec_update(es);
                     } else if (seminarsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbes.exec_insert(es);
                     }
                 }
@@ -3780,22 +3780,22 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     exam = new EmployeeExam();
                     exam.setEmployee_id(employee_id);
                     exam.setExam_id((Integer) ((ComboBox) examsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Exam)).getValue()).getValue());
+                            myUI.getMessage(Messages.Exam)).getValue()).getValue());
                     exam.setScore(((TextField) examsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Score)).getValue()).getValue());
+                            myUI.getMessage(Messages.Score)).getValue()).getValue());
                     exam.setDate_of_issue(((DateField) examsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.IssueDate)).getValue()).getValue());
+                            myUI.getMessage(Messages.IssueDate)).getValue()).getValue());
                     Button b = (Button) ((HorizontalLayout) examsTable.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Document)).getValue()).getComponent(0);
+                            myUI.getMessage(Messages.Document)).getValue()).getComponent(0);
                     if (b.getData() != null) {
                         exam.setAttachment_id(((Attachment) b.getData()).getId());
                     }
                     if (examsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         exam.setId(Integer.parseInt(next.toString()));
                         dbex.exec_update(exam);
                     } else if (examsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbex.exec_insert(exam);
                     }
                 }
@@ -3826,35 +3826,35 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 }
             }
             if (branchesTable.getContainerDataSource().size() > 0) {
-                employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.ExtraBranches)).setValue(null);
+                employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.ExtraBranches)).setValue(null);
                 for (Object next : branchesTable.getItemIds()) {
                     EmployeeBranch eb = new EmployeeBranch();
                     eb.setEmployee_id(employee_id);
                     eb.setBranch_id((Integer) ((ComboBox) branchesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Branch)).getValue()).getValue());
+                            myUI.getMessage(Messages.Branch)).getValue()).getValue());
                     eb.setMain(((CheckBox) branchesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Main)).getValue()).getValue());
+                            myUI.getMessage(Messages.Main)).getValue()).getValue());
                     String str = ((ComboBox) branchesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Branch)).getValue()).getItemCaption(eb.getBranch_id());
+                            myUI.getMessage(Messages.Branch)).getValue()).getItemCaption(eb.getBranch_id());
                     if (eb.isMain()) {
-                        employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.MainBranch)).setValue(
+                        employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.MainBranch)).setValue(
                                 ((ComboBox) branchesTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(IndigoMessages.Branch)).getValue()).getItemCaption(eb.getBranch_id()));
+                                        myUI.getMessage(Messages.Branch)).getValue()).getItemCaption(eb.getBranch_id()));
                     } else {
-                        if (employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.ExtraBranches)).getValue() == null) {
-                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.ExtraBranches)).setValue(str);
+                        if (employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.ExtraBranches)).getValue() == null) {
+                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.ExtraBranches)).setValue(str);
                         } else {
-                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.ExtraBranches)).setValue(
+                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.ExtraBranches)).setValue(
                                     employeesDataTable.getContainerProperty(employee_id,
-                                            myUI.getMessage(IndigoMessages.ExtraBranches)).getValue().toString() + ", " + str);
+                                            myUI.getMessage(Messages.ExtraBranches)).getValue().toString() + ", " + str);
                         }
                     }
                     if (branchesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         eb.setId(Integer.parseInt(next.toString()));
                         dbeb.exec_update(eb);
                     } else if (branchesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbeb.exec_insert(eb);
                     }
                 }
@@ -3888,30 +3888,30 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     el.setEmployee_id(employee_id);
                     el.setSchool_id(myUI.getUser().getSchool().getId());
                     el.setBranch_id((Integer) ((ComboBox) lessonsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Lesson)).getValue()).getValue());
+                            myUI.getMessage(Messages.Lesson)).getValue()).getValue());
                     el.setClass_number_id((Integer) ((ComboBox) lessonsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.ClassName)).getValue()).getValue());
+                            myUI.getMessage(Messages.ClassName)).getValue()).getValue());
                     el.setYear_id((Integer) ((ComboBox) lessonsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.AcademicYear)).getValue()).getValue());
+                            myUI.getMessage(Messages.AcademicYear)).getValue()).getValue());
                     el.setHours((Integer) ((TextField) lessonsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Hours)).getValue()).getPropertyDataSource().getValue());
+                            myUI.getMessage(Messages.Hours)).getValue()).getPropertyDataSource().getValue());
                     el.setExtra_hours((Integer) ((TextField) lessonsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.ExtraHours)).getValue()).getPropertyDataSource().getValue());
+                            myUI.getMessage(Messages.ExtraHours)).getValue()).getPropertyDataSource().getValue());
                     if (el.getYear_id() == myUI.getUser().getCurrent_year().getId()) {
                         hours += el.getHours();
                         extra += el.getExtra_hours();
                     }
                     if (lessonsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         el.setId(Integer.parseInt(next.toString()));
                         dbel.exec_update(el);
                     } else if (lessonsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbel.exec_insert(el);
                     }
                 }
-                employeesDataTable.getContainerProperty(employeesDataTable.getValue(), myUI.getMessage(IndigoMessages.Hours)).setValue(hours);
-                employeesDataTable.getContainerProperty(employeesDataTable.getValue(), myUI.getMessage(IndigoMessages.ExtraHours)).setValue(extra);
+                employeesDataTable.getContainerProperty(employeesDataTable.getValue(), myUI.getMessage(Messages.Hours)).setValue(hours);
+                employeesDataTable.getContainerProperty(employeesDataTable.getValue(), myUI.getMessage(Messages.ExtraHours)).setValue(extra);
             }
             delLessonIds.clear();
             dbel.close();
@@ -3941,28 +3941,28 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     eo.setSchool_id(myUI.getUser().getSchool().getId());
                     eo.setPosition_id((Integer) employeesDataTable.getContainerProperty(employee_id, Settings.position_id).getValue());
                     eo.setClass_name_id((Integer) ((ComboBox) supervisionTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.ClassName)).getValue()).getValue());
+                            myUI.getMessage(Messages.ClassName)).getValue()).getValue());
                     eo.setFrom_date(((DateField) supervisionTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.FromDate)).getValue()).getValue());
+                            myUI.getMessage(Messages.FromDate)).getValue()).getValue());
                     if (((DateField) supervisionTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.TillDate)).getValue()).getValue() != null) {
+                            myUI.getMessage(Messages.TillDate)).getValue()).getValue() != null) {
                         eo.setTo_date(((DateField) supervisionTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.TillDate)).getValue()).getValue());
+                                myUI.getMessage(Messages.TillDate)).getValue()).getValue());
                     }
                     if (((TextField) supervisionTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Note)).getValue()).getValue() != null
+                            myUI.getMessage(Messages.Note)).getValue()).getValue() != null
                             && !((TextField) supervisionTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Note)).getValue()).getValue().equals("")) {
+                            myUI.getMessage(Messages.Note)).getValue()).getValue().equals("")) {
                         eo.setNote(((TextField) supervisionTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.Note)).getValue()).getValue());
+                                myUI.getMessage(Messages.Note)).getValue()).getValue());
                     }
                     eo.setM_employee_id(myUI.getUser().getId());
                     if (supervisionTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         eo.setId(Integer.parseInt(next.toString()));
                         dbeo.exec_update(eo);
                     } else if (supervisionTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbeo.exec_insert(eo);
                     }
                 }
@@ -4011,27 +4011,27 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 }
             }
             if (ordersTable.getContainerDataSource().size() > 0) {
-                employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.ExtraPosition)).setValue(null);
+                employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.ExtraPosition)).setValue(null);
                 employeesDataTable.getContainerProperty(employee_id, Settings.extra_position_ids).setValue(null);
                 for (Object next : ordersTable.getItemIds()) {
                     EmployeeOrder eo = new EmployeeOrder();
                     eo.setEmployee_id(employee_id);
                     eo.setOrder_id((Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.OrderType)).getValue()).getValue());
+                            myUI.getMessage(Messages.OrderType)).getValue()).getValue());
                     eo.setSchool_id(myUI.getUser().getSchool().getId());
                     eo.setPosition_id((Integer) employeesDataTable.getContainerProperty(employee_id, Settings.position_id).getValue());
                     if (eo.getOrder_id() == 5) {
                         eo.setFrom_to_school_id((Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.Details)).getValue()).getValue());
+                                myUI.getMessage(Messages.Details)).getValue()).getValue());
                     } else if (eo.getOrder_id() == 3) {
                         eo.setClass_name_id((Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.Details)).getValue()).getValue());
+                                myUI.getMessage(Messages.Details)).getValue()).getValue());
                     } else if (eo.getOrder_id() == 1 || eo.getOrder_id() == 2 || eo.getOrder_id() == 7) {
                         eo.setPosition_id((Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.Details)).getValue()).getValue());
+                                myUI.getMessage(Messages.Details)).getValue()).getValue());
                     }
                     eo.setFrom_date(((DateField) ordersTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.FromDate)).getValue()).getValue());
+                            myUI.getMessage(Messages.FromDate)).getValue()).getValue());
                     boolean isContain = false;
                     for (EmployeeOrder temp : delOrderIds) {
                         if (ordersTable.getItem(next).getItemProperty(
@@ -4043,22 +4043,22 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     if (ordersTable.getItem(next).getItemProperty(
                             Settings.effected_by_id).getValue() == null || !isContain) {
                         eo.setTo_date(((DateField) ordersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.TillDate)).getValue()).getValue());
+                                myUI.getMessage(Messages.TillDate)).getValue()).getValue());
                     }
                     if (((TextField) ordersTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Note)).getValue()).getValue() != null
+                            myUI.getMessage(Messages.Note)).getValue()).getValue() != null
                             && !((TextField) ordersTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.Note)).getValue()).getValue().equals("")) {
+                            myUI.getMessage(Messages.Note)).getValue()).getValue().equals("")) {
                         eo.setNote(((TextField) ordersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.Note)).getValue()).getValue());
+                                myUI.getMessage(Messages.Note)).getValue()).getValue());
                     }
                     eo.setM_employee_id(myUI.getUser().getId());
                     if (ordersTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Update))) {
+                            .equals(myUI.getMessage(Messages.Update))) {
                         eo.setId(Integer.parseInt(next.toString()));
                         dbeo.exec_update(eo);
                     } else if (ordersTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(IndigoMessages.Insert))) {
+                            .equals(myUI.getMessage(Messages.Insert))) {
                         dbeo.exec_insert(eo);
                         if (eo.getOrder_id() == 6) {
                             DbAccCategory dbAc = new DbAccCategory();
@@ -4085,20 +4085,20 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     }
                     if (eo.getOrder_id() == 1) {
                         employeesDataTable.getContainerProperty(employee_id, Settings.position_id).setValue(eo.getPosition_id());
-                        employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.MainPosition)).setValue(
+                        employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.MainPosition)).setValue(
                                 ((ComboBox) ordersTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(IndigoMessages.Details)).getValue()).getItemCaption(eo.getPosition_id()));
+                                        myUI.getMessage(Messages.Details)).getValue()).getItemCaption(eo.getPosition_id()));
                     } else if (eo.getOrder_id() == 2) {
                         String str = ((ComboBox) ordersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(IndigoMessages.Details)).getValue()).getItemCaption(eo.getPosition_id());
+                                myUI.getMessage(Messages.Details)).getValue()).getItemCaption(eo.getPosition_id());
                         String str_ids = eo.getPosition_id() + "";
-                        if (employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.ExtraPosition)).getValue() == null) {
-                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.ExtraPosition)).setValue(str);
+                        if (employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.ExtraPosition)).getValue() == null) {
+                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.ExtraPosition)).setValue(str);
                             employeesDataTable.getContainerProperty(employee_id, Settings.extra_position_ids).setValue(str_ids);
                         } else {
-                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.ExtraPosition)).setValue(
+                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.ExtraPosition)).setValue(
                                     employeesDataTable.getContainerProperty(employee_id,
-                                            myUI.getMessage(IndigoMessages.ExtraPosition)).getValue().toString() + ", " + str);
+                                            myUI.getMessage(Messages.ExtraPosition)).getValue().toString() + ", " + str);
                             employeesDataTable.getContainerProperty(employee_id, Settings.extra_position_ids).setValue(
                                     employeesDataTable.getContainerProperty(employee_id, Settings.extra_position_ids).getValue().toString() + ", " + str_ids);
                         }
@@ -4106,20 +4106,20 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         employeesDataTable.getContainerProperty(employee_id, Settings.is_modifiable).setValue(false);
                     }
                     if ((Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
-                            myUI.getMessage(IndigoMessages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
+                            myUI.getMessage(Messages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
                             Settings.working_status_id).getValue() != 0) {
                         employeesDataTable.getContainerProperty(employee_id, Settings.working_status_id).setValue(
                                 ((ComboBox) ordersTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(IndigoMessages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
+                                        myUI.getMessage(Messages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
                                         Settings.working_status_id).getValue());
                         employeesDataTable.getContainerProperty(employee_id, Settings.visible_hr_orders).setValue(
                                 ((ComboBox) ordersTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(IndigoMessages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
+                                        myUI.getMessage(Messages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
                                         Settings.visible_hr_orders).getValue().toString());
-                        employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(IndigoMessages.WorkingStatus)).setValue(
+                        employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(Messages.WorkingStatus)).setValue(
                                 ((ComboBox) ordersTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(IndigoMessages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
-                                        myUI.getMessage(IndigoMessages.WorkingStatus)).getValue().toString());
+                                        myUI.getMessage(Messages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
+                                        myUI.getMessage(Messages.WorkingStatus)).getValue().toString());
                     }
                 }
             }
@@ -4134,11 +4134,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private void addContractItem() {
         NATURAL_COL_ORDER_CONTRACTS = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.AgreementType),
-                myUI.getMessage(IndigoMessages.SalaryAmount),
-                myUI.getMessage(IndigoMessages.CreationDate),
-                myUI.getMessage(IndigoMessages.Start),
-                myUI.getMessage(IndigoMessages.End)};
+                myUI.getMessage(Messages.AgreementType),
+                myUI.getMessage(Messages.SalaryAmount),
+                myUI.getMessage(Messages.CreationDate),
+                myUI.getMessage(Messages.Start),
+                myUI.getMessage(Messages.End)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (contractsTable.getContainerDataSource().size() == 0) {
             contractsTable.setContainerDataSource(prepareContractsContainer());
@@ -4148,34 +4148,34 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 contractsTable.getContainerDataSource().size(), id);
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
-        hl.addComponent(createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
+        hl.addComponent(createButton(myUI.getMessage(Messages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(Settings.button).setValue(hl);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.AgreementType)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.AgreementType), Settings.dbContractType, true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.SalaryAmount)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.SalaryAmount),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+        item.getItemProperty(myUI.getMessage(Messages.AgreementType)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.AgreementType), Settings.dbContractType, true));
+        item.getItemProperty(myUI.getMessage(Messages.SalaryAmount)).setValue(
+                createTextField(null, myUI.getMessage(Messages.SalaryAmount),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
                                 1, 250, false), true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.CreationDate)).setValue(
-                createDateField(today, myUI.getMessage(IndigoMessages.CreationDate), null, true,
+        item.getItemProperty(myUI.getMessage(Messages.CreationDate)).setValue(
+                createDateField(today, myUI.getMessage(Messages.CreationDate), null, true,
                         Settings.datePattern, Resolution.DAY));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Start)).setValue(
-                createDateField(null, myUI.getMessage(IndigoMessages.Start), null, true,
+        item.getItemProperty(myUI.getMessage(Messages.Start)).setValue(
+                createDateField(null, myUI.getMessage(Messages.Start), null, true,
                         Settings.datePattern, Resolution.DAY));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.End)).setValue(
-                createDateField(null, myUI.getMessage(IndigoMessages.End), null, true,
+        item.getItemProperty(myUI.getMessage(Messages.End)).setValue(
+                createDateField(null, myUI.getMessage(Messages.End), null, true,
                         Settings.datePattern, Resolution.DAY));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
-        contractsTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.AgreementType), 1);
-        contractsTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.SalaryAmount), 1);
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
+        contractsTable.setColumnExpandRatio(myUI.getMessage(Messages.AgreementType), 1);
+        contractsTable.setColumnExpandRatio(myUI.getMessage(Messages.SalaryAmount), 1);
         contractsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CONTRACTS);
     }
 
     private void addPhonesItem() {
         noPhonesCkb.setEnabled(false);
         NATURAL_COL_ORDER_PHONES = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.Type),
-                myUI.getMessage(IndigoMessages.Number)};
+                myUI.getMessage(Messages.Type),
+                myUI.getMessage(Messages.Number)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (phonesTable.getContainerDataSource().size() == 0) {
             phonesTable.setContainerDataSource(preparePhonesContainer());
@@ -4184,14 +4184,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item = ((IndexedContainer) phonesTable.getContainerDataSource()).addItemAt(
                 phonesTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Type)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.Type), Settings.dbPhoneType, true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Number)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.Number),
+                createButton(myUI.getMessage(Messages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.Type), Settings.dbPhoneType, true));
+        item.getItemProperty(myUI.getMessage(Messages.Number)).setValue(
+                createTextField(null, myUI.getMessage(Messages.Number),
                         new RegexpValidator("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s0-9]*$", true,
-                                myUI.getMessage(IndigoMessages.NotificationWrongValue)), true));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+                                myUI.getMessage(Messages.NotificationWrongValue)), true));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         phonesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_PHONES);
 
     }
@@ -4199,11 +4199,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void addChildItem() {
         noChildrenCkb.setEnabled(false);
         NATURAL_COL_ORDER_CHILDREN = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.FullName),
-                myUI.getMessage(IndigoMessages.DateOfBirth),
-                myUI.getMessage(IndigoMessages.Institution),
-                myUI.getMessage(IndigoMessages.EducationStatus),
-                myUI.getMessage(IndigoMessages.HealthStatus)};
+                myUI.getMessage(Messages.FullName),
+                myUI.getMessage(Messages.DateOfBirth),
+                myUI.getMessage(Messages.Institution),
+                myUI.getMessage(Messages.EducationStatus),
+                myUI.getMessage(Messages.HealthStatus)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (childrenTable.getContainerDataSource().size() == 0) {
             childrenTable.setContainerDataSource(prepareChildrenContainer());
@@ -4212,21 +4212,21 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item = ((IndexedContainer) childrenTable.getContainerDataSource()).addItemAt(
                 childrenTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.EducationStatus)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.EducationStatus), Settings.dbHrEducationStatus, false));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.HealthStatus)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.HealthStatus), Settings.dbHealthStatus, true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.FullName)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.FullName),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true), true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Institution)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.Institution),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 300, true), false));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.DateOfBirth)).setValue(
-                createDateField(null, myUI.getMessage(IndigoMessages.DateOfBirth),
+                createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(myUI.getMessage(Messages.EducationStatus)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.EducationStatus), Settings.dbHrEducationStatus, false));
+        item.getItemProperty(myUI.getMessage(Messages.HealthStatus)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.HealthStatus), Settings.dbHealthStatus, true));
+        item.getItemProperty(myUI.getMessage(Messages.FullName)).setValue(
+                createTextField(null, myUI.getMessage(Messages.FullName),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), true));
+        item.getItemProperty(myUI.getMessage(Messages.Institution)).setValue(
+                createTextField(null, myUI.getMessage(Messages.Institution),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 300, true), false));
+        item.getItemProperty(myUI.getMessage(Messages.DateOfBirth)).setValue(
+                createDateField(null, myUI.getMessage(Messages.DateOfBirth),
                         null, true, Settings.datePattern, Resolution.DAY));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         childrenTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CHILDREN);
         childrenTable.setPageLength(childrenTable.size());
     }
@@ -4235,22 +4235,22 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         if (own_id == 1) {
             noEducationCkb.setEnabled(false);
             NATURAL_COL_ORDER_EDU = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.University),
-                    myUI.getMessage(IndigoMessages.Country),
-                    myUI.getMessage(IndigoMessages.Department),
-                    myUI.getMessage(IndigoMessages.EduLevel),
-                    myUI.getMessage(IndigoMessages.Start),
-                    myUI.getMessage(IndigoMessages.End),
-                    myUI.getMessage(IndigoMessages.Document)};
+                    myUI.getMessage(Messages.University),
+                    myUI.getMessage(Messages.Country),
+                    myUI.getMessage(Messages.Department),
+                    myUI.getMessage(Messages.EduLevel),
+                    myUI.getMessage(Messages.Start),
+                    myUI.getMessage(Messages.End),
+                    myUI.getMessage(Messages.Document)};
         } else {
             noSpouseEducationCkb.setEnabled(false);
             NATURAL_COL_ORDER_EDU = new String[]{Settings.button,
-                    myUI.getMessage(IndigoMessages.University),
-                    myUI.getMessage(IndigoMessages.Country),
-                    myUI.getMessage(IndigoMessages.Department),
-                    myUI.getMessage(IndigoMessages.EduLevel),
-                    myUI.getMessage(IndigoMessages.Start),
-                    myUI.getMessage(IndigoMessages.End)};
+                    myUI.getMessage(Messages.University),
+                    myUI.getMessage(Messages.Country),
+                    myUI.getMessage(Messages.Department),
+                    myUI.getMessage(Messages.EduLevel),
+                    myUI.getMessage(Messages.Start),
+                    myUI.getMessage(Messages.End)};
         }
         String id = Settings.FreshItem + (--r_table_counter);
         if (t.getContainerDataSource().size() == 0) {
@@ -4260,8 +4260,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item = ((IndexedContainer) t.getContainerDataSource()).addItemAt(
                 t.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
-        final ComboBox cb = createCombobox(0, myUI.getMessage(IndigoMessages.University), Settings.dbUniversityTable, true);
+                createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
+        final ComboBox cb = createCombobox(0, myUI.getMessage(Messages.University), Settings.dbUniversityTable, true);
         cb.setNewItemsAllowed(true);
         cb.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
             try {
@@ -4272,8 +4272,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 if (id1 != 0) {
                     for (Object next : t.getItemIds()) {
                         Item item1 = ((IndexedContainer) ((ComboBox) t.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.University)).getValue()).getContainerDataSource()).addItem(id1);
-                        item1.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(newItemCaption);
+                                myUI.getMessage(Messages.University)).getValue()).getContainerDataSource()).addItem(id1);
+                        item1.getItemProperty(myUI.getMessage(Messages.Title)).setValue(newItemCaption);
                         cb.setValue(id1);
                     }
                 }
@@ -4282,25 +4282,25 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 logger.catching(e);
             }
         });
-        item.getItemProperty(myUI.getMessage(IndigoMessages.University)).setValue(cb);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Department)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.Department),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 250, true), true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Start)).setValue(
-                createDateField(null, myUI.getMessage(IndigoMessages.Start),
+        item.getItemProperty(myUI.getMessage(Messages.University)).setValue(cb);
+        item.getItemProperty(myUI.getMessage(Messages.Department)).setValue(
+                createTextField(null, myUI.getMessage(Messages.Department),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 250, true), true));
+        item.getItemProperty(myUI.getMessage(Messages.Start)).setValue(
+                createDateField(null, myUI.getMessage(Messages.Start),
                         null, true, Settings.yearPattern, Resolution.YEAR));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.End)).setValue(
-                createDateField(null, myUI.getMessage(IndigoMessages.End),
+        item.getItemProperty(myUI.getMessage(Messages.End)).setValue(
+                createDateField(null, myUI.getMessage(Messages.End),
                         null, true, Settings.yearPattern, Resolution.YEAR));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Country)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.Country), Settings.dbCountry, true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.EduLevel)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.EduLevel), Settings.dbEduLevel, true));
+        item.getItemProperty(myUI.getMessage(Messages.Country)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.Country), Settings.dbCountry, true));
+        item.getItemProperty(myUI.getMessage(Messages.EduLevel)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.EduLevel), Settings.dbEduLevel, true));
         if (own_id == 1) {
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
 
-            Button b = createButton(myUI.getMessage(IndigoMessages.DownLoad), null, Settings.download_button, FontAwesome.DOWNLOAD);
+            Button b = createButton(myUI.getMessage(Messages.DownLoad), null, Settings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setEnabled(false);
             hl.addComponent(b);
@@ -4309,13 +4309,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             u.setId(id);
             u.setData(b);
             hl.addComponent(u);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Document)).setValue(hl);
+            item.getItemProperty(myUI.getMessage(Messages.Document)).setValue(hl);
         }
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         t.setVisibleColumns((Object[]) NATURAL_COL_ORDER_EDU);
         t.setPageLength(t.size() > 0 ? t.size() : 1);
-        t.setColumnExpandRatio(myUI.getMessage(IndigoMessages.University), 1);
-        t.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Department), 1);
+        t.setColumnExpandRatio(myUI.getMessage(Messages.University), 1);
+        t.setColumnExpandRatio(myUI.getMessage(Messages.Department), 1);
     }
 
     private void addWorkItem(final Table t, int own_id) {
@@ -4325,13 +4325,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             noSpouseWorkPlacesCkb.setEnabled(false);
         }
         NATURAL_COL_ORDER_WORK = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.WorkPlace),
-                myUI.getMessage(IndigoMessages.Sapat),
-                myUI.getMessage(IndigoMessages.MainPosition),
-                myUI.getMessage(IndigoMessages.ExtraPositions),
-                myUI.getMessage(IndigoMessages.WorkingStatus),
-                myUI.getMessage(IndigoMessages.Start),
-                myUI.getMessage(IndigoMessages.End)};
+                myUI.getMessage(Messages.WorkPlace),
+                myUI.getMessage(Messages.Sapat),
+                myUI.getMessage(Messages.MainPosition),
+                myUI.getMessage(Messages.ExtraPositions),
+                myUI.getMessage(Messages.WorkingStatus),
+                myUI.getMessage(Messages.Start),
+                myUI.getMessage(Messages.End)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (t.getContainerDataSource().size() == 0) {
             t.setContainerDataSource(prepareWorkContainer(own_id));
@@ -4340,10 +4340,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item = ((IndexedContainer) t.getContainerDataSource()).addItemAt(
                 t.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
-        ComboBox cb = createCombobox(0, myUI.getMessage(IndigoMessages.MainPosition), null, true);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.MainPosition)).setValue(cb);
-        ComboBoxMultiselect cb3 = createComboboxMulti(myUI.getMessage(IndigoMessages.ExtraPosition), false);
+                createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
+        ComboBox cb = createCombobox(0, myUI.getMessage(Messages.MainPosition), null, true);
+        item.getItemProperty(myUI.getMessage(Messages.MainPosition)).setValue(cb);
+        ComboBoxMultiselect cb3 = createComboboxMulti(myUI.getMessage(Messages.ExtraPosition), false);
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
@@ -4356,8 +4356,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             logger.error(ex);
             logger.catching(ex);
         }
-        item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraPositions)).setValue(cb3);
-        cb = createCombobox(0, myUI.getMessage(IndigoMessages.WorkingStatus), null, true);
+        item.getItemProperty(myUI.getMessage(Messages.ExtraPositions)).setValue(cb3);
+        cb = createCombobox(0, myUI.getMessage(Messages.WorkingStatus), null, true);
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
@@ -4367,8 +4367,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             logger.error(ex);
             logger.catching(ex);
         }
-        item.getItemProperty(myUI.getMessage(IndigoMessages.WorkingStatus)).setValue(cb);
-        final ComboBox cb2 = createCombobox(0, myUI.getMessage(IndigoMessages.WorkPlace), Settings.dbWork_placeTable, true);
+        item.getItemProperty(myUI.getMessage(Messages.WorkingStatus)).setValue(cb);
+        final ComboBox cb2 = createCombobox(0, myUI.getMessage(Messages.WorkPlace), Settings.dbWork_placeTable, true);
         cb2.setNewItemsAllowed(true);
         cb2.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
             try {
@@ -4379,8 +4379,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 if (id1 != 0) {
                     for (Object next : t.getContainerDataSource().getItemIds()) {
                         Item item1 = ((IndexedContainer) ((ComboBox) t.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id1);
-                        item1.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(newItemCaption);
+                                myUI.getMessage(Messages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id1);
+                        item1.getItemProperty(myUI.getMessage(Messages.Title)).setValue(newItemCaption);
                         cb2.setValue(id1);
                     }
                 }
@@ -4389,16 +4389,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 logger.catching(e);
             }
         });
-        item.getItemProperty(myUI.getMessage(IndigoMessages.WorkPlace)).setValue(cb2);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Start)).setValue(
-                createDateField(null, myUI.getMessage(IndigoMessages.Start), null,
+        item.getItemProperty(myUI.getMessage(Messages.WorkPlace)).setValue(cb2);
+        item.getItemProperty(myUI.getMessage(Messages.Start)).setValue(
+                createDateField(null, myUI.getMessage(Messages.Start), null,
                         true, Settings.datePattern, Resolution.DAY));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.End)).setValue(
-                createDateField(null, myUI.getMessage(IndigoMessages.End), null,
+        item.getItemProperty(myUI.getMessage(Messages.End)).setValue(
+                createDateField(null, myUI.getMessage(Messages.End), null,
                         false, Settings.datePattern, Resolution.DAY));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Sapat)).setValue(
-                createCheckBox(false, myUI.getMessage(IndigoMessages.Sapat)));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+        item.getItemProperty(myUI.getMessage(Messages.Sapat)).setValue(
+                createCheckBox(false, myUI.getMessage(Messages.Sapat)));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         t.setVisibleColumns((Object[]) NATURAL_COL_ORDER_WORK);
         t.setPageLength(t.size());
     }
@@ -4406,8 +4406,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void addLanguageItem() {
         noLanguagesCkb.setEnabled(false);
         NATURAL_COL_ORDER_LANGUAGES = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.Language),
-                myUI.getMessage(IndigoMessages.Level)};
+                myUI.getMessage(Messages.Language),
+                myUI.getMessage(Messages.Level)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (languagesTable.getContainerDataSource().size() == 0) {
             languagesTable.setContainerDataSource(prepareLanguageContainer());
@@ -4416,12 +4416,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item = ((IndexedContainer) languagesTable.getContainerDataSource()).addItemAt(
                 languagesTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Language)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.Language), Settings.dbLanguageTable, true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Level)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.Level), Settings.dbLanguageLevelTable, true));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+                createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(myUI.getMessage(Messages.Language)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.Language), Settings.dbLanguageTable, true));
+        item.getItemProperty(myUI.getMessage(Messages.Level)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.Level), Settings.dbLanguageLevelTable, true));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         languagesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_LANGUAGES);
         languagesTable.setPageLength(languagesTable.size());
     }
@@ -4429,11 +4429,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void addCertificateItem() {
         noCertificatesCkb.setEnabled(false);
         NATURAL_COL_ORDER_CERTIFICATES = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.Certificate),
-                myUI.getMessage(IndigoMessages.GivenBy),
-                myUI.getMessage(IndigoMessages.IssueDate),
-                myUI.getMessage(IndigoMessages.Note),
-                myUI.getMessage(IndigoMessages.Document)};
+                myUI.getMessage(Messages.Certificate),
+                myUI.getMessage(Messages.GivenBy),
+                myUI.getMessage(Messages.IssueDate),
+                myUI.getMessage(Messages.Note),
+                myUI.getMessage(Messages.Document)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (certificatesTable.getContainerDataSource().size() == 0) {
             certificatesTable.setContainerDataSource(prepareCertificateContainer());
@@ -4442,18 +4442,18 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item = ((IndexedContainer) certificatesTable.getContainerDataSource()).addItemAt(
                 certificatesTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeCertificate, FontAwesome.MINUS_SQUARE));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.Note),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeCertificate, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
+                createTextField(null, myUI.getMessage(Messages.Note),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
                                 null, 250, true), false));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.GivenBy)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.GivenBy),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true), true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.IssueDate)).setValue(
-                createDateField(null, myUI.getMessage(IndigoMessages.IssueDate),
+        item.getItemProperty(myUI.getMessage(Messages.GivenBy)).setValue(
+                createTextField(null, myUI.getMessage(Messages.GivenBy),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), true));
+        item.getItemProperty(myUI.getMessage(Messages.IssueDate)).setValue(
+                createDateField(null, myUI.getMessage(Messages.IssueDate),
                         null, true, Settings.datePattern, Resolution.DAY));
-        final ComboBox cb = createCombobox(0, myUI.getMessage(IndigoMessages.Certificate), Settings.dbCertificateTable, true);
+        final ComboBox cb = createCombobox(0, myUI.getMessage(Messages.Certificate), Settings.dbCertificateTable, true);
         cb.setNewItemsAllowed(true);
         cb.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
             try {
@@ -4464,8 +4464,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 if (id1 != 0) {
                     for (Object next : certificatesTable.getContainerDataSource().getItemIds()) {
                         Item item1 = ((IndexedContainer) ((ComboBox) certificatesTable.getContainerDataSource().getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Certificate)).getValue()).getContainerDataSource()).addItem(id1);
-                        item1.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(newItemCaption);
+                                myUI.getMessage(Messages.Certificate)).getValue()).getContainerDataSource()).addItem(id1);
+                        item1.getItemProperty(myUI.getMessage(Messages.Title)).setValue(newItemCaption);
                         cb.setValue(id1);
                     }
                 }
@@ -4474,12 +4474,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 logger.catching(e);
             }
         });
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Certificate)).setValue(cb);
+        item.getItemProperty(myUI.getMessage(Messages.Certificate)).setValue(cb);
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
 
-        Button b = createButton(myUI.getMessage(IndigoMessages.DownLoad), null, Settings.download_button, FontAwesome.DOWNLOAD);
+        Button b = createButton(myUI.getMessage(Messages.DownLoad), null, Settings.download_button, FontAwesome.DOWNLOAD);
         b.setStyleName(ValoTheme.BUTTON_SMALL);
         b.setEnabled(false);
         hl.addComponent(b);
@@ -4488,9 +4488,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         u.setId(id);
         u.setData(b);
         hl.addComponent(u);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Document)).setValue(hl);
+        item.getItemProperty(myUI.getMessage(Messages.Document)).setValue(hl);
 
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         certificatesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CERTIFICATES);
         certificatesTable.setPageLength(certificatesTable.size());
     }
@@ -4498,10 +4498,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void addSeminarItem() {
         noSeminarsCkb.setEnabled(false);
         NATURAL_COL_ORDER_SEMINARS = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.Title),
-                myUI.getMessage(IndigoMessages.Subject),
-                myUI.getMessage(IndigoMessages.Note),
-                myUI.getMessage(IndigoMessages.IssueDate)};
+                myUI.getMessage(Messages.Title),
+                myUI.getMessage(Messages.Subject),
+                myUI.getMessage(Messages.Note),
+                myUI.getMessage(Messages.IssueDate)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (seminarsTable.getContainerDataSource().size() == 0) {
             seminarsTable.setContainerDataSource(prepareSeminarContainer());
@@ -4510,20 +4510,20 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item = ((IndexedContainer) seminarsTable.getContainerDataSource()).addItemAt(
                 seminarsTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.Title),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true), true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Subject)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.Subject),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true), true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.Note),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true), false));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.IssueDate)).setValue(
-                createDateField(null, myUI.getMessage(IndigoMessages.IssueDate),
+                createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
+                createTextField(null, myUI.getMessage(Messages.Title),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), true));
+        item.getItemProperty(myUI.getMessage(Messages.Subject)).setValue(
+                createTextField(null, myUI.getMessage(Messages.Subject),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), true));
+        item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
+                createTextField(null, myUI.getMessage(Messages.Note),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), false));
+        item.getItemProperty(myUI.getMessage(Messages.IssueDate)).setValue(
+                createDateField(null, myUI.getMessage(Messages.IssueDate),
                         null, true, Settings.datePattern, Resolution.DAY));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         seminarsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_SEMINARS);
         seminarsTable.setPageLength(seminarsTable.size());
     }
@@ -4531,10 +4531,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void addExamItem() {
         noExamsCkb.setEnabled(false);
         NATURAL_COL_ORDER_EXAMS = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.Exam),
-                myUI.getMessage(IndigoMessages.Score),
-                myUI.getMessage(IndigoMessages.IssueDate),
-                myUI.getMessage(IndigoMessages.Document)};
+                myUI.getMessage(Messages.Exam),
+                myUI.getMessage(Messages.Score),
+                myUI.getMessage(Messages.IssueDate),
+                myUI.getMessage(Messages.Document)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (examsTable.getContainerDataSource().size() == 0) {
             examsTable.setContainerDataSource(prepareExamContainer());
@@ -4543,8 +4543,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item = ((IndexedContainer) examsTable.getContainerDataSource()).addItemAt(
                 examsTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeExams, FontAwesome.MINUS_SQUARE));
-        ComboBox cb = createCombobox(0, myUI.getMessage(IndigoMessages.Exam), null, true);
+                createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeExams, FontAwesome.MINUS_SQUARE));
+        ComboBox cb = createCombobox(0, myUI.getMessage(Messages.Exam), null, true);
         try {
             DbExam dbe = new DbExam();
             dbe.connect();
@@ -4554,18 +4554,18 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             logger.error(ex);
             logger.catching(ex);
         }
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Exam)).setValue(cb);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Score)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.Score),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 10, false), true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.IssueDate)).setValue(
-                createDateField(null, myUI.getMessage(IndigoMessages.IssueDate),
+        item.getItemProperty(myUI.getMessage(Messages.Exam)).setValue(cb);
+        item.getItemProperty(myUI.getMessage(Messages.Score)).setValue(
+                createTextField(null, myUI.getMessage(Messages.Score),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), 1, 10, false), true));
+        item.getItemProperty(myUI.getMessage(Messages.IssueDate)).setValue(
+                createDateField(null, myUI.getMessage(Messages.IssueDate),
                         null, true, Settings.datePattern, Resolution.DAY));
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
 
-        Button b = createButton(myUI.getMessage(IndigoMessages.DownLoad), null, Settings.download_button, FontAwesome.DOWNLOAD);
+        Button b = createButton(myUI.getMessage(Messages.DownLoad), null, Settings.download_button, FontAwesome.DOWNLOAD);
         b.setStyleName(ValoTheme.BUTTON_SMALL);
         b.setEnabled(false);
         hl.addComponent(b);
@@ -4574,8 +4574,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         u.setId(id);
         u.setData(b);
         hl.addComponent(u);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Document)).setValue(hl);
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+        item.getItemProperty(myUI.getMessage(Messages.Document)).setValue(hl);
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         examsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_EXAMS);
         examsTable.setPageLength(examsTable.size());
     }
@@ -4583,8 +4583,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void addBranchItem() {
         noBranchesCkb.setEnabled(false);
         NATURAL_COL_ORDER_BRANCHES = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.Branch),
-                myUI.getMessage(IndigoMessages.Main)};
+                myUI.getMessage(Messages.Branch),
+                myUI.getMessage(Messages.Main)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (branchesTable.getContainerDataSource().size() == 0) {
             branchesTable.setContainerDataSource(prepareBranchContainer());
@@ -4593,23 +4593,23 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item = ((IndexedContainer) branchesTable.getContainerDataSource()).addItemAt(
                 branchesTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Branch)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.Branch), Settings.dbBranchTable, true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Main)).setValue(
-                createCheckBox(false, myUI.getMessage(IndigoMessages.Main)));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+                createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(myUI.getMessage(Messages.Branch)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.Branch), Settings.dbBranchTable, true));
+        item.getItemProperty(myUI.getMessage(Messages.Main)).setValue(
+                createCheckBox(false, myUI.getMessage(Messages.Main)));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         branchesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_BRANCHES);
         branchesTable.setPageLength(branchesTable.size());
     }
 
     private void addLessonItem() {
         NATURAL_COL_ORDER_LESSONS = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.Lesson),
-                myUI.getMessage(IndigoMessages.ClassName),
-                myUI.getMessage(IndigoMessages.AcademicYear),
-                myUI.getMessage(IndigoMessages.Hours),
-                myUI.getMessage(IndigoMessages.ExtraHours)};
+                myUI.getMessage(Messages.Lesson),
+                myUI.getMessage(Messages.ClassName),
+                myUI.getMessage(Messages.AcademicYear),
+                myUI.getMessage(Messages.Hours),
+                myUI.getMessage(Messages.ExtraHours)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (lessonsTable.getContainerDataSource().size() == 0) {
             lessonsTable.setContainerDataSource(prepareLessonsContainer());
@@ -4618,42 +4618,42 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item = ((IndexedContainer) lessonsTable.getContainerDataSource()).addItemAt(
                 lessonsTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeBranchHours, FontAwesome.MINUS_SQUARE));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Lesson)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.Lesson), Settings.dbBranchTable, true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.ClassName)).setValue(
-                createCombobox(0, myUI.getMessage(IndigoMessages.ClassName), Settings.classTable, true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.AcademicYear)).setValue(
-                createCombobox(myUI.getUser().getCurrent_year().getId(), myUI.getMessage(IndigoMessages.AcademicYear), Settings.dbYear, true));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Hours)).setValue(
-                createTextFieldWithProperty(null, myUI.getMessage(IndigoMessages.Hours),
-                        new IntegerRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 999),
+                createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeBranchHours, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(myUI.getMessage(Messages.Lesson)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.Lesson), Settings.dbBranchTable, true));
+        item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
+                createCombobox(0, myUI.getMessage(Messages.ClassName), Settings.classTable, true));
+        item.getItemProperty(myUI.getMessage(Messages.AcademicYear)).setValue(
+                createCombobox(myUI.getUser().getCurrent_year().getId(), myUI.getMessage(Messages.AcademicYear), Settings.dbYear, true));
+        item.getItemProperty(myUI.getMessage(Messages.Hours)).setValue(
+                createTextFieldWithProperty(null, myUI.getMessage(Messages.Hours),
+                        new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 1, 999),
                         new ObjectProperty<>(0), Settings.getStringToIntegerConverter()));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraHours)).setValue(
-                createTextFieldWithProperty(null, myUI.getMessage(IndigoMessages.ExtraHours),
-                        new IntegerRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 0, 999),
+        item.getItemProperty(myUI.getMessage(Messages.ExtraHours)).setValue(
+                createTextFieldWithProperty(null, myUI.getMessage(Messages.ExtraHours),
+                        new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0, 999),
                         new ObjectProperty<>(0), Settings.getStringToIntegerConverter()));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         lessonsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_LESSONS);
         lessonsTable.setPageLength(lessonsTable.size());
     }
 
     private void addSupervisionItem() {
         NATURAL_COL_ORDER_SUPERVISION = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.ClassName),
-                myUI.getMessage(IndigoMessages.FromDate),
-                myUI.getMessage(IndigoMessages.TillDate),
-                myUI.getMessage(IndigoMessages.Note)};
+                myUI.getMessage(Messages.ClassName),
+                myUI.getMessage(Messages.FromDate),
+                myUI.getMessage(Messages.TillDate),
+                myUI.getMessage(Messages.Note)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (supervisionTable.getContainerDataSource().size() == 0) {
             supervisionTable.setContainerDataSource(prepareSupervisionContainer());
         }
         Item item = ((IndexedContainer) supervisionTable.getContainerDataSource()).addItemAt(
                 supervisionTable.getContainerDataSource().size(), id);
-        item.getItemProperty(Settings.button).setValue(createButton(myUI.getMessage(IndigoMessages.DeleteButton), id,
+        item.getItemProperty(Settings.button).setValue(createButton(myUI.getMessage(Messages.DeleteButton), id,
                 Settings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
-        ComboBox cb = createCombobox(0, myUI.getMessage(IndigoMessages.ClassName), null, true);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.ClassName)).setValue(cb);
+        ComboBox cb = createCombobox(0, myUI.getMessage(Messages.ClassName), null, true);
+        item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(cb);
         try {
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
@@ -4663,28 +4663,28 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             logger.error(ex);
             logger.catching(ex);
         }
-        DateField df = createDateField(today, myUI.getMessage(IndigoMessages.FromDate), null, true,
+        DateField df = createDateField(today, myUI.getMessage(Messages.FromDate), null, true,
                 Settings.datePattern, Resolution.DAY);
         df.setRangeEnd(today);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.FromDate)).setValue(df);
-        df = createDateField(null, myUI.getMessage(IndigoMessages.TillDate), null,
+        item.getItemProperty(myUI.getMessage(Messages.FromDate)).setValue(df);
+        df = createDateField(null, myUI.getMessage(Messages.TillDate), null,
                 false, Settings.datePattern, Resolution.DAY);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.TillDate)).setValue(df);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.Note),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 300, true), false));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+        item.getItemProperty(myUI.getMessage(Messages.TillDate)).setValue(df);
+        item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
+                createTextField(null, myUI.getMessage(Messages.Note),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 300, true), false));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         supervisionTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_SUPERVISION);
         supervisionTable.setPageLength(supervisionTable.size());
     }
 
     private void addOrderItem() {
         NATURAL_COL_ORDER_ORDERS = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.OrderType),
-                myUI.getMessage(IndigoMessages.Details),
-                myUI.getMessage(IndigoMessages.FromDate),
-                myUI.getMessage(IndigoMessages.TillDate),
-                myUI.getMessage(IndigoMessages.Note)};
+                myUI.getMessage(Messages.OrderType),
+                myUI.getMessage(Messages.Details),
+                myUI.getMessage(Messages.FromDate),
+                myUI.getMessage(Messages.TillDate),
+                myUI.getMessage(Messages.Note)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (ordersTable.getContainerDataSource().size() == 0) {
             ordersTable.setContainerDataSource(prepareOrdersContainer());
@@ -4692,8 +4692,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         Item item;
         item = ((IndexedContainer) ordersTable.getContainerDataSource()).addItemAt(
                 ordersTable.getContainerDataSource().size(), id);
-        item.getItemProperty(Settings.button).setValue(createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
-        ComboBox cb = createCombobox(0, myUI.getMessage(IndigoMessages.OrderType), null, true);
+        item.getItemProperty(Settings.button).setValue(createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
+        ComboBox cb = createCombobox(0, myUI.getMessage(Messages.OrderType), null, true);
         cb.setData(id);
         cb.addValueChangeListener(this);
         try {
@@ -4709,23 +4709,23 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             logger.error(ex);
             logger.catching(ex);
         }
-        item.getItemProperty(myUI.getMessage(IndigoMessages.OrderType)).setValue(cb);
+        item.getItemProperty(myUI.getMessage(Messages.OrderType)).setValue(cb);
         cb = createCombobox(0, null, null, false);
         cb.setVisible(false);
         cb.setRequired(false);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Details)).setValue(cb);
-        DateField df = createDateField(today, myUI.getMessage(IndigoMessages.FromDate), null, true,
+        item.getItemProperty(myUI.getMessage(Messages.Details)).setValue(cb);
+        DateField df = createDateField(today, myUI.getMessage(Messages.FromDate), null, true,
                 Settings.datePattern, Resolution.DAY);
         df.setRangeEnd(today);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.FromDate)).setValue(df);
-        df = createDateField(null, myUI.getMessage(IndigoMessages.TillDate), null,
+        item.getItemProperty(myUI.getMessage(Messages.FromDate)).setValue(df);
+        df = createDateField(null, myUI.getMessage(Messages.TillDate), null,
                 false, Settings.datePattern, Resolution.DAY);
         df.setEnabled(false);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.TillDate)).setValue(df);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(
-                createTextField(null, myUI.getMessage(IndigoMessages.Note),
-                        new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 300, true), false));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Insert));
+        item.getItemProperty(myUI.getMessage(Messages.TillDate)).setValue(df);
+        item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
+                createTextField(null, myUI.getMessage(Messages.Note),
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 300, true), false));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         ordersTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_ORDERS);
 
     }
@@ -4738,7 +4738,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         tf.addValidator(validator);
         if (isRequired) {
             tf.setRequired(true);
-            tf.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+            tf.setRequiredError(myUI.getMessage(Messages.RequiredField));
         }
         if (value != null) {
             tf.setValue(value);
@@ -4751,7 +4751,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         tf.setRequired(true);
-        tf.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        tf.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tf.setNullRepresentation("");
         tf.setConverter(conv);
         tf.setWidth(Settings.PERCENTS100);
@@ -4768,7 +4768,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         df.setStyleName(ValoTheme.DATEFIELD_TINY);
         if (isRequired) {
             df.setRequired(true);
-            df.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+            df.setRequiredError(myUI.getMessage(Messages.RequiredField));
         }
         df.setDateFormat(date_format);
         df.setResolution(resolution);
@@ -4791,11 +4791,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth(Settings.PERCENTS100);
-        cb.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        cb.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
             cb.setRequired(true);
-            cb.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+            cb.setRequiredError(myUI.getMessage(Messages.RequiredField));
         }
         cb.setClearButtonCaption(null);
         cb.setSelectAllButtonCaption(null);
@@ -4807,11 +4807,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth(Settings.PERCENTS100);
-        cb.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        cb.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
             cb.setRequired(true);
-            cb.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+            cb.setRequiredError(myUI.getMessage(Messages.RequiredField));
         }
         try {
             if (dbTable != null) {
@@ -4847,20 +4847,20 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         if (contractsCont == null) {
             contractsCont = new IndexedContainer();
             contractsCont.addContainerProperty(Settings.button, HorizontalLayout.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.AgreementType), ComboBox.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.SalaryAmount), TextField.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.CreationDate), DateField.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.Start), DateField.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.End), DateField.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.AcademicYear), Integer.class, 0);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.Year), String.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.ProbationaryPeriod), Integer.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.WorkingDays), Integer.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.SalaryDay), Integer.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.WorkingHours), Integer.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.Patent), String.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.Equipment), String.class, null);
-            contractsCont.addContainerProperty(myUI.getMessage(IndigoMessages.PatentDate), Date.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.AgreementType), ComboBox.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.SalaryAmount), TextField.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.CreationDate), DateField.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.Start), DateField.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.End), DateField.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.AcademicYear), Integer.class, 0);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.Year), String.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.ProbationaryPeriod), Integer.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.WorkingDays), Integer.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.SalaryDay), Integer.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.WorkingHours), Integer.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.Patent), String.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.Equipment), String.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(Messages.PatentDate), Date.class, null);
             contractsCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             contractsCont.removeAllItems();
@@ -4873,9 +4873,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             phonesCont = new IndexedContainer();
             phonesCont.addContainerProperty(Settings.button, Button.class, null);
             phonesCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Type), ComboBox.class, null);
+                    myUI.getMessage(Messages.Type), ComboBox.class, null);
             phonesCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Number), TextField.class, null);
+                    myUI.getMessage(Messages.Number), TextField.class, null);
             phonesCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             phonesCont.removeAllItems();
@@ -4888,15 +4888,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             childrenCont = new IndexedContainer();
             childrenCont.addContainerProperty(Settings.button, Button.class, null);
             childrenCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.FullName), TextField.class, null);
+                    myUI.getMessage(Messages.FullName), TextField.class, null);
             childrenCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.DateOfBirth), DateField.class, null);
+                    myUI.getMessage(Messages.DateOfBirth), DateField.class, null);
             childrenCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Institution), TextField.class, null);
+                    myUI.getMessage(Messages.Institution), TextField.class, null);
             childrenCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.EducationStatus), ComboBox.class, null);
+                    myUI.getMessage(Messages.EducationStatus), ComboBox.class, null);
             childrenCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.HealthStatus), ComboBox.class, null);
+                    myUI.getMessage(Messages.HealthStatus), ComboBox.class, null);
             childrenCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             childrenCont.removeAllItems();
@@ -4909,13 +4909,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         if (c == null) {
             c = new IndexedContainer();
             c.addContainerProperty(Settings.button, Button.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.University), ComboBox.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.Department), TextField.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.Start), DateField.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.End), DateField.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.Country), ComboBox.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.EduLevel), ComboBox.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.Document), HorizontalLayout.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.University), ComboBox.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.Department), TextField.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.Start), DateField.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.End), DateField.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.Country), ComboBox.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.EduLevel), ComboBox.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.Document), HorizontalLayout.class, null);
             c.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             c.removeAllItems();
@@ -4928,13 +4928,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         if (c == null) {
             c = new IndexedContainer();
             c.addContainerProperty(Settings.button, Button.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.WorkPlace), ComboBox.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.MainPosition), ComboBox.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.ExtraPositions), ComboBoxMultiselect.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.WorkingStatus), ComboBox.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.Start), DateField.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.End), DateField.class, null);
-            c.addContainerProperty(myUI.getMessage(IndigoMessages.Sapat), CheckBox.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.WorkPlace), ComboBox.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.MainPosition), ComboBox.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.ExtraPositions), ComboBoxMultiselect.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.WorkingStatus), ComboBox.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.Start), DateField.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.End), DateField.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.Sapat), CheckBox.class, null);
             c.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             c.removeAllItems();
@@ -4947,9 +4947,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             languagesCont = new IndexedContainer();
             languagesCont.addContainerProperty(Settings.button, Button.class, null);
             languagesCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Language), ComboBox.class, null);
+                    myUI.getMessage(Messages.Language), ComboBox.class, null);
             languagesCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Level), ComboBox.class, null);
+                    myUI.getMessage(Messages.Level), ComboBox.class, null);
             languagesCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             languagesCont.removeAllItems();
@@ -4961,11 +4961,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         if (certificatesCont == null) {
             certificatesCont = new IndexedContainer();
             certificatesCont.addContainerProperty(Settings.button, Button.class, null);
-            certificatesCont.addContainerProperty(myUI.getMessage(IndigoMessages.Note), TextField.class, null);
-            certificatesCont.addContainerProperty(myUI.getMessage(IndigoMessages.GivenBy), TextField.class, null);
-            certificatesCont.addContainerProperty(myUI.getMessage(IndigoMessages.IssueDate), DateField.class, null);
-            certificatesCont.addContainerProperty(myUI.getMessage(IndigoMessages.Certificate), ComboBox.class, null);
-            certificatesCont.addContainerProperty(myUI.getMessage(IndigoMessages.Document), HorizontalLayout.class, null);
+            certificatesCont.addContainerProperty(myUI.getMessage(Messages.Note), TextField.class, null);
+            certificatesCont.addContainerProperty(myUI.getMessage(Messages.GivenBy), TextField.class, null);
+            certificatesCont.addContainerProperty(myUI.getMessage(Messages.IssueDate), DateField.class, null);
+            certificatesCont.addContainerProperty(myUI.getMessage(Messages.Certificate), ComboBox.class, null);
+            certificatesCont.addContainerProperty(myUI.getMessage(Messages.Document), HorizontalLayout.class, null);
             certificatesCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             certificatesCont.removeAllItems();
@@ -4978,13 +4978,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             seminarsCont = new IndexedContainer();
             seminarsCont.addContainerProperty(Settings.button, Button.class, null);
             seminarsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Title), TextField.class, null);
+                    myUI.getMessage(Messages.Title), TextField.class, null);
             seminarsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Subject), TextField.class, null);
+                    myUI.getMessage(Messages.Subject), TextField.class, null);
             seminarsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Note), TextField.class, null);
+                    myUI.getMessage(Messages.Note), TextField.class, null);
             seminarsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.IssueDate), DateField.class, null);
+                    myUI.getMessage(Messages.IssueDate), DateField.class, null);
             seminarsCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             seminarsCont.removeAllItems();
@@ -4997,13 +4997,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             examsCont = new IndexedContainer();
             examsCont.addContainerProperty(Settings.button, Button.class, null);
             examsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Exam), ComboBox.class, null);
+                    myUI.getMessage(Messages.Exam), ComboBox.class, null);
             examsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Score), TextField.class, null);
+                    myUI.getMessage(Messages.Score), TextField.class, null);
             examsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.IssueDate), DateField.class, null);
+                    myUI.getMessage(Messages.IssueDate), DateField.class, null);
             examsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Document), HorizontalLayout.class, null);
+                    myUI.getMessage(Messages.Document), HorizontalLayout.class, null);
             examsCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             examsCont.removeAllItems();
@@ -5016,9 +5016,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             branchesCont = new IndexedContainer();
             branchesCont.addContainerProperty(Settings.button, Button.class, null);
             branchesCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Branch), ComboBox.class, null);
+                    myUI.getMessage(Messages.Branch), ComboBox.class, null);
             branchesCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Main), CheckBox.class, null);
+                    myUI.getMessage(Messages.Main), CheckBox.class, null);
             branchesCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             branchesCont.removeAllItems();
@@ -5031,15 +5031,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             lessonsCont = new IndexedContainer();
             lessonsCont.addContainerProperty(Settings.button, Button.class, null);
             lessonsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Lesson), ComboBox.class, null);
+                    myUI.getMessage(Messages.Lesson), ComboBox.class, null);
             lessonsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.ClassName), ComboBox.class, null);
+                    myUI.getMessage(Messages.ClassName), ComboBox.class, null);
             lessonsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.AcademicYear), ComboBox.class, null);
+                    myUI.getMessage(Messages.AcademicYear), ComboBox.class, null);
             lessonsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Hours), TextField.class, null);
+                    myUI.getMessage(Messages.Hours), TextField.class, null);
             lessonsCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.ExtraHours), TextField.class, null);
+                    myUI.getMessage(Messages.ExtraHours), TextField.class, null);
             lessonsCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             lessonsCont.removeAllItems();
@@ -5052,13 +5052,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             supervisionCont = new IndexedContainer();
             supervisionCont.addContainerProperty(Settings.button, Button.class, null);
             supervisionCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.ClassName), ComboBox.class, null);
+                    myUI.getMessage(Messages.ClassName), ComboBox.class, null);
             supervisionCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.FromDate), DateField.class, null);
+                    myUI.getMessage(Messages.FromDate), DateField.class, null);
             supervisionCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.TillDate), DateField.class, null);
+                    myUI.getMessage(Messages.TillDate), DateField.class, null);
             supervisionCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Note), TextField.class, null);
+                    myUI.getMessage(Messages.Note), TextField.class, null);
             supervisionCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             supervisionCont.removeAllItems();
@@ -5071,15 +5071,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             ordersCont = new IndexedContainer();
             ordersCont.addContainerProperty(Settings.button, Button.class, null);
             ordersCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.OrderType), ComboBox.class, null);
+                    myUI.getMessage(Messages.OrderType), ComboBox.class, null);
             ordersCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Details), ComboBox.class, null);
+                    myUI.getMessage(Messages.Details), ComboBox.class, null);
             ordersCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.FromDate), DateField.class, null);
+                    myUI.getMessage(Messages.FromDate), DateField.class, null);
             ordersCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.TillDate), DateField.class, null);
+                    myUI.getMessage(Messages.TillDate), DateField.class, null);
             ordersCont.addContainerProperty(
-                    myUI.getMessage(IndigoMessages.Note), TextField.class, null);
+                    myUI.getMessage(Messages.Note), TextField.class, null);
             ordersCont.addContainerProperty(Settings.effected_by_id, String.class, null);
             ordersCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
@@ -5207,10 +5207,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 Object next = iter.next();
                 String permission;
                 if (Settings.convertCollectionToStr((Set) ((ComboBoxMultiselect) (permissionTable
-                        .getContainerProperty(next, myUI.getMessage(IndigoMessages.Functions))
+                        .getContainerProperty(next, myUI.getMessage(Messages.Functions))
                         .getValue())).getValue()) != null) {
                     permission = next + ":" + (Settings.convertCollectionToStr((Set) ((ComboBoxMultiselect) (permissionTable
-                            .getContainerProperty(next, myUI.getMessage(IndigoMessages.Functions))
+                            .getContainerProperty(next, myUI.getMessage(Messages.Functions))
                             .getValue())).getValue()));
                     dbe.exec_insert_perm(login, permission);
                     permOneStr.append(permission);
@@ -5219,7 +5219,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     }
                 }
             }
-            employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(IndigoMessages.Permissions)).setValue(permOneStr.toString());
+            employeesDataTable.getContainerProperty(employeeID, myUI.getMessage(Messages.Permissions)).setValue(permOneStr.toString());
             dbe.close();
         } catch (Exception ex) {
             logger.error(ex);
@@ -5304,16 +5304,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void addDataContainerItem(int id, int acc_category_id) {
         Item item = ((IndexedContainer) employeesDataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Id)).setValue(loginTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Id)).setValue(loginTF.getValue());
         item.getItemProperty(Settings.id).setValue(id);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.FirstName)).setValue(nameTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.LastName)).setValue(surnameTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.MiddleName)).setValue(middleNameTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.DateOfBirth)).setValue(birthDateDF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Photo)).setValue(photoName);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Permissions)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(nameTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(surnameTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.MiddleName)).setValue(middleNameTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.DateOfBirth)).setValue(birthDateDF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Photo)).setValue(photoName);
+        item.getItemProperty(myUI.getMessage(Messages.Permissions)).setValue(
                 mainPositionCB.getContainerProperty(mainPositionCB.getValue(),
-                        myUI.getMessage(IndigoMessages.Permissions)).getValue());
+                        myUI.getMessage(Messages.Permissions)).getValue());
         item.getItemProperty(Settings.visible_hr_orders).setValue("1,2,3,4,5,6");
         item.getItemProperty(Settings.gender_id).setValue(genderCB.getValue());
         item.getItemProperty(Settings.nationality_id).setValue(nationalityCB.getValue());
@@ -5323,28 +5323,28 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item.getItemProperty(Settings.salary_category_id).setValue(contractCategoryCB.getValue());
         item.getItemProperty(Settings.working_status_id).setValue(2);
         item.getItemProperty(Settings.acc_category_id).setValue(acc_category_id);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.MainPosition)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.MainPosition)).setValue(
                 mainPositionCB.getContainerDataSource().getContainerProperty(mainPositionCB.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.WorkingStatus)).setValue(
-                workingStatCont.getContainerProperty(2, myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
+        item.getItemProperty(myUI.getMessage(Messages.WorkingStatus)).setValue(
+                workingStatCont.getContainerProperty(2, myUI.getMessage(Messages.Title)).getValue().toString());
         employeesDataTable.clearFilters();
         employeesDataTable.setValue(id);
     }
 
     private void updateDataContainer() {
         employeesDataTable.getContainerProperty(employeeID,
-                myUI.getMessage(IndigoMessages.Id)).setValue(loginTF.getValue());
+                myUI.getMessage(Messages.Id)).setValue(loginTF.getValue());
         employeesDataTable.getContainerProperty(employeeID,
-                myUI.getMessage(IndigoMessages.FirstName)).setValue(nameTF.getValue());
+                myUI.getMessage(Messages.FirstName)).setValue(nameTF.getValue());
         employeesDataTable.getContainerProperty(employeeID,
-                myUI.getMessage(IndigoMessages.LastName)).setValue(surnameTF.getValue());
+                myUI.getMessage(Messages.LastName)).setValue(surnameTF.getValue());
         employeesDataTable.getContainerProperty(employeeID,
-                myUI.getMessage(IndigoMessages.MiddleName)).setValue(middleNameTF.getValue());
+                myUI.getMessage(Messages.MiddleName)).setValue(middleNameTF.getValue());
         employeesDataTable.getContainerProperty(employeeID,
-                myUI.getMessage(IndigoMessages.Photo)).setValue(photoName);
+                myUI.getMessage(Messages.Photo)).setValue(photoName);
         employeesDataTable.getContainerProperty(employeeID,
-                myUI.getMessage(IndigoMessages.DateOfBirth)).setValue(birthDateDF.getValue());
+                myUI.getMessage(Messages.DateOfBirth)).setValue(birthDateDF.getValue());
         employeesDataTable.getContainerProperty(employeeID,
                 Settings.gender_id).setValue(genderCB.getValue());
         employeesDataTable.getContainerProperty(employeeID,
@@ -5356,9 +5356,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         employeesDataTable.getContainerProperty(employeeID,
                 Settings.salary_category_id).setValue(contractCategoryCB.getValue());
         employeesDataTable.getContainerProperty(employeeID,
-                myUI.getMessage(IndigoMessages.MainPosition)).setValue(mainPositionCB
+                myUI.getMessage(Messages.MainPosition)).setValue(mainPositionCB
                 .getContainerDataSource().getContainerProperty(mainPositionCB.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
     }
 
     private void execDelete() {
@@ -5377,7 +5377,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbDef.getConnection().setAutoCommit(true);
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException ex) {
-            Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             if (dbDef != null) {
                 try {
@@ -5406,9 +5406,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbe.connect();
             if (st != 0) {
                 dbe.exec_delete_perm(employeesDataTable.getContainerDataSource().getContainerProperty(employeeID,
-                        myUI.getMessage(IndigoMessages.Id)).getValue().toString());
+                        myUI.getMessage(Messages.Id)).getValue().toString());
                 dbe.exec_delete_role(employeesDataTable.getContainerDataSource().getContainerProperty(employeeID,
-                        myUI.getMessage(IndigoMessages.Id)).getValue().toString());
+                        myUI.getMessage(Messages.Id)).getValue().toString());
                 clearEmployeeFields(false);
                 clearContactFields();
                 clearSpouseFields();
@@ -5430,7 +5430,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 repaint();
                 employeesDataTable.getContainerDataSource().removeItem(employeeID);
                 employeesDataTable.setValue(null);
-                Notification.show(myUI.getMessage(IndigoMessages.ValueDeleted), Notification.Type.HUMANIZED_MESSAGE);
+                Notification.show(myUI.getMessage(Messages.ValueDeleted), Notification.Type.HUMANIZED_MESSAGE);
             }
             dbe.close();
         } catch (Exception ignored) {
@@ -5520,16 +5520,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else {
             ComboBox ordersCB = (ComboBox) property;
             if (ordersCB.getValue() != null) {
-                ComboBox orders_extraCB = ((ComboBox) ordersTable.getContainerProperty(ordersCB.getData(), myUI.getMessage(IndigoMessages.Details)).getValue());
-                DateField orderToDateDF = ((DateField) ordersTable.getContainerProperty(ordersCB.getData(), myUI.getMessage(IndigoMessages.TillDate)).getValue());
+                ComboBox orders_extraCB = ((ComboBox) ordersTable.getContainerProperty(ordersCB.getData(), myUI.getMessage(Messages.Details)).getValue());
+                DateField orderToDateDF = ((DateField) ordersTable.getContainerProperty(ordersCB.getData(), myUI.getMessage(Messages.TillDate)).getValue());
 
                 try {
                     if ((Integer) ordersCB.getValue() == 3) {
                         orderToDateDF.setEnabled(true);
                         orders_extraCB.setVisible(true);
-                        orders_extraCB.setDescription(myUI.getMessage(IndigoMessages.ClassName));
+                        orders_extraCB.setDescription(myUI.getMessage(Messages.ClassName));
                         orders_extraCB.setRequired(true);
-                        orders_extraCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                        orders_extraCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
                         DbClassName dbcn = new DbClassName();
                         dbcn.connect();
                         orders_extraCB.setContainerDataSource(
@@ -5537,9 +5537,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         dbcn.close();
                     } else if ((Integer) ordersCB.getValue() == 5) {
                         orders_extraCB.setVisible(true);
-                        orders_extraCB.setDescription(myUI.getMessage(IndigoMessages.School));
+                        orders_extraCB.setDescription(myUI.getMessage(Messages.School));
                         orders_extraCB.setRequired(true);
-                        orders_extraCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                        orders_extraCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
                         DbSchool dbs = new DbSchool();
                         dbs.connect();
                         orders_extraCB.setContainerDataSource(
@@ -5554,9 +5554,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                             orderToDateDF.setEnabled(false);
                         }
                         orders_extraCB.setVisible(true);
-                        orders_extraCB.setDescription(myUI.getMessage(IndigoMessages.Position));
+                        orders_extraCB.setDescription(myUI.getMessage(Messages.Position));
                         orders_extraCB.setRequired(true);
-                        orders_extraCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                        orders_extraCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
                         DbDefinition dbd = new DbDefinition();
                         dbd.connect();
                         orders_extraCB.setContainerDataSource(
@@ -5586,43 +5586,43 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         TextField tf;
         if (type_id == 1) {
             tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
-                            contract_id, myUI.getMessage(IndigoMessages.ProbationaryPeriod)).getValue(), null,
-                    new IntegerRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 12),
+                            contract_id, myUI.getMessage(Messages.ProbationaryPeriod)).getValue(), null,
+                    new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 1, 12),
                     new ObjectProperty(0), Settings.getStringToIntegerConverter());
-            tf.setCaption(myUI.getMessage(IndigoMessages.ProbationaryPeriod));
+            tf.setCaption(myUI.getMessage(Messages.ProbationaryPeriod));
             contractExtraInfoLay.addComponent(tf);
             tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
-                            contract_id, myUI.getMessage(IndigoMessages.SalaryDay)).getValue(), null,
-                    new IntegerRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 31),
+                            contract_id, myUI.getMessage(Messages.SalaryDay)).getValue(), null,
+                    new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 1, 31),
                     new ObjectProperty(0), Settings.getStringToIntegerConverter());
-            tf.setCaption(myUI.getMessage(IndigoMessages.SalaryDay));
+            tf.setCaption(myUI.getMessage(Messages.SalaryDay));
             contractExtraInfoLay.addComponent(tf);
             tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
-                            contract_id, myUI.getMessage(IndigoMessages.WorkingDays)).getValue(), null,
-                    new IntegerRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 7),
+                            contract_id, myUI.getMessage(Messages.WorkingDays)).getValue(), null,
+                    new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 1, 7),
                     new ObjectProperty(0), Settings.getStringToIntegerConverter());
-            tf.setCaption(myUI.getMessage(IndigoMessages.WorkingDays));
+            tf.setCaption(myUI.getMessage(Messages.WorkingDays));
             contractExtraInfoLay.addComponent(tf);
             tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
-                            contract_id, myUI.getMessage(IndigoMessages.WorkingHours)).getValue(), null,
-                    new IntegerRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 24),
+                            contract_id, myUI.getMessage(Messages.WorkingHours)).getValue(), null,
+                    new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 1, 24),
                     new ObjectProperty(0), Settings.getStringToIntegerConverter());
-            tf.setCaption(myUI.getMessage(IndigoMessages.WorkingHours));
+            tf.setCaption(myUI.getMessage(Messages.WorkingHours));
             contractExtraInfoLay.addComponent(tf);
             if (type_id == 1) {
                 tf = createTextField(contractsTable.getContainerProperty(
-                        contract_id, myUI.getMessage(IndigoMessages.Equipment)).getValue() == null ? "" :
-                        contractsTable.getContainerProperty(contract_id, myUI.getMessage(IndigoMessages.Equipment))
+                        contract_id, myUI.getMessage(Messages.Equipment)).getValue() == null ? "" :
+                        contractsTable.getContainerProperty(contract_id, myUI.getMessage(Messages.Equipment))
                                 .getValue().toString(), null, new StringLengthValidator(
-                        myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 350, false), true);
-                tf.setCaption(myUI.getMessage(IndigoMessages.Equipment));
+                        myUI.getMessage(Messages.NotificationWrongValue), 1, 350, false), true);
+                tf.setCaption(myUI.getMessage(Messages.Equipment));
                 contractExtraInfoLay.addComponent(tf);
             }
         } else {
             if (type_id == 4) {
                 ComboBox cb = createCombobox(0, null, null, true);
-                cb.setCaption(myUI.getMessage(IndigoMessages.AcademicYear));
-                cb.setData(myUI.getMessage(IndigoMessages.Year));
+                cb.setCaption(myUI.getMessage(Messages.AcademicYear));
+                cb.setData(myUI.getMessage(Messages.Year));
                 try {
                     DbDefinition dbd = new DbDefinition();
                     dbd.connect();
@@ -5633,24 +5633,24 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     logger.catching(ex);
                 }
                 cb.setValue(contractsTable.getContainerProperty(contract_id,
-                        myUI.getMessage(IndigoMessages.AcademicYear)).getValue());
+                        myUI.getMessage(Messages.AcademicYear)).getValue());
                 contractExtraInfoLay.addComponent(cb);
             }
             if (type_id != 3 && type_id != 2) {
                 tf = createTextField(contractsTable.getContainerProperty(
-                        contract_id, myUI.getMessage(IndigoMessages.Patent)).getValue() == null ? "" :
-                        contractsTable.getContainerProperty(contract_id, myUI.getMessage(IndigoMessages.Patent))
+                        contract_id, myUI.getMessage(Messages.Patent)).getValue() == null ? "" :
+                        contractsTable.getContainerProperty(contract_id, myUI.getMessage(Messages.Patent))
                                 .getValue().toString(), null, new StringLengthValidator(
-                        myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 200, false), true);
-                tf.setCaption(myUI.getMessage(IndigoMessages.Patent));
+                        myUI.getMessage(Messages.NotificationWrongValue), 1, 200, false), true);
+                tf.setCaption(myUI.getMessage(Messages.Patent));
                 contractExtraInfoLay.addComponent(tf);
                 contractExtraInfoLay.addComponent(createDateField((Date) contractsTable.getContainerProperty(
-                                contract_id, myUI.getMessage(IndigoMessages.PatentDate)).getValue(), null,
-                        myUI.getMessage(IndigoMessages.PatentDate), true, Settings.datePattern, Resolution.DAY));
+                                contract_id, myUI.getMessage(Messages.PatentDate)).getValue(), null,
+                        myUI.getMessage(Messages.PatentDate), true, Settings.datePattern, Resolution.DAY));
             }
         }
         if (printContractBtn == null) {
-            printContractBtn = new Button(myUI.getMessage(IndigoMessages.Print));
+            printContractBtn = new Button(myUI.getMessage(Messages.Print));
             printContractBtn.setStyleName(ValoTheme.BUTTON_SMALL);
             printContractBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
             printContractBtn.setIcon(FontAwesome.PRINT);
@@ -5674,46 +5674,46 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 contractsTable.getContainerProperty(id, cb.getData()).setValue(cb.getItemCaption(cb.getValue()));
             }
         }
-        if ((Integer) contractsTable.getContainerProperty(id, myUI.getMessage(IndigoMessages.AcademicYear)).getValue() != 0) {
+        if ((Integer) contractsTable.getContainerProperty(id, myUI.getMessage(Messages.AcademicYear)).getValue() != 0) {
             employeeContract.setYearId((Integer) contractsTable.getContainerProperty(id,
-                    myUI.getMessage(IndigoMessages.AcademicYear)).getValue());
+                    myUI.getMessage(Messages.AcademicYear)).getValue());
             employeeContract.setYear(contractsTable.getContainerProperty(id,
-                    myUI.getMessage(IndigoMessages.Year)).getValue().toString());
+                    myUI.getMessage(Messages.Year)).getValue().toString());
         }
         if (contractsTable.getContainerProperty(id,
-                myUI.getMessage(IndigoMessages.ProbationaryPeriod)).getValue() != null) {
+                myUI.getMessage(Messages.ProbationaryPeriod)).getValue() != null) {
             employeeContract.setProbationaryPeriod((Integer) contractsTable.getContainerProperty(id,
-                    myUI.getMessage(IndigoMessages.ProbationaryPeriod)).getValue());
+                    myUI.getMessage(Messages.ProbationaryPeriod)).getValue());
         }
         if (contractsTable.getContainerProperty(id,
-                myUI.getMessage(IndigoMessages.SalaryDay)).getValue() != null) {
+                myUI.getMessage(Messages.SalaryDay)).getValue() != null) {
             employeeContract.setSalaryDay((Integer) contractsTable.getContainerProperty(id,
-                    myUI.getMessage(IndigoMessages.SalaryDay)).getValue());
+                    myUI.getMessage(Messages.SalaryDay)).getValue());
         }
         if (contractsTable.getContainerProperty(id,
-                myUI.getMessage(IndigoMessages.WorkingDays)).getValue() != null) {
+                myUI.getMessage(Messages.WorkingDays)).getValue() != null) {
             employeeContract.setWorkingDays((Integer) contractsTable.getContainerProperty(id,
-                    myUI.getMessage(IndigoMessages.WorkingDays)).getValue());
+                    myUI.getMessage(Messages.WorkingDays)).getValue());
         }
         if (contractsTable.getContainerProperty(id,
-                myUI.getMessage(IndigoMessages.WorkingHours)).getValue() != null) {
+                myUI.getMessage(Messages.WorkingHours)).getValue() != null) {
             employeeContract.setWorkingHours((Integer) contractsTable.getContainerProperty(id,
-                    myUI.getMessage(IndigoMessages.WorkingHours)).getValue());
+                    myUI.getMessage(Messages.WorkingHours)).getValue());
         }
         if (contractsTable.getContainerProperty(id,
-                myUI.getMessage(IndigoMessages.Patent)).getValue() != null) {
+                myUI.getMessage(Messages.Patent)).getValue() != null) {
             employeeContract.setPatent(contractsTable.getContainerProperty(id,
-                    myUI.getMessage(IndigoMessages.Patent)).getValue().toString());
+                    myUI.getMessage(Messages.Patent)).getValue().toString());
         }
         if (contractsTable.getContainerProperty(id,
-                myUI.getMessage(IndigoMessages.Equipment)).getValue() != null) {
+                myUI.getMessage(Messages.Equipment)).getValue() != null) {
             employeeContract.setEquipment(contractsTable.getContainerProperty(id,
-                    myUI.getMessage(IndigoMessages.Equipment)).getValue().toString());
+                    myUI.getMessage(Messages.Equipment)).getValue().toString());
         }
         if (contractsTable.getContainerProperty(id,
-                myUI.getMessage(IndigoMessages.PatentDate)).getValue() != null) {
+                myUI.getMessage(Messages.PatentDate)).getValue() != null) {
             employeeContract.setPatentDate((Date) contractsTable.getContainerProperty(id,
-                    myUI.getMessage(IndigoMessages.PatentDate)).getValue());
+                    myUI.getMessage(Messages.PatentDate)).getValue());
         }
         try {
             DbEmployeeContract dbCon = new DbEmployeeContract();

@@ -16,7 +16,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.dao.DbSchool;
 import kg.alex.indigo.dao.DbStudent;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
@@ -58,13 +58,13 @@ public class StatusesReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDefinition dbd = new DbDefinition();
@@ -78,23 +78,23 @@ public class StatusesReport implements Button.ClickListener,
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
         yearSelect.addValueChangeListener(this);
 
-        statusMS = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Status));
+        statusMS = new ComboBoxMultiselect(myUI.getMessage(Messages.Status));
         statusMS.setStyleName(ValoTheme.COMBOBOX_TINY);
         statusMS.setWidth(Settings.PERCENTS100);
-        statusMS.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        statusMS.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         statusMS.setFilteringMode(FilteringMode.CONTAINS);
-        statusMS.setClearButtonCaption(myUI.getMessage(IndigoMessages.Clear));
+        statusMS.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         statusMS.setShowSelectAllButton((filter, page) -> true);
-        statusMS.setSelectAllButtonCaption(myUI.getMessage(IndigoMessages.SelectAll));
+        statusMS.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         statusMS.addValueChangeListener(this);
 
-        selectAllClassesBtn = new Button(myUI.getMessage(IndigoMessages.AllClasses));
+        selectAllClassesBtn = new Button(myUI.getMessage(Messages.AllClasses));
         selectAllClassesBtn.setWidth(Settings.PERCENTS100);
         selectAllClassesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllClassesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllClassesBtn.addClickListener(this);
 
-        deselectAllClassesBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllClassesBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllClassesBtn.setWidth(Settings.PERCENTS100);
         deselectAllClassesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllClassesBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -123,15 +123,15 @@ public class StatusesReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        selectAllSchoolsBtn = new Button(myUI.getMessage(IndigoMessages.AllSchools));
+        selectAllSchoolsBtn = new Button(myUI.getMessage(Messages.AllSchools));
         selectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         selectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllSchoolsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllSchoolsBtn.addClickListener(this);
 
-        deselectAllSchoolsBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllSchoolsBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         deselectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllSchoolsBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -155,13 +155,13 @@ public class StatusesReport implements Button.ClickListener,
             dbsc.connect();
             schoolsTable.setContainerDataSource(dbsc.execSchoolSel(myUI, 0));
             dbsc.close();
-            schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
+            schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -169,7 +169,7 @@ public class StatusesReport implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -234,14 +234,14 @@ public class StatusesReport implements Button.ClickListener,
                         while (status_iter.hasNext()) {
                             Object nextStatus = status_iter.next();
                             dataTable.setColumnAlignment(classTable.getContainerProperty(
-                                            nextClass, myUI.getMessage(IndigoMessages.Title)).getValue() + " "
-                                            + myUI.getMessage(IndigoMessages.ClassName) + " "
+                                            nextClass, myUI.getMessage(Messages.Title)).getValue() + " "
+                                            + myUI.getMessage(Messages.ClassName) + " "
                                             + statusMS.getContainerProperty(
-                                            nextStatus, myUI.getMessage(IndigoMessages.Title)).getValue(),
+                                            nextStatus, myUI.getMessage(Messages.Title)).getValue(),
                                     Table.Align.RIGHT);
                         }
                     }
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Total),
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Total),
                             Table.Align.RIGHT);
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -256,7 +256,7 @@ public class StatusesReport implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
-                    excelReport.setReportTitle(myUI.getMessage(IndigoMessages.StatusesReport));
+                    excelReport.setReportTitle(myUI.getMessage(Messages.StatusesReport));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
                 }

@@ -15,7 +15,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.*;
 import kg.alex.indigo.domain.AccCategory;
 import kg.alex.indigo.domain.School;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,12 +52,12 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     public SchoolDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Code),
-                myUI.getMessage(IndigoMessages.TitleRu), myUI.getMessage(IndigoMessages.TitleKg),
-                myUI.getMessage(IndigoMessages.TitleEn),
-                myUI.getMessage(IndigoMessages.SchoolType), myUI.getMessage(IndigoMessages.Status),
-                myUI.getMessage(IndigoMessages.Bank), myUI.getMessage(IndigoMessages.BankAccount),
-                myUI.getMessage(IndigoMessages.Address), myUI.getMessage(IndigoMessages.Phone)};
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Code),
+                myUI.getMessage(Messages.TitleRu), myUI.getMessage(Messages.TitleKg),
+                myUI.getMessage(Messages.TitleEn),
+                myUI.getMessage(Messages.SchoolType), myUI.getMessage(Messages.Status),
+                myUI.getMessage(Messages.Bank), myUI.getMessage(Messages.BankAccount),
+                myUI.getMessage(Messages.Address), myUI.getMessage(Messages.Phone)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -78,13 +78,13 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             logger.catching(e);
         }
         dataTable.setColumnCollapsingAllowed(true);
-        dataTable.setColumnCollapsed(myUI.getMessage(IndigoMessages.TitleKg), true);
-        dataTable.setColumnCollapsed(myUI.getMessage(IndigoMessages.TitleEn), true);
-        dataTable.setColumnCollapsed(myUI.getMessage(IndigoMessages.Bank), true);
-        dataTable.setColumnCollapsed(myUI.getMessage(IndigoMessages.BankAccount), true);
-        dataTable.setColumnCollapsed(myUI.getMessage(IndigoMessages.Address), true);
-        dataTable.setColumnCollapsed(myUI.getMessage(IndigoMessages.Phone), true);
-        dataTable.setColumnCollapsed(myUI.getMessage(IndigoMessages.Logo), true);
+        dataTable.setColumnCollapsed(myUI.getMessage(Messages.TitleKg), true);
+        dataTable.setColumnCollapsed(myUI.getMessage(Messages.TitleEn), true);
+        dataTable.setColumnCollapsed(myUI.getMessage(Messages.Bank), true);
+        dataTable.setColumnCollapsed(myUI.getMessage(Messages.BankAccount), true);
+        dataTable.setColumnCollapsed(myUI.getMessage(Messages.Address), true);
+        dataTable.setColumnCollapsed(myUI.getMessage(Messages.Phone), true);
+        dataTable.setColumnCollapsed(myUI.getMessage(Messages.Logo), true);
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
@@ -114,7 +114,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(IndigoMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -122,7 +122,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(IndigoMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -130,94 +130,94 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(IndigoMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(IndigoMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay, 0, 0, 1, 0);
 
-        codeTF = new TextField(myUI.getMessage(IndigoMessages.Code));
+        codeTF = new TextField(myUI.getMessage(Messages.Code));
         codeTF.setRequired(true);
         codeTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        codeTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        codeTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         codeTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(codeTF);
 
-        innTF = new TextField(myUI.getMessage(IndigoMessages.INN));
+        innTF = new TextField(myUI.getMessage(Messages.INN));
         innTF.setRequired(false);
         innTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         innTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(innTF);
 
-        nameRuTF = new TextField(myUI.getMessage(IndigoMessages.TitleRu));
+        nameRuTF = new TextField(myUI.getMessage(Messages.TitleRu));
         nameRuTF.setRequired(true);
-        nameRuTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        nameRuTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         nameRuTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameRuTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(nameRuTF);
 
-        nameKgTF = new TextField(myUI.getMessage(IndigoMessages.TitleKg));
+        nameKgTF = new TextField(myUI.getMessage(Messages.TitleKg));
         nameKgTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameKgTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(nameKgTF);
 
-        nameEnTF = new TextField(myUI.getMessage(IndigoMessages.TitleEn));
+        nameEnTF = new TextField(myUI.getMessage(Messages.TitleEn));
         nameEnTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameEnTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(nameEnTF);
 
-        cityTF = new TextField(myUI.getMessage(IndigoMessages.City) + " (Ru/Kg)");
+        cityTF = new TextField(myUI.getMessage(Messages.City) + " (Ru/Kg)");
         cityTF.setRequired(false);
         cityTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         cityTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(cityTF);
 
-        addressTF = new TextField(myUI.getMessage(IndigoMessages.Address) + " (Ru/Kg)");
+        addressTF = new TextField(myUI.getMessage(Messages.Address) + " (Ru/Kg)");
         addressTF.setRequired(false);
         addressTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         addressTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(addressTF);
 
-        phoneTF = new TextField(myUI.getMessage(IndigoMessages.Phone));
+        phoneTF = new TextField(myUI.getMessage(Messages.Phone));
         phoneTF.setRequired(false);
         phoneTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         phoneTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(phoneTF);
 
-        bankTF = new TextField(myUI.getMessage(IndigoMessages.Bank) + " (Ru/Kg)");
+        bankTF = new TextField(myUI.getMessage(Messages.Bank) + " (Ru/Kg)");
         bankTF.setRequired(false);
         bankTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         bankTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(bankTF);
 
-        bankAccountTF = new TextField(myUI.getMessage(IndigoMessages.BankAccount));
+        bankAccountTF = new TextField(myUI.getMessage(Messages.BankAccount));
         bankAccountTF.setRequired(false);
         bankAccountTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         bankAccountTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(bankAccountTF);
 
-        typeSelect = new ComboBox(myUI.getMessage(IndigoMessages.SchoolType));
+        typeSelect = new ComboBox(myUI.getMessage(Messages.SchoolType));
         typeSelect.setNullSelectionAllowed(false);
         typeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         typeSelect.setRequired(true);
-        typeSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        typeSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         typeSelect.setWidth(Settings.PERCENTS100);
-        typeSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        typeSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         typeSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(typeSelect);
 
@@ -233,13 +233,13 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         settingsLay.addComponent(new Label());
         settingsLay.addComponent(photoUpl);
 
-        statusSelect = new ComboBox(myUI.getMessage(IndigoMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setRequired(true);
-        statusSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        statusSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         statusSelect.setWidth(Settings.PERCENTS100);
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -276,10 +276,10 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             codeTF.focus();
             statusSelect.setValue(2);
         } else if (source == deleteBtn && dataTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                    myUI.getMessage(IndigoMessages.ConfirmDeletion),
-                    myUI.getMessage(IndigoMessages.Yes),
-                    myUI.getMessage(IndigoMessages.No),
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
@@ -307,8 +307,8 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             for (Object next : salCont.getItemIds()) {
                                 AccCategory ac = new AccCategory();
                                 ac.setCode(sch.getCode());
-                                ac.setName(salCont.getContainerProperty(next, myUI.getMessage(IndigoMessages.Title)).getValue() + " - " + sch.getName_ru());
-                                ac.setParent_code(salCont.getContainerProperty(next, myUI.getMessage(IndigoMessages.Code)).getValue().toString());
+                                ac.setName(salCont.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue() + " - " + sch.getName_ru());
+                                ac.setParent_code(salCont.getContainerProperty(next, myUI.getMessage(Messages.Code)).getValue().toString());
                                 ac.setParent_id((Integer) next);
                                 ac.setStatus_id(2);
                                 ac.setType_id(2);
@@ -319,8 +319,8 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             for (Object next : typesContainer.getItemIds()) {
                                 AccCategory ac = new AccCategory();
                                 ac.setCode(sch.getCode());
-                                ac.setName(typesContainer.getContainerProperty(next, myUI.getMessage(IndigoMessages.Title)).getValue() + " - " + sch.getName_ru());
-                                ac.setParent_code(typesContainer.getContainerProperty(next, myUI.getMessage(IndigoMessages.Code)).getValue().toString());
+                                ac.setName(typesContainer.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue() + " - " + sch.getName_ru());
+                                ac.setParent_code(typesContainer.getContainerProperty(next, myUI.getMessage(Messages.Code)).getValue().toString());
                                 ac.setParent_id((Integer) next);
                                 ac.setStatus_id(2);
                                 ac.setType_id(5);
@@ -330,15 +330,15 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             }
                             dba.close();
                             addDataContainerItem(id);
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                             Item item = (myUI.getSchoolCont()).addItem(id);
-                            item.getItemProperty(myUI.getMessage(IndigoMessages.Logo)).setValue(sch.getPhoto());
-                            item.getItemProperty(myUI.getMessage(IndigoMessages.Code)).setValue(codeTF.getValue());
-                            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(
+                            item.getItemProperty(myUI.getMessage(Messages.Logo)).setValue(sch.getPhoto());
+                            item.getItemProperty(myUI.getMessage(Messages.Code)).setValue(codeTF.getValue());
+                            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                                     codeTF.getValue() + " - " + nameRuTF.getValue());
                         } else {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
@@ -353,9 +353,9 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                         }
                         if (status != 0) {
                             if (!school.getCode().equals(dataTable.getContainerProperty(dataTable.getContainerProperty(dataTable.getValue(),
-                                    Settings.id).getValue(), myUI.getMessage(IndigoMessages.Code)).getValue())
+                                    Settings.id).getValue(), myUI.getMessage(Messages.Code)).getValue())
                                     || !school.getName_kg().equals(dataTable.getContainerProperty(dataTable.getContainerProperty(dataTable.getValue(),
-                                    Settings.id).getValue(), myUI.getMessage(IndigoMessages.TitleRu)).getValue())) {
+                                    Settings.id).getValue(), myUI.getMessage(Messages.TitleRu)).getValue())) {
                                 DbSalaryCategories dbsc = new DbSalaryCategories();
                                 dbsc.connect();
                                 IndexedContainer salCont = dbsc.execSQL(myUI);
@@ -369,33 +369,33 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                                 for (Object next : salCont.getItemIds()) {
                                     int id = dba.exec_id((Integer) next, school.getId());
                                     dba.exec_update_code(id, school.getCode(), salCont.getContainerProperty(next,
-                                            myUI.getMessage(IndigoMessages.Title)).getValue() + " - " + school.getName_ru());
+                                            myUI.getMessage(Messages.Title)).getValue() + " - " + school.getName_ru());
                                     dba.exec_update_all_parent_codes(id, salCont.getContainerProperty(next,
-                                            myUI.getMessage(IndigoMessages.Code)).getValue() + "." + school.getCode(), false);
+                                            myUI.getMessage(Messages.Code)).getValue() + "." + school.getCode(), false);
                                 }
                                 for (Object next : typesContainer.getItemIds()) {
                                     int id = dba.exec_id((Integer) next, school.getId());
                                     dba.exec_update_code(id, school.getCode(), typesContainer.getContainerProperty(next,
-                                            myUI.getMessage(IndigoMessages.Title)).getValue() + " - " + school.getName_ru());
+                                            myUI.getMessage(Messages.Title)).getValue() + " - " + school.getName_ru());
                                     dba.exec_update_all_parent_codes(id, typesContainer.getContainerProperty(next,
-                                            myUI.getMessage(IndigoMessages.Code)).getValue() + "." + school.getCode(), false);
+                                            myUI.getMessage(Messages.Code)).getValue() + "." + school.getCode(), false);
                                 }
                                 dba.close();
                             }
                             updateDataContainer();
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                             myUI.getSchoolCont().getContainerProperty(dataTable.getValue(),
-                                    myUI.getMessage(IndigoMessages.Title)).setValue(codeTF.getValue() + " - " + nameRuTF.getValue());
+                                    myUI.getMessage(Messages.Title)).setValue(codeTF.getValue() + " - " + nameRuTF.getValue());
                         } else {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     }
                     dbScl.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -474,60 +474,60 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
     private void fillFields() {
         codeTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Code)).getValue().toString());
+                myUI.getMessage(Messages.Code)).getValue().toString());
         nameRuTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.TitleRu)).getValue().toString());
+                myUI.getMessage(Messages.TitleRu)).getValue().toString());
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).getValue());
         typeSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.school_type_id).getValue());
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.TitleKg)).getValue() != null) {
+                myUI.getMessage(Messages.TitleKg)).getValue() != null) {
             nameKgTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.TitleKg)).getValue().toString());
+                    myUI.getMessage(Messages.TitleKg)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.TitleEn)).getValue() != null) {
+                myUI.getMessage(Messages.TitleEn)).getValue() != null) {
             nameEnTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.TitleEn)).getValue().toString());
+                    myUI.getMessage(Messages.TitleEn)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.City)).getValue() != null) {
+                myUI.getMessage(Messages.City)).getValue() != null) {
             cityTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.City)).getValue().toString());
+                    myUI.getMessage(Messages.City)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Address)).getValue() != null) {
+                myUI.getMessage(Messages.Address)).getValue() != null) {
             addressTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.Address)).getValue().toString());
+                    myUI.getMessage(Messages.Address)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.INN)).getValue() != null) {
+                myUI.getMessage(Messages.INN)).getValue() != null) {
             innTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.INN)).getValue().toString());
+                    myUI.getMessage(Messages.INN)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Bank)).getValue() != null) {
+                myUI.getMessage(Messages.Bank)).getValue() != null) {
             bankTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.Bank)).getValue().toString());
+                    myUI.getMessage(Messages.Bank)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.BankAccount)).getValue() != null) {
+                myUI.getMessage(Messages.BankAccount)).getValue() != null) {
             bankAccountTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.BankAccount)).getValue().toString());
+                    myUI.getMessage(Messages.BankAccount)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Phone)).getValue() != null) {
+                myUI.getMessage(Messages.Phone)).getValue() != null) {
             phoneTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.Phone)).getValue().toString());
+                    myUI.getMessage(Messages.Phone)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Logo)).getValue() != null) {
+                myUI.getMessage(Messages.Logo)).getValue() != null) {
             photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS
                     + dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.Logo)).getValue().toString())));
+                    myUI.getMessage(Messages.Logo)).getValue().toString())));
             photoName = dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.Logo)).getValue().toString();
+                    myUI.getMessage(Messages.Logo)).getValue().toString();
         } else {
             photoName = null;
         }
@@ -553,64 +553,64 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
     private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Code)).setValue(codeTF.getValue());
+                myUI.getMessage(Messages.Code)).setValue(codeTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.TitleKg)).setValue(nameKgTF.getValue());
+                myUI.getMessage(Messages.TitleKg)).setValue(nameKgTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.TitleRu)).setValue(nameRuTF.getValue());
+                myUI.getMessage(Messages.TitleRu)).setValue(nameRuTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.TitleEn)).setValue(nameEnTF.getValue());
+                myUI.getMessage(Messages.TitleEn)).setValue(nameEnTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.City)).setValue(cityTF.getValue());
+                myUI.getMessage(Messages.City)).setValue(cityTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Address)).setValue(addressTF.getValue());
+                myUI.getMessage(Messages.Address)).setValue(addressTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.INN)).setValue(innTF.getValue());
+                myUI.getMessage(Messages.INN)).setValue(innTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Address)).setValue(addressTF.getValue());
+                myUI.getMessage(Messages.Address)).setValue(addressTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Bank)).setValue(bankTF.getValue());
+                myUI.getMessage(Messages.Bank)).setValue(bankTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.BankAccount)).setValue(bankAccountTF.getValue());
+                myUI.getMessage(Messages.BankAccount)).setValue(bankAccountTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Phone)).setValue(phoneTF.getValue());
+                myUI.getMessage(Messages.Phone)).setValue(phoneTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Logo)).setValue(photoName);
+                myUI.getMessage(Messages.Logo)).setValue(photoName);
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Status)).setValue(statusSelect.
+                myUI.getMessage(Messages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.school_type_id).setValue(typeSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.SchoolType)).setValue(typeSelect.
+                myUI.getMessage(Messages.SchoolType)).setValue(typeSelect.
                 getContainerProperty(typeSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
     }
 
     private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Code)).setValue(codeTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.TitleKg)).setValue(nameKgTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.TitleRu)).setValue(nameRuTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.TitleEn)).setValue(nameEnTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.City)).setValue(cityTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Address)).setValue(addressTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.INN)).setValue(innTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Bank)).setValue(bankTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.BankAccount)).setValue(bankAccountTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Phone)).setValue(phoneTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Logo)).setValue(photoName);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Status)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Code)).setValue(codeTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.TitleKg)).setValue(nameKgTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.TitleRu)).setValue(nameRuTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.TitleEn)).setValue(nameEnTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.City)).setValue(cityTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Address)).setValue(addressTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.INN)).setValue(innTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Bank)).setValue(bankTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.BankAccount)).setValue(bankAccountTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Phone)).setValue(phoneTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Logo)).setValue(photoName);
+        item.getItemProperty(myUI.getMessage(Messages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         item.getItemProperty(Settings.status_id).setValue(statusSelect.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.SchoolType)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.SchoolType)).setValue(
                 typeSelect.getContainerProperty(typeSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         item.getItemProperty(Settings.school_type_id).setValue(typeSelect.getValue());
         item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
@@ -661,7 +661,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             dbDef.getConnection().setAutoCommit(true);
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             if (dbDef != null) {
                 try {
@@ -691,7 +691,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         uploadProgressBar = new ProgressBar();
         uploadProgressBar.setWidth("90%");
 
-        statusWindow = new Window(myUI.getMessage(IndigoMessages.UploadStatus));
+        statusWindow = new Window(myUI.getMessage(Messages.UploadStatus));
         statusWindow.setResizable(false);
         statusWindow.setDraggable(false);
         statusWindow.setModal(true);
@@ -714,7 +714,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         l.addComponent(cancelButton);
         l.setComponentAlignment(cancelButton, Alignment.MIDDLE_LEFT);
 
-        uploadProgressBar.setCaption(myUI.getMessage(IndigoMessages.Progress));
+        uploadProgressBar.setCaption(myUI.getMessage(Messages.Progress));
         uploadProgressBar.setVisible(false);
         l.addComponent(uploadProgressBar);
         l.setExpandRatio(uploadProgressBar, 1);
@@ -725,7 +725,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         photoUpl = new Upload(null, receiver);
         photoUpl.setImmediate(true);
         photoUpl.setStyleName(ValoTheme.BUTTON_SMALL);
-        photoUpl.setButtonCaption(myUI.getMessage(IndigoMessages.Upload));
+        photoUpl.setButtonCaption(myUI.getMessage(Messages.Upload));
         photoUpl.setWidth(Settings.PERCENTS100);
 
         photoUpl.addStartedListener((Upload.StartedListener) event -> {
@@ -746,12 +746,12 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             if (!mimeType.equals("image/jpeg")) {
                 photoUpl.interruptUpload();
                 photoName = null;
-                Notification.show(myUI.getMessage(IndigoMessages.OnlyJpg),
+                Notification.show(myUI.getMessage(Messages.OnlyJpg),
                         Notification.Type.WARNING_MESSAGE);
             } else if (contentLength >= 5000000) {
                 photoUpl.interruptUpload();
                 photoName = null;
-                Notification.show(myUI.getMessage(IndigoMessages.Maxsize),
+                Notification.show(myUI.getMessage(Messages.Maxsize),
                         Notification.Type.WARNING_MESSAGE);
             } else {
 

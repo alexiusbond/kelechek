@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.StudentRelative;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.StudentDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -42,50 +42,50 @@ public class DbStudentRelative extends BaseDb {
             String id = result.getString("sr.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    dw.createButton(myUi.getMessage(IndigoMessages.DeleteButton), id,
+                    dw.createButton(myUi.getMessage(Messages.DeleteButton), id,
                             Settings.dbStudentRelatives, FontAwesome.MINUS_SQUARE));
             if (result.getInt("sr.is_main") == 1) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.FullName)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.FullName)).setValue(
                         dw.createTextField(result.getString("sr.fullname"),
-                                myUi.getMessage(IndigoMessages.FullName), id, false, true));
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Address)).setValue(
+                                myUi.getMessage(Messages.FullName), id, false, true));
+                item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
                         dw.createTextField(result.getString("sr.address"),
-                                myUi.getMessage(IndigoMessages.Address), id, true, true));
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Phone)).setValue(
+                                myUi.getMessage(Messages.Address), id, true, true));
+                item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                         dw.createTextField(result.getString("sr.phone"),
-                                myUi.getMessage(IndigoMessages.Phone), id, true, true));
-                item.getItemProperty(myUi.getMessage(IndigoMessages.WorkPlace)).setValue(
+                                myUi.getMessage(Messages.Phone), id, true, true));
+                item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
                         dw.createTextField(result.getString("sr.work_place"),
-                                myUi.getMessage(IndigoMessages.WorkPlace), id, true, true));
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Passport)).setValue(
+                                myUi.getMessage(Messages.WorkPlace), id, true, true));
+                item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                         dw.createTextField(result.getString("sr.passport"),
-                                myUi.getMessage(IndigoMessages.Passport), id, true, true));
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Responsible)).setValue(
-                        dw.createCheckBox(true, myUi.getMessage(IndigoMessages.Responsible), id));
+                                myUi.getMessage(Messages.Passport), id, true, true));
+                item.getItemProperty(myUi.getMessage(Messages.Responsible)).setValue(
+                        dw.createCheckBox(true, myUi.getMessage(Messages.Responsible), id));
             } else {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.FullName)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.FullName)).setValue(
                         dw.createTextField(result.getString("sr.fullname"),
-                                myUi.getMessage(IndigoMessages.FullName), id, false, false));
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Address)).setValue(
+                                myUi.getMessage(Messages.FullName), id, false, false));
+                item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
                         dw.createTextField(result.getString("sr.address"),
-                                myUi.getMessage(IndigoMessages.Address), id, true, false));
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Phone)).setValue(
+                                myUi.getMessage(Messages.Address), id, true, false));
+                item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                         dw.createTextField(result.getString("sr.phone"),
-                                myUi.getMessage(IndigoMessages.Phone), id, true, false));
-                item.getItemProperty(myUi.getMessage(IndigoMessages.WorkPlace)).setValue(
+                                myUi.getMessage(Messages.Phone), id, true, false));
+                item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
                         dw.createTextField(result.getString("sr.work_place"),
-                                myUi.getMessage(IndigoMessages.WorkPlace), id, true, false));
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Passport)).setValue(
+                                myUi.getMessage(Messages.WorkPlace), id, true, false));
+                item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                         dw.createTextField(result.getString("sr.passport"),
-                                myUi.getMessage(IndigoMessages.Passport), id, true, false));
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Responsible)).setValue(
-                        dw.createCheckBox(false, myUi.getMessage(IndigoMessages.Responsible), id));
+                                myUi.getMessage(Messages.Passport), id, true, false));
+                item.getItemProperty(myUi.getMessage(Messages.Responsible)).setValue(
+                        dw.createCheckBox(false, myUi.getMessage(Messages.Responsible), id));
             }
-            item.getItemProperty(myUi.getMessage(IndigoMessages.RelativeType)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.RelativeType)).setValue(
                     dw.createCombobox(result.getInt("sr.relatives_id"),
-                            myUi.getMessage(IndigoMessages.RelativeType),
+                            myUi.getMessage(Messages.RelativeType),
                             id, Settings.dbRelatives, false, false, false, false));
-            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(IndigoMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
         }
         return container;
     }

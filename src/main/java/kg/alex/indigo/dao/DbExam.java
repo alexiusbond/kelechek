@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.Exam;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,19 +52,19 @@ public class DbExam extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ValidityMonths), Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Status), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ValidityMonths), Integer.class, 0);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
         container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("e.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ValidityMonths)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ValidityMonths)).setValue(
                     result.getInt("e.validity"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Status)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(
                     result.getString("ac.name"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("e.activity_status_id"));
@@ -107,10 +107,10 @@ public class DbExam extends BaseDb {
         stat.setInt(1, id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name"));
         }
         return container;

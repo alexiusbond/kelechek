@@ -16,7 +16,7 @@ import com.vaadin.ui.Table;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.StudentInfoPdf;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,8 +80,8 @@ public class MonthsReportPdf {
                     table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(table_date);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(IndigoMessages.Monthly)
-                            + " " + myUI.getMessage(IndigoMessages.Report), fontBold);
+                    Paragraph spr = new Paragraph(myUI.getMessage(Messages.Monthly)
+                            + " " + myUI.getMessage(Messages.Report), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);
@@ -103,10 +103,10 @@ public class MonthsReportPdf {
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
                         pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         pdfTable.addCell(new Phrase(" №", tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Month), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.InstPlanDebt), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Paid), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Left), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Month), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.InstPlanDebt), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Paid), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Left), tableFontBold));
                         pdfTable.addCell(new Phrase(Settings.percentage, tableFontBold));
 
                         Iterator<?> iter = dataTable.getContainerDataSource().getItemIds().iterator();
@@ -119,14 +119,14 @@ public class MonthsReportPdf {
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             pdfTable.addCell(new Phrase(j + "", tableFont));
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Month)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Month)).getValue().toString(), tableFont));
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.InstPlanDebt)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.InstPlanDebt)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Paid)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Paid)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Left)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Left)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
                                     Settings.percentage).getValue()), tableFont));
                             j++;
@@ -134,11 +134,11 @@ public class MonthsReportPdf {
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.InstPlanDebt)), tableFontBold));
+                                myUI.getMessage(Messages.InstPlanDebt)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.Paid)), tableFontBold));
+                                myUI.getMessage(Messages.Paid)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.Left)), tableFontBold));
+                                myUI.getMessage(Messages.Left)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
                                 Settings.percentage), tableFontBold));
 
@@ -153,8 +153,8 @@ public class MonthsReportPdf {
                     T2.getDefaultCell().setBorder(0);
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
-                    T2.addCell(new Phrase(myUI.getMessage(IndigoMessages.Accountant), ordFontBold));
-                    T2.addCell(new Phrase(myUI.getMessage(IndigoMessages.Director), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Accountant), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
                     T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
                             + studentInfo.getAccountant().getName() + " " +
                             (studentInfo.getAccountant().getMiddle_name() == null ?

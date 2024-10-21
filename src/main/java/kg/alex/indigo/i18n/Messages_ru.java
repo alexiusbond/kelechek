@@ -1,6 +1,6 @@
 package kg.alex.indigo.i18n;
 
-public class IndigoMessages_ru extends IndigoMessages {
+public class Messages_ru extends kg.alex.indigo.i18n.Messages {
 
     static final Object[][] contents_ru = {
             // Application

@@ -14,7 +14,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbAccTransactions;
 import kg.alex.indigo.dao.DbSchool;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
@@ -50,31 +50,31 @@ public class SchoolsReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        fromDateDF = new DateField(myUI.getMessage(IndigoMessages.FromDate));
+        fromDateDF = new DateField(myUI.getMessage(Messages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setRequired(true);
-        fromDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new DateField(myUI.getMessage(IndigoMessages.TillDate));
+        tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setRequired(true);
-        tillDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
-        selectAllSchoolsBtn = new Button(myUI.getMessage(IndigoMessages.AllSchools));
+        selectAllSchoolsBtn = new Button(myUI.getMessage(Messages.AllSchools));
         selectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         selectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllSchoolsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllSchoolsBtn.addClickListener(this);
 
-        deselectAllSchoolsBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllSchoolsBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         deselectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllSchoolsBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -97,14 +97,14 @@ public class SchoolsReport implements Button.ClickListener,
             DbSchool dbs = new DbSchool();
             dbs.connect();
             schoolTable.setContainerDataSource(dbs.execSchoolSel(myUI, 0));
-            schoolTable.setVisibleColumns(myUI.getMessage(IndigoMessages.Title));
+            schoolTable.setVisibleColumns(myUI.getMessage(Messages.Title));
             dbs.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -112,7 +112,7 @@ public class SchoolsReport implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -161,10 +161,10 @@ public class SchoolsReport implements Button.ClickListener,
                     Calendar c = Calendar.getInstance();
                     c.setTime(fromDateDF.getValue());
                     c.add(Calendar.DAY_OF_MONTH, -1);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Total), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.IncomesTotal), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.ExpensesTotal), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.PreviousBalance)
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Total), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.IncomesTotal), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.ExpensesTotal), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.PreviousBalance)
                             + " (" + Settings.df.format(c.getTime()) + ")", Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {
@@ -179,8 +179,8 @@ public class SchoolsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(IndigoMessages.SchoolDiscounts));
-                    excelReport.setReportTitle(myUI.getMessage(IndigoMessages.SchoolDiscounts)
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(Messages.SchoolDiscounts));
+                    excelReport.setReportTitle(myUI.getMessage(Messages.SchoolDiscounts)
                             + "(" + Settings.df.format(fromDateDF.getValue()) + " - " + Settings.df.format(tillDateDF.getValue()) + ")");
                     excelReport.setDisplayTotals(true);
                     excelReport.export();

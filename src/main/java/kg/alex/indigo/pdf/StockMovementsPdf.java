@@ -17,7 +17,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.StockInvoice;
 import kg.alex.indigo.domain.StudentInfoPdf;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -85,19 +85,19 @@ public class StockMovementsPdf {
                     Thead.getDefaultCell().setBorder(0);
                     Thead.getDefaultCell().setFixedHeight(15f);
                     Phrase p = new Phrase();
-                    p.add(new Phrase(myUI.getMessage(IndigoMessages.Date) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.Date) + ": ", ordFontBold));
                     p.add(new Phrase(df.format(stockInvoice.getCreation_date()), ordFont));
                     Thead.addCell(p);
                     p = new Phrase();
-                    p.add(new Phrase(myUI.getMessage(IndigoMessages.InvoiceNumber) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.InvoiceNumber) + ": ", ordFontBold));
                     p.add(new Phrase(stockInvoice.getInvoiceNumberStr(), ordFont));
                     Thead.addCell(p);
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(IndigoMessages.Stock) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.Stock) + ": ", ordFontBold));
                     p.add(new Phrase(stockInvoice.getStock(), ordFont));
                     Thead.addCell(p);
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(IndigoMessages.ProductCategory) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.ProductCategory) + ": ", ordFontBold));
                     p.add(new Phrase(stockInvoice.getAcc_category(), ordFont));
                     Thead.addCell(p);
 
@@ -111,13 +111,13 @@ public class StockMovementsPdf {
                     table.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     table.addCell(new Phrase(" №", ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(IndigoMessages.Product), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(IndigoMessages.Measurement), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(IndigoMessages.Note), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(IndigoMessages.QuantityShort), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(IndigoMessages.Price), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(IndigoMessages.Rate), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(IndigoMessages.Amount), ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.Product), ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.Measurement), ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.Note), ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.QuantityShort), ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.Price), ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.Rate), ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.Amount), ordFontBold));
 
                     Iterator<?> iter1 = stockMovementsCont.getItemIds().iterator();
                     int y = 0;
@@ -128,28 +128,28 @@ public class StockMovementsPdf {
                         Object next = iter1.next();
                         table.addCell(new Phrase(y + "", tableFont));
                         ComboBox cb = (ComboBox) stockMovementsCont.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Product)).getValue();
+                                myUI.getMessage(Messages.Product)).getValue();
                         table.addCell(new Phrase(cb.getItemCaption(cb.getValue()), tableFont));
                         cb = (ComboBox) stockMovementsCont.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Measurement)).getValue();
+                                myUI.getMessage(Messages.Measurement)).getValue();
                         table.addCell(new Phrase(cb.getItemCaption(cb.getValue()), tableFont));
                         TextField tf = (TextField) stockMovementsCont.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Note)).getValue();
+                                myUI.getMessage(Messages.Note)).getValue();
                         table.addCell(new Phrase(tf.getValue(), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(IndigoMessages.Quantity)).getValue();
+                        tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(Messages.Quantity)).getValue();
                         table.addCell(new Phrase(Settings.dFormat2.format(tf.getPropertyDataSource().getValue()), tableFont));
-                        if (title.equals(myUI.getMessage(IndigoMessages.StockIncome))) {
-                            tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(IndigoMessages.Price)).getValue();
+                        if (title.equals(myUI.getMessage(Messages.StockIncome))) {
+                            tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(Messages.Price)).getValue();
                             table.addCell(new Phrase(Settings.dFormat2.format(tf.getPropertyDataSource().getValue()), tableFont));
                         } else {
                             table.addCell(new Phrase(Settings.dFormat2.format(stockMovementsCont.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Price)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Price)).getValue()), tableFont));
                         }
                         table.addCell(new Phrase(Settings.dFormat2.format(stockMovementsCont.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Rate)).getValue()), tableFont));
+                                myUI.getMessage(Messages.Rate)).getValue()), tableFont));
                         table.addCell(new Phrase(Settings.dFormat2.format(stockMovementsCont.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Amount)).getValue()), tableFont));
+                                myUI.getMessage(Messages.Amount)).getValue()), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         y++;
                     }
@@ -162,7 +162,7 @@ public class StockMovementsPdf {
                     table.addCell(new Phrase(" ", ordFontBold));
                     table.addCell(new Phrase(" ", ordFontBold));
                     table.addCell(new Phrase(" ", ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(IndigoMessages.Total) + ": " + total, ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.Total) + ": " + total, ordFontBold));
 
                     document.add(table);
 
@@ -175,24 +175,24 @@ public class StockMovementsPdf {
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(IndigoMessages.FromEmployee) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.FromEmployee) + ": ", ordFontBold));
                     p.add(new Phrase(stockInvoice.getFrom_employee(), ordFont));
                     T2.addCell(p);
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(IndigoMessages.ToEmployee) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.ToEmployee) + ": ", ordFontBold));
                     p.add(new Phrase(stockInvoice.getTo_employee(), ordFont));
                     T2.addCell(p);
                     T2.addCell(new Phrase(" ", ordFont));
                     T2.addCell(new Phrase(" ", ordFont));
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(IndigoMessages.Director) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.Director) + ": ", ordFontBold));
                     p.add(new Phrase(schoolInfo.getDirector().getSurname() + " "
                             + schoolInfo.getDirector().getName() + " " +
                             (schoolInfo.getDirector().getMiddle_name() == null ?
                                     "" : schoolInfo.getDirector().getMiddle_name()), ordFont));
                     T2.addCell(p);
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(IndigoMessages.Accountant) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.Accountant) + ": ", ordFontBold));
                     p.add(new Phrase(schoolInfo.getAccountant().getSurname() + " "
                             + schoolInfo.getAccountant().getName() + " " +
                             (schoolInfo.getAccountant().getMiddle_name() == null ?

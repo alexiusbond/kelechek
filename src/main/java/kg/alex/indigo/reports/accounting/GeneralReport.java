@@ -26,7 +26,7 @@ import kg.alex.indigo.dao.DbSchool;
 import kg.alex.indigo.dao.DbStudentContract;
 import kg.alex.indigo.domain.ContractInfo;
 import kg.alex.indigo.domain.SchoolAccounting;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.pdf.AccountingGeneralReportPdf;
 import kg.alex.indigo.utils.FormattedTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
@@ -77,25 +77,25 @@ public class GeneralReport implements Button.ClickListener,
         leftGrid.setWidth(Settings.PERCENTS100);
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-        educationStatusMCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        educationStatusMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         educationStatusMCB.setWidth(Settings.PERCENTS100);
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
-        educationStatusMCB.setClearButtonCaption(myUI.getMessage(IndigoMessages.Clear));
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
-        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(IndigoMessages.SelectAll));
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
@@ -134,9 +134,9 @@ public class GeneralReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
+        schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -144,7 +144,7 @@ public class GeneralReport implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         pdfBtn = new Button();
-        pdfBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
+        pdfBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
         pdfBtn.setWidth(Settings.PERCENTS100);
         pdfBtn.setEnabled(false);
         pdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -192,8 +192,8 @@ public class GeneralReport implements Button.ClickListener,
                     DbAccTransactions dbacc = new DbAccTransactions();
                     dbacc.connect();
                     schoolAcc = dbacc.exec_get_totals((Integer) schoolsTable.getValue(), 2, 2,
-                            ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(IndigoMessages.StartDate)).getValue()),
-                            ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(IndigoMessages.TillDate)).getValue()), null);
+                            ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.StartDate)).getValue()),
+                            ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.TillDate)).getValue()), null);
                     dbacc.close();
                     setSchoolAccounting(schoolAcc);
                     DbStudentContract dbsc = new DbStudentContract();
@@ -218,7 +218,7 @@ public class GeneralReport implements Button.ClickListener,
                 String svgPaid = SVGGenerator.getInstance().withWidth(400).withHeight(100).generate(confPaid);
                 new AccountingGeneralReportPdf(myUI, svgPayments, svgPaid, svgDiscounts, schoolAcc,
                         transactionsTable, contractTtl, paymentsTable, (Integer) schoolsTable.getValue(),
-                        (String) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(IndigoMessages.Title)).getValue(),
+                        (String) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.Title)).getValue(),
                         Settings.df.format(prevDayCal.getTime()));
             } catch (Exception e) {
                 logger.error(e);
@@ -243,9 +243,9 @@ public class GeneralReport implements Button.ClickListener,
             pdfBtn.setEnabled(false);
         }
         if (event.getProperty() == yearSelect) {
-            prevDayCal.setTime((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(IndigoMessages.StartDate)).getValue());
+            prevDayCal.setTime((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.StartDate)).getValue());
             prevDayCal.add(Calendar.DAY_OF_MONTH, -1);
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
         }
     }
 
@@ -258,67 +258,67 @@ public class GeneralReport implements Button.ClickListener,
         caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
-        caption.setValue(myUI.getMessage(IndigoMessages.Total));
+        caption.setValue(myUI.getMessage(Messages.Total));
 
         Label discountsCaption = new Label();
         discountsCaption.setWidth(Settings.PERCENTS100);
         discountsCaption.setContentMode(ContentMode.HTML);
         discountsCaption.setStyleName("tableCpt");
-        discountsCaption.setValue(myUI.getMessage(IndigoMessages.Discounts));
+        discountsCaption.setValue(myUI.getMessage(Messages.Discounts));
 
         Label paymentsCaption = new Label();
         paymentsCaption.setWidth(Settings.PERCENTS100);
         paymentsCaption.setContentMode(ContentMode.HTML);
         paymentsCaption.setStyleName("tableCpt");
-        paymentsCaption.setValue(myUI.getMessage(IndigoMessages.Payments));
+        paymentsCaption.setValue(myUI.getMessage(Messages.Payments));
 
         Label ttlStudentsLab = new Label();
         ttlStudentsLab.setWidth(Settings.PERCENTS100);
         ttlStudentsLab.setContentMode(ContentMode.HTML);
         ttlStudentsLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlStudentsLab.setValue("<b>" + myUI.getMessage(IndigoMessages.Students) + ":" + "</b>");
+        ttlStudentsLab.setValue("<b>" + myUI.getMessage(Messages.Students) + ":" + "</b>");
 
         Label ttlContractLab = new Label();
         ttlContractLab.setWidth(Settings.PERCENTS100);
         ttlContractLab.setContentMode(ContentMode.HTML);
         ttlContractLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlContractLab.setValue("<b>" + myUI.getMessage(IndigoMessages.TotalContract) + "</b>");
+        ttlContractLab.setValue("<b>" + myUI.getMessage(Messages.TotalContract) + "</b>");
 
         Label ttlDebtLab = new Label();
         ttlDebtLab.setWidth(Settings.PERCENTS100);
         ttlDebtLab.setContentMode(ContentMode.HTML);
         ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlDebtLab.setValue("<b>" + myUI.getMessage(IndigoMessages.TotalDebt) + "</b>");
+        ttlDebtLab.setValue("<b>" + myUI.getMessage(Messages.TotalDebt) + "</b>");
 
         Label ttlDiscLab = new Label();
         ttlDiscLab.setWidth(Settings.PERCENTS100);
         ttlDiscLab.setContentMode(ContentMode.HTML);
         ttlDiscLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlDiscLab.setValue("<b>" + myUI.getMessage(IndigoMessages.TotalDiscount) + "</b>");
+        ttlDiscLab.setValue("<b>" + myUI.getMessage(Messages.TotalDiscount) + "</b>");
 
         Label ttlCorrectionLab = new Label();
         ttlCorrectionLab.setWidth(Settings.PERCENTS100);
         ttlCorrectionLab.setContentMode(ContentMode.HTML);
         ttlCorrectionLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlCorrectionLab.setValue("<b>" + myUI.getMessage(IndigoMessages.TotalCorrection) + "</b>");
+        ttlCorrectionLab.setValue("<b>" + myUI.getMessage(Messages.TotalCorrection) + "</b>");
 
         Label ttlNetLab = new Label();
         ttlNetLab.setWidth(Settings.PERCENTS100);
         ttlNetLab.setContentMode(ContentMode.HTML);
         ttlNetLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlNetLab.setValue("<b>" + myUI.getMessage(IndigoMessages.Net) + ":" + "</b>");
+        ttlNetLab.setValue("<b>" + myUI.getMessage(Messages.Net) + ":" + "</b>");
 
         Label ttlPaymentLab = new Label();
         ttlPaymentLab.setWidth(Settings.PERCENTS100);
         ttlPaymentLab.setContentMode(ContentMode.HTML);
         ttlPaymentLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlPaymentLab.setValue("<b>" + myUI.getMessage(IndigoMessages.TotalPayment) + "</b>");
+        ttlPaymentLab.setValue("<b>" + myUI.getMessage(Messages.TotalPayment) + "</b>");
 
         Label ttlLeftLab = new Label();
         ttlLeftLab.setWidth(Settings.PERCENTS100);
         ttlLeftLab.setContentMode(ContentMode.HTML);
         ttlLeftLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlLeftLab.setValue("<b>" + myUI.getMessage(IndigoMessages.TotalLeft) + "</b>");
+        ttlLeftLab.setValue("<b>" + myUI.getMessage(Messages.TotalLeft) + "</b>");
 
         totalsGrid.addComponent(caption, 0, 0, 1, 0);
         totalsGrid.addComponent(ttlStudentsLab, 0, 1);
@@ -381,7 +381,7 @@ public class GeneralReport implements Button.ClickListener,
         caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
-        caption.setValue(myUI.getMessage(IndigoMessages.AccountingInformationCaption));
+        caption.setValue(myUI.getMessage(Messages.AccountingInformationCaption));
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth(Settings.PERCENTS100);
@@ -389,26 +389,26 @@ public class GeneralReport implements Button.ClickListener,
         incTotalLbl = new Label();
         incTotalLbl.setContentMode(ContentMode.HTML);
         incTotalLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        incTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.IncomesTotal) + ": </b>");
+        incTotalLbl.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal) + ": </b>");
         hl.addComponent(incTotalLbl);
 
         outcomeTotalLbl = new Label();
         outcomeTotalLbl.setContentMode(ContentMode.HTML);
         outcomeTotalLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        outcomeTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.ExpensesTotal) + ": </b>");
+        outcomeTotalLbl.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal) + ": </b>");
         hl.addComponent(outcomeTotalLbl);
 
         prevBalanceLbl = new Label();
         prevBalanceLbl.setContentMode(ContentMode.HTML);
         prevBalanceLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        prevBalanceLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime())
+        prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime())
                 + "): </b>");
         hl.addComponent(prevBalanceLbl);
 
         totalLbl = new Label();
         totalLbl.setContentMode(ContentMode.HTML);
         totalLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        totalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.Total) + ": </b>");
+        totalLbl.setValue("<b>" + myUI.getMessage(Messages.Total) + ": </b>");
         hl.addComponent(totalLbl);
 
         rightLay.addComponent(caption);
@@ -417,16 +417,16 @@ public class GeneralReport implements Button.ClickListener,
 
     private void buildTransactionsTable() {
 
-        NATURAL_COL_ORDER_TRANSACTIONS = new String[]{myUI.getMessage(IndigoMessages.Month),
-                myUI.getMessage(IndigoMessages.InstallmentPlan), myUI.getMessage(IndigoMessages.Payments),
-                myUI.getMessage(IndigoMessages.Incomes),
-                myUI.getMessage(IndigoMessages.Expenses), myUI.getMessage(IndigoMessages.Difference)};
+        NATURAL_COL_ORDER_TRANSACTIONS = new String[]{myUI.getMessage(Messages.Month),
+                myUI.getMessage(Messages.InstallmentPlan), myUI.getMessage(Messages.Payments),
+                myUI.getMessage(Messages.Incomes),
+                myUI.getMessage(Messages.Expenses), myUI.getMessage(Messages.Difference)};
 
         Label caption = new Label();
         caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
-        caption.setValue(myUI.getMessage(IndigoMessages.IncomeOutcomeMonthlyCaption));
+        caption.setValue(myUI.getMessage(Messages.IncomeOutcomeMonthlyCaption));
 
         transactionsTable = new FormattedTable(myUI);
         transactionsTable.setFooterVisible(true);
@@ -441,15 +441,15 @@ public class GeneralReport implements Button.ClickListener,
 
     private void buildPaymentsLayout() {
 
-        NATURAL_COL_ORDER_PAYMENTS = new String[]{myUI.getMessage(IndigoMessages.Month),
-                myUI.getMessage(IndigoMessages.InstallmentPlan), myUI.getMessage(IndigoMessages.Payments),
-                myUI.getMessage(IndigoMessages.Debt)};
+        NATURAL_COL_ORDER_PAYMENTS = new String[]{myUI.getMessage(Messages.Month),
+                myUI.getMessage(Messages.InstallmentPlan), myUI.getMessage(Messages.Payments),
+                myUI.getMessage(Messages.Debt)};
 
         Label caption = new Label();
         caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
-        caption.setValue(myUI.getMessage(IndigoMessages.PaymentsMonthlyCaption));
+        caption.setValue(myUI.getMessage(Messages.PaymentsMonthlyCaption));
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth(Settings.PERCENTS100);
 
@@ -494,20 +494,20 @@ public class GeneralReport implements Button.ClickListener,
 
     private void setSchoolAccounting(SchoolAccounting schoolAcc) {
         if (schoolAcc != null) {
-            incTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.IncomesTotal)
+            incTotalLbl.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal)
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$");
-            outcomeTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.ExpensesTotal)
+            outcomeTotalLbl.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal)
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + "$");
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.PreviousBalance)
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance)
                     + " (" + Settings.df.format(prevDayCal.getTime())
                     + "): </b>" + schoolAcc.getPrevious_balance() + "$");
-            totalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.CashBox)
+            totalLbl.setValue("<b>" + myUI.getMessage(Messages.CashBox)
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + "$");
         } else {
-            incTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.IncomesTotal) + ": </b>");
-            outcomeTotalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.ExpensesTotal) + ": </b>");
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
-            totalLbl.setValue("<b>" + myUI.getMessage(IndigoMessages.CashBox) + ": </b>");
+            incTotalLbl.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal) + ": </b>");
+            outcomeTotalLbl.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal) + ": </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
+            totalLbl.setValue("<b>" + myUI.getMessage(Messages.CashBox) + ": </b>");
         }
     }
 
@@ -535,10 +535,10 @@ public class GeneralReport implements Button.ClickListener,
             double totalDisc = contractTtl.getNet() + contractTtl.getDiscount();
             if (totalDisc != 0.0) {
                 final DataSeries series = new DataSeries();
-                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(IndigoMessages.TotalDiscount), Settings.round(contractTtl.getDiscount() * 100 / totalDisc, 2));
+                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(Messages.TotalDiscount), Settings.round(contractTtl.getDiscount() * 100 / totalDisc, 2));
                 discounts.setSliced(true);
                 series.add(discounts);
-                series.add(new DataSeriesItem(myUI.getMessage(IndigoMessages.Net) + ": ", Settings.round(contractTtl.getNet() * 100 / totalDisc, 2)));
+                series.add(new DataSeriesItem(myUI.getMessage(Messages.Net) + ": ", Settings.round(contractTtl.getNet() * 100 / totalDisc, 2)));
                 confDisc.setSeries(series);
             }
 
@@ -547,10 +547,10 @@ public class GeneralReport implements Button.ClickListener,
             double totalPay = contractTtl.getLeft() + contractTtl.getPaid();
             if (totalPay != 0.0) {
                 final DataSeries series = new DataSeries();
-                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(IndigoMessages.TotalLeft), Settings.round(contractTtl.getLeft() * 100 / totalPay, 2));
+                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(Messages.TotalLeft), Settings.round(contractTtl.getLeft() * 100 / totalPay, 2));
                 discounts.setSliced(true);
                 series.add(discounts);
-                series.add(new DataSeriesItem(myUI.getMessage(IndigoMessages.TotalPayment), Settings.round(contractTtl.getPaid() * 100 / totalPay, 2)));
+                series.add(new DataSeriesItem(myUI.getMessage(Messages.TotalPayment), Settings.round(contractTtl.getPaid() * 100 / totalPay, 2)));
                 confPaid.setSeries(series);
             }
             chartPaid.drawChart(confPaid);
@@ -564,15 +564,15 @@ public class GeneralReport implements Button.ClickListener,
             dbsc.execSQL_Plan_Payments(myUI, (Integer) yearSelect.getValue(),
                     Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                     (Integer) schoolsTable.getValue(),
-                    new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(IndigoMessages.StartDate)).getValue()).getTime()),
-                    new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(IndigoMessages.TillDate)).getValue()).getTime()),
+                    new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.StartDate)).getValue()).getTime()),
+                    new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.TillDate)).getValue()).getTime()),
                     transactionsTable);
             transactionsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_TRANSACTIONS);
-            transactionsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.InstallmentPlan), Table.Align.RIGHT);
-            transactionsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Payments), Table.Align.RIGHT);
-            transactionsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Incomes), Table.Align.RIGHT);
-            transactionsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Expenses), Table.Align.RIGHT);
-            transactionsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Difference), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(Messages.InstallmentPlan), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(Messages.Payments), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(Messages.Incomes), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(Messages.Expenses), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(Messages.Difference), Table.Align.RIGHT);
             transactionsTable.setPageLength(transactionsTable.size());
             if (transactionsTable.getContainerDataSource().size() != 0) {
                 pdfBtn.setEnabled(true);
@@ -587,16 +587,16 @@ public class GeneralReport implements Button.ClickListener,
     private void setPaymentsTableOptions() {
         paymentsTable.setContainerDataSource(transactionsTable.getContainerDataSource());
         paymentsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_PAYMENTS);
-        paymentsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.InstallmentPlan), Table.Align.RIGHT);
-        paymentsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Payments), Table.Align.RIGHT);
-        paymentsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Debt), Table.Align.RIGHT);
+        paymentsTable.setColumnAlignment(myUI.getMessage(Messages.InstallmentPlan), Table.Align.RIGHT);
+        paymentsTable.setColumnAlignment(myUI.getMessage(Messages.Payments), Table.Align.RIGHT);
+        paymentsTable.setColumnAlignment(myUI.getMessage(Messages.Debt), Table.Align.RIGHT);
         paymentsTable.setPageLength(paymentsTable.size());
-        paymentsTable.setColumnFooter(myUI.getMessage(IndigoMessages.InstallmentPlan),
-                transactionsTable.getColumnFooter(myUI.getMessage(IndigoMessages.InstallmentPlan)));
-        paymentsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Payments),
-                transactionsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Payments)));
-        paymentsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Debt),
-                transactionsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Debt)));
+        paymentsTable.setColumnFooter(myUI.getMessage(Messages.InstallmentPlan),
+                transactionsTable.getColumnFooter(myUI.getMessage(Messages.InstallmentPlan)));
+        paymentsTable.setColumnFooter(myUI.getMessage(Messages.Payments),
+                transactionsTable.getColumnFooter(myUI.getMessage(Messages.Payments)));
+        paymentsTable.setColumnFooter(myUI.getMessage(Messages.Debt),
+                transactionsTable.getColumnFooter(myUI.getMessage(Messages.Debt)));
         if (paymentsTable.getContainerDataSource().size() != 0) {
             pdfBtn.setEnabled(true);
         }
@@ -607,17 +607,17 @@ public class GeneralReport implements Button.ClickListener,
         List<Number> instList = new ArrayList<>();
         List<Number> paymentsList = new ArrayList<>();
         for (Object next : paymentsTable.getItemIds()) {
-            months.add(paymentsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Month)).getValue().toString());
-            instList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.InstallmentPlan)).getValue());
-            paymentsList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Payments)).getValue());
+            months.add(paymentsTable.getContainerProperty(next, myUI.getMessage(Messages.Month)).getValue().toString());
+            instList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(Messages.InstallmentPlan)).getValue());
+            paymentsList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(Messages.Payments)).getValue());
         }
         confPayments.getxAxis().setCategories(months.toArray(new String[0]));
         ListSeries ls = new ListSeries();
-        ls.setName(myUI.getMessage(IndigoMessages.InstallmentPlan));
+        ls.setName(myUI.getMessage(Messages.InstallmentPlan));
         ls.setData(instList);
         confPayments.addSeries(ls);
         ls = new ListSeries();
-        ls.setName(myUI.getMessage(IndigoMessages.Payments));
+        ls.setName(myUI.getMessage(Messages.Payments));
         ls.setData(paymentsList);
         confPayments.addSeries(ls);
 

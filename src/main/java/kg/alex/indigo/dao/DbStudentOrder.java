@@ -12,7 +12,7 @@ import com.vaadin.ui.Button;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.StudentOrder;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.reports.students.OutOfList;
 import kg.alex.indigo.ui.IssueOrderView;
 
@@ -55,33 +55,33 @@ public class DbStudentOrder extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(Settings.button, Button.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.OrderType), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.FromClass), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.OrderType), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FromClass), String.class, null);
         container.addContainerProperty(Settings.from_class_id, Integer.class, 0);
         container.addContainerProperty(Settings.to_class_id, Integer.class, 0);
         container.addContainerProperty(Settings.student_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ToClass), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.FromEducationStatus), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ToClass), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FromEducationStatus), String.class, null);
         container.addContainerProperty(Settings.order_id, Integer.class, 0);
         container.addContainerProperty(Settings.from_education_status_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ToEducationStatus), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Reasons), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Year), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ToEducationStatus), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Reasons), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Year), String.class, null);
         boolean is_delete_added = false;
         while (result.next()) {
             Item item = container.addItem(result.getInt("so.id"));
             if (!is_delete_added && result.getInt("so.orders_id") < 4) {
                 item.getItemProperty(Settings.button).setValue(iv.createButton(
-                        myUi.getMessage(IndigoMessages.DeleteButton),
+                        myUi.getMessage(Messages.DeleteButton),
                         result.getString("so.id"), FontAwesome.MINUS));
                 is_delete_added = true;
             }
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Date)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Date)).setValue(
                     Settings.df.format(result.getDate("creation_date")));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.OrderType)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.OrderType)).setValue(
                     result.getString("o.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.FromClass)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.FromClass)).setValue(
                     result.getString("from_class"));
             item.getItemProperty(Settings.from_class_id).setValue(
                     result.getInt("from_class_name.id"));
@@ -91,17 +91,17 @@ public class DbStudentOrder extends BaseDb {
                     result.getInt("o.id"));
             item.getItemProperty(Settings.student_id).setValue(
                     result.getInt("so.student_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ToClass)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ToClass)).setValue(
                     result.getString("to_class"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.FromEducationStatus)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.FromEducationStatus)).setValue(
                     result.getString("from_edu.name"));
             item.getItemProperty(Settings.from_education_status_id).setValue(
                     result.getInt("from_edu.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ToEducationStatus)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ToEducationStatus)).setValue(
                     result.getString("to_edu.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Reasons)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Reasons)).setValue(
                     result.getString("so.reason"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Year)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Year)).setValue(
                     result.getString("y.name"));
         }
         return container;
@@ -315,42 +315,42 @@ public class DbStudentOrder extends BaseDb {
         stat.setInt(1, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Id), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Year), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Reasons), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.FromClass), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ToClass), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Net), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Paid), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Left), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Year), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Reasons), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FromClass), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ToClass), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Net), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Paid), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Left), Double.class, 0.0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Id)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Id)).setValue(
                     result.getString("st.login"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.FirstName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.LastName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(
                     result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Year)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Year)).setValue(
                     result.getString("y.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Reasons)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Reasons)).setValue(
                     result.getString("so.reason"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.FromClass)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.FromClass)).setValue(
                     result.getString("from_class"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ToClass)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.ToClass)).setValue(
                     result.getString("to_class"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     result.getString("date(so.modification_date)"));
             ol.nets += result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc") + result.getDouble("vc.amount");
             ol.paid_amounts += result.getDouble("sc.net_payments");
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Net)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Net)).setValue(
                     result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc") + result.getDouble("vc.amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Paid)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Paid)).setValue(
                     result.getDouble("sc.net_payments"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Left)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Left)).setValue(
                     (result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc") + result.getDouble("vc.amount")
                             - (result.getDouble("sc.net_payments"))));
         }

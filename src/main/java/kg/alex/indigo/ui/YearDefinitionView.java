@@ -15,7 +15,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.dao.DbYear;
 import kg.alex.indigo.domain.Year;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -46,8 +46,8 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
     public YearDefinitionView(MyVaadinUI myUI, AuthenticatedScreen as) {
         this.myUI = myUI;
         this.as = as;
-        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Title), myUI.getMessage(IndigoMessages.Period),
-                myUI.getMessage(IndigoMessages.PeriodKg), myUI.getMessage(IndigoMessages.StartDate), myUI.getMessage(IndigoMessages.EndDate)};
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Title), myUI.getMessage(Messages.Period),
+                myUI.getMessage(Messages.PeriodKg), myUI.getMessage(Messages.StartDate), myUI.getMessage(Messages.EndDate)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -95,7 +95,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(IndigoMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -103,7 +103,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(IndigoMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -111,66 +111,66 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(IndigoMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(IndigoMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new TextField(myUI.getMessage(IndigoMessages.Title));
+        nameTF = new TextField(myUI.getMessage(Messages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        nameTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 9, 9, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 9, 9, false));
         InputMask im = new InputMask("2099-2099");
         im.extend(nameTF);
         im.setClearIncomplete(true);
         settingsLay.addComponent(nameTF);
 
-        period = new TextField(myUI.getMessage(IndigoMessages.Period));
+        period = new TextField(myUI.getMessage(Messages.Period));
         period.setRequired(true);
         period.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        period.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        period.setRequiredError(myUI.getMessage(Messages.RequiredField));
         period.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(period);
 
-        periodKg = new TextField(myUI.getMessage(IndigoMessages.PeriodKg));
+        periodKg = new TextField(myUI.getMessage(Messages.PeriodKg));
         periodKg.setRequired(true);
         periodKg.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        periodKg.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        periodKg.setRequiredError(myUI.getMessage(Messages.RequiredField));
         periodKg.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(periodKg);
 
-        start_date = new DateField(myUI.getMessage(IndigoMessages.StartDate));
+        start_date = new DateField(myUI.getMessage(Messages.StartDate));
         start_date.setStyleName(ValoTheme.DATEFIELD_SMALL);
         start_date.setRequired(true);
-        start_date.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        start_date.setRequiredError(myUI.getMessage(Messages.RequiredField));
         start_date.setWidth(Settings.PERCENTS100);
         start_date.setValue(new Date());
         start_date.setDateFormat(Settings.datePattern);
         settingsLay.addComponent(start_date);
 
-        end_date = new DateField(myUI.getMessage(IndigoMessages.EndDate));
+        end_date = new DateField(myUI.getMessage(Messages.EndDate));
         end_date.setStyleName(ValoTheme.DATEFIELD_SMALL);
         end_date.setRequired(true);
-        end_date.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        end_date.setRequiredError(myUI.getMessage(Messages.RequiredField));
         end_date.setWidth(Settings.PERCENTS100);
         end_date.setValue(new Date());
         end_date.setDateFormat(Settings.datePattern);
@@ -196,10 +196,10 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
             prepareModificationMode();
             nameTF.focus();
         } else if (source == deleteBtn && dataTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                    myUI.getMessage(IndigoMessages.ConfirmDeletion),
-                    myUI.getMessage(IndigoMessages.Yes),
-                    myUI.getMessage(IndigoMessages.No),
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
@@ -226,10 +226,10 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                                 logger.error(e);
                                 logger.catching(e);
                             }
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
@@ -244,10 +244,10 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                         }
                         if (status != 0) {
                             updateDataContainer();
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     }
@@ -266,7 +266,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                     dby.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -335,16 +335,16 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
 
     private void fillFields() throws ParseException {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                myUI.getMessage(Messages.Title)).getValue().toString());
         period.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Period)).getValue().toString());
+                myUI.getMessage(Messages.Period)).getValue().toString());
         periodKg.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.PeriodKg)).getValue().toString());
+                myUI.getMessage(Messages.PeriodKg)).getValue().toString());
         start_date.setValue(Settings.df.parse(dataTable.getContainerProperty(
-                        dataTable.getValue(), myUI.getMessage(IndigoMessages.StartDate))
+                        dataTable.getValue(), myUI.getMessage(Messages.StartDate))
                 .getValue().toString()));
         end_date.setValue(Settings.df.parse(dataTable.getContainerProperty(
-                        dataTable.getValue(), myUI.getMessage(IndigoMessages.EndDate))
+                        dataTable.getValue(), myUI.getMessage(Messages.EndDate))
                 .getValue().toString()));
 
     }
@@ -359,16 +359,16 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
 
     private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Title)).setValue(nameTF.getValue());
+                myUI.getMessage(Messages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Period)).setValue(period.getValue());
+                myUI.getMessage(Messages.Period)).setValue(period.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.PeriodKg)).setValue(periodKg.getValue());
+                myUI.getMessage(Messages.PeriodKg)).setValue(periodKg.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.StartDate)).setValue(
+                myUI.getMessage(Messages.StartDate)).setValue(
                 Settings.df.format(start_date.getValue()));
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.EndDate)).setValue(
+                myUI.getMessage(Messages.EndDate)).setValue(
                 Settings.df.format(end_date.getValue()));
 
     }
@@ -376,16 +376,16 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
     private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                 nameTF.getValue());
         item.getItemProperty(Settings.id).setValue(id);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Period)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Period)).setValue(
                 period.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.PeriodKg)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.PeriodKg)).setValue(
                 periodKg.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.StartDate)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.StartDate)).setValue(
                 Settings.df.format(start_date.getValue()));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.EndDate)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.EndDate)).setValue(
                 Settings.df.format(end_date.getValue()));
 
         dataTable.setValue(id);
@@ -430,7 +430,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                 }
                 dbDef.close();
             } catch (SQLIntegrityConstraintViolationException e) {
-                Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete),
+                Notification.show(myUI.getMessage(Messages.CanNotDelete),
                         Notification.Type.WARNING_MESSAGE);
                 logger.error(e);
                 logger.catching(e);
@@ -439,7 +439,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                 logger.catching(e);
             }
         } else {
-            Notification.show(myUI.getMessage(IndigoMessages.CanDeleteOnlyLastItem),
+            Notification.show(myUI.getMessage(Messages.CanDeleteOnlyLastItem),
                     Notification.Type.WARNING_MESSAGE);
         }
     }

@@ -14,7 +14,7 @@ import com.vaadin.server.StreamResource;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.StudentInfoPdf;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -82,7 +82,7 @@ public class DebtsPdf {
                     table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(table_date);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(IndigoMessages.ClassInstallmentPlan) + ": "
+                    Paragraph spr = new Paragraph(myUI.getMessage(Messages.ClassInstallmentPlan) + ": "
                             + year + " (" + Settings.df.format(fromDate) + " - " + Settings.df.format(tillDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
@@ -97,12 +97,12 @@ public class DebtsPdf {
                     table_plan.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     table_plan.addCell(new Phrase(" №", ordFontBold));
-                    table_plan.addCell(new Phrase(myUI.getMessage(IndigoMessages.FirstName), ordFontBold));
-                    table_plan.addCell(new Phrase(myUI.getMessage(IndigoMessages.LastName), ordFontBold));
-                    table_plan.addCell(new Phrase(myUI.getMessage(IndigoMessages.ClassName), ordFontBold));
-                    table_plan.addCell(new Phrase(myUI.getMessage(IndigoMessages.InstallmentPlan), ordFontBold));
-                    table_plan.addCell(new Phrase(myUI.getMessage(IndigoMessages.Paid), ordFontBold));
-                    table_plan.addCell(new Phrase(myUI.getMessage(IndigoMessages.Debt), ordFontBold));
+                    table_plan.addCell(new Phrase(myUI.getMessage(Messages.FirstName), ordFontBold));
+                    table_plan.addCell(new Phrase(myUI.getMessage(Messages.LastName), ordFontBold));
+                    table_plan.addCell(new Phrase(myUI.getMessage(Messages.ClassName), ordFontBold));
+                    table_plan.addCell(new Phrase(myUI.getMessage(Messages.InstallmentPlan), ordFontBold));
+                    table_plan.addCell(new Phrase(myUI.getMessage(Messages.Paid), ordFontBold));
+                    table_plan.addCell(new Phrase(myUI.getMessage(Messages.Debt), ordFontBold));
 
                     Iterator<?> iter = planCont.getItemIds().iterator();
                     int i = 0;
@@ -113,21 +113,21 @@ public class DebtsPdf {
                         Object next = iter.next();
                         table_plan.addCell(new Phrase(i + "", tableFont));
                         table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.FirstName)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.FirstName)).getValue().toString(), tableFont));
                         table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.LastName)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.LastName)).getValue().toString(), tableFont));
                         table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.ClassName)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.ClassName)).getValue().toString(), tableFont));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         table_plan.addCell(new Phrase(Settings.dFormat2.format(
                                 planCont.getContainerProperty(next,
-                                        myUI.getMessage(IndigoMessages.InstallmentPlan)).getValue()), tableFont));
+                                        myUI.getMessage(Messages.InstallmentPlan)).getValue()), tableFont));
                         table_plan.addCell(new Phrase(Settings.dFormat2.format(
                                 planCont.getContainerProperty(next,
-                                        myUI.getMessage(IndigoMessages.Paid)).getValue()), tableFont));
+                                        myUI.getMessage(Messages.Paid)).getValue()), tableFont));
                         table_plan.addCell(new Phrase(Settings.dFormat2.format(
                                 planCont.getContainerProperty(next,
-                                        myUI.getMessage(IndigoMessages.Debt)).getValue()), tableFont));
+                                        myUI.getMessage(Messages.Debt)).getValue()), tableFont));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         i++;
                     }
@@ -149,8 +149,8 @@ public class DebtsPdf {
                     T2.getDefaultCell().setBorder(0);
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
-                    T2.addCell(new Phrase(myUI.getMessage(IndigoMessages.Accountant), ordFontBold));
-                    T2.addCell(new Phrase(myUI.getMessage(IndigoMessages.Director), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Accountant), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
                     T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
                             + studentInfo.getAccountant().getName() + " " +
                             (studentInfo.getAccountant().getMiddle_name() == null ?

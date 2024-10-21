@@ -8,7 +8,7 @@ package kg.alex.indigo.utils;
 import com.vaadin.data.Property;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.tepi.filtertable.FilterTable;
 
 /**
@@ -26,7 +26,7 @@ public class FormattedFilterTable extends FilterTable {
     protected String formatPropertyValue(Object rowId, Object colId, Property property) {
         if (property.getType() == Double.class) {
             if (property.getValue() != null) {
-                if (colId.equals(myUI.getMessage(IndigoMessages.Rate))) {
+                if (colId.equals(myUI.getMessage(Messages.Rate))) {
                     return Settings.dFormat4.format(property.getValue());
                 } else {
                     return Settings.dFormat2.format(property.getValue());

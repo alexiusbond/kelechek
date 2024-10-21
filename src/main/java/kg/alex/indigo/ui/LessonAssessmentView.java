@@ -13,7 +13,7 @@ import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.dao.DbEmployee;
 import kg.alex.indigo.dao.DbEmployeeLessons;
 import kg.alex.indigo.domain.EmployeeLessons;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.utils.MyFilterDecorator;
 import kg.alex.indigo.utils.ResetableFilterGenerator;
 import org.apache.logging.log4j.LogManager;
@@ -58,7 +58,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             logger.error(e);
             logger.catching(e);
         }
-        employeesTable.setColumnWidth(myUI.getMessage(IndigoMessages.TotalHours), 10);
+        employeesTable.setColumnWidth(myUI.getMessage(Messages.TotalHours), 10);
         employeesTable.setFilterGenerator(new ResetableFilterGenerator(employeesTable));
 
         VerticalLayout vl2 = new VerticalLayout();
@@ -72,13 +72,13 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
         vl.setSpacing(true);
         vl.setSizeFull();
 
-        classNumberSelect = new ComboBox(myUI.getMessage(IndigoMessages.ClassNumber));
+        classNumberSelect = new ComboBox(myUI.getMessage(Messages.ClassNumber));
         classNumberSelect.setNullSelectionAllowed(false);
         classNumberSelect.setRequired(true);
         classNumberSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        classNumberSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        classNumberSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         classNumberSelect.setWidth(Settings.PERCENTS100);
-        classNumberSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        classNumberSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         classNumberSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDefinition dbDef = new DbDefinition();
@@ -97,7 +97,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
         lessonsTable.setSizeFull();
         lessonsTable.setSelectable(false);
 
-        saveBtn = new Button(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn = new Button(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_HUGE);
         saveBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
@@ -134,27 +134,27 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
                             el.setSchool_id(myUI.getUser().getSchool().getId());
                             el.setClass_number_id((Integer) classNumberSelect.getValue());
                             el.setEmployee_id((Integer) employeesTable.getValue());
-                            el.setHours((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Hours))
+                            el.setHours((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(Messages.Hours))
                                     .getValue()).getPropertyDataSource().getValue());
-                            el.setExtra_hours((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.ExtraHours))
+                            el.setExtra_hours((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(Messages.ExtraHours))
                                     .getValue()).getPropertyDataSource().getValue());
                             int id = dbel.exec_insert(el);
                             if (id == 0) {
-                                el.setId((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Hours))
+                                el.setId((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(Messages.Hours))
                                         .getValue()).getData());
                                 dbel.exec_update(el);
                             }
                         }
                     }
-                    employeesTable.getContainerProperty(employeesTable.getValue(), myUI.getMessage(IndigoMessages.TotalHours)
+                    employeesTable.getContainerProperty(employeesTable.getValue(), myUI.getMessage(Messages.TotalHours)
                             + myUI.getUser().getCurrent_year().getName()).setValue(dbel.execSQLTotalHours(myUI,
                             (Integer) employeesTable.getValue(), myUI.getUser().getSchool().getId()));
-                    Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                    Notification.show(myUI.getMessage(Messages.ValueSaved),
                             Notification.Type.HUMANIZED_MESSAGE);
                     dbel.close();
 
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -184,20 +184,20 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             }
         } else {
             final Integer branch_id = (Integer) ((CheckBox) property).getData();
-            TextField tfHours = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(IndigoMessages.Hours)).getValue();
-            TextField tfExtra = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(IndigoMessages.ExtraHours)).getValue();
+            TextField tfHours = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(Messages.Hours)).getValue();
+            TextField tfExtra = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(Messages.ExtraHours)).getValue();
             if (((CheckBox) property).getValue()) {
                 tfHours.setEnabled(true);
                 tfHours.setRequired(true);
-                tfHours.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                tfHours.setRequiredError(myUI.getMessage(Messages.RequiredField));
                 tfExtra.setEnabled(true);
                 tfExtra.setRequired(true);
-                tfExtra.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                tfExtra.setRequiredError(myUI.getMessage(Messages.RequiredField));
             } else {
-                ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                        myUI.getMessage(IndigoMessages.ConfirmDeletion),
-                        myUI.getMessage(IndigoMessages.Yes),
-                        myUI.getMessage(IndigoMessages.No),
+                ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                        myUI.getMessage(Messages.ConfirmDeletion),
+                        myUI.getMessage(Messages.Yes),
+                        myUI.getMessage(Messages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 execDelete(branch_id);
@@ -209,8 +209,8 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
     }
 
     private void execDelete(Integer branch_id) {
-        TextField tfHours = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(IndigoMessages.Hours)).getValue();
-        TextField tfExtra = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(IndigoMessages.ExtraHours)).getValue();
+        TextField tfHours = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(Messages.Hours)).getValue();
+        TextField tfExtra = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(Messages.ExtraHours)).getValue();
         tfHours.setEnabled(false);
         tfHours.setRequired(false);
         tfHours.setValue("");
@@ -223,15 +223,15 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             int st = dbel.exec_delete((Integer) employeesTable.getValue(), branch_id, myUI.getUser().getSchool().getId(),
                     (Integer) classNumberSelect.getValue(), myUI.getUser().getCurrent_year().getId());
             if (st != 0) {
-                Notification.show(myUI.getMessage(IndigoMessages.ValueDeleted),
+                Notification.show(myUI.getMessage(Messages.ValueDeleted),
                         Notification.Type.HUMANIZED_MESSAGE);
-                employeesTable.getContainerProperty(employeesTable.getValue(), myUI.getMessage(IndigoMessages.TotalHours)
+                employeesTable.getContainerProperty(employeesTable.getValue(), myUI.getMessage(Messages.TotalHours)
                         + myUI.getUser().getCurrent_year().getName()).setValue(dbel.execSQLTotalHours(myUI,
                         (Integer) employeesTable.getValue(), myUI.getUser().getSchool().getId()));
             }
             dbel.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);

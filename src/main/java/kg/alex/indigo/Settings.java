@@ -12,7 +12,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.ui.*;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -541,7 +541,7 @@ public class Settings implements Serializable {
 
     public static boolean validateTable(MyVaadinUI myUI, Table t) {
         if (t.size() == 0) {
-            Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+            Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                     Notification.Type.WARNING_MESSAGE);
             return false;
         } else {

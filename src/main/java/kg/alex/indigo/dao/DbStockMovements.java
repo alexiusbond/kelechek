@@ -17,7 +17,7 @@ import com.vaadin.ui.TextField;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.StockMovement;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.StockIncomeView;
 import kg.alex.indigo.ui.StockOutcomeView;
 import kg.alex.indigo.utils.FormattedTreeTable;
@@ -61,8 +61,8 @@ public class DbStockMovements extends BaseDb {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    v.createButton(myUi.getMessage(IndigoMessages.DeleteButton), id, Settings.dbStockMovement, is_modifyable));
-            ComboBox cb = v.createCombobox(0, myUi.getMessage(IndigoMessages.Product), null, true, is_modifyable);
+                    v.createButton(myUi.getMessage(Messages.DeleteButton), id, Settings.dbStockMovement, is_modifyable));
+            ComboBox cb = v.createCombobox(0, myUi.getMessage(Messages.Product), null, true, is_modifyable);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
@@ -72,47 +72,47 @@ public class DbStockMovements extends BaseDb {
                 logger.error(e);
                 logger.catching(e);
             }
-            cb.setItemCaptionPropertyId(myUi.getMessage(IndigoMessages.FullName));
+            cb.setItemCaptionPropertyId(myUi.getMessage(Messages.FullName));
             cb.setValue(result.getInt("t.acc_category_id"));
             cb.setId(id);
             cb.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Product)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Product)).setValue(cb);
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Note)).setValue(v.createTextField(
-                    result.getString("t.note"), myUi.getMessage(IndigoMessages.Note),
-                    new StringLengthValidator(myUi.getMessage(IndigoMessages.NotificationWrongValue), null, 250, false), true));
-            cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(IndigoMessages.Measurement),
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(v.createTextField(
+                    result.getString("t.note"), myUi.getMessage(Messages.Note),
+                    new StringLengthValidator(myUi.getMessage(Messages.NotificationWrongValue), null, 250, false), true));
+            cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(Messages.Measurement),
                     Settings.dbMeasurement, true, is_modifyable);
             cb.setId(id);
             cb.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Measurement)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Measurement)).setValue(cb);
             item.getItemProperty(Settings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
             double minVal = 0.01;
             if (result.getDouble("t.remain") < result.getDouble("t.amount")) {
                 minVal = result.getDouble("t.amount") - result.getDouble("t.remain");
             }
             TextField tf = v.createTextFieldWithProperty(
-                    result.getDouble("t.amount"), myUi.getMessage(IndigoMessages.Quantity),
-                    new DoubleRangeValidator(myUi.getMessage(IndigoMessages.NotificationWrongValue), minVal, null),
+                    result.getDouble("t.amount"), myUi.getMessage(Messages.Quantity),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), minVal, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), (result.getDouble("t.remain") > 0));
             tf.addValueChangeListener(v);
             tf.setId(id);
-            tf.setData(myUi.getMessage(IndigoMessages.Quantity));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Quantity)).setValue(tf);
+            tf.setData(myUi.getMessage(Messages.Quantity));
+            item.getItemProperty(myUi.getMessage(Messages.Quantity)).setValue(tf);
             item.getItemProperty(Settings.quantity_id).setValue(result.getDouble("t.amount"));
             tf = v.createTextFieldWithProperty(
-                    result.getDouble("t.price"), myUi.getMessage(IndigoMessages.Price),
-                    new DoubleRangeValidator(myUi.getMessage(IndigoMessages.NotificationWrongValue), 0.01, null),
+                    result.getDouble("t.price"), myUi.getMessage(Messages.Price),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), is_modifyable);
             tf.addValueChangeListener(v);
             tf.setId(id);
-            tf.setData(myUi.getMessage(IndigoMessages.Price));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Price)).setValue(tf);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(
+            tf.setData(myUi.getMessage(Messages.Price));
+            item.getItemProperty(myUi.getMessage(Messages.Price)).setValue(tf);
+            item.getItemProperty(myUi.getMessage(Messages.Rate)).setValue(result.getDouble("t.currency_rate"));
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(
                     result.getDouble("t.amount") * result.getDouble("t.price"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Remain)).setValue(result.getDouble("rmn.remain"));
-            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(IndigoMessages.Update));
+            item.getItemProperty(myUi.getMessage(Messages.Remain)).setValue(result.getDouble("rmn.remain"));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             item.getItemProperty(Settings.is_modifiable).setValue(is_modifyable);
             total += result.getDouble("t.amount") * result.getDouble("t.price");
 
@@ -171,8 +171,8 @@ public class DbStockMovements extends BaseDb {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    v.createButton(myUi.getMessage(IndigoMessages.DeleteButton), id, Settings.dbStockMovement));
-            ComboBox cb = v.createCombobox(0, myUi.getMessage(IndigoMessages.Product), null, true);
+                    v.createButton(myUi.getMessage(Messages.DeleteButton), id, Settings.dbStockMovement));
+            ComboBox cb = v.createCombobox(0, myUi.getMessage(Messages.Product), null, true);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
@@ -182,34 +182,34 @@ public class DbStockMovements extends BaseDb {
                 logger.error(e);
                 logger.catching(e);
             }
-            cb.setItemCaptionPropertyId(myUi.getMessage(IndigoMessages.FullName));
+            cb.setItemCaptionPropertyId(myUi.getMessage(Messages.FullName));
             cb.setValue(result.getInt("t.acc_category_id"));
             cb.setId(id);
             cb.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Product)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Product)).setValue(cb);
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Note)).setValue(v.createTextField(
-                    result.getString("t.note"), myUi.getMessage(IndigoMessages.Note),
-                    new StringLengthValidator(myUi.getMessage(IndigoMessages.NotificationWrongValue), null, 250, false), true));
-            cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(IndigoMessages.Measurement), Settings.dbMeasurement, true);
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(v.createTextField(
+                    result.getString("t.note"), myUi.getMessage(Messages.Note),
+                    new StringLengthValidator(myUi.getMessage(Messages.NotificationWrongValue), null, 250, false), true));
+            cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(Messages.Measurement), Settings.dbMeasurement, true);
             cb.setId(id);
             cb.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Measurement)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Measurement)).setValue(cb);
             item.getItemProperty(Settings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
             TextField tf = v.createTextFieldWithProperty(
-                    result.getDouble("amount"), myUi.getMessage(IndigoMessages.Quantity),
-                    new DoubleRangeValidator(myUi.getMessage(IndigoMessages.NotificationWrongValue), 0.01, null),
+                    result.getDouble("amount"), myUi.getMessage(Messages.Quantity),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2));
             tf.addValueChangeListener(v);
             tf.setId(id);
-            tf.setData(myUi.getMessage(IndigoMessages.Quantity));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Quantity)).setValue(tf);
+            tf.setData(myUi.getMessage(Messages.Quantity));
+            item.getItemProperty(myUi.getMessage(Messages.Quantity)).setValue(tf);
             item.getItemProperty(Settings.quantity_id).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Price)).setValue(result.getDouble("total") / result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Rate)).setValue(result.getDouble("currency_rate") / result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("total"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Remain)).setValue(result.getDouble("rmn.remain"));
-            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(IndigoMessages.Update));
+            item.getItemProperty(myUi.getMessage(Messages.Price)).setValue(result.getDouble("total") / result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(Messages.Rate)).setValue(result.getDouble("currency_rate") / result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(result.getDouble("total"));
+            item.getItemProperty(myUi.getMessage(Messages.Remain)).setValue(result.getDouble("rmn.remain"));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             total += result.getDouble("total");
 
             item = v.getOriginalCont().addItem(id);
@@ -410,30 +410,30 @@ public class DbStockMovements extends BaseDb {
         stat.setInt(3, service_type_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Quantity), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Measurement), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.AveragePrice), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.AverageRate), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Quantity), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Measurement), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.AveragePrice), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.AverageRate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
         t.setContainerDataSource(container);
         double total_amount = 0.0;
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Title))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Title))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
                         item = container.addItem(parent);
-                        item.getItemProperty(myUI.getMessage(IndigoMessages.Title))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(Messages.Title))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(Messages.Title)).getValue().toString());
                     } else {
-                        item.getItemProperty(myUI.getMessage(IndigoMessages.AverageRate)).setValue(0.0);
-                        item.getItemProperty(myUI.getMessage(IndigoMessages.Quantity)).setValue(0.0);
-                        item.getItemProperty(myUI.getMessage(IndigoMessages.AveragePrice)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.AverageRate)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.Quantity)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.AveragePrice)).setValue(0.0);
                     }
                     container.setParent(catNext, parent);
                 }
@@ -449,26 +449,26 @@ public class DbStockMovements extends BaseDb {
         }
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Quantity)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Measurement)).setValue(result.getString("measurement"));
+            item.getItemProperty(myUI.getMessage(Messages.Quantity)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(Messages.Measurement)).setValue(result.getString("measurement"));
             total_amount += result.getDouble("total");
             if (result.getDouble("amount") != 0.0) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.AveragePrice)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.AveragePrice)).setValue(
                         result.getDouble("total") / result.getDouble("amount"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.AverageRate)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.AverageRate)).setValue(
                         result.getDouble("currency_rate") / result.getDouble("amount"));
             }
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("total"));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("total"));
 
             Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
             while (parent_id != null) {
                 item = container.getItem(parent_id);
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).getValue() + result.getDouble("total"));
+                item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
+                        (Double) item.getItemProperty(myUI.getMessage(Messages.Amount)).getValue() + result.getDouble("total"));
                 parent_id = (Integer) container.getParent(parent_id);
             }
         }
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.Amount), Settings.dFormat2.format(total_amount));
+        t.setColumnFooter(myUI.getMessage(Messages.Amount), Settings.dFormat2.format(total_amount));
     }
 
     public void exec_stock_balance(MyVaadinUI myUI, FilterTreeTable categoriesTable, Date from, Date till,
@@ -504,32 +504,32 @@ public class DbStockMovements extends BaseDb {
         stat.setDate(10, new java.sql.Date(from.getTime()));
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.StockIncome) + " - " + myUI.getMessage(IndigoMessages.Quantity), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.StockIncome) + " - " + myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.StockOutcome) + " - " + myUI.getMessage(IndigoMessages.Quantity), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.StockOutcome) + " - " + myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.PreviousBalance) + " " +
-                myUI.getMessage(IndigoMessages.ToThe).toLowerCase() + " " + Settings.df.format(till), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Quantity), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Quantity), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.PreviousBalance) + " " +
+                myUI.getMessage(Messages.ToThe).toLowerCase() + " " + Settings.df.format(till), Double.class, null);
         t.setContainerDataSource(container);
         double total_in_amount = 0.0, total_out_amount = 0.0;
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Title))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Title))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
                         item = container.addItem(parent);
-                        item.getItemProperty(myUI.getMessage(IndigoMessages.Title))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(Messages.Title))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(Messages.Title)).getValue().toString());
                     } else {
-                        item.getItemProperty(myUI.getMessage(IndigoMessages.StockIncome) + " - " + myUI.getMessage(IndigoMessages.Quantity)).setValue(0.0);
-                        item.getItemProperty(myUI.getMessage(IndigoMessages.StockOutcome) + " - " + myUI.getMessage(IndigoMessages.Quantity)).setValue(0.0);
-                        item.getItemProperty(myUI.getMessage(IndigoMessages.PreviousBalance) + " " +
-                                myUI.getMessage(IndigoMessages.ToThe).toLowerCase() + " " + Settings.df.format(till)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Quantity)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Quantity)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.PreviousBalance) + " " +
+                                myUI.getMessage(Messages.ToThe).toLowerCase() + " " + Settings.df.format(till)).setValue(0.0);
                     }
                     container.setParent(catNext, parent);
                 }
@@ -545,16 +545,16 @@ public class DbStockMovements extends BaseDb {
         }
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.StockIncome)
-                    + " - " + myUI.getMessage(IndigoMessages.Quantity)).setValue(result.getDouble("in_amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.StockOutcome)
-                    + " - " + myUI.getMessage(IndigoMessages.Quantity)).setValue(result.getDouble("out_amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.StockIncome)
-                    + " - " + myUI.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("in_total"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.StockOutcome)
-                    + " - " + myUI.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("out_total"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.PreviousBalance) + " " +
-                    myUI.getMessage(IndigoMessages.ToThe).toLowerCase() + " " + Settings.df.format(till)).setValue(result.getDouble("balance")
+            item.getItemProperty(myUI.getMessage(Messages.StockIncome)
+                    + " - " + myUI.getMessage(Messages.Quantity)).setValue(result.getDouble("in_amount"));
+            item.getItemProperty(myUI.getMessage(Messages.StockOutcome)
+                    + " - " + myUI.getMessage(Messages.Quantity)).setValue(result.getDouble("out_amount"));
+            item.getItemProperty(myUI.getMessage(Messages.StockIncome)
+                    + " - " + myUI.getMessage(Messages.Amount)).setValue(result.getDouble("in_total"));
+            item.getItemProperty(myUI.getMessage(Messages.StockOutcome)
+                    + " - " + myUI.getMessage(Messages.Amount)).setValue(result.getDouble("out_total"));
+            item.getItemProperty(myUI.getMessage(Messages.PreviousBalance) + " " +
+                    myUI.getMessage(Messages.ToThe).toLowerCase() + " " + Settings.df.format(till)).setValue(result.getDouble("balance")
                     + result.getDouble("in_amount") - result.getDouble("out_amount"));
 
             total_in_amount += result.getDouble("in_total");
@@ -563,17 +563,17 @@ public class DbStockMovements extends BaseDb {
             Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
             while (parent_id != null) {
                 item = container.getItem(parent_id);
-                item.getItemProperty(myUI.getMessage(IndigoMessages.StockIncome) + " - " + myUI.getMessage(IndigoMessages.Amount)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.StockIncome)
-                                + " - " + myUI.getMessage(IndigoMessages.Amount)).getValue() + result.getDouble("in_total"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.StockOutcome) + " - " + myUI.getMessage(IndigoMessages.Amount)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(IndigoMessages.StockOutcome)
-                                + " - " + myUI.getMessage(IndigoMessages.Amount)).getValue() + result.getDouble("out_total"));
+                item.getItemProperty(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Amount)).setValue(
+                        (Double) item.getItemProperty(myUI.getMessage(Messages.StockIncome)
+                                + " - " + myUI.getMessage(Messages.Amount)).getValue() + result.getDouble("in_total"));
+                item.getItemProperty(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Amount)).setValue(
+                        (Double) item.getItemProperty(myUI.getMessage(Messages.StockOutcome)
+                                + " - " + myUI.getMessage(Messages.Amount)).getValue() + result.getDouble("out_total"));
                 parent_id = (Integer) container.getParent(parent_id);
             }
         }
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.StockIncome) + " - " + myUI.getMessage(IndigoMessages.Amount), Settings.dFormat2.format(total_in_amount));
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.StockOutcome) + " - " + myUI.getMessage(IndigoMessages.Amount), Settings.dFormat2.format(total_out_amount));
+        t.setColumnFooter(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Amount), Settings.dFormat2.format(total_in_amount));
+        t.setColumnFooter(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Amount), Settings.dFormat2.format(total_out_amount));
     }
 
     public void exec_product_movements(MyVaadinUI myUI, int acc_category_id, Date from, Date till,
@@ -598,52 +598,52 @@ public class DbStockMovements extends BaseDb {
         stat.setInt(5, stock_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.InvoiceNumber), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.MovementType), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Measurement), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Price), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Rate), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.StockIncome), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.StockOutcome), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.PreviousBalance), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.InvoiceNumber), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.MovementType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Measurement), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Price), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.StockIncome), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.StockOutcome), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PreviousBalance), Double.class, 0.0);
         int i = 0;
         double balance = execSQL_category_balance(acc_category_id, stock_id + "", from),
                 totalOut = 0.0, totalIn = 0.0, netAmount = 0.0;
         while (result.next()) {
             Item item = container.addItem(++i);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(Settings.df.format(result.getDate("inv.creation_date")));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.InvoiceNumber)).setValue(result.getString("invoice_number"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(result.getString("sm.note"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.MovementType)).setValue(result.getString("tp.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Measurement)).setValue(result.getString("m.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format(result.getDate("inv.creation_date")));
+            item.getItemProperty(myUI.getMessage(Messages.InvoiceNumber)).setValue(result.getString("invoice_number"));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(result.getString("sm.note"));
+            item.getItemProperty(myUI.getMessage(Messages.MovementType)).setValue(result.getString("tp.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Measurement)).setValue(result.getString("m.name"));
             if (result.getDouble("amount") != 0.0) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Price)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Price)).setValue(
                         result.getDouble("total") / result.getDouble("amount"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(
                         result.getDouble("currency_rate") / result.getDouble("amount"));
             }
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("total"));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("total"));
 
             if (result.getInt("inv.service_type_id") == 2) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.StockOutcome)).setValue(result.getDouble("amount"));
+                item.getItemProperty(myUI.getMessage(Messages.StockOutcome)).setValue(result.getDouble("amount"));
                 balance -= result.getDouble("amount");
                 totalOut += result.getDouble("amount");
                 netAmount -= result.getDouble("total");
             } else {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.StockIncome)).setValue(result.getDouble("amount"));
+                item.getItemProperty(myUI.getMessage(Messages.StockIncome)).setValue(result.getDouble("amount"));
                 balance += result.getDouble("amount");
                 totalIn += result.getDouble("amount");
                 netAmount += result.getDouble("total");
             }
-            item.getItemProperty(myUI.getMessage(IndigoMessages.PreviousBalance)).setValue(balance);
+            item.getItemProperty(myUI.getMessage(Messages.PreviousBalance)).setValue(balance);
         }
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.StockIncome), Settings.dFormat2.format(totalIn));
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.StockOutcome), Settings.dFormat2.format(totalOut));
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.Amount), Settings.dFormat2.format(netAmount));
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.PreviousBalance), Settings.dFormat2.format(balance));
+        t.setColumnFooter(myUI.getMessage(Messages.StockIncome), Settings.dFormat2.format(totalIn));
+        t.setColumnFooter(myUI.getMessage(Messages.StockOutcome), Settings.dFormat2.format(totalOut));
+        t.setColumnFooter(myUI.getMessage(Messages.Amount), Settings.dFormat2.format(netAmount));
+        t.setColumnFooter(myUI.getMessage(Messages.PreviousBalance), Settings.dFormat2.format(balance));
         t.setContainerDataSource(container);
     }
 

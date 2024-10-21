@@ -8,7 +8,7 @@ package kg.alex.indigo.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,10 +26,10 @@ public class DbProductCategories extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("acc_category_id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(result.getString("name"));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(result.getString("name"));
         }
         return container;
     }

@@ -9,7 +9,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.reports.hr.HRGeneralReport;
 import kg.alex.indigo.reports.hr.HRLessonHoursReport;
 import org.apache.shiro.SecurityUtils;
@@ -45,19 +45,19 @@ public class HRReportsView extends HorizontalSplitPanel implements Property.Valu
         rightGrid.setSpacing(true);
         rightGrid.setWidth(Settings.PERCENTS100);
 
-        repTypeSelect = new ComboBox(myUI.getMessage(IndigoMessages.ReportType));
+        repTypeSelect = new ComboBox(myUI.getMessage(Messages.ReportType));
         repTypeSelect.setNullSelectionAllowed(false);
         repTypeSelect.setRequired(true);
-        repTypeSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        repTypeSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         repTypeSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         repTypeSelect.setWidth(Settings.PERCENTS100);
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
         if (currentUser.isPermitted(Settings.cnHRReportsView + ":" + Settings.prmHrGeneralReport)) {
-            repTypeSelect.addItem(myUI.getMessage(IndigoMessages.HRGeneralReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.HRGeneralReport));
         }
         if (currentUser.isPermitted(Settings.cnHRReportsView + ":" + Settings.prmLessonHoursReport)) {
-            repTypeSelect.addItem(myUI.getMessage(IndigoMessages.HRLessonHoursReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.HRLessonHoursReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);
     }
@@ -68,9 +68,9 @@ public class HRReportsView extends HorizontalSplitPanel implements Property.Valu
         if (property == repTypeSelect) {
             this.setSecondComponent(null);
             leftGrid.removeComponent(0, 1);
-            if (repTypeSelect.getValue().equals(myUI.getMessage(IndigoMessages.HRLessonHoursReport))) {
+            if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.HRLessonHoursReport))) {
                 new HRLessonHoursReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(IndigoMessages.HRGeneralReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.HRGeneralReport))) {
                 new HRGeneralReport(myUI, this);
             }
         }

@@ -15,7 +15,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbAccessories;
 import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.domain.Accessories;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -40,8 +40,8 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
     public AccessoriesDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Title),
-                myUI.getMessage(IndigoMessages.Category), myUI.getMessage(IndigoMessages.Status)};
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Title),
+                myUI.getMessage(Messages.Category), myUI.getMessage(Messages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -89,7 +89,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(IndigoMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -97,7 +97,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(IndigoMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -105,52 +105,52 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(IndigoMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(IndigoMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new TextField(myUI.getMessage(IndigoMessages.Title));
+        nameTF = new TextField(myUI.getMessage(Messages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        nameTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 100, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false));
         settingsLay.addComponent(nameTF);
 
-        statusSelect = new ComboBox(myUI.getMessage(IndigoMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        statusSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        statusSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         statusSelect.setWidth(Settings.PERCENTS100);
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        categorySelect = new ComboBox(myUI.getMessage(IndigoMessages.Category));
+        categorySelect = new ComboBox(myUI.getMessage(Messages.Category));
         categorySelect.setNullSelectionAllowed(false);
         categorySelect.setRequired(true);
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        categorySelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        categorySelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         categorySelect.setWidth(Settings.PERCENTS100);
-        categorySelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        categorySelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         categorySelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -185,10 +185,10 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
             nameTF.focus();
             statusSelect.setValue(2);
         } else if (source == deleteBtn && dataTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                    myUI.getMessage(IndigoMessages.ConfirmDeletion),
-                    myUI.getMessage(IndigoMessages.Yes),
-                    myUI.getMessage(IndigoMessages.No),
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
@@ -203,10 +203,10 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
                         int id = dbAcc.exec_insert(getAccessories(0));
                         if (id != 0) {
                             addDataContainerItem(id);
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
@@ -221,17 +221,17 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
                         }
                         if (status != 0) {
                             updateDataContainer();
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     }
                     dbAcc.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -288,7 +288,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
 
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                myUI.getMessage(Messages.Title)).getValue().toString());
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).getValue());
         categorySelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
@@ -303,32 +303,32 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
 
     private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Title)).setValue(nameTF.getValue());
+                myUI.getMessage(Messages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.category_id).setValue(categorySelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Status)).setValue(statusSelect.
+                myUI.getMessage(Messages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Category)).setValue(categorySelect.
+                myUI.getMessage(Messages.Category)).setValue(categorySelect.
                 getContainerProperty(categorySelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
     }
 
     private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                 nameTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Status)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Category)).setValue(
+                        myUI.getMessage(Messages.Title)).getValue().toString());
+        item.getItemProperty(myUI.getMessage(Messages.Category)).setValue(
                 categorySelect.getContainerProperty(categorySelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         item.getItemProperty(Settings.status_id).setValue(
                 statusSelect.getValue());
         item.getItemProperty(Settings.category_id).setValue(
@@ -364,7 +364,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);

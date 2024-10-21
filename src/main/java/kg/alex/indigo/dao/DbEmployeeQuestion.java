@@ -12,7 +12,7 @@ import com.vaadin.ui.TextField;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.EmployeeQuestioning;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -60,18 +60,18 @@ public class DbEmployeeQuestion extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Question), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Answer), TextField.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Question), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Answer), TextField.class, null);
         container.addContainerProperty(Settings.id, Integer.class, 0);
         while (result.next()) {
             String id = result.getString("q.id");
             Item item = container.addItem(id);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Question)).setValue(result.getString("q.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Question)).setValue(result.getString("q.name"));
             item.getItemProperty(Settings.id).setValue(result.getInt("eq.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Answer)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Answer)).setValue(
                     edv.createTextField(result.getString("eq.answer"),
-                            myUI.getMessage(IndigoMessages.Answer),
-                            new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 350, true), false));
+                            myUI.getMessage(Messages.Answer),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 350, true), false));
         }
         return container;
     }

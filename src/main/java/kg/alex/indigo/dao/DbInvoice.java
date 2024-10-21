@@ -13,7 +13,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.Invoice;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -40,24 +40,24 @@ public class DbInvoice extends BaseDb {
         stat.setInt(2, invoice_type_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.InvoiceNumber), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Note), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Note) + " 2", String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.InvoiceNumber), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Note) + " 2", String.class, null);
         container.addContainerProperty(Settings.button, CheckBox.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("inv.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(Messages.InvoiceNumber)).setValue(result.getString("inv_num"));
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(result.getDouble("amount"));
             if (invoice_type_id != 1) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Date)).setValue(Settings.ymdf.format(result.getTimestamp("inv.creation_date")));
+                item.getItemProperty(myUi.getMessage(Messages.Date)).setValue(Settings.ymdf.format(result.getTimestamp("inv.creation_date")));
             } else {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Date)).setValue(Settings.dtmf.format(result.getTimestamp("inv.creation_date")));
+                item.getItemProperty(myUi.getMessage(Messages.Date)).setValue(Settings.dtmf.format(result.getTimestamp("inv.creation_date")));
             }
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Note)).setValue(result.getString("inv.note"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Note) + " 2").setValue(result.getString("inv.note2"));
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(result.getString("inv.note"));
+            item.getItemProperty(myUi.getMessage(Messages.Note) + " 2").setValue(result.getString("inv.note2"));
             CheckBox cb = new CheckBox();
             cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
             cb.setData(result.getInt("inv.id"));
@@ -88,20 +88,20 @@ public class DbInvoice extends BaseDb {
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.InvoiceNumber), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Note), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Note) + " 2", String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.InvoiceNumber), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Note) + " 2", String.class, null);
         container.addContainerProperty(Settings.button, CheckBox.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("inv.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Date)).setValue(Settings.ymdf.format(result.getTimestamp("inv.creation_date")));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Note)).setValue(result.getString("inv.note"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Note) + " 2").setValue(result.getString("inv.note2"));
+            item.getItemProperty(myUi.getMessage(Messages.InvoiceNumber)).setValue(result.getString("inv_num"));
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(Messages.Date)).setValue(Settings.ymdf.format(result.getTimestamp("inv.creation_date")));
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(result.getString("inv.note"));
+            item.getItemProperty(myUi.getMessage(Messages.Note) + " 2").setValue(result.getString("inv.note2"));
             CheckBox cb = new CheckBox();
             cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
             cb.setData(result.getInt("inv.id"));
@@ -146,18 +146,18 @@ public class DbInvoice extends BaseDb {
         stat.setInt(2, invoice_type_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.InvoiceNumber), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Note), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.InvoiceNumber), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(Messages.Note), String.class, null);
         container.addContainerProperty(Settings.button, CheckBox.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("inv.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Date)).setValue(Settings.dtmf.format(result.getTimestamp("inv.creation_date")));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Note)).setValue(result.getString("inv.note"));
+            item.getItemProperty(myUi.getMessage(Messages.InvoiceNumber)).setValue(result.getString("inv_num"));
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(Messages.Date)).setValue(Settings.dtmf.format(result.getTimestamp("inv.creation_date")));
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(result.getString("inv.note"));
             CheckBox cb = new CheckBox();
             cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
             cb.setData(result.getInt("inv.id"));

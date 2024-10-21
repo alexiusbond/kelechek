@@ -8,7 +8,7 @@ package kg.alex.indigo;
 import com.ejt.vaadin.loginform.LoginForm;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.ui.*;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 /**
  * @author alex
@@ -35,13 +35,13 @@ public class MyLoginForm extends LoginForm {
         errorLbl.setVisible(false);
         errorLbl.setImmediate(true);
 
-        Label userNameLbl = new Label(myUI.getMessage(IndigoMessages.Username));
+        Label userNameLbl = new Label(myUI.getMessage(Messages.Username));
         userNameLbl.setSizeUndefined();
         userNameLbl.addStyleName("large");
-        Label passwordLbl = new Label(myUI.getMessage(IndigoMessages.Password));
+        Label passwordLbl = new Label(myUI.getMessage(Messages.Password));
         passwordLbl.setSizeUndefined();
         passwordLbl.addStyleName("large");
-        loginButton.setCaption(myUI.getMessage(IndigoMessages.Login));
+        loginButton.setCaption(myUI.getMessage(Messages.Login));
         loginButton.setStyleName("large");
         loginButton.setStyleName("primary");
         loginButton.setWidth("35%");
@@ -80,11 +80,11 @@ public class MyLoginForm extends LoginForm {
                 error = true;
             }
             if (error) {
-                errorLbl.setValue(myUI.getMessage(IndigoMessages.InvalidUserNamePassword));
+                errorLbl.setValue(myUI.getMessage(Messages.InvalidUserNamePassword));
                 errorLbl.setVisible(true);
             }
         } else {
-            errorLbl.setValue(myUI.getMessage(IndigoMessages.LoginUsernameNotEmpty));
+            errorLbl.setValue(myUI.getMessage(Messages.LoginUsernameNotEmpty));
             errorLbl.setVisible(true);
         }
     }

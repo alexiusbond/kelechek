@@ -20,7 +20,7 @@ import kg.alex.indigo.dao.DbEmployee;
 import kg.alex.indigo.dao.DbSchool;
 import kg.alex.indigo.dao.DbStudentContract;
 import kg.alex.indigo.domain.StudentInfoPdf;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.pdf.MonthsReportPdf;
 import kg.alex.indigo.pdf.SummaryReportPdf;
 import kg.alex.indigo.pdf.YearReportPdf;
@@ -63,40 +63,40 @@ public class YearMonthReport implements Button.ClickListener,
         this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
-        NATURAL_COL_ORDER_YEAR = new String[]{myUI.getMessage(IndigoMessages.ClassName),
-                myUI.getMessage(IndigoMessages.Total_Active),
-                myUI.getMessage(IndigoMessages.Contract),
-                myUI.getMessage(IndigoMessages.Discount),
-                myUI.getMessage(IndigoMessages.DiscountPercentage),
-                myUI.getMessage(IndigoMessages.Correction),
-                myUI.getMessage(IndigoMessages.PreviousYearDebt),
-                myUI.getMessage(IndigoMessages.PreviousYearOverpay),
-                myUI.getMessage(IndigoMessages.Net),
-                myUI.getMessage(IndigoMessages.Paid),
+        NATURAL_COL_ORDER_YEAR = new String[]{myUI.getMessage(Messages.ClassName),
+                myUI.getMessage(Messages.Total_Active),
+                myUI.getMessage(Messages.Contract),
+                myUI.getMessage(Messages.Discount),
+                myUI.getMessage(Messages.DiscountPercentage),
+                myUI.getMessage(Messages.Correction),
+                myUI.getMessage(Messages.PreviousYearDebt),
+                myUI.getMessage(Messages.PreviousYearOverpay),
+                myUI.getMessage(Messages.Net),
+                myUI.getMessage(Messages.Paid),
                 Settings.percentage,
-                myUI.getMessage(IndigoMessages.Debt),
-                myUI.getMessage(IndigoMessages.OverPay)};
+                myUI.getMessage(Messages.Debt),
+                myUI.getMessage(Messages.OverPay)};
 
-        NATURAL_COL_ORDER_SUMMARY = new String[]{myUI.getMessage(IndigoMessages.School),
-                myUI.getMessage(IndigoMessages.Total_Active),
-                myUI.getMessage(IndigoMessages.Contract),
-                myUI.getMessage(IndigoMessages.Discount),
-                myUI.getMessage(IndigoMessages.DiscountPercentage),
-                myUI.getMessage(IndigoMessages.Correction),
-                myUI.getMessage(IndigoMessages.PreviousYearDebt),
-                myUI.getMessage(IndigoMessages.PreviousYearOverpay),
-                myUI.getMessage(IndigoMessages.Net),
-                myUI.getMessage(IndigoMessages.Paid),
+        NATURAL_COL_ORDER_SUMMARY = new String[]{myUI.getMessage(Messages.School),
+                myUI.getMessage(Messages.Total_Active),
+                myUI.getMessage(Messages.Contract),
+                myUI.getMessage(Messages.Discount),
+                myUI.getMessage(Messages.DiscountPercentage),
+                myUI.getMessage(Messages.Correction),
+                myUI.getMessage(Messages.PreviousYearDebt),
+                myUI.getMessage(Messages.PreviousYearOverpay),
+                myUI.getMessage(Messages.Net),
+                myUI.getMessage(Messages.Paid),
                 Settings.percentage,
-                myUI.getMessage(IndigoMessages.Debt),
-                myUI.getMessage(IndigoMessages.OverPay)};
+                myUI.getMessage(Messages.Debt),
+                myUI.getMessage(Messages.OverPay)};
 
-        NATURAL_COL_ORDER_MONTH = new String[]{myUI.getMessage(IndigoMessages.Month),
-                myUI.getMessage(IndigoMessages.InstPlanDebt),
-                myUI.getMessage(IndigoMessages.Paid),
+        NATURAL_COL_ORDER_MONTH = new String[]{myUI.getMessage(Messages.Month),
+                myUI.getMessage(Messages.InstPlanDebt),
+                myUI.getMessage(Messages.Paid),
                 Settings.percentage,
-                myUI.getMessage(IndigoMessages.Debt),
-                myUI.getMessage(IndigoMessages.OverPay)};
+                myUI.getMessage(Messages.Debt),
+                myUI.getMessage(Messages.OverPay)};
     }
 
     private void buildLeftPanel() {
@@ -104,25 +104,25 @@ public class YearMonthReport implements Button.ClickListener,
         leftGrid.setSpacing(true);
         leftGrid.setWidth(Settings.PERCENTS100);
 
-        yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-        educationStatusMCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        educationStatusMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         educationStatusMCB.setWidth(Settings.PERCENTS100);
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
-        educationStatusMCB.setClearButtonCaption(myUI.getMessage(IndigoMessages.Clear));
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
-        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(IndigoMessages.SelectAll));
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
@@ -140,8 +140,8 @@ public class YearMonthReport implements Button.ClickListener,
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
         yearSelect.addValueChangeListener(this);
 
-        fromDateDF = new PopupDateField(myUI.getMessage(IndigoMessages.FromDate));
-        fromDateDF.setInputPrompt(myUI.getMessage(IndigoMessages.AnyDate));
+        fromDateDF = new PopupDateField(myUI.getMessage(Messages.FromDate));
+        fromDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setDateFormat(Settings.datePattern);
@@ -149,8 +149,8 @@ public class YearMonthReport implements Button.ClickListener,
         fromDateDF.setVisible(false);
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new PopupDateField(myUI.getMessage(IndigoMessages.TillDate));
-        tillDateDF.setInputPrompt(myUI.getMessage(IndigoMessages.AnyDate));
+        tillDateDF = new PopupDateField(myUI.getMessage(Messages.TillDate));
+        tillDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setDateFormat(Settings.datePattern);
@@ -158,13 +158,13 @@ public class YearMonthReport implements Button.ClickListener,
         tillDateDF.setVisible(false);
         tillDateDF.addValueChangeListener(this);
 
-        selectAllBtn = new Button(myUI.getMessage(IndigoMessages.AllSchools));
+        selectAllBtn = new Button(myUI.getMessage(Messages.AllSchools));
         selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
-        deselectAllBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -187,7 +187,7 @@ public class YearMonthReport implements Button.ClickListener,
             DbSchool dbs = new DbSchool();
             dbs.connect();
             schoolTable.setContainerDataSource(dbs.execSchoolSel(myUI, 0));
-            schoolTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
+            schoolTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
             dbs.close();
         } catch (Exception e) {
             logger.error(e);
@@ -196,16 +196,16 @@ public class YearMonthReport implements Button.ClickListener,
 
         type = new OptionGroup();
         type.setWidth(Settings.PERCENTS100);
-        type.addItem(myUI.getMessage(IndigoMessages.Monthly));
-        type.addItem(myUI.getMessage(IndigoMessages.Yearly));
+        type.addItem(myUI.getMessage(Messages.Monthly));
+        type.addItem(myUI.getMessage(Messages.Yearly));
         if (currentUser.hasRole(Settings.rnAdmin)) {
-            type.addItem(myUI.getMessage(IndigoMessages.Summary));
+            type.addItem(myUI.getMessage(Messages.Summary));
         }
-        type.setValue(myUI.getMessage(IndigoMessages.Monthly));
+        type.setValue(myUI.getMessage(Messages.Monthly));
         type.setStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         type.addValueChangeListener(this);
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -213,7 +213,7 @@ public class YearMonthReport implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         makePdfBtn = new Button();
-        makePdfBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
+        makePdfBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
         makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         makePdfBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -222,7 +222,7 @@ public class YearMonthReport implements Button.ClickListener,
         makePdfBtn.setEnabled(false);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -260,33 +260,33 @@ public class YearMonthReport implements Button.ClickListener,
 
     public FormattedTable createTable(String caption) {
         IndexedContainer container = new IndexedContainer();
-        if (type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Yearly))) {
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.ClassName), String.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Total_Active), String.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Contract), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Discount), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.DiscountPercentage), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Correction), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.PreviousYearDebt), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.PreviousYearOverpay), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Net), Double.class, null);
-        } else if (type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Summary))) {
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.School), String.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Total_Active), String.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Contract), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Discount), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.DiscountPercentage), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Correction), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.PreviousYearDebt), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.PreviousYearOverpay), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Net), Double.class, null);
+        if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))) {
+            container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Total_Active), String.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Contract), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Discount), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.DiscountPercentage), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Correction), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.PreviousYearDebt), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.PreviousYearOverpay), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Net), Double.class, null);
+        } else if (type.getValue().toString().equals(myUI.getMessage(Messages.Summary))) {
+            container.addContainerProperty(myUI.getMessage(Messages.School), String.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Total_Active), String.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Contract), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Discount), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.DiscountPercentage), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Correction), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.PreviousYearDebt), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.PreviousYearOverpay), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Net), Double.class, null);
         } else {
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.Month), String.class, null);
-            container.addContainerProperty(myUI.getMessage(IndigoMessages.InstPlanDebt), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.Month), String.class, null);
+            container.addContainerProperty(myUI.getMessage(Messages.InstPlanDebt), Double.class, null);
         }
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Debt), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.OverPay), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Paid), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Debt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.OverPay), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Paid), Double.class, null);
         container.addContainerProperty(Settings.percentage, Double.class, 0.0);
 
         FormattedTable dataTable = new FormattedTable(myUI);
@@ -299,31 +299,31 @@ public class YearMonthReport implements Button.ClickListener,
         dataTable.addStyleName("noWrap");
         dataTable.addStyleName("noWrapHeader");
         dataTable.setContainerDataSource(container);
-        if (type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Yearly))
-                || type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Summary))) {
-            if (type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Yearly))) {
+        if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))
+                || type.getValue().toString().equals(myUI.getMessage(Messages.Summary))) {
+            if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))) {
                 dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_YEAR);
             } else {
                 dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_SUMMARY);
             }
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Total_Active), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Contract), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Discount), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.DiscountPercentage), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Correction), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.PreviousYearDebt), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.PreviousYearOverpay), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Net), Table.Align.RIGHT);
-            dataTable.setColumnWidth(myUI.getMessage(IndigoMessages.ClassName), 100);
-            dataTable.setColumnWidth(myUI.getMessage(IndigoMessages.Total_Active), 80);
-            dataTable.setColumnWidth(myUI.getMessage(IndigoMessages.PreviousYearOverpay), 80);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Total_Active), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Contract), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Discount), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.DiscountPercentage), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Correction), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.PreviousYearDebt), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.PreviousYearOverpay), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Net), Table.Align.RIGHT);
+            dataTable.setColumnWidth(myUI.getMessage(Messages.ClassName), 100);
+            dataTable.setColumnWidth(myUI.getMessage(Messages.Total_Active), 80);
+            dataTable.setColumnWidth(myUI.getMessage(Messages.PreviousYearOverpay), 80);
         } else {
             dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_MONTH);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.InstPlanDebt), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.InstPlanDebt), Table.Align.RIGHT);
         }
-        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Debt), Table.Align.RIGHT);
-        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.OverPay), Table.Align.RIGHT);
-        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Paid), Table.Align.RIGHT);
+        dataTable.setColumnAlignment(myUI.getMessage(Messages.Debt), Table.Align.RIGHT);
+        dataTable.setColumnAlignment(myUI.getMessage(Messages.OverPay), Table.Align.RIGHT);
+        dataTable.setColumnAlignment(myUI.getMessage(Messages.Paid), Table.Align.RIGHT);
         dataTable.setColumnAlignment(Settings.percentage, Table.Align.RIGHT);
         if (container.size() != 0) {
             makePdfBtn.setEnabled(true);
@@ -352,12 +352,12 @@ public class YearMonthReport implements Button.ClickListener,
                         school_ids = myUI.getUser().getSchool().getId() + "";
                     }
                     if (school_ids != null) {
-                        if (type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Yearly))) {
+                        if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))) {
                             rightLay.setHeightUndefined();
                             dbsc.execSQL_Yearly_by_classes(myUI, school_ids,
                                     Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                                     (Integer) yearSelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(), this);
-                        } else if (type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Summary))) {
+                        } else if (type.getValue().toString().equals(myUI.getMessage(Messages.Summary))) {
                             dbsc.execSQL_Summary_report(myUI, school_ids,
                                     Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                                     (Integer) yearSelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(), this);
@@ -370,7 +370,7 @@ public class YearMonthReport implements Button.ClickListener,
                                     (Integer) yearSelect.getValue(), this);
                         }
                     } else {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationNothingIsSelected),
+                        Notification.show(myUI.getMessage(Messages.NotificationNothingIsSelected),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                     dbsc.close();
@@ -397,19 +397,19 @@ public class YearMonthReport implements Button.ClickListener,
                 dbEmployee.close();
                 if (studentInfo.getAccountant() != null) {
                     if (studentInfo.getSchool().getAddress() != null) {
-                        if (type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Yearly))) {
+                        if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))) {
                             new YearReportPdf(myUI, rightLay, studentInfo);
-                        } else if (type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Monthly))) {
+                        } else if (type.getValue().toString().equals(myUI.getMessage(Messages.Monthly))) {
                             new MonthsReportPdf(myUI, rightLay, studentInfo);
                         } else {
                             new SummaryReportPdf(myUI, rightLay, studentInfo);
                         }
                     } else {
-                        Notification.show(myUI.getMessage(IndigoMessages.FillSchoolInfo),
+                        Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NoAccountant),
+                    Notification.show(myUI.getMessage(Messages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -435,7 +435,7 @@ public class YearMonthReport implements Button.ClickListener,
                             excelReport.setReportTitle(t.getCaption());
                             excelReport.setDisplayTotals(true);
                             excelReport.convertTable();
-                            if (type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Monthly))) {
+                            if (type.getValue().toString().equals(myUI.getMessage(Messages.Monthly))) {
                                 excelReport.getTotalsRow().getCell(4).setCellFormula(null);
                                 excelReport.getTotalsRow().getCell(4).setCellValue(
                                         t.getColumnFooter(Settings.percentage));
@@ -444,9 +444,9 @@ public class YearMonthReport implements Button.ClickListener,
                                 excelReport.getTotalsRow().getCell(4).setCellFormula(null);
                                 excelReport.getTotalsRow().getCell(10).setCellFormula(null);
                                 excelReport.getTotalsRow().getCell(1).setCellValue(
-                                        t.getColumnFooter(myUI.getMessage(IndigoMessages.Total_Active)));
+                                        t.getColumnFooter(myUI.getMessage(Messages.Total_Active)));
                                 excelReport.getTotalsRow().getCell(4).setCellValue(
-                                        t.getColumnFooter(myUI.getMessage(IndigoMessages.DiscountPercentage)));
+                                        t.getColumnFooter(myUI.getMessage(Messages.DiscountPercentage)));
                                 excelReport.getTotalsRow().getCell(10).setCellValue(t.getColumnFooter(Settings.percentage));
                             }
                         }
@@ -478,7 +478,7 @@ public class YearMonthReport implements Button.ClickListener,
             makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
             rightLay.removeAllComponents();
-            if (type.getValue().toString().equals(myUI.getMessage(IndigoMessages.Monthly))) {
+            if (type.getValue().toString().equals(myUI.getMessage(Messages.Monthly))) {
                 fromDateDF.setVisible(false);
                 tillDateDF.setVisible(false);
             } else {

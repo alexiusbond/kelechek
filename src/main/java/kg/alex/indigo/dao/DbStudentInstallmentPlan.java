@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.StudentInstallmentPlan;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.reports.students.ClassInstPlanReport;
 import kg.alex.indigo.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.indigo.ui.StudentDefinitionView;
@@ -44,13 +44,13 @@ public class DbStudentInstallmentPlan extends BaseDb {
             String id = result.getString("ip.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    dw.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id,
+                    dw.createButton(myUI.getMessage(Messages.DeleteButton), id,
                             Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
             java.util.Date date = result.getDate("ip.date_of_payment");
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
-                    dw.createDateField(date, myUI.getMessage(IndigoMessages.Date), id, false, true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
-                    dw.createTextFieldDouble(result.getDouble("ip.amount"), 2, myUI.getMessage(IndigoMessages.Amount), id));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
+                    dw.createDateField(date, myUI.getMessage(Messages.Date), id, false, true));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
+                    dw.createTextFieldDouble(result.getDouble("ip.amount"), 2, myUI.getMessage(Messages.Amount), id));
             item.getItemProperty(Settings.status_id)
                     .setValue(result.getInt("ip.is_visible"));
         }
@@ -102,13 +102,13 @@ public class DbStudentInstallmentPlan extends BaseDb {
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("ip.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format((result.getDate("ip.date_of_payment"))));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                     result.getDouble("ip.amount"));
             ip.total_inst += result.getDouble("ip.amount");
         }
@@ -127,22 +127,22 @@ public class DbStudentInstallmentPlan extends BaseDb {
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
         boolean isFound = false;
         while (result.next()) {
             payments -= result.getDouble("ip.amount");
             if (payments < 0.0 && !isFound) {
                 isFound = true;
                 Item item = container.addItem(result.getInt("ip.id"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                         Settings.df.format((result.getDate("ip.date_of_payment"))));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(-1 * payments);
+                item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(-1 * payments);
             } else if (isFound) {
                 Item item = container.addItem(result.getInt("ip.id"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                         Settings.df.format((result.getDate("ip.date_of_payment"))));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("ip.amount"));
+                item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("ip.amount"));
             }
         }
         return container;
@@ -169,20 +169,20 @@ public class DbStudentInstallmentPlan extends BaseDb {
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Phone), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Phone), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("ip.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.FirstName)).setValue(result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.LastName)).setValue(result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ClassName)).setValue(result.getString("vcs.class_name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("ip.amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Phone)).setValue(result.getString("phone"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(Settings.df.format((result.getDate("ip.date_of_payment"))));
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(result.getString("st.name"));
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(result.getString("st.surname"));
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(result.getString("vcs.class_name"));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("ip.amount"));
+            item.getItemProperty(myUI.getMessage(Messages.Phone)).setValue(result.getString("phone"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format((result.getDate("ip.date_of_payment"))));
             cip.total += result.getDouble("ip.amount");
         }
         return container;

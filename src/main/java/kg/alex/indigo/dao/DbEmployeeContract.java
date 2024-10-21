@@ -15,7 +15,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.EmployeeContract;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 import org.vaadin.hene.popupbutton.PopupButton;
 
@@ -123,10 +123,10 @@ public class DbEmployeeContract extends BaseDb {
             Item item = container.addItem(id);
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
-            hl.addComponent(edv.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id,
+            hl.addComponent(edv.createButton(myUI.getMessage(Messages.DeleteButton), id,
                     null, FontAwesome.MINUS_SQUARE));
             PopupButton btn = new PopupButton();
-            btn.setDescription(myUI.getMessage(IndigoMessages.Print));
+            btn.setDescription(myUI.getMessage(Messages.Print));
             btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
             btn.addStyleName(ValoTheme.BUTTON_TINY);
             btn.setIcon(FontAwesome.PRINT);
@@ -135,49 +135,49 @@ public class DbEmployeeContract extends BaseDb {
             btn.setContent(edv.getContractExtraInfoLay());
             hl.addComponent(btn);
             item.getItemProperty(Settings.button).setValue(hl);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.AgreementType)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.AgreementType)).setValue(
                     edv.createCombobox(result.getInt("ec.contract_type_id"),
-                            myUI.getMessage(IndigoMessages.AgreementType), Settings.dbContractType, true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.SalaryAmount)).setValue(
+                            myUI.getMessage(Messages.AgreementType), Settings.dbContractType, true));
+            item.getItemProperty(myUI.getMessage(Messages.SalaryAmount)).setValue(
                     edv.createTextField(result.getString("ec.salary"),
-                            myUI.getMessage(IndigoMessages.SalaryAmount),
-                            new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                            myUI.getMessage(Messages.SalaryAmount),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
                                     1, 250, false), true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Start)).setValue(edv.createDateField(result.getDate("ec.from_date"),
-                    myUI.getMessage(IndigoMessages.Start), null, true, Settings.datePattern, Resolution.DAY));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.CreationDate)).setValue(edv.createDateField(result.getDate("ec.creation_date"),
-                    myUI.getMessage(IndigoMessages.CreationDate), null, true, Settings.datePattern, Resolution.DAY));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.End)).setValue(edv.createDateField(result.getDate("ec.till_date"),
-                    myUI.getMessage(IndigoMessages.End), null, true, Settings.datePattern, Resolution.DAY));
+            item.getItemProperty(myUI.getMessage(Messages.Start)).setValue(edv.createDateField(result.getDate("ec.from_date"),
+                    myUI.getMessage(Messages.Start), null, true, Settings.datePattern, Resolution.DAY));
+            item.getItemProperty(myUI.getMessage(Messages.CreationDate)).setValue(edv.createDateField(result.getDate("ec.creation_date"),
+                    myUI.getMessage(Messages.CreationDate), null, true, Settings.datePattern, Resolution.DAY));
+            item.getItemProperty(myUI.getMessage(Messages.End)).setValue(edv.createDateField(result.getDate("ec.till_date"),
+                    myUI.getMessage(Messages.End), null, true, Settings.datePattern, Resolution.DAY));
             if (result.getInt("ec.probationary_period") != 0) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.ProbationaryPeriod)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.ProbationaryPeriod)).setValue(
                         result.getInt("ec.probationary_period"));
             }
             if (result.getInt("ec.year_id") != 0) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.AcademicYear)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.AcademicYear)).setValue(
                         result.getInt("ec.year_id"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Year)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Year)).setValue(
                         result.getString("y.name"));
             }
             if (result.getInt("ec.salary_day") != 0) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.SalaryDay)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.SalaryDay)).setValue(
                         result.getInt("ec.salary_day"));
             }
             if (result.getInt("ec.working_days") != 0) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.WorkingDays)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.WorkingDays)).setValue(
                         result.getInt("ec.working_days"));
             }
             if (result.getInt("ec.working_hours") != 0) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.WorkingHours)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.WorkingHours)).setValue(
                         result.getInt("ec.working_hours"));
             }
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Patent)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Patent)).setValue(
                     result.getString("ec.patent"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Equipment)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Equipment)).setValue(
                     result.getString("ec.equipment"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.PatentDate)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.PatentDate)).setValue(
                     result.getDate("ec.patent_date"));
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }

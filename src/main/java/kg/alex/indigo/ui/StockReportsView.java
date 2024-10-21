@@ -10,7 +10,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.reports.stock.ProductMovementsReport;
 import kg.alex.indigo.reports.stock.StockGeneralReport;
 import org.apache.shiro.SecurityUtils;
@@ -46,20 +46,20 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         rightGrid.setSpacing(true);
         rightGrid.setWidth(Settings.PERCENTS100);
 
-        repTypeSelect = new ComboBox(myUI.getMessage(IndigoMessages.ReportType));
+        repTypeSelect = new ComboBox(myUI.getMessage(Messages.ReportType));
         repTypeSelect.setNullSelectionAllowed(false);
         repTypeSelect.setRequired(true);
-        repTypeSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        repTypeSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         repTypeSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         repTypeSelect.setWidth(Settings.PERCENTS100);
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
 
         if (currentUser.isPermitted(Settings.cnStockReportsView + ":" + Settings.prmProductMovementsReport)) {
-            repTypeSelect.addItem(myUI.getMessage(IndigoMessages.ProductMovementsReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.ProductMovementsReport));
         }
         if (currentUser.isPermitted(Settings.cnStockReportsView + ":" + Settings.prmStockGeneralReport)) {
-            repTypeSelect.addItem(myUI.getMessage(IndigoMessages.StockGeneralReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.StockGeneralReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);
     }
@@ -70,9 +70,9 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         if (property == repTypeSelect) {
             this.setSecondComponent(null);
             leftGrid.removeComponent(0, 1);
-            if (repTypeSelect.getValue().equals(myUI.getMessage(IndigoMessages.StockGeneralReport))) {
+            if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.StockGeneralReport))) {
                 new StockGeneralReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(IndigoMessages.ProductMovementsReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.ProductMovementsReport))) {
                 new ProductMovementsReport(myUI, this);
             }
         }

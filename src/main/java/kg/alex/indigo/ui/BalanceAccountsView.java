@@ -21,7 +21,7 @@ import kg.alex.indigo.dao.DbTransfers;
 import kg.alex.indigo.domain.AccBalanceSettings;
 import kg.alex.indigo.domain.Invoice;
 import kg.alex.indigo.domain.Transfer;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.utils.FormattedFilterTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -65,9 +65,9 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
     public BalanceAccountsView(MyVaadinUI myUI) {
         this.myUI = myUI;
         df = Settings.ymdf;
-        NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(IndigoMessages.InvoiceNumber),
-                myUI.getMessage(IndigoMessages.Date), myUI.getMessage(IndigoMessages.Amount),
-                myUI.getMessage(IndigoMessages.Note), myUI.getMessage(IndigoMessages.Note) + " 2"};
+        NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(Messages.InvoiceNumber),
+                myUI.getMessage(Messages.Date), myUI.getMessage(Messages.Amount),
+                myUI.getMessage(Messages.Note), myUI.getMessage(Messages.Note) + " 2"};
 
         buildRightLayout();
         buildSettingsLayout();
@@ -92,7 +92,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(IndigoMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -100,7 +100,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(IndigoMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -108,28 +108,28 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(IndigoMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(IndigoMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
 
         confirmBtn = new Button();
-        confirmBtn.setDescription(myUI.getMessage(IndigoMessages.Confirm));
+        confirmBtn.setDescription(myUI.getMessage(Messages.Confirm));
         confirmBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         confirmBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         confirmBtn.setIcon(FontAwesome.CHECK);
@@ -138,14 +138,14 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         buttonsLay.addComponent(confirmBtn);
         settingsLay.addComponent(buttonsLay, 0, 0, 1, 0);
 
-        invoiceNumberTF = new TextField(myUI.getMessage(IndigoMessages.InvoiceNumber));
+        invoiceNumberTF = new TextField(myUI.getMessage(Messages.InvoiceNumber));
         invoiceNumberTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         invoiceNumberTF.setWidth(Settings.PERCENTS100);
         invoiceNumberTF.addValueChangeListener(this);
         settingsLay.addComponent(invoiceNumberTF);
 
         searchBtn = new PopupButton();
-        searchBtn.setDescription(myUI.getMessage(IndigoMessages.Search));
+        searchBtn.setDescription(myUI.getMessage(Messages.Search));
         searchBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         searchBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         searchBtn.setIcon(FontAwesome.BINOCULARS);
@@ -153,23 +153,23 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         settingsLay.addComponent(searchBtn);
         settingsLay.setComponentAlignment(searchBtn, Alignment.BOTTOM_RIGHT);
 
-        dateDF = new DateField(myUI.getMessage(IndigoMessages.Date));
+        dateDF = new DateField(myUI.getMessage(Messages.Date));
         dateDF.setWidth(Settings.PERCENTS100);
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
-        dateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        dateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         dateDF.setResolution(Resolution.MONTH);
         dateDF.setDateFormat(Settings.yearMonthPattern);
         dateDF.setValue(new Date());
         settingsLay.addComponent(dateDF, 0, 2, 1, 2);
 
-        noteTF = new TextArea(myUI.getMessage(IndigoMessages.Note));
+        noteTF = new TextArea(myUI.getMessage(Messages.Note));
         noteTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         noteTF.setWidth(Settings.PERCENTS100);
         noteTF.setRows(3);
         settingsLay.addComponent(noteTF, 0, 3, 1, 3);
 
-        note2TF = new TextArea(myUI.getMessage(IndigoMessages.Note) + " 2");
+        note2TF = new TextArea(myUI.getMessage(Messages.Note) + " 2");
         note2TF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         note2TF.setWidth(Settings.PERCENTS100);
         note2TF.setRows(3);
@@ -264,7 +264,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 rightLay.addComponent(l, column, row);
                 l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_LARGE);
                 l.addStyleName("tableCpt");
-                l.setId(myUI.getMessage(IndigoMessages.Parent));
+                l.setId(myUI.getMessage(Messages.Parent));
                 rightLay.addComponent(l, column + 1, row);
                 rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
                 row++;
@@ -275,9 +275,9 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 hl.setWidth(Settings.PERCENTS100);
                 hl.addComponent(createLabel(balanceSettings.getPrefix(), null));
                 TextField tf = createTextField(new StringLengthValidator(
-                                myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                                myUI.getMessage(Messages.NotificationWrongValue),
                                 null, 100, true), false, null,
-                        myUI.getMessage(IndigoMessages.Note), null, null, null);
+                        myUI.getMessage(Messages.Note), null, null, null);
                 hl.addComponent(tf);
                 hl.setExpandRatio(tf, 1);
                 if (balanceSettings.getPostfix() != null) {
@@ -289,7 +289,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             }
             balanceSettings.setRow(row);
             balanceSettings.setColumn(column);
-            rightLay.addComponent(createTextField(new DoubleRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+            rightLay.addComponent(createTextField(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue),
                             0.0, null), false, null, balanceSettings, this,
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2)), column + 1, row);
             row++;
@@ -318,7 +318,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         }
         if (isRequired) {
             tf.setRequired(true);
-            tf.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+            tf.setRequiredError(myUI.getMessage(Messages.RequiredField));
         }
         if (property != null) {
             tf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
@@ -361,9 +361,9 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         }
         invoicesTable.setPageLength(5);
         invoicesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-        invoicesTable.setColumnWidth(myUI.getMessage(IndigoMessages.Note), 200);
-        invoicesTable.setColumnWidth(myUI.getMessage(IndigoMessages.Note) + " 2", 200);
-        invoicesTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), CustomTable.Align.RIGHT);
+        invoicesTable.setColumnWidth(myUI.getMessage(Messages.Note), 200);
+        invoicesTable.setColumnWidth(myUI.getMessage(Messages.Note) + " 2", 200);
+        invoicesTable.setColumnAlignment(myUI.getMessage(Messages.Amount), CustomTable.Align.RIGHT);
     }
 
     @Override
@@ -378,7 +378,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 prepareModificationMode();
                 invoiceNumberTF.focus();
             } else {
-                Notification.show(myUI.getMessage(IndigoMessages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
+                Notification.show(myUI.getMessage(Messages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == createBtn) {
             isNew = true;
@@ -388,17 +388,17 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             if (currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.prmConfirmationControl) ||
                     invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null &&
                             !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue()) {
-                ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                        myUI.getMessage(IndigoMessages.ConfirmDeletion),
-                        myUI.getMessage(IndigoMessages.Yes),
-                        myUI.getMessage(IndigoMessages.No),
+                ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                        myUI.getMessage(Messages.ConfirmDeletion),
+                        myUI.getMessage(Messages.Yes),
+                        myUI.getMessage(Messages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 execDelete();
                             }
                         });
             } else {
-                Notification.show(myUI.getMessage(IndigoMessages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
+                Notification.show(myUI.getMessage(Messages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == saveBtn) {
             try {
@@ -418,13 +418,13 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                                     insertTransfers(id, 3);
                                     insertTransfers(id, 4);
                                     addDataContainerItem(id, df.format(dateDF.getValue()));
-                                    Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                    Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                                     prepareNormalMode();
                                 } else {
-                                    Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                                    Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
                                 }
                             } else {
-                                Notification.show(myUI.getMessage(IndigoMessages.ExistsInvoiceNotification), Notification.Type.WARNING_MESSAGE);
+                                Notification.show(myUI.getMessage(Messages.ExistsInvoiceNotification), Notification.Type.WARNING_MESSAGE);
                             }
                         } else {
                             if (!dbCon.isExists(myUI.getUser().getSchool().getId(), 5, dateDF.getValue(), invID)) {
@@ -441,21 +441,21 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                                     insertTransfers(invID, 4);
                                     updateDataContainer();
                                     setTransfers();
-                                    Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                    Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                                     prepareNormalMode();
                                 } else {
-                                    Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                                    Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
                                 }
                             } else {
-                                Notification.show(myUI.getMessage(IndigoMessages.ExistsInvoiceNotification), Notification.Type.WARNING_MESSAGE);
+                                Notification.show(myUI.getMessage(Messages.ExistsInvoiceNotification), Notification.Type.WARNING_MESSAGE);
                             }
                         }
                         dbCon.close();
                     } else {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue), Notification.Type.WARNING_MESSAGE);
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue), Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue), Notification.Type.WARNING_MESSAGE);
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue), Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -473,10 +473,10 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 ckb.setValue(true);
                 confirmBtn.setEnabled(false);
             } else {
-                ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                        myUI.getMessage(IndigoMessages.ConfirmConfirmation),
-                        myUI.getMessage(IndigoMessages.Yes),
-                        myUI.getMessage(IndigoMessages.No),
+                ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                        myUI.getMessage(Messages.ConfirmConfirmation),
+                        myUI.getMessage(Messages.Yes),
+                        myUI.getMessage(Messages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue();
@@ -487,7 +487,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                                     int status = dbInvoice.exec_update(invID, 1);
                                     dbInvoice.close();
                                     if (status == 1) {
-                                        Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                        Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                                         confirmBtn.setEnabled(false);
                                     }
                                 } catch (Exception e) {
@@ -518,7 +518,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             Object next;
             while (iter.hasNext()) {
                 next = iter.next();
-                if (invoicesTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.InvoiceNumber)).getValue().equals(property.getValue())) {
+                if (invoicesTable.getContainerProperty(next, myUI.getMessage(Messages.InvoiceNumber)).getValue().equals(property.getValue())) {
                     invoicesTable.setValue(next);
                     isFound = true;
                     break;
@@ -526,7 +526,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             }
             if (!isFound) {
                 invoiceNumberTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                        myUI.getMessage(IndigoMessages.InvoiceNumber)).getValue().toString());
+                        myUI.getMessage(Messages.InvoiceNumber)).getValue().toString());
             }
             invoiceNumberTF.addValueChangeListener(this);
         } else if (event.getProperty() instanceof CheckBox) {
@@ -540,7 +540,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 int status = dbInvoice.exec_update((Integer) ((CheckBox) event.getProperty()).getData(), value);
                 dbInvoice.close();
                 if (status == 1) {
-                    Notification.show(myUI.getMessage(IndigoMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                    Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                     if ((int) ((CheckBox) event.getProperty()).getData() == (int) invoicesTable.getValue()) {
                         confirmBtn.setEnabled(value != 1);
                     }
@@ -558,17 +558,17 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 TextField tf = (TextField) hl.getComponent(1);
                 if (amountTf.isValid() && amountTf.getConvertedValue() != null && (Double) amountTf.getConvertedValue() != 0.0) {
                     tf.setRequired(true);
-                    tf.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                    tf.setRequiredError(myUI.getMessage(Messages.RequiredField));
                     tf.setNullSettingAllowed(false);
                     tf.removeAllValidators();
-                    tf.addValidator(new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                    tf.addValidator(new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
                             1, 100, false));
                 } else {
                     tf.setRequired(false);
                     tf.setRequiredError(null);
                     tf.setNullSettingAllowed(true);
                     tf.removeAllValidators();
-                    tf.addValidator(new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                    tf.addValidator(new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
                             null, 100, true));
                 }
             }
@@ -625,25 +625,25 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                     Settings.button).getValue()).getValue());
         }
         invoiceNumberTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                myUI.getMessage(IndigoMessages.InvoiceNumber)).getValue().toString());
+                myUI.getMessage(Messages.InvoiceNumber)).getValue().toString());
         try {
             dateDF.setValue(df.parse(invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                    myUI.getMessage(IndigoMessages.Date)).getValue().toString()));
+                    myUI.getMessage(Messages.Date)).getValue().toString()));
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
         if (invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                myUI.getMessage(IndigoMessages.Note)).getValue() != null) {
+                myUI.getMessage(Messages.Note)).getValue() != null) {
             noteTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                    myUI.getMessage(IndigoMessages.Note)).getValue().toString());
+                    myUI.getMessage(Messages.Note)).getValue().toString());
         } else {
             noteTF.setValue("");
         }
         if (invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                myUI.getMessage(IndigoMessages.Note) + " 2").getValue() != null) {
+                myUI.getMessage(Messages.Note) + " 2").getValue() != null) {
             note2TF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                    myUI.getMessage(IndigoMessages.Note) + " 2").getValue().toString());
+                    myUI.getMessage(Messages.Note) + " 2").getValue().toString());
         } else {
             note2TF.setValue("");
         }
@@ -665,13 +665,13 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 ((AbstractField<?>) c).setValue(null);
                 c.setId(null);
                 if (((AbstractField<?>) c).getData() != null &&
-                        ((AbstractField<?>) c).getData().equals(myUI.getMessage(IndigoMessages.Note))) {
+                        ((AbstractField<?>) c).getData().equals(myUI.getMessage(Messages.Note))) {
                     ((TextField) c).setRequired(false);
                     ((TextField) c).setRequiredError(null);
                     ((TextField) c).setNullSettingAllowed(true);
                     ((TextField) c).removeAllValidators();
                     ((TextField) c).addValidator(new StringLengthValidator(
-                            myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                            myUI.getMessage(Messages.NotificationWrongValue),
                             null, 100, true));
                 }
             } else if (c instanceof AbstractComponentContainer) {
@@ -723,10 +723,10 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                             if (c instanceof TextField) {
                                 ((TextField) c).setValue(value.trim());
                                 ((TextField) c).setRequired(true);
-                                ((TextField) c).setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                                ((TextField) c).setRequiredError(myUI.getMessage(Messages.RequiredField));
                                 ((TextField) c).setNullSettingAllowed(false);
                                 ((TextField) c).removeAllValidators();
-                                ((TextField) c).addValidator(new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                                ((TextField) c).addValidator(new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
                                         1, 100, false));
                             }
                         }
@@ -737,39 +737,39 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
     }
 
     private void updateDataContainer() {
-        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(IndigoMessages.Date)).setValue(
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Date)).setValue(
                 df.format(dateDF.getValue()));
         try {
-            invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(IndigoMessages.Amount)).setValue(
+            invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Amount)).setValue(
                     Settings.dFormat2.parse(((Label) rightLay.getComponent(4, rightLay.getRows() - 1))
                             .getValue()).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(IndigoMessages.Note)).setValue(
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Note)).setValue(
                 noteTF.getValue());
-        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(IndigoMessages.Note) + " 2").setValue(
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Note) + " 2").setValue(
                 note2TF.getValue());
     }
 
     private void addDataContainerItem(int id, String date) {
         Item item = ((IndexedContainer) invoicesTable.getContainerDataSource()).addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(date);
+        item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(date);
         try {
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                     Settings.dFormat2.parse(((Label) rightLay.getComponent(4, rightLay.getRows() - 1))
                             .getValue()).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(noteTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Note) + " 2").setValue(note2TF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(noteTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Note) + " 2").setValue(note2TF.getValue());
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
-            item.getItemProperty(myUI.getMessage(IndigoMessages.InvoiceNumber)).setValue(dbCon.execSQL_invoice_number(id));
+            item.getItemProperty(myUI.getMessage(Messages.InvoiceNumber)).setValue(dbCon.execSQL_invoice_number(id));
             dbCon.close();
             CheckBox cb = new CheckBox();
             cb.setData(id);
@@ -832,7 +832,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete), Notification.Type.WARNING_MESSAGE);
+            Notification.show(myUI.getMessage(Messages.CanNotDelete), Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);
         } catch (Exception e) {
@@ -904,7 +904,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                     parentTotal += (Double) tf.getConvertedValue();
                 }
             } else if (rightLay.getComponent(column, i) instanceof Label && rightLay.getComponent(column, i).getId() != null
-                    && rightLay.getComponent(column, i).getId().equals(myUI.getMessage(IndigoMessages.Parent))) {
+                    && rightLay.getComponent(column, i).getId().equals(myUI.getMessage(Messages.Parent))) {
                 ((Label) rightLay.getComponent(column, i)).setValue(Settings.dFormat2.format(parentTotal));
                 parentTotal = 0.0;
             }

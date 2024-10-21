@@ -11,7 +11,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbStudentInstallmentPlan;
 import kg.alex.indigo.domain.InvoiceInfoPdf;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.utils.money.WritableSummRu;
 import kg.alex.indigo.utils.money.WritableSummRuSOM;
 import org.apache.logging.log4j.LogManager;
@@ -242,9 +242,9 @@ public class Invoice2023PDF {
                         table_plan.getDefaultCell().setBorder(Rectangle.BOTTOM);
                         table_plan.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
                         table_plan.addCell(new Phrase(" №", table_bold_font));
-                        table_plan.addCell(new Phrase(myUI.getMessage(IndigoMessages.Date), table_bold_font));
+                        table_plan.addCell(new Phrase(myUI.getMessage(Messages.Date), table_bold_font));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        table_plan.addCell(new Phrase(myUI.getMessage(IndigoMessages.Amount), table_bold_font));
+                        table_plan.addCell(new Phrase(myUI.getMessage(Messages.Amount), table_bold_font));
 
                         Iterator<?> iter = installmentCont.getItemIds().iterator();
                         int i = 0;
@@ -256,10 +256,10 @@ public class Invoice2023PDF {
                             table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             table_plan.addCell(new Phrase(i + "", table_font));
                             table_plan.addCell(new Phrase(installmentCont.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Date)).getValue().toString(), table_font));
+                                    myUI.getMessage(Messages.Date)).getValue().toString(), table_font));
                             table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             table_plan.addCell(new Phrase(Settings.dFormat2.format(installmentCont.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Amount)).getValue()) + " " + contractCurrency, table_font));
+                                    myUI.getMessage(Messages.Amount)).getValue()) + " " + contractCurrency, table_font));
                             table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             i++;
                         }

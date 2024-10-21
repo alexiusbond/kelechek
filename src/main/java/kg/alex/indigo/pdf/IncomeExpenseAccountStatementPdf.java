@@ -14,7 +14,7 @@ import com.vaadin.ui.Table;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.School;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,9 +80,9 @@ public class IncomeExpenseAccountStatementPdf {
                     table_date.addCell(new Phrase(" ", tableFont));
                     document.add(table_date);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(IndigoMessages.IncomeExpenseAccountStatementReport) + " "
-                            + myUI.getMessage(IndigoMessages.From) + " " + Settings.df.format(from) + " "
-                            + myUI.getMessage(IndigoMessages.To) + " " + Settings.df.format(to), fontBold);
+                    Paragraph spr = new Paragraph(myUI.getMessage(Messages.IncomeExpenseAccountStatementReport) + " "
+                            + myUI.getMessage(Messages.From) + " " + Settings.df.format(from) + " "
+                            + myUI.getMessage(Messages.To) + " " + Settings.df.format(to), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(9, " "));
                     document.add(spr);
@@ -96,12 +96,12 @@ public class IncomeExpenseAccountStatementPdf {
                     dataTable.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     dataTable.addCell(new Phrase(" №", ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Date), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Type), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Note), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Income), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Expense), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Balance), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(Messages.Type), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(Messages.Note), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(Messages.Income), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(Messages.Expense), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(Messages.Balance), ordFontBold));
 
                     Iterator<?> iter = t.getItemIds().iterator();
                     int i = 0;
@@ -110,40 +110,40 @@ public class IncomeExpenseAccountStatementPdf {
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         dataTable.addCell(new Phrase((++i) + "", tableFont));
                         dataTable.addCell(new Phrase(
-                                t.getContainerProperty(next, myUI.getMessage(IndigoMessages.Date)).getValue() == null ? "" :
+                                t.getContainerProperty(next, myUI.getMessage(Messages.Date)).getValue() == null ? "" :
                                         t.getContainerProperty(next,
-                                                myUI.getMessage(IndigoMessages.Date)).getValue().toString(), tableFont));
+                                                myUI.getMessage(Messages.Date)).getValue().toString(), tableFont));
                         dataTable.addCell(new Phrase(t.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Type)).getValue().toString(), tableFont));
-                        if (t.getContainerProperty(next, myUI.getMessage(IndigoMessages.Note)).getValue() != null) {
+                                myUI.getMessage(Messages.Type)).getValue().toString(), tableFont));
+                        if (t.getContainerProperty(next, myUI.getMessage(Messages.Note)).getValue() != null) {
                             dataTable.addCell(new Phrase(t.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Note)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Note)).getValue().toString(), tableFont));
                         } else {
                             dataTable.addCell(new Phrase("", tableFont));
                         }
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        if (t.getContainerProperty(next, myUI.getMessage(IndigoMessages.Income)).getValue() != null) {
+                        if (t.getContainerProperty(next, myUI.getMessage(Messages.Income)).getValue() != null) {
                             dataTable.addCell(new Phrase(Settings.dFormat2.format(t.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Income)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Income)).getValue()), tableFont));
                         } else {
                             dataTable.addCell(new Phrase("", tableFont));
                         }
-                        if (t.getContainerProperty(next, myUI.getMessage(IndigoMessages.Expense)).getValue() != null) {
+                        if (t.getContainerProperty(next, myUI.getMessage(Messages.Expense)).getValue() != null) {
                             dataTable.addCell(new Phrase(Settings.dFormat2.format(t.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Expense)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Expense)).getValue()), tableFont));
                         } else {
                             dataTable.addCell(new Phrase("", tableFont));
                         }
                         dataTable.addCell(new Phrase(t.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Balance)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.Balance)).getValue().toString(), tableFont));
                     }
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
-                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(IndigoMessages.Income)), tableFontBold));
-                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(IndigoMessages.Expense)), tableFontBold));
-                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(IndigoMessages.Balance)), tableFontBold));
+                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(Messages.Income)), tableFontBold));
+                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(Messages.Expense)), tableFontBold));
+                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(Messages.Balance)), tableFontBold));
 
                     document.add(dataTable);
 

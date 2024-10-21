@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.StockInvoice;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,31 +41,31 @@ public class DbStockInvoice extends BaseDb {
         stat.setInt(2, service_type_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.InvoiceNumber), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Stock), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.FromEmployee), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ToEmployee), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.InvoiceNumber), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Stock), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(Messages.FromEmployee), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ToEmployee), String.class, null);
         container.addContainerProperty(Settings.stock_id, Integer.class, 0);
         container.addContainerProperty(Settings.from_employee_id, Integer.class, 0);
         container.addContainerProperty(Settings.to_employee_id, Integer.class, 0);
         container.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Note), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Note), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Stock)).setValue(result.getString("stock.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.FromEmployee)).setValue(result.getString("from_employee"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ToEmployee)).setValue(result.getString("to_employee"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Date)).setValue(Settings.dtmf.format(result.getTimestamp("t.creation_date")));
+            item.getItemProperty(myUi.getMessage(Messages.InvoiceNumber)).setValue(result.getString("inv_num"));
+            item.getItemProperty(myUi.getMessage(Messages.Stock)).setValue(result.getString("stock.name"));
+            item.getItemProperty(myUi.getMessage(Messages.FromEmployee)).setValue(result.getString("from_employee"));
+            item.getItemProperty(myUi.getMessage(Messages.ToEmployee)).setValue(result.getString("to_employee"));
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(Messages.Date)).setValue(Settings.dtmf.format(result.getTimestamp("t.creation_date")));
             item.getItemProperty(Settings.stock_id).setValue(result.getInt("stock.id"));
             item.getItemProperty(Settings.from_employee_id).setValue(result.getInt("from_e.id"));
             item.getItemProperty(Settings.to_employee_id).setValue(result.getInt("to_e.id"));
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Note)).setValue(result.getString("t.note"));
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(result.getString("t.note"));
         }
         return container;
     }

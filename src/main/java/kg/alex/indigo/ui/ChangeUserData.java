@@ -7,7 +7,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.dao.DbUserDetails;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -38,37 +38,37 @@ public class ChangeUserData extends VerticalLayout implements Button.ClickListen
         body.setWidth("50%");
         userForm = new Form();
         ThemeResource iconOK = new ThemeResource("../mytheme/icons/16/ok.png");
-        Button saveButton = new Button(myUI.getMessage(IndigoMessages.SaveButton));
+        Button saveButton = new Button(myUI.getMessage(Messages.SaveButton));
         saveButton.setIcon(iconOK);
         saveButton.addClickListener(this);
         saveButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 
-        userForm.setCaption(myUI.getMessage(IndigoMessages.FormCaptionUser) + ": "
+        userForm.setCaption(myUI.getMessage(Messages.FormCaptionUser) + ": "
                 + currentUser.getPrincipal().toString());
-        userForm.setDescription(myUI.getMessage(IndigoMessages.FormDescription));
+        userForm.setDescription(myUI.getMessage(Messages.FormDescription));
         userForm.setImmediate(true);
 
         userForm.addField("name",
-                new TextField(myUI.getMessage(IndigoMessages.FullName),
+                new TextField(myUI.getMessage(Messages.FullName),
                         name));
         userForm.getField("name").setEnabled(false);
 
         userForm.addField("pass",
-                new PasswordField(myUI.getMessage(IndigoMessages.FormFiledCurPassword)));
+                new PasswordField(myUI.getMessage(Messages.FormFiledCurPassword)));
         userForm.getField("pass").setRequired(true);
-        userForm.getField("pass").setRequiredError(myUI.getMessage(IndigoMessages.RequiredErrorCurrPassword));
+        userForm.getField("pass").setRequiredError(myUI.getMessage(Messages.RequiredErrorCurrPassword));
 
         userForm.addField("new_pass",
-                new PasswordField(myUI.getMessage(IndigoMessages.NewPassword)));
+                new PasswordField(myUI.getMessage(Messages.NewPassword)));
         userForm.getField("new_pass").setRequired(true);
-        userForm.getField("new_pass").setRequiredError(myUI.getMessage(IndigoMessages.RequiredErrorNewPassword));
+        userForm.getField("new_pass").setRequiredError(myUI.getMessage(Messages.RequiredErrorNewPassword));
         userForm.getField("new_pass").addValidator(new RegexpValidator("[a-zA-Z0-9!@#$%^&*().,]{6,20}",
-                myUI.getMessage(IndigoMessages.RegexpValidatorError)));
+                myUI.getMessage(Messages.RegexpValidatorError)));
 
         userForm.addField("conf_pass",
-                new PasswordField(myUI.getMessage(IndigoMessages.FormFiledConfPassword)));
+                new PasswordField(myUI.getMessage(Messages.FormFiledConfPassword)));
         userForm.getField("conf_pass").setRequired(true);
-        userForm.getField("conf_pass").setRequiredError(myUI.getMessage(IndigoMessages.RequiredErrorConfPassword));
+        userForm.getField("conf_pass").setRequiredError(myUI.getMessage(Messages.RequiredErrorConfPassword));
         // userForm.getField("conf_pass").addValidator(confPassValidator);
 
         userForm.getFooter().addComponent(saveButton);
@@ -81,7 +81,7 @@ public class ChangeUserData extends VerticalLayout implements Button.ClickListen
             userForm.commit();
             if (!userForm.getField("new_pass").getValue().equals(
                     userForm.getField("conf_pass").getValue())) {
-                Notification.show(myUI.getMessage(IndigoMessages.NotificationDontMatch),
+                Notification.show(myUI.getMessage(Messages.NotificationDontMatch),
                         Notification.Type.WARNING_MESSAGE);
             } else {
                 try {
@@ -92,9 +92,9 @@ public class ChangeUserData extends VerticalLayout implements Button.ClickListen
 
                         dbUser.editPass(currentUser.getPrincipal().toString(),
                                 new Sha256Hash(userForm.getField("new_pass").getValue()).toString());
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationSuccessfulChange));
+                        Notification.show(myUI.getMessage(Messages.NotificationSuccessfulChange));
                     } else {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongCurrPassword),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongCurrPassword),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                     dbUser.close();

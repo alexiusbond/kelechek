@@ -18,7 +18,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.*;
 import kg.alex.indigo.domain.EmployeeMessage;
 import kg.alex.indigo.domain.OrderMessage;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.pdf.OrderPdf;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedFilterTable;
@@ -55,10 +55,10 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
     public SendOrderView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Date),
-                myUI.getMessage(IndigoMessages.Employee), myUI.getMessage(IndigoMessages.OrderNumber),
-                myUI.getMessage(IndigoMessages.Student), myUI.getMessage(IndigoMessages.Year), myUI.getMessage(IndigoMessages.Discount),
-                myUI.getMessage(IndigoMessages.Title), myUI.getMessage(IndigoMessages.Message), myUI.getMessage(IndigoMessages.Status),
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Date),
+                myUI.getMessage(Messages.Employee), myUI.getMessage(Messages.OrderNumber),
+                myUI.getMessage(Messages.Student), myUI.getMessage(Messages.Year), myUI.getMessage(Messages.Discount),
+                myUI.getMessage(Messages.Title), myUI.getMessage(Messages.Message), myUI.getMessage(Messages.Status),
                 Settings.button};
         buildSettingsLayout();
 
@@ -93,9 +93,9 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             logger.catching(e);
         }
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-        dataTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Message), 1);
-        dataTable.setColumnWidth(myUI.getMessage(IndigoMessages.Date), 80);
-        dataTable.setColumnWidth(myUI.getMessage(IndigoMessages.Title), 240);
+        dataTable.setColumnExpandRatio(myUI.getMessage(Messages.Message), 1);
+        dataTable.setColumnWidth(myUI.getMessage(Messages.Date), 80);
+        dataTable.setColumnWidth(myUI.getMessage(Messages.Title), 240);
         dataTable.setColumnWidth(Settings.button, 60);
         dataTable.setCellStyleGenerator((CustomTable.CellStyleGenerator) (source, itemId, propertyId) -> {
 
@@ -115,7 +115,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         vl.addComponent(dataTable);
 
         excelBtn = new Button();
-        excelBtn.setCaption(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setCaption(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setStyleName(ValoTheme.BUTTON_PRIMARY);
         excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         excelBtn.setIcon(FontAwesome.SHARE_SQUARE_O);
@@ -138,13 +138,13 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         settingsLay.setSpacing(true);
         settingsLay.setSizeFull();
 
-        schoolSelect = new ComboBox(myUI.getMessage(IndigoMessages.School));
+        schoolSelect = new ComboBox(myUI.getMessage(Messages.School));
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setRequired(true);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        schoolSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        schoolSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         schoolSelect.setWidth(Settings.PERCENTS100);
-        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
         schoolSelect.addValueChangeListener(this);
         try {
@@ -158,72 +158,72 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         }
         settingsLay.addComponent(schoolSelect, 0, 0, 3, 0);
 
-        employeeMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.ToEmployees));
+        employeeMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.ToEmployees));
         employeeMCB.setRequired(true);
         employeeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        employeeMCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        employeeMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         employeeMCB.setWidth(Settings.PERCENTS100);
-        employeeMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        employeeMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         employeeMCB.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(employeeMCB, 0, 1, 3, 1);
 
-        studentSelect = new ComboBox(myUI.getMessage(IndigoMessages.Student));
+        studentSelect = new ComboBox(myUI.getMessage(Messages.Student));
         studentSelect.setNullSelectionAllowed(false);
         studentSelect.setRequired(true);
         studentSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        studentSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        studentSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         studentSelect.setWidth(Settings.PERCENTS100);
-        studentSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        studentSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         studentSelect.setFilteringMode(FilteringMode.CONTAINS);
         studentSelect.addValueChangeListener(this);
         settingsLay.addComponent(studentSelect, 0, 2, 1, 2);
 
-        studentTF = new TextField(myUI.getMessage(IndigoMessages.FullName));
+        studentTF = new TextField(myUI.getMessage(Messages.FullName));
         studentTF.setEnabled(false);
         studentTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         studentTF.setWidth(Settings.PERCENTS100);
         studentTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true));
+                myUI.getMessage(Messages.NotificationWrongValue), null, 200, true));
         studentTF.addValueChangeListener(this);
         settingsLay.addComponent(studentTF, 2, 2, 3, 2);
 
-        dateDF = new DateField(myUI.getMessage(IndigoMessages.Date));
+        dateDF = new DateField(myUI.getMessage(Messages.Date));
         dateDF.setResolution(Resolution.MINUTE);
         dateDF.setWidth(Settings.PERCENTS100);
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
-        dateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        dateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         dateDF.setDateFormat(Settings.datePattern);
         dateDF.setValue(new Date());
         settingsLay.addComponent(dateDF, 0, 3);
 
-        orderNumberTF = new TextField(myUI.getMessage(IndigoMessages.OrderNumber));
+        orderNumberTF = new TextField(myUI.getMessage(Messages.OrderNumber));
         orderNumberTF.setRequired(true);
         orderNumberTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        orderNumberTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        orderNumberTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         orderNumberTF.setWidth(Settings.PERCENTS100);
         orderNumberTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 25, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 25, false));
         orderNumberTF.setValue("01-31/2  ");
         settingsLay.addComponent(orderNumberTF, 1, 3);
 
-        yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(yearSelect, 2, 3);
 
-        unitSelect = new ComboBox(myUI.getMessage(IndigoMessages.Unit));
+        unitSelect = new ComboBox(myUI.getMessage(Messages.Unit));
         unitSelect.setNullSelectionAllowed(false);
         unitSelect.setRequired(true);
         unitSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        unitSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        unitSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         unitSelect.setWidth(Settings.PERCENTS100);
-        unitSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        unitSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         unitSelect.setFilteringMode(FilteringMode.CONTAINS);
         unitSelect.addValueChangeListener(this);
 
@@ -240,15 +240,15 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         unitSelect.setValue(3);
 
         ObjectProperty<Integer> property = new ObjectProperty<>(0);
-        discountTF = new TextField(myUI.getMessage(IndigoMessages.Discount), property);
+        discountTF = new TextField(myUI.getMessage(Messages.Discount), property);
         discountTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         discountTF.setRequired(true);
-        discountTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        discountTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         discountTF.setWidth(Settings.PERCENTS100);
         discountTF.setNullRepresentation("");
         discountTF.setConverter(Settings.getStringToIntegerConverter());
         discountTF.addValidator(new IntegerRangeValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, null));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, null));
         discountTF.addValueChangeListener(this);
 
         HorizontalLayout hl = new HorizontalLayout();
@@ -257,35 +257,35 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         hl.addComponent(unitSelect);
         settingsLay.addComponent(hl, 3, 3);
 
-        headlineTA = new TextArea(myUI.getMessage(IndigoMessages.Headline));
+        headlineTA = new TextArea(myUI.getMessage(Messages.Headline));
         headlineTA.setRows(2);
         headlineTA.setRequired(true);
         headlineTA.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        headlineTA.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        headlineTA.setRequiredError(myUI.getMessage(Messages.RequiredField));
         headlineTA.setWidth(Settings.PERCENTS100);
         headlineTA.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 300, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 300, false));
         settingsLay.addComponent(headlineTA, 0, 4, 3, 4);
 
-        contentRTA = new TextArea(myUI.getMessage(IndigoMessages.Content));
+        contentRTA = new TextArea(myUI.getMessage(Messages.Content));
         contentRTA.setRows(2);
         contentRTA.setRequired(true);
         contentRTA.setStyleName(ValoTheme.TEXTAREA_SMALL);
-        contentRTA.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        contentRTA.setRequiredError(myUI.getMessage(Messages.RequiredField));
         contentRTA.setSizeFull();
         settingsLay.addComponent(contentRTA, 0, 5, 3, 5);
 
-        messageTA = new TextArea(myUI.getMessage(IndigoMessages.Message));
+        messageTA = new TextArea(myUI.getMessage(Messages.Message));
         messageTA.setRows(2);
         messageTA.setRequired(true);
         messageTA.setStyleName(ValoTheme.TEXTAREA_SMALL);
-        messageTA.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        messageTA.setRequiredError(myUI.getMessage(Messages.RequiredField));
         messageTA.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(messageTA, 0, 6, 2, 6);
 
         sendBtn = new Button();
         sendBtn.setWidth(Settings.PERCENTS100);
-        sendBtn.setCaption(myUI.getMessage(IndigoMessages.Send));
+        sendBtn.setCaption(myUI.getMessage(Messages.Send));
         sendBtn.addClickListener(this);
         settingsLay.addComponent(sendBtn, 3, 6);
         settingsLay.setComponentAlignment(sendBtn, Alignment.BOTTOM_RIGHT);
@@ -319,20 +319,20 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                             int em_id = dbem.exec_insert(employeeMessage);
                             employeeMessage.setId(em_id);
                             employeeMessage.setEmployee(employeeMCB.getContainerProperty(
-                                    next, myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                                    next, myUI.getMessage(Messages.Title)).getValue().toString());
                             addDataContainerItem(employeeMessage, orderMessage);
                         }
                         dbem.close();
-                        Notification.show(myUI.getMessage(IndigoMessages.Sent),
+                        Notification.show(myUI.getMessage(Messages.Sent),
                                 Notification.Type.HUMANIZED_MESSAGE);
                     } else {
-                        Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                        Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                     dbcn.close();
                     clearFields();
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -356,7 +356,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                     tableForExport.setColumnCollapsed(Settings.status_id, true);
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(tableForExport, "sheet1");
                     excelReport.excludeCollapsedColumns();
-                    excelReport.setReportTitle(myUI.getMessage(IndigoMessages.SendOrders));
+                    excelReport.setReportTitle(myUI.getMessage(Messages.SendOrders));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
                 }
@@ -368,17 +368,17 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             EmployeeMessage employeeMessage = (EmployeeMessage) source.getData();
             if ((Integer) dataTable.getContainerProperty(employeeMessage.getId(),
                     Settings.status_id).getValue() == 2) {
-                ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                        myUI.getMessage(IndigoMessages.ConfirmDeletion),
-                        myUI.getMessage(IndigoMessages.Yes),
-                        myUI.getMessage(IndigoMessages.No),
+                ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                        myUI.getMessage(Messages.ConfirmDeletion),
+                        myUI.getMessage(Messages.Yes),
+                        myUI.getMessage(Messages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 execDelete(employeeMessage);
                             }
                         });
             } else {
-                Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete),
+                Notification.show(myUI.getMessage(Messages.CanNotDelete),
                         Notification.Type.WARNING_MESSAGE);
             }
         } else {
@@ -392,15 +392,15 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         if (property == schoolSelect && schoolSelect.getValue() != null) {
             try {
                 headlineTA.setValue(schoolSelect.getContainerProperty(schoolSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.TitleKg)).getValue().toString().toUpperCase()
+                        myUI.getMessage(Messages.TitleKg)).getValue().toString().toUpperCase()
                         + "НИН ДИРЕКТОРУНА");
                 DbStudent dbSt = new DbStudent();
                 dbSt.connect();
                 studentSelect.setContainerDataSource(dbSt.exec_for_select(myUI,
                         (Integer) schoolSelect.getValue(), myUI.getUser().getCurrent_year().getId(), "1,2,3"));
                 Item item = ((IndexedContainer) studentSelect.getContainerDataSource()).addItemAt(0, 0);
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(
-                        myUI.getMessage(IndigoMessages.Other));
+                item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
+                        myUI.getMessage(Messages.Other));
                 dbSt.close();
                 DbEmployee dbe = new DbEmployee();
                 dbe.connect();
@@ -422,9 +422,9 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 student = studentTF.getValue();
             } else {
                 class_name = studentSelect.getContainerProperty(studentSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.ClassNumber)).getValue().toString();
+                        myUI.getMessage(Messages.ClassNumber)).getValue().toString();
                 student = studentSelect.getContainerProperty(studentSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.FullName)).getValue().toString();
+                        myUI.getMessage(Messages.FullName)).getValue().toString();
             }
             if ((Integer) unitSelect.getValue() == 1) {
                 discount = discountTF.getPropertyDataSource().getValue() + "% жеңилдик берилсин.";
@@ -445,7 +445,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             if (studentSelect.getValue() != null && (Integer) studentSelect.getValue() == 0) {
                 studentTF.setEnabled(true);
                 studentTF.setRequired(true);
-                studentTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                studentTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
             } else {
                 studentTF.setEnabled(false);
                 studentTF.setRequired(false);
@@ -472,33 +472,33 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
     private void addDataContainerItem(EmployeeMessage employeeMessage, OrderMessage orderMessage) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, employeeMessage.getId());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                 Settings.df.format(dateDF.getValue()));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Employee)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Employee)).setValue(
                 employeeMessage.getEmployee());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Message)).setValue(messageTA.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(headlineTA.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.OrderNumber)).setValue(orderNumberTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Discount)).setValue(discountTF.getPropertyDataSource().getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Message)).setValue(messageTA.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(headlineTA.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.OrderNumber)).setValue(orderNumberTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Discount)).setValue(discountTF.getPropertyDataSource().getValue());
         String student;
         if ((Integer) studentSelect.getValue() == 0) {
             student = studentTF.getValue();
         } else {
             student = studentSelect.getContainerProperty(studentSelect.getValue(),
-                    myUI.getMessage(IndigoMessages.FullName)).getValue().toString();
+                    myUI.getMessage(Messages.FullName)).getValue().toString();
         }
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Year)).setValue(yearSelect.getItemCaption(yearSelect.getValue()));
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Student)).setValue(student);
+        item.getItemProperty(myUI.getMessage(Messages.Year)).setValue(yearSelect.getItemCaption(yearSelect.getValue()));
+        item.getItemProperty(myUI.getMessage(Messages.Student)).setValue(student);
         item.getItemProperty(Settings.status_id).setValue(2);
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
-        hl.addComponent(createButton(myUI.getMessage(IndigoMessages.DeleteButton),
+        hl.addComponent(createButton(myUI.getMessage(Messages.DeleteButton),
                 Settings.actDelete, FontAwesome.BAN, employeeMessage));
-        hl.addComponent(createButton(myUI.getMessage(IndigoMessages.ViewDocument),
+        hl.addComponent(createButton(myUI.getMessage(Messages.ViewDocument),
                 Settings.actPdf, FontAwesome.FILE_PDF_O, orderMessage));
         item.getItemProperty(Settings.button).setValue(hl);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Status)).setValue(
-                myUI.getMessage(IndigoMessages.UnRead));
+        item.getItemProperty(myUI.getMessage(Messages.Status)).setValue(
+                myUI.getMessage(Messages.UnRead));
     }
 
     public Button createButton(String description, String button_id, Resource icon, Object data) {
@@ -549,7 +549,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(IndigoMessages.CanNotDeleteRead),
+            Notification.show(myUI.getMessage(Messages.CanNotDeleteRead),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);

@@ -17,7 +17,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.Employee;
 import kg.alex.indigo.domain.EmployeesCount;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -148,19 +148,19 @@ public class DbEmployee extends BaseDb {
         }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Id), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.LastName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.MiddleName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.DateOfBirth), Date.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Photo), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.MainPosition), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.MainBranch), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ExtraBranches), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ExtraPosition), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Hours), Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ExtraHours), Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.WorkingStatus), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.MiddleName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.DateOfBirth), Date.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Photo), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.MainPosition), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.MainBranch), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ExtraBranches), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ExtraPosition), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Hours), Integer.class, 0);
+        container.addContainerProperty(myUi.getMessage(Messages.ExtraHours), Integer.class, 0);
+        container.addContainerProperty(myUi.getMessage(Messages.WorkingStatus), String.class, null);
         container.addContainerProperty(Settings.gender_id, Integer.class, 0);
         container.addContainerProperty(Settings.nationality_id, Integer.class, 0);
         container.addContainerProperty(Settings.citizenship_id, Integer.class, 0);
@@ -172,8 +172,8 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
         container.addContainerProperty(Settings.is_modifiable, Boolean.class, true);
         container.addContainerProperty(Settings.visible_hr_orders, String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Permissions), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.CanBeAdvisor), Boolean.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Permissions), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.CanBeAdvisor), Boolean.class, null);
         container.addContainerProperty(Settings.id, Integer.class, 0);
 
         for (Object next : workingStatCont.getItemIds()) {
@@ -182,33 +182,33 @@ public class DbEmployee extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
             item.getItemProperty(Settings.id).setValue(result.getInt("e.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Id)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Id)).setValue(
                     result.getString("e.login"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.FirstName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.FirstName)).setValue(
                     result.getString("e.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.LastName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.LastName)).setValue(
                     result.getString("e.surname"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.MiddleName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.MiddleName)).setValue(
                     result.getString("e.middle_name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.DateOfBirth)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.DateOfBirth)).setValue(
                     result.getDate("e.date_of_birth"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Photo)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Photo)).setValue(
                     result.getString("e.photo"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.MainPosition)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.MainPosition)).setValue(
                     result.getString("p.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.MainBranch)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.MainBranch)).setValue(
                     result.getString("main_branch"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.WorkingStatus)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.WorkingStatus)).setValue(
                     result.getString("ws.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ExtraPosition)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ExtraPosition)).setValue(
                     result.getString("extra_positions"));
             item.getItemProperty(Settings.extra_position_ids).setValue(
                     result.getString("extra_position_ids"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ExtraBranches)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ExtraBranches)).setValue(
                     result.getString("extra_branches"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Hours)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Hours)).setValue(
                     result.getInt("ebh.hours"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ExtraHours)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ExtraHours)).setValue(
                     result.getInt("ebh.extra"));
             item.getItemProperty(Settings.gender_id).setValue(
                     result.getInt("g.id"));
@@ -222,10 +222,10 @@ public class DbEmployee extends BaseDb {
             if (result.getInt("ws.id") == 3 && result.getInt("eo3.id") != 0) {
                 item.getItemProperty(Settings.is_modifiable).setValue(false);
             }
-            item.getItemProperty(myUi.getMessage(IndigoMessages.CanBeAdvisor)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.CanBeAdvisor)).setValue(
                     result.getBoolean("e.can_advisor"));
             item.getItemProperty(Settings.visible_hr_orders).setValue(result.getString("ord.visible_hr_orders"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Permissions)).setValue(result.getString("permissions"));
+            item.getItemProperty(myUi.getMessage(Messages.Permissions)).setValue(result.getString("permissions"));
             item.getItemProperty(Settings.position_id).setValue(result.getInt("p.id"));
             item.getItemProperty(Settings.salary_category_id).setValue(result.getInt("cat.parent_id"));
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("cat.id"));
@@ -269,26 +269,26 @@ public class DbEmployee extends BaseDb {
         stat.setInt(3, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.FullName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.MainPosition), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ExtraPosition), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.MainBranch), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ExtraBranches), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.TotalHours) + myUi.getUser().getCurrent_year().getName(), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FullName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.MainPosition), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ExtraPosition), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.MainBranch), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ExtraBranches), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.TotalHours) + myUi.getUser().getCurrent_year().getName(), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.FullName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.FullName)).setValue(
                     result.getString("fullname"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.MainPosition)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.MainPosition)).setValue(
                     result.getString("p.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.MainBranch)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.MainBranch)).setValue(
                     result.getString("main_branch"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ExtraPosition)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ExtraPosition)).setValue(
                     result.getString("extra_positions"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ExtraBranches)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ExtraBranches)).setValue(
                     result.getString("extra_branches"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.TotalHours) + myUi.getUser().getCurrent_year().getName()).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.TotalHours) + myUi.getUser().getCurrent_year().getName()).setValue(
                     result.getInt("ebh.hours") + " (" + result.getInt("ebh.extra") + ")");
         }
         return container;
@@ -318,15 +318,15 @@ public class DbEmployee extends BaseDb {
         stat.setInt(2, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("fullname") + " - " + result.getString("p.name"));
             if (result.getString("extra_positions") != null) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
-                        item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).getValue()
+                item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
+                        item.getItemProperty(myUi.getMessage(Messages.Title)).getValue()
                                 + ", " + result.getString("extra_positions"));
             }
         }
@@ -350,11 +350,11 @@ public class DbEmployee extends BaseDb {
         stat.setInt(1, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("fullname"));
         }
         return container;
@@ -407,20 +407,20 @@ public class DbEmployee extends BaseDb {
         stat.setInt(3, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Id), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.LastName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.MainPosition), ComboBox.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.FromDate), DateField.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Note), TextField.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Position), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ExtraPosition), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.MainBranch), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ExtraBranches), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Lessons), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.SpouseInfo), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Children), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Photo), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.MainPosition), ComboBox.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FromDate), DateField.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Note), TextField.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Position), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ExtraPosition), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.MainBranch), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ExtraBranches), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Lessons), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.SpouseInfo), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Children), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Photo), String.class, null);
         container.addContainerProperty(Settings.crud_status, String.class, null);
         container.addContainerProperty(Settings.school_id, Integer.class, school_id);
         container.addContainerProperty(Settings.position_id, Integer.class, 0);
@@ -428,43 +428,43 @@ public class DbEmployee extends BaseDb {
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Id)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Id)).setValue(
                     result.getString("e.login"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.FirstName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.FirstName)).setValue(
                     result.getString("e.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.LastName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.LastName)).setValue(
                     result.getString("e.surname"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Position)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Position)).setValue(
                     result.getString("p.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ExtraPosition)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ExtraPosition)).setValue(
                     result.getString("extra_positions"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.MainBranch)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.MainBranch)).setValue(
                     result.getString("main_branch"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ExtraBranches)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ExtraBranches)).setValue(
                     result.getString("extra_branches"));
             if (result.getString("ebh.lessons") != null) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Lessons)).setValue(
-                        result.getString("ebh.lessons") + "; " + myUi.getMessage(IndigoMessages.Total) + " - "
+                item.getItemProperty(myUi.getMessage(Messages.Lessons)).setValue(
+                        result.getString("ebh.lessons") + "; " + myUi.getMessage(Messages.Total) + " - "
                                 + result.getInt("ebh.hours") + "(" + result.getInt("ebh.extra") + ")");
             }
-            item.getItemProperty(myUi.getMessage(IndigoMessages.SpouseInfo)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.SpouseInfo)).setValue(
                     result.getString("es.fullname"));
             if (result.getString("es.fullname") != null) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.SpouseInfo)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.SpouseInfo)).setValue(
                         result.getString("es.fullname") + " - " + result.getString("spouse_work"));
             }
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Children)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Children)).setValue(
                     result.getString("children"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Photo)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Photo)).setValue(
                     result.getString("e.photo"));
             ComboBox cb = new ComboBox();
-            cb.setDescription(myUi.getMessage(IndigoMessages.MainPosition));
+            cb.setDescription(myUi.getMessage(Messages.MainPosition));
             cb.setStyleName(ValoTheme.COMBOBOX_TINY);
             cb.setWidth(Settings.PERCENTS100);
-            cb.setItemCaptionPropertyId(myUi.getMessage(IndigoMessages.Title));
+            cb.setItemCaptionPropertyId(myUi.getMessage(Messages.Title));
             cb.setFilteringMode(FilteringMode.CONTAINS);
             cb.setRequired(true);
-            cb.setRequiredError(myUi.getMessage(IndigoMessages.RequiredField));
+            cb.setRequiredError(myUi.getMessage(Messages.RequiredField));
             try {
                 DbDefinition dbp = new DbDefinition();
                 dbp.connect();
@@ -477,30 +477,30 @@ public class DbEmployee extends BaseDb {
             cb.setNullSelectionAllowed(false);
             cb.setValue(result.getInt("p.id"));
             cb.setEnabled(false);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.MainPosition)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.MainPosition)).setValue(cb);
 
             DateField df = new DateField();
             df.setWidth(Settings.PERCENTS100);
             df.setStyleName(ValoTheme.DATEFIELD_TINY);
             df.setRequired(true);
-            df.setRequiredError(myUi.getMessage(IndigoMessages.RequiredField));
+            df.setRequiredError(myUi.getMessage(Messages.RequiredField));
             df.setDateFormat(Settings.datePattern);
-            df.setDescription(myUi.getMessage(IndigoMessages.FromDate));
+            df.setDescription(myUi.getMessage(Messages.FromDate));
             df.setValue(result.getDate("eo.from_date"));
             df.setRangeEnd(new Date());
             df.setEnabled(false);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.FromDate)).setValue(df);
+            item.getItemProperty(myUi.getMessage(Messages.FromDate)).setValue(df);
 
             TextField tf = new TextField();
-            tf.setDescription(myUi.getMessage(IndigoMessages.Note));
+            tf.setDescription(myUi.getMessage(Messages.Note));
             tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
             tf.setWidth(Settings.PERCENTS100);
-            tf.addValidator(new StringLengthValidator(myUi.getMessage(IndigoMessages.NotificationWrongValue), null, 300, true));
+            tf.addValidator(new StringLengthValidator(myUi.getMessage(Messages.NotificationWrongValue), null, 300, true));
             if (result.getString("eo.note") != null) {
                 tf.setValue(result.getString("eo.note"));
             }
             tf.setEnabled(false);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Note)).setValue(tf);
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(tf);
             item.getItemProperty(Settings.position_id).setValue(result.getInt("p.id"));
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("cat.id"));
         }
@@ -676,8 +676,8 @@ public class DbEmployee extends BaseDb {
                 "LEFT JOIN hr_employee_order AS eo ON eo.id = (SELECT MAX(eo.id) FROM hr_employee_order as eo " +
                 "LEFT JOIN hr_orders as o on o.id = eo.hr_orders_id WHERE eo.employee_id = e.id " +
                 "AND eo.to_date IS NULL AND o.working_status_id IS NOT NULL ";
-        if (params.get(myUI.getMessage(IndigoMessages.Schools)) != null) {
-            sql += "AND school_id IN (" + params.get(myUI.getMessage(IndigoMessages.Schools)) + ")";
+        if (params.get(myUI.getMessage(Messages.Schools)) != null) {
+            sql += "AND school_id IN (" + params.get(myUI.getMessage(Messages.Schools)) + ")";
         }
         sql += ") " +
                 "LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id " +
@@ -707,83 +707,83 @@ public class DbEmployee extends BaseDb {
                 "LEFT JOIN hr_language_level AS lev ON elan.hr_language_level_id = lev.id " +
                 "LEFT JOIN hr_employee_phone_number AS ph ON ph.employee_id = e.id " +
                 "WHERE 1 ";
-        if (params.get(myUI.getMessage(IndigoMessages.Schools)) != null) {
-            sql += "AND eo.school_id IN (" + params.get(myUI.getMessage(IndigoMessages.Schools)) + ") ";
+        if (params.get(myUI.getMessage(Messages.Schools)) != null) {
+            sql += "AND eo.school_id IN (" + params.get(myUI.getMessage(Messages.Schools)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.WorkingStatuses)) != null) {
+        if (params.get(myUI.getMessage(Messages.WorkingStatuses)) != null) {
             sql +=
-                    "AND ws.id IN (" + params.get(myUI.getMessage(IndigoMessages.WorkingStatuses)) + ") ";
+                    "AND ws.id IN (" + params.get(myUI.getMessage(Messages.WorkingStatuses)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.Positions)) != null) {
-            sql += "AND p.id IN (" + params.get(myUI.getMessage(IndigoMessages.Positions)) + ") ";
+        if (params.get(myUI.getMessage(Messages.Positions)) != null) {
+            sql += "AND p.id IN (" + params.get(myUI.getMessage(Messages.Positions)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.Genders)) != null) {
-            sql += "AND g.id IN (" + params.get(myUI.getMessage(IndigoMessages.Genders)) + ") ";
+        if (params.get(myUI.getMessage(Messages.Genders)) != null) {
+            sql += "AND g.id IN (" + params.get(myUI.getMessage(Messages.Genders)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.Nationalities)) != null) {
-            sql += "AND n.id IN (" + params.get(myUI.getMessage(IndigoMessages.Nationalities)) + ") ";
+        if (params.get(myUI.getMessage(Messages.Nationalities)) != null) {
+            sql += "AND n.id IN (" + params.get(myUI.getMessage(Messages.Nationalities)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.MartialStatuses)) != null) {
-            sql += "AND m.id IN (" + params.get(myUI.getMessage(IndigoMessages.MartialStatuses)) + ") ";
+        if (params.get(myUI.getMessage(Messages.MartialStatuses)) != null) {
+            sql += "AND m.id IN (" + params.get(myUI.getMessage(Messages.MartialStatuses)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.CanBeAdvisors)) != null) {
-            sql += "AND e.can_advisor IN (" + params.get(myUI.getMessage(IndigoMessages.CanBeAdvisors)) + ") ";
+        if (params.get(myUI.getMessage(Messages.CanBeAdvisors)) != null) {
+            sql += "AND e.can_advisor IN (" + params.get(myUI.getMessage(Messages.CanBeAdvisors)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.ContractTypes)) != null) {
-            sql += "AND sal.id IN (" + params.get(myUI.getMessage(IndigoMessages.ContractTypes)) + ") ";
+        if (params.get(myUI.getMessage(Messages.ContractTypes)) != null) {
+            sql += "AND sal.id IN (" + params.get(myUI.getMessage(Messages.ContractTypes)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.Citizenships)) != null) {
-            sql += "AND cntr.id IN (" + params.get(myUI.getMessage(IndigoMessages.Citizenships)) + ") ";
+        if (params.get(myUI.getMessage(Messages.Citizenships)) != null) {
+            sql += "AND cntr.id IN (" + params.get(myUI.getMessage(Messages.Citizenships)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.ExtraPositions)) != null) {
-            sql += "AND p2.id IN (" + params.get(myUI.getMessage(IndigoMessages.ExtraPositions)) + ") ";
+        if (params.get(myUI.getMessage(Messages.ExtraPositions)) != null) {
+            sql += "AND p2.id IN (" + params.get(myUI.getMessage(Messages.ExtraPositions)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.Education)) != null) {
-            sql += "AND uni.id IN (" + params.get(myUI.getMessage(IndigoMessages.Education)) + ") ";
+        if (params.get(myUI.getMessage(Messages.Education)) != null) {
+            sql += "AND uni.id IN (" + params.get(myUI.getMessage(Messages.Education)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.WorkPlaces)) != null) {
-            sql += "AND wp.id IN (" + params.get(myUI.getMessage(IndigoMessages.WorkPlaces)) + ") ";
+        if (params.get(myUI.getMessage(Messages.WorkPlaces)) != null) {
+            sql += "AND wp.id IN (" + params.get(myUI.getMessage(Messages.WorkPlaces)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.Certificates)) != null) {
-            sql += "AND cert.id IN (" + params.get(myUI.getMessage(IndigoMessages.Certificates)) + ") ";
+        if (params.get(myUI.getMessage(Messages.Certificates)) != null) {
+            sql += "AND cert.id IN (" + params.get(myUI.getMessage(Messages.Certificates)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.Languages)) != null) {
-            sql += "AND lang.id IN (" + params.get(myUI.getMessage(IndigoMessages.Languages)) + ") ";
+        if (params.get(myUI.getMessage(Messages.Languages)) != null) {
+            sql += "AND lang.id IN (" + params.get(myUI.getMessage(Messages.Languages)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.GraduationSchools)) != null) {
-            if (params.get(myUI.getMessage(IndigoMessages.GraduationSchools)).contains("-1")) {
-                sql += "AND (sch2.id IN (" + params.get(myUI.getMessage(IndigoMessages.GraduationSchools)) + ") OR sch2.id IS NULL) ";
+        if (params.get(myUI.getMessage(Messages.GraduationSchools)) != null) {
+            if (params.get(myUI.getMessage(Messages.GraduationSchools)).contains("-1")) {
+                sql += "AND (sch2.id IN (" + params.get(myUI.getMessage(Messages.GraduationSchools)) + ") OR sch2.id IS NULL) ";
             } else {
-                sql += "AND sch2.id IN (" + params.get(myUI.getMessage(IndigoMessages.GraduationSchools)) + ") ";
+                sql += "AND sch2.id IN (" + params.get(myUI.getMessage(Messages.GraduationSchools)) + ") ";
             }
         }
-        if (params.get(myUI.getMessage(IndigoMessages.HealthStatuses)) != null) {
-            sql += "AND hs.id IN (" + params.get(myUI.getMessage(IndigoMessages.HealthStatuses)) + ") ";
+        if (params.get(myUI.getMessage(Messages.HealthStatuses)) != null) {
+            sql += "AND hs.id IN (" + params.get(myUI.getMessage(Messages.HealthStatuses)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.Exams)) != null) {
-            sql += "AND ex.id IN (" + params.get(myUI.getMessage(IndigoMessages.Exams)) + ") ";
+        if (params.get(myUI.getMessage(Messages.Exams)) != null) {
+            sql += "AND ex.id IN (" + params.get(myUI.getMessage(Messages.Exams)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.MainBranches)) != null) {
-            sql += "AND mbr.id IN (" + params.get(myUI.getMessage(IndigoMessages.MainBranches)) + ") ";
+        if (params.get(myUI.getMessage(Messages.MainBranches)) != null) {
+            sql += "AND mbr.id IN (" + params.get(myUI.getMessage(Messages.MainBranches)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.ExtraBranches)) != null) {
-            sql += "AND ebr.id IN (" + params.get(myUI.getMessage(IndigoMessages.ExtraBranches)) + ") ";
+        if (params.get(myUI.getMessage(Messages.ExtraBranches)) != null) {
+            sql += "AND ebr.id IN (" + params.get(myUI.getMessage(Messages.ExtraBranches)) + ") ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.FirstName)) != null
-                && !params.get(myUI.getMessage(IndigoMessages.FirstName)).equals("")) {
-            sql += "AND e.name LIKE  '%" + params.get(myUI.getMessage(IndigoMessages.FirstName)) + "%' ";
+        if (params.get(myUI.getMessage(Messages.FirstName)) != null
+                && !params.get(myUI.getMessage(Messages.FirstName)).equals("")) {
+            sql += "AND e.name LIKE  '%" + params.get(myUI.getMessage(Messages.FirstName)) + "%' ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.LastName)) != null
-                && !params.get(myUI.getMessage(IndigoMessages.LastName)).equals("")) {
-            sql += "AND e.surname LIKE  '%" + params.get(myUI.getMessage(IndigoMessages.LastName)) + "%' ";
+        if (params.get(myUI.getMessage(Messages.LastName)) != null
+                && !params.get(myUI.getMessage(Messages.LastName)).equals("")) {
+            sql += "AND e.surname LIKE  '%" + params.get(myUI.getMessage(Messages.LastName)) + "%' ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.FromAge)) != null
-                && !params.get(myUI.getMessage(IndigoMessages.FromAge)).equals("0")) {
-            sql += "AND year(NOW()) - year(e.date_of_birth) >= " + params.get(myUI.getMessage(IndigoMessages.FromAge)) + " ";
+        if (params.get(myUI.getMessage(Messages.FromAge)) != null
+                && !params.get(myUI.getMessage(Messages.FromAge)).equals("0")) {
+            sql += "AND year(NOW()) - year(e.date_of_birth) >= " + params.get(myUI.getMessage(Messages.FromAge)) + " ";
         }
-        if (params.get(myUI.getMessage(IndigoMessages.ToAge)) != null
-                && !params.get(myUI.getMessage(IndigoMessages.ToAge)).equals("0")) {
-            sql += "AND year(NOW()) - year(e.date_of_birth) <= " + params.get(myUI.getMessage(IndigoMessages.ToAge)) + " ";
+        if (params.get(myUI.getMessage(Messages.ToAge)) != null
+                && !params.get(myUI.getMessage(Messages.ToAge)).equals("0")) {
+            sql += "AND year(NOW()) - year(e.date_of_birth) <= " + params.get(myUI.getMessage(Messages.ToAge)) + " ";
         }
         sql += "GROUP BY e.id ORDER BY sch.id, e.surname, e.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -792,75 +792,75 @@ public class DbEmployee extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(" ", Integer.class, 0);
         container.addContainerProperty(Settings.button, String.class, "CV");
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.School), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Id), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Photo), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.MiddleName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.DateOfBirth), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Age), Integer.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.WorkingStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ContractType), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.MainPosition), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ExtraPositions), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Gender), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Nationality), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Citizenship), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.MartialStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ContactInfo), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.HealthStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.GraduationSchools),
-                String.class, myUI.getMessage(IndigoMessages.OtherSchool));
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Education), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.WorkPlaces), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Hours), Integer.class, 0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ExtraHours), Integer.class, 0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.MainBranch), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ExtraBranches), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.CanBeAdvisor), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Exams), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Seminars), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Certificates), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Languages), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.School), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Photo), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.MiddleName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.DateOfBirth), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Age), Integer.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WorkingStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ContractType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.MainPosition), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ExtraPositions), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Gender), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Nationality), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Citizenship), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.MartialStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ContactInfo), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.HealthStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.GraduationSchools),
+                String.class, myUI.getMessage(Messages.OtherSchool));
+        container.addContainerProperty(myUI.getMessage(Messages.Education), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WorkPlaces), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Hours), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.ExtraHours), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.MainBranch), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ExtraBranches), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.CanBeAdvisor), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Exams), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Seminars), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Certificates), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Languages), String.class, null);
         int i = 0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
             item.getItemProperty(" ").setValue(++i);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.School)).setValue(result.getString("school"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Id)).setValue(result.getString("e.login"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Photo)).setValue(result.getString("e.photo"));
+            item.getItemProperty(myUI.getMessage(Messages.School)).setValue(result.getString("school"));
+            item.getItemProperty(myUI.getMessage(Messages.Id)).setValue(result.getString("e.login"));
+            item.getItemProperty(myUI.getMessage(Messages.Photo)).setValue(result.getString("e.photo"));
             if (result.getString("grad_school") != null) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.GraduationSchools)).setValue(result.getString("grad_school"));
+                item.getItemProperty(myUI.getMessage(Messages.GraduationSchools)).setValue(result.getString("grad_school"));
             }
-            item.getItemProperty(myUI.getMessage(IndigoMessages.FirstName)).setValue(result.getString("e.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.LastName)).setValue(result.getString("e.surname"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.MiddleName)).setValue(result.getString("e.middle_name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Age)).setValue(result.getInt("age"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.DateOfBirth)).setValue(Settings.df.format(
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(result.getString("e.name"));
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(result.getString("e.surname"));
+            item.getItemProperty(myUI.getMessage(Messages.MiddleName)).setValue(result.getString("e.middle_name"));
+            item.getItemProperty(myUI.getMessage(Messages.Age)).setValue(result.getInt("age"));
+            item.getItemProperty(myUI.getMessage(Messages.DateOfBirth)).setValue(Settings.df.format(
                     result.getDate("e.date_of_birth")));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ContractType)).setValue(result.getString("sal.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.MainPosition)).setValue(result.getString("p.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ContactInfo)).setValue(result.getString("phones"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraPositions)).setValue(result.getString("extra_positions"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.MainBranch)).setValue(result.getString("main_branch"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraBranches)).setValue(result.getString("extra_branches"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Gender)).setValue(result.getString("g.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Nationality)).setValue(result.getString("n.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Citizenship)).setValue(result.getString("cntr.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.MartialStatus)).setValue(result.getString("m.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WorkingStatus)).setValue(result.getString("ws.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.HealthStatus)).setValue(result.getString("hs.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Education)).setValue(result.getString("education"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WorkPlaces)).setValue(result.getString("work"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.CanBeAdvisor)).setValue(result.getInt("e.can_advisor") == 1 ?
-                    myUI.getMessage(IndigoMessages.Yes) : myUI.getMessage(IndigoMessages.No));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Hours)).setValue(result.getInt("ebh.hours"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraHours)).setValue(result.getInt("ebh.extra"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Exams)).setValue(result.getString("exams"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Seminars)).setValue(result.getString("sems"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Certificates)).setValue(result.getString("certs"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Languages)).setValue(result.getString("langs"));
+            item.getItemProperty(myUI.getMessage(Messages.ContractType)).setValue(result.getString("sal.name"));
+            item.getItemProperty(myUI.getMessage(Messages.MainPosition)).setValue(result.getString("p.name"));
+            item.getItemProperty(myUI.getMessage(Messages.ContactInfo)).setValue(result.getString("phones"));
+            item.getItemProperty(myUI.getMessage(Messages.ExtraPositions)).setValue(result.getString("extra_positions"));
+            item.getItemProperty(myUI.getMessage(Messages.MainBranch)).setValue(result.getString("main_branch"));
+            item.getItemProperty(myUI.getMessage(Messages.ExtraBranches)).setValue(result.getString("extra_branches"));
+            item.getItemProperty(myUI.getMessage(Messages.Gender)).setValue(result.getString("g.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Nationality)).setValue(result.getString("n.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Citizenship)).setValue(result.getString("cntr.name"));
+            item.getItemProperty(myUI.getMessage(Messages.MartialStatus)).setValue(result.getString("m.name"));
+            item.getItemProperty(myUI.getMessage(Messages.WorkingStatus)).setValue(result.getString("ws.name"));
+            item.getItemProperty(myUI.getMessage(Messages.HealthStatus)).setValue(result.getString("hs.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Education)).setValue(result.getString("education"));
+            item.getItemProperty(myUI.getMessage(Messages.WorkPlaces)).setValue(result.getString("work"));
+            item.getItemProperty(myUI.getMessage(Messages.CanBeAdvisor)).setValue(result.getInt("e.can_advisor") == 1 ?
+                    myUI.getMessage(Messages.Yes) : myUI.getMessage(Messages.No));
+            item.getItemProperty(myUI.getMessage(Messages.Hours)).setValue(result.getInt("ebh.hours"));
+            item.getItemProperty(myUI.getMessage(Messages.ExtraHours)).setValue(result.getInt("ebh.extra"));
+            item.getItemProperty(myUI.getMessage(Messages.Exams)).setValue(result.getString("exams"));
+            item.getItemProperty(myUI.getMessage(Messages.Seminars)).setValue(result.getString("sems"));
+            item.getItemProperty(myUI.getMessage(Messages.Certificates)).setValue(result.getString("certs"));
+            item.getItemProperty(myUI.getMessage(Messages.Languages)).setValue(result.getString("langs"));
         }
         return container;
     }

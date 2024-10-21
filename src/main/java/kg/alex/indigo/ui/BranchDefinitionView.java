@@ -14,7 +14,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbBranch;
 import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.domain.Branch;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vaadin.dialogs.ConfirmDialog;
@@ -38,8 +38,8 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
         this.myUI = myUI;
 
         String[] NATURAL_COL_ORDER = new String[]{
-                myUI.getMessage(IndigoMessages.Code), myUI.getMessage(IndigoMessages.Title),
-                myUI.getMessage(IndigoMessages.Status)};
+                myUI.getMessage(Messages.Code), myUI.getMessage(Messages.Title),
+                myUI.getMessage(Messages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -87,7 +87,7 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(IndigoMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -95,7 +95,7 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(IndigoMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -103,52 +103,52 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(IndigoMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(IndigoMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new TextField(myUI.getMessage(IndigoMessages.Title));
+        nameTF = new TextField(myUI.getMessage(Messages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        nameTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 150, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 150, false));
         settingsLay.addComponent(nameTF);
 
-        codeTF = new TextField(myUI.getMessage(IndigoMessages.Code));
+        codeTF = new TextField(myUI.getMessage(Messages.Code));
         codeTF.setRequired(true);
         codeTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        codeTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        codeTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         codeTF.setWidth(Settings.PERCENTS100);
         codeTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 3, 5, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 3, 5, false));
         settingsLay.addComponent(codeTF);
 
-        statusSelect = new ComboBox(myUI.getMessage(IndigoMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
-        statusSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        statusSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setWidth(Settings.PERCENTS100);
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -180,10 +180,10 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
             nameTF.focus();
             statusSelect.setValue(2);
         } else if (source == deleteBtn && dataTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                    myUI.getMessage(IndigoMessages.ConfirmDeletion),
-                    myUI.getMessage(IndigoMessages.Yes),
-                    myUI.getMessage(IndigoMessages.No),
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
@@ -198,10 +198,10 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
                         int id = dbCon.exec_insert(getBranch(0));
                         if (id != 0) {
                             addDataContainerItem(id);
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
@@ -215,17 +215,17 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
                         }
                         if (status != 0) {
                             updateDataContainer();
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     }
                     dbCon.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -276,11 +276,11 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
 
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                myUI.getMessage(Messages.Title)).getValue().toString());
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Code)).getValue() != null) {
+                myUI.getMessage(Messages.Code)).getValue() != null) {
             codeTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.Code)).getValue().toString());
+                    myUI.getMessage(Messages.Code)).getValue().toString());
         } else {
             codeTF.setValue("");
         }
@@ -296,26 +296,26 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
 
     private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Title)).setValue(nameTF.getValue());
+                myUI.getMessage(Messages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Code)).setValue(codeTF.getValue());
+                myUI.getMessage(Messages.Code)).setValue(codeTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Status)).setValue(statusSelect.
+                myUI.getMessage(Messages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
     }
 
     private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                 nameTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Code)).setValue(codeTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Status)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Code)).setValue(codeTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         item.getItemProperty(Settings.status_id).setValue(
                 statusSelect.getValue());
         item.getItemProperty(Settings.id).setValue(id);
@@ -349,7 +349,7 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete), Notification.Type.WARNING_MESSAGE);
+            Notification.show(myUI.getMessage(Messages.CanNotDelete), Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);
         } catch (Exception e) {

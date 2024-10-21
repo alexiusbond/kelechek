@@ -19,7 +19,7 @@ import kg.alex.indigo.dao.DbEmployeeLessons;
 import kg.alex.indigo.domain.EmployeeBranchesExcel;
 import kg.alex.indigo.domain.EmployeeLessons;
 import kg.alex.indigo.excel.ExcelUploader;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.pdf.BranchCodesPdf;
 import kg.alex.indigo.utils.FormattedFilterTable;
 import kg.alex.indigo.utils.FormattedTable;
@@ -56,7 +56,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         Label captionFromFile = new Label();
         captionFromFile.setWidth(Settings.PERCENTS100);
         captionFromFile.setContentMode(ContentMode.HTML);
-        captionFromFile.setValue(myUI.getMessage(IndigoMessages.FileData));
+        captionFromFile.setValue(myUI.getMessage(Messages.FileData));
         captionFromFile.setStyleName("tableCpt");
         vl.addComponent(captionFromFile);
 
@@ -69,7 +69,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         Label captionFromDb = new Label();
         captionFromDb.setWidth(Settings.PERCENTS100);
         captionFromDb.setContentMode(ContentMode.HTML);
-        captionFromDb.setValue(myUI.getMessage(IndigoMessages.DbData));
+        captionFromDb.setValue(myUI.getMessage(Messages.DbData));
         captionFromDb.setStyleName("tableCpt");
         vl.addComponent(captionFromDb);
 
@@ -99,13 +99,13 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
             logger.catching(e);
         }
         dataTable.setVisibleColumns((Object[]) new String[]{
-                myUI.getMessage(IndigoMessages.Lecturer), myUI.getMessage(IndigoMessages.Lesson),
-                myUI.getMessage(IndigoMessages.ClassName),
-                myUI.getMessage(IndigoMessages.Hours),
-                myUI.getMessage(IndigoMessages.ExtraHours)});
-        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.ClassName), CustomTable.Align.RIGHT);
-        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Hours), CustomTable.Align.RIGHT);
-        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.ExtraHours), CustomTable.Align.RIGHT);
+                myUI.getMessage(Messages.Lecturer), myUI.getMessage(Messages.Lesson),
+                myUI.getMessage(Messages.ClassName),
+                myUI.getMessage(Messages.Hours),
+                myUI.getMessage(Messages.ExtraHours)});
+        dataTable.setColumnAlignment(myUI.getMessage(Messages.ClassName), CustomTable.Align.RIGHT);
+        dataTable.setColumnAlignment(myUI.getMessage(Messages.Hours), CustomTable.Align.RIGHT);
+        dataTable.setColumnAlignment(myUI.getMessage(Messages.ExtraHours), CustomTable.Align.RIGHT);
     }
 
     private void buildSettingsLayout() {
@@ -119,7 +119,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         buttonsLay.setSpacing(true);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
@@ -127,14 +127,14 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         buttonsLay.addComponent(saveBtn);
 
         templateBtn = new Button();
-        templateBtn.setDescription(myUI.getMessage(IndigoMessages.DownloadTemplateBtn));
+        templateBtn.setDescription(myUI.getMessage(Messages.DownloadTemplateBtn));
         templateBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         templateBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         templateBtn.addClickListener(this);
         buttonsLay.addComponent(templateBtn);
 
         branchesPDF_Btn = new Button();
-        branchesPDF_Btn.setDescription(myUI.getMessage(IndigoMessages.DownloadBranchesCode));
+        branchesPDF_Btn.setDescription(myUI.getMessage(Messages.DownloadBranchesCode));
         branchesPDF_Btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         branchesPDF_Btn.setIcon(FontAwesome.FILE_PDF_O);
         branchesPDF_Btn.addClickListener(this);
@@ -142,7 +142,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(IndigoMessages.DeleteAllButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteAllButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
@@ -152,26 +152,26 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         ExcelUploader<?> excelUploader = new ExcelUploader<>(EmployeeBranchesExcel.class);
         excelUploader.addSucceededListener((event, items) -> {
             importTable.setContainerDataSource(buildContainer(items));
-            importTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Hours), Table.Align.RIGHT);
-            importTable.setColumnAlignment(myUI.getMessage(IndigoMessages.ExtraHours), Table.Align.RIGHT);
-            importTable.setColumnAlignment(myUI.getMessage(IndigoMessages.ClassName), Table.Align.RIGHT);
+            importTable.setColumnAlignment(myUI.getMessage(Messages.Hours), Table.Align.RIGHT);
+            importTable.setColumnAlignment(myUI.getMessage(Messages.ExtraHours), Table.Align.RIGHT);
+            importTable.setColumnAlignment(myUI.getMessage(Messages.ClassName), Table.Align.RIGHT);
         });
 
         Upload fileUpl = new Upload(null, excelUploader);
         fileUpl.setImmediate(true);
         fileUpl.setStyleName("large");
-        fileUpl.setButtonCaption(myUI.getMessage(IndigoMessages.UploadExcel));
-        fileUpl.setDescription(myUI.getMessage(IndigoMessages.UploadExcel));
+        fileUpl.setButtonCaption(myUI.getMessage(Messages.UploadExcel));
+        fileUpl.setDescription(myUI.getMessage(Messages.UploadExcel));
         fileUpl.addSucceededListener(excelUploader);
         buttonsLay.addComponent(fileUpl);
 
-        yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.LessonsYear));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.LessonsYear));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
         yearSelect.addValueChangeListener(this);
 
@@ -193,11 +193,11 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == deleteBtn && yearSelect.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                    myUI.getMessage(IndigoMessages.ConfirmDeletionAll) + " " + yearSelect.getItemCaption(yearSelect.getValue()) + " "
-                            + myUI.getMessage(IndigoMessages.Year) + "?",
-                    myUI.getMessage(IndigoMessages.Yes),
-                    myUI.getMessage(IndigoMessages.No),
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletionAll) + " " + yearSelect.getItemCaption(yearSelect.getValue()) + " "
+                            + myUI.getMessage(Messages.Year) + "?",
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
@@ -218,23 +218,23 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                     EmployeeLessons el = new EmployeeLessons();
                     el.setSchool_id(myUI.getUser().getSchool().getId());
                     el.setYear_id((Integer) yearSelect.getValue());
-                    if (importTable.getContainerProperty(item_id, myUI.getMessage(IndigoMessages.Hours)).getValue() != null) {
+                    if (importTable.getContainerProperty(item_id, myUI.getMessage(Messages.Hours)).getValue() != null) {
                         el.setHours((Integer) importTable.getContainerProperty(item_id,
-                                myUI.getMessage(IndigoMessages.Hours)).getValue());
+                                myUI.getMessage(Messages.Hours)).getValue());
                     } else {
                         continue;
                     }
-                    if (importTable.getContainerProperty(item_id, myUI.getMessage(IndigoMessages.ExtraHours)).getValue() != null) {
+                    if (importTable.getContainerProperty(item_id, myUI.getMessage(Messages.ExtraHours)).getValue() != null) {
                         el.setExtra_hours((Integer) importTable.getContainerProperty(item_id,
-                                myUI.getMessage(IndigoMessages.ExtraHours)).getValue());
+                                myUI.getMessage(Messages.ExtraHours)).getValue());
                     } else {
                         el.setExtra_hours(0);
                     }
-                    if (importTable.getContainerProperty(item_id, myUI.getMessage(IndigoMessages.LecturerID)).getValue() != null) {
+                    if (importTable.getContainerProperty(item_id, myUI.getMessage(Messages.LecturerID)).getValue() != null) {
                         int id = 0;
                         try {
                             id = dbEmp.execSQL_id(myUI.getUser().getSchool().getId(), importTable.getContainerProperty(item_id,
-                                    myUI.getMessage(IndigoMessages.LecturerID)).getValue().toString());
+                                    myUI.getMessage(Messages.LecturerID)).getValue().toString());
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -247,11 +247,11 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                     } else {
                         continue;
                     }
-                    if (importTable.getContainerProperty(item_id, myUI.getMessage(IndigoMessages.CourseCode)).getValue() != null) {
+                    if (importTable.getContainerProperty(item_id, myUI.getMessage(Messages.CourseCode)).getValue() != null) {
                         int id = 0;
                         try {
                             id = dbDef.search_id(Settings.dbBranchTable, Settings.dbColumnCode, importTable.getContainerProperty(item_id,
-                                    myUI.getMessage(IndigoMessages.CourseCode)).getValue().toString());
+                                    myUI.getMessage(Messages.CourseCode)).getValue().toString());
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -264,11 +264,11 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                     } else {
                         continue;
                     }
-                    if (importTable.getContainerProperty(item_id, myUI.getMessage(IndigoMessages.ClassName)).getValue() != null) {
+                    if (importTable.getContainerProperty(item_id, myUI.getMessage(Messages.ClassName)).getValue() != null) {
                         int id = 0;
                         try {
                             id = dbDef.search_id(Settings.classTable, Settings.dbColumnName, importTable.getContainerProperty(item_id,
-                                    myUI.getMessage(IndigoMessages.ClassName)).getValue().toString());
+                                    myUI.getMessage(Messages.ClassName)).getValue().toString());
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -302,11 +302,11 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                 importTable.removeItem(id);
             }
             if (importTable.size() != 0) {
-                Notification.show(counter + " " + myUI.getMessage(IndigoMessages.InsertedAmount)
-                                + " " + myUI.getMessage(IndigoMessages.NotInserted),
+                Notification.show(counter + " " + myUI.getMessage(Messages.InsertedAmount)
+                                + " " + myUI.getMessage(Messages.NotInserted),
                         Notification.Type.WARNING_MESSAGE);
             } else {
-                Notification.show(counter + " " + myUI.getMessage(IndigoMessages.InsertedAmount),
+                Notification.show(counter + " " + myUI.getMessage(Messages.InsertedAmount),
                         Notification.Type.HUMANIZED_MESSAGE);
             }
             if (counter > 0) {
@@ -359,29 +359,29 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
     private IndexedContainer buildContainer(List<EmployeeBranchesExcel> list) {
 
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.LecturerID), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.CourseCode), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ClassName), Integer.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Hours), Integer.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ExtraHours), Integer.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LecturerID), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.CourseCode), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), Integer.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Hours), Integer.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ExtraHours), Integer.class, null);
         for (int i = 0; i < list.size(); i++) {
             Item item = container.addItem(i);
             if (item != null) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.LecturerID)).setValue(list.get(i).getLogin());
-                item.getItemProperty(myUI.getMessage(IndigoMessages.CourseCode)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.LecturerID)).setValue(list.get(i).getLogin());
+                item.getItemProperty(myUI.getMessage(Messages.CourseCode)).setValue(
                         list.get(i).getCourse_code());
                 try {
-                    item.getItemProperty(myUI.getMessage(IndigoMessages.Hours)).setValue(
+                    item.getItemProperty(myUI.getMessage(Messages.Hours)).setValue(
                             Integer.parseInt(list.get(i).getHours()));
                 } catch (Exception ignored) {
                 }
                 try {
-                    item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraHours)).setValue(
+                    item.getItemProperty(myUI.getMessage(Messages.ExtraHours)).setValue(
                             Integer.parseInt(list.get(i).getExtra_hours()));
                 } catch (Exception ignored) {
                 }
                 try {
-                    item.getItemProperty(myUI.getMessage(IndigoMessages.ClassName)).setValue(
+                    item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                             Integer.parseInt(list.get(i).getClass_number()));
                 } catch (Exception ignored) {
                 }

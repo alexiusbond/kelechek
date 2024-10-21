@@ -5,7 +5,7 @@ import com.vaadin.data.util.converter.Converter;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.dao.DbAccCategory;
 import kg.alex.indigo.dao.DbEmployee;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,10 +30,10 @@ public class ValueFromContainerConverter implements Converter<String, Integer> {
 
     @Override
     public String convertToPresentation(Integer value, Class<? extends String> targetType, Locale locale) throws ConversionException {
-        if (container.getContainerProperty(value, myUi.getMessage(IndigoMessages.Title)) != null &&
-                container.getContainerProperty(value, myUi.getMessage(IndigoMessages.Title)).getValue() != null) {
-            return container.getContainerProperty(value, myUi.getMessage(IndigoMessages.Title)).getValue().toString();
-        } else if (value != null && propertyId != null && propertyId.equals(myUi.getMessage(IndigoMessages.Category))) {
+        if (container.getContainerProperty(value, myUi.getMessage(Messages.Title)) != null &&
+                container.getContainerProperty(value, myUi.getMessage(Messages.Title)).getValue() != null) {
+            return container.getContainerProperty(value, myUi.getMessage(Messages.Title)).getValue().toString();
+        } else if (value != null && propertyId != null && propertyId.equals(myUi.getMessage(Messages.Category))) {
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
@@ -46,7 +46,7 @@ public class ValueFromContainerConverter implements Converter<String, Integer> {
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (value != null && propertyId != null && propertyId.equals(myUi.getMessage(IndigoMessages.ToEmployee))) {
+        } else if (value != null && propertyId != null && propertyId.equals(myUi.getMessage(Messages.ToEmployee))) {
             try {
                 DbEmployee dbCon = new DbEmployee();
                 dbCon.connect();

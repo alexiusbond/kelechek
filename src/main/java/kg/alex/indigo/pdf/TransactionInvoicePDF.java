@@ -9,7 +9,7 @@ import com.vaadin.server.StreamResource;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.AccTransaction;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.utils.money.WritableSummRu;
 import kg.alex.indigo.utils.money.WritableSummRuSOM;
 import kg.alex.indigo.utils.money.WritableSummRuUSD;
@@ -150,7 +150,7 @@ public class TransactionInvoicePDF {
                 orderTable.addCell(cell);
 
                 Paragraph receivedPar = new Paragraph();
-                if (orderName.equals(myUI.getMessage(IndigoMessages.IncomeOrder))) {
+                if (orderName.equals(myUI.getMessage(Messages.IncomeOrder))) {
                     receivedPar.add(new Chunk("Выдал: ", bold_font));
                 } else {
                     receivedPar.add(new Chunk("Получил: ", bold_font));
@@ -167,7 +167,7 @@ public class TransactionInvoicePDF {
                 orderTable.addCell(new Phrase("Подпись _____________", bold_font));
 
                 Paragraph accPar = new Paragraph();
-                if (orderName.equals(myUI.getMessage(IndigoMessages.IncomeOrder))) {
+                if (orderName.equals(myUI.getMessage(Messages.IncomeOrder))) {
                     accPar.add(new Chunk("Получил: ", bold_font));
                 } else {
                     accPar.add(new Chunk("Выдал: ", bold_font));

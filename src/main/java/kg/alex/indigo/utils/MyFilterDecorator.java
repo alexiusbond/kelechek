@@ -3,7 +3,7 @@ package kg.alex.indigo.utils;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.indigo.MyVaadinUI;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.tepi.filtertable.FilterDecorator;
 import org.tepi.filtertable.numberfilter.NumberFilterPopupConfig;
 
@@ -42,24 +42,24 @@ public class MyFilterDecorator implements FilterDecorator, Serializable {
 
     @Override
     public String getFromCaption() {
-        return myUI.getMessage(IndigoMessages.StartDate);
+        return myUI.getMessage(Messages.StartDate);
     }
 
     @Override
     public String getToCaption() {
-        return myUI.getMessage(IndigoMessages.EndDate);
+        return myUI.getMessage(Messages.EndDate);
     }
 
     @Override
     public String getSetCaption() {
         // use default caption
-        return myUI.getMessage(IndigoMessages.Set);
+        return myUI.getMessage(Messages.Set);
     }
 
     @Override
     public String getClearCaption() {
         // use default caption
-        return myUI.getMessage(IndigoMessages.Clear);
+        return myUI.getMessage(Messages.Clear);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class MyFilterDecorator implements FilterDecorator, Serializable {
 
     @Override
     public String getAllItemsVisibleString() {
-        return myUI.getMessage(IndigoMessages.Search);
+        return myUI.getMessage(Messages.Search);
     }
 
     @Override

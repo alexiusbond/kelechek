@@ -10,7 +10,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,7 +50,7 @@ public class TemplatesView extends VerticalLayout implements Button.ClickListene
     }
 
     private Button createButton(String itemId) {
-        Button btn = new Button(myUI.getMessage(IndigoMessages.DownloadButton));
+        Button btn = new Button(myUI.getMessage(Messages.DownloadButton));
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.setIcon(FontAwesome.DOWNLOAD);
         btn.setData(itemId);
@@ -60,8 +60,8 @@ public class TemplatesView extends VerticalLayout implements Button.ClickListene
 
     private void setDataTable() {
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), Date.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), Date.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
         try {
             File folder = new File("/home/indigo/docs");
@@ -72,15 +72,15 @@ public class TemplatesView extends VerticalLayout implements Button.ClickListene
                     if (basicFileAttributes.isRegularFile()) {
                         String id = listOfFile.getName();
                         Item item = container.addItem(id);
-                        item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(listOfFile.getName());
-                        item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+                        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(listOfFile.getName());
+                        item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                                 new Date(basicFileAttributes.lastModifiedTime().toMillis()));
                         item.getItemProperty(Settings.button).setValue(createButton(id));
                     }
                 }
             }
             dataTable.clear();
-            container.sort(new String[]{myUI.getMessage(IndigoMessages.Date)}, new boolean[]{false});
+            container.sort(new String[]{myUI.getMessage(Messages.Date)}, new boolean[]{false});
             dataTable.setContainerDataSource(container);
         } catch (Exception e) {
             logger.error(e);

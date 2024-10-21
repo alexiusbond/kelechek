@@ -12,7 +12,7 @@ import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import kg.alex.indigo.MyVaadinUI;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,7 +46,7 @@ public class HeaderFooterPortrait extends PdfPageEventHelper {
 
             ct.setSimpleColumn(rect);
             ct.setAlignment(Element.ALIGN_CENTER);
-            ct.addText(new Phrase(myUI.getMessage(IndigoMessages.MinistryOfEducation), fontGray));
+            ct.addText(new Phrase(myUI.getMessage(Messages.MinistryOfEducation), fontGray));
             ct.addText(Chunk.NEWLINE);
             ct.addText(new Phrase(name, ordFont));
             ct.addText(Chunk.NEWLINE);

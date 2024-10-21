@@ -14,7 +14,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.*;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,7 +63,7 @@ public class SettingsView extends GridLayout {
         Label captionAccounting = new Label();
         captionAccounting.setSizeFull();
         captionAccounting.setContentMode(ContentMode.HTML);
-        captionAccounting.setValue(myUI.getMessage(IndigoMessages.AccountingSettings));
+        captionAccounting.setValue(myUI.getMessage(Messages.AccountingSettings));
         captionAccounting.setStyleName("tableCpt");
         int row = 0;
         addComponent(captionAccounting, 0, row, 1, row);
@@ -80,7 +80,7 @@ public class SettingsView extends GridLayout {
                 Label l = new Label();
                 l.setSizeUndefined();
                 l.setValue(paymentsContainer.getContainerProperty(itemIds.get(i),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
                 addComponent(l, 0, (i + row));
                 setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
@@ -88,10 +88,10 @@ public class SettingsView extends GridLayout {
                 cb.setNullSelectionAllowed(false);
                 cb.setRequired(true);
                 cb.setData(itemIds.get(i));
-                cb.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                cb.setRequiredError(myUI.getMessage(Messages.RequiredField));
                 cb.setStyleName(ValoTheme.COMBOBOX_SMALL);
                 cb.setWidth(Settings.PERCENTS100);
-                cb.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+                cb.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
                 cb.setFilteringMode(FilteringMode.CONTAINS);
                 if ((Integer) paymentsContainer.getContainerProperty(itemIds.get(i),
                         Settings.acc_type_id).getValue() == 1) {
@@ -106,7 +106,7 @@ public class SettingsView extends GridLayout {
                         DbPaymentCategory dbp = new DbPaymentCategory();
                         dbp.connect();
                         if (dbp.exec_update((Integer) cb.getValue(), (Integer) cb.getData()) != 0) {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved));
+                            Notification.show(myUI.getMessage(Messages.ValueSaved));
                         }
                         dbp.close();
                     } catch (Exception e) {
@@ -122,7 +122,7 @@ public class SettingsView extends GridLayout {
                 Label l = new Label();
                 l.setSizeUndefined();
                 l.setValue(salaryContainer.getContainerProperty(itemIds.get(i),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
                 addComponent(l, 0, (i + row));
                 setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
@@ -130,10 +130,10 @@ public class SettingsView extends GridLayout {
                 cb.setNullSelectionAllowed(false);
                 cb.setRequired(true);
                 cb.setData(itemIds.get(i));
-                cb.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                cb.setRequiredError(myUI.getMessage(Messages.RequiredField));
                 cb.setStyleName(ValoTheme.COMBOBOX_SMALL);
                 cb.setWidth(Settings.PERCENTS100);
-                cb.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+                cb.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
                 cb.setFilteringMode(FilteringMode.CONTAINS);
                 cb.setContainerDataSource(Settings.copyContainer(expensesContainer));
                 cb.setValue(salaryContainer.getContainerProperty(itemIds.get(i), Settings.acc_category_id).getValue());
@@ -142,7 +142,7 @@ public class SettingsView extends GridLayout {
                         DbSalaryCategories dbp = new DbSalaryCategories();
                         dbp.connect();
                         if (dbp.exec_update((Integer) cb.getValue(), (Integer) cb.getData()) != 0) {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved));
+                            Notification.show(myUI.getMessage(Messages.ValueSaved));
                         }
                         dbp.close();
                     } catch (Exception e) {
@@ -158,7 +158,7 @@ public class SettingsView extends GridLayout {
                 Label l = new Label();
                 l.setSizeUndefined();
                 l.setValue(typesContainer.getContainerProperty(itemIds.get(i),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
                 addComponent(l, 0, (i + row));
                 setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
@@ -166,10 +166,10 @@ public class SettingsView extends GridLayout {
                 cb.setNullSelectionAllowed(false);
                 cb.setRequired(true);
                 cb.setData(itemIds.get(i));
-                cb.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                cb.setRequiredError(myUI.getMessage(Messages.RequiredField));
                 cb.setStyleName(ValoTheme.COMBOBOX_SMALL);
                 cb.setWidth(Settings.PERCENTS100);
-                cb.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+                cb.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
                 cb.setFilteringMode(FilteringMode.CONTAINS);
                 cb.setContainerDataSource(Settings.copyContainer(incomesAndExpensesContainer));
                 cb.setValue(typesContainer.getContainerProperty(itemIds.get(i), Settings.acc_category_id).getValue());
@@ -178,7 +178,7 @@ public class SettingsView extends GridLayout {
                         DbAccType dbAccType = new DbAccType();
                         dbAccType.connect();
                         if (dbAccType.exec_update((Integer) cb.getValue(), (Integer) cb.getData()) != 0) {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved));
+                            Notification.show(myUI.getMessage(Messages.ValueSaved));
                         }
                         dbAccType.close();
                     } catch (Exception e) {
@@ -195,7 +195,7 @@ public class SettingsView extends GridLayout {
         Label captionStock = new Label();
         captionStock.setSizeFull();
         captionStock.setContentMode(ContentMode.HTML);
-        captionStock.setValue(myUI.getMessage(IndigoMessages.StockSettings));
+        captionStock.setValue(myUI.getMessage(Messages.StockSettings));
         captionStock.setStyleName("tableCpt");
         row += typesContainer.size();
         addComponent(captionStock, 0, row, 1, row);
@@ -210,7 +210,7 @@ public class SettingsView extends GridLayout {
                 Label l = new Label();
                 l.setSizeUndefined();
                 l.setValue(productsContainer.getContainerProperty(itemIds.get(i),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
                 addComponent(l, 0, (i + row));
                 setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
@@ -218,10 +218,10 @@ public class SettingsView extends GridLayout {
                 cb.setNullSelectionAllowed(false);
                 cb.setRequired(true);
                 cb.setData(itemIds.get(i));
-                cb.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                cb.setRequiredError(myUI.getMessage(Messages.RequiredField));
                 cb.setStyleName(ValoTheme.COMBOBOX_SMALL);
                 cb.setWidth(Settings.PERCENTS100);
-                cb.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+                cb.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
                 cb.setFilteringMode(FilteringMode.CONTAINS);
                 cb.setContainerDataSource(Settings.copyContainer(container));
                 cb.setValue(productsContainer.getContainerProperty(itemIds.get(i), Settings.acc_category_id).getValue());
@@ -230,7 +230,7 @@ public class SettingsView extends GridLayout {
                         DbProductCategories dbp = new DbProductCategories();
                         dbp.connect();
                         if (dbp.exec_update((Integer) cb.getValue(), (Integer) cb.getData()) != 0) {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved));
+                            Notification.show(myUI.getMessage(Messages.ValueSaved));
                         }
                         dbp.close();
                     } catch (Exception e) {
@@ -248,7 +248,7 @@ public class SettingsView extends GridLayout {
         Label captionPositions = new Label();
         captionPositions.setSizeFull();
         captionPositions.setContentMode(ContentMode.HTML);
-        captionPositions.setValue(myUI.getMessage(IndigoMessages.PositionsSettings));
+        captionPositions.setValue(myUI.getMessage(Messages.PositionsSettings));
         captionPositions.setStyleName("tableCpt");
         row = 0;
         addComponent(captionPositions, 2, row, 3, row);
@@ -263,7 +263,7 @@ public class SettingsView extends GridLayout {
                 Label l = new Label();
                 l.setSizeUndefined();
                 l.setValue(positionsContainer.getContainerProperty(itemIds.get(i),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
                 addComponent(l, 2, (i + row));
                 setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
@@ -271,10 +271,10 @@ public class SettingsView extends GridLayout {
                 cb.setNullSelectionAllowed(false);
                 cb.setRequired(true);
                 cb.setData(itemIds.get(i));
-                cb.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+                cb.setRequiredError(myUI.getMessage(Messages.RequiredField));
                 cb.setStyleName(ValoTheme.COMBOBOX_SMALL);
                 cb.setWidth(Settings.PERCENTS100);
-                cb.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+                cb.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
                 cb.setFilteringMode(FilteringMode.CONTAINS);
                 cb.setContainerDataSource(Settings.copyContainer(container));
                 cb.setValue(positionsContainer.getContainerProperty(itemIds.get(i), Settings.hr_position_id).getValue());
@@ -283,7 +283,7 @@ public class SettingsView extends GridLayout {
                         DbPosition dbp = new DbPosition();
                         dbp.connect();
                         if (dbp.exec_update((Integer) cb.getValue(), (Integer) cb.getData()) != 0) {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved));
+                            Notification.show(myUI.getMessage(Messages.ValueSaved));
                         }
                         dbp.close();
                     } catch (Exception e) {
@@ -300,21 +300,21 @@ public class SettingsView extends GridLayout {
         Label captionExams = new Label();
         captionExams.setSizeFull();
         captionExams.setContentMode(ContentMode.HTML);
-        captionExams.setValue(myUI.getMessage(IndigoMessages.ExamsSettings));
+        captionExams.setValue(myUI.getMessage(Messages.ExamsSettings));
         captionExams.setStyleName("tableCpt");
 
         Label sebatExamLab = new Label();
         sebatExamLab.setSizeUndefined();
-        sebatExamLab.setValue(myUI.getMessage(IndigoMessages.SapatExam));
+        sebatExamLab.setValue(myUI.getMessage(Messages.SapatExam));
 
         ComboBox sebatExamCb = new ComboBox();
         sebatExamCb.setNullSelectionAllowed(false);
         sebatExamCb.setRequired(true);
         sebatExamCb.setData(5);
-        sebatExamCb.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        sebatExamCb.setRequiredError(myUI.getMessage(Messages.RequiredField));
         sebatExamCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         sebatExamCb.setWidth(Settings.PERCENTS100);
-        sebatExamCb.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        sebatExamCb.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         sebatExamCb.setFilteringMode(FilteringMode.CONTAINS);
 
         try {

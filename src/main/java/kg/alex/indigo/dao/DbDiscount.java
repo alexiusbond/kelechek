@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.Discount;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,39 +40,39 @@ public class DbDiscount extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Value), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Value), Double.class, 0.0);
         container.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Currency), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Currency), String.class, null);
         container.addContainerProperty(Settings.discount_type_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.DiscountType), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.DiscountType), String.class, null);
         container.addContainerProperty(Settings.year_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Year), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Year), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Status), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
         container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("d.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("d.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Value)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Value)).setValue(
                     result.getDouble("d.amount"));
             item.getItemProperty(Settings.acc_currency_id).setValue(
                     result.getInt("d.acc_currency_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Currency)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Currency)).setValue(
                     result.getString("cur.name"));
             item.getItemProperty(Settings.discount_type_id).setValue(
                     result.getInt("d.discount_type_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.DiscountType)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.DiscountType)).setValue(
                     result.getString("dt.name"));
             item.getItemProperty(Settings.year_id).setValue(
                     result.getInt("d.year_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Year)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Year)).setValue(
                     result.getString("y.name"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("d.activity_status_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Status)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(
                     result.getString("ac.name"));
             item.getItemProperty(Settings.id).setValue(result.getInt("d.id"));
         }
@@ -124,10 +124,10 @@ public class DbDiscount extends BaseDb {
         stat.setInt(1, cur_year);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("d.year_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("y.name"));
         }
         return container;
@@ -161,27 +161,27 @@ public class DbDiscount extends BaseDb {
         }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Amount), Double.class, 0.0);
         container.addContainerProperty(Settings.discount_type_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             if (result.getInt("t.discount_type_id") == 3) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - (max " + result.getString("t.amount") + "%)");
             } else if (result.getInt("t.discount_type_id") == 4) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - (max " + result.getString("t.amount")
                                 + " " + result.getString("cur.name") + ")");
             } else if (result.getInt("t.discount_type_id") == 1) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount") + "%");
             } else if (result.getInt("t.discount_type_id") == 2) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount")
                                 + " " + result.getString("cur.name") + ")");
             }
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(
                     result.getDouble("t.amount"));
             item.getItemProperty(Settings.discount_type_id).setValue(
                     result.getInt("t.discount_type_id"));
@@ -229,34 +229,34 @@ public class DbDiscount extends BaseDb {
         stat.setInt(7, currency_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.DiscountType), Integer.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(Messages.DiscountType), Integer.class, null);
         container.addContainerProperty(Settings.is_order_discount, Boolean.class, false);
         while (result.next()) {
             Item item = container.addItem(result.getInt("d.id"));
             if (result.getInt("d.discount_type_id") == 3) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - (max "
                                 + Settings.dFormat2.format(result.getDouble("amount")) + "%)");
             } else if (result.getInt("d.discount_type_id") == 4) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - (max "
                                 + Settings.dFormat2.format(result.getDouble("amount"))
                                 + " " + result.getString("cur.name") + ")");
             } else if (result.getInt("d.discount_type_id") == 1) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - "
                                 + Settings.dFormat2.format(result.getDouble("amount")) + "%");
             } else if (result.getInt("d.discount_type_id") == 2) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - "
                                 + Settings.dFormat2.format(result.getDouble("amount"))
                                 + " " + result.getString("cur.name"));
             }
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(Settings.round(
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(Settings.round(
                     result.getDouble("amount"), 2));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.DiscountType)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.DiscountType)).setValue(
                     result.getInt("d.discount_type_id"));
             item.getItemProperty(Settings.is_order_discount).setValue(
                     result.getInt("d.discount_unit_id") != 0);

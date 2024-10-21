@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.School;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,54 +34,54 @@ public class DbSchool extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Code), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.TitleKg), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.TitleRu), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.TitleEn), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.SchoolType), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Status), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Code), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.TitleKg), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.TitleRu), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.TitleEn), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.SchoolType), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
         container.addContainerProperty(Settings.school_type_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.City), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Address), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.INN), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Bank), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.BankAccount), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Phone), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Logo), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.City), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Address), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.INN), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Bank), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.BankAccount), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Phone), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Logo), String.class, null);
         container.addContainerProperty(Settings.id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Code)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Code)).setValue(
                     result.getString("s.code"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.TitleKg)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.TitleKg)).setValue(
                     result.getString("s.name_kg"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.TitleRu)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.TitleRu)).setValue(
                     result.getString("s.name_ru"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.TitleEn)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.TitleEn)).setValue(
                     result.getString("s.name_en"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Status)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.SchoolType)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.SchoolType)).setValue(
                     result.getString("t.name"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("s.activity_status_id"));
             item.getItemProperty(Settings.school_type_id).setValue(
                     result.getInt("s.school_type_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.City)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.City)).setValue(
                     result.getString("s.city"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Address)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
                     result.getString("s.address"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.INN)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.INN)).setValue(
                     result.getString("s.inn"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Bank)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Bank)).setValue(
                     result.getString("s.bank"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.BankAccount)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.BankAccount)).setValue(
                     result.getString("s.bank_account"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Phone)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                     result.getString("s.phone"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Logo)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Logo)).setValue(
                     result.getString("s.photo"));
             item.getItemProperty(Settings.id).setValue(result.getInt("s.id"));
         }
@@ -249,23 +249,23 @@ public class DbSchool extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
 
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.TitleKg), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.PrimaryCode), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.SecondaryCode), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Logo), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.TitleKg), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PrimaryCode), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.SecondaryCode), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Logo), String.class, null);
         container.addContainerProperty(Settings.dbSchoolType, Integer.class, 0);
         container.addContainerProperty(Settings.dbAcc_currency, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(result.getString("name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.TitleKg)).setValue(result.getString("s.name_kg"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Code)).setValue(result.getString("s.code"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.PrimaryCode)).setValue(result.getString("s.primary_code"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.SecondaryCode)).setValue(result.getString("s.secondary_code"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Logo)).setValue(result.getString("s.photo"));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(result.getString("name"));
+            item.getItemProperty(myUI.getMessage(Messages.TitleKg)).setValue(result.getString("s.name_kg"));
+            item.getItemProperty(myUI.getMessage(Messages.Code)).setValue(result.getString("s.code"));
+            item.getItemProperty(myUI.getMessage(Messages.PrimaryCode)).setValue(result.getString("s.primary_code"));
+            item.getItemProperty(myUI.getMessage(Messages.SecondaryCode)).setValue(result.getString("s.secondary_code"));
+            item.getItemProperty(myUI.getMessage(Messages.Logo)).setValue(result.getString("s.photo"));
             item.getItemProperty(Settings.dbSchoolType).setValue(result.getInt("s.school_type_id"));
             item.getItemProperty(Settings.dbAcc_currency).setValue(result.getInt("s.acc_currency_id"));
         }
@@ -279,13 +279,13 @@ public class DbSchool extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
 
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(result.getString("name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Code)).setValue(result.getString("s.code"));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(result.getString("name"));
+            item.getItemProperty(myUI.getMessage(Messages.Code)).setValue(result.getString("s.code"));
         }
         return container;
     }

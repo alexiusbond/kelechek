@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.EmployeeLanguage;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -63,14 +63,14 @@ public class DbEmployeeLanguage extends BaseDb {
             String id = result.getString("el.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    edv.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Language)).setValue(
+                    edv.createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(myUI.getMessage(Messages.Language)).setValue(
                     edv.createCombobox(result.getInt("el.hr_language_id"),
-                            myUI.getMessage(IndigoMessages.Language), Settings.dbLanguageTable, true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Level)).setValue(
+                            myUI.getMessage(Messages.Language), Settings.dbLanguageTable, true));
+            item.getItemProperty(myUI.getMessage(Messages.Level)).setValue(
                     edv.createCombobox(result.getInt("el.hr_language_level_id"),
-                            myUI.getMessage(IndigoMessages.Level), Settings.dbLanguageLevelTable, true));
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
+                            myUI.getMessage(Messages.Level), Settings.dbLanguageLevelTable, true));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }

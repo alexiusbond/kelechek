@@ -6,7 +6,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbEmployeeMessage;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,9 +26,9 @@ public class MessagesView extends VerticalLayout {
         setSpacing(true);
         setMargin(true);
         setSizeFull();
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Date),
-                myUI.getMessage(IndigoMessages.OrderNumber), myUI.getMessage(IndigoMessages.Student),
-                myUI.getMessage(IndigoMessages.Discount), myUI.getMessage(IndigoMessages.Status), Settings.button};
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Date),
+                myUI.getMessage(Messages.OrderNumber), myUI.getMessage(Messages.Student),
+                myUI.getMessage(Messages.Discount), myUI.getMessage(Messages.Status), Settings.button};
         buildBody();
     }
 
@@ -56,8 +56,8 @@ public class MessagesView extends VerticalLayout {
             logger.catching(e);
         }
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-        dataTable.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Message), 1);
-        dataTable.setColumnWidth(myUI.getMessage(IndigoMessages.Date), 80);
+        dataTable.setColumnExpandRatio(myUI.getMessage(Messages.Message), 1);
+        dataTable.setColumnWidth(myUI.getMessage(Messages.Date), 80);
         dataTable.setColumnWidth(Settings.button, 60);
         dataTable.setCellStyleGenerator((CustomTable.CellStyleGenerator) (source, itemId, propertyId) -> {
 

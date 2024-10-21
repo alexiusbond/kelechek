@@ -8,7 +8,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.dao.DbStudentContract;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +33,7 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
         mainLay.setMargin(true);
         this.setContent(mainLay);
 
-        excelBtn = new Button(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn = new Button(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -53,9 +53,9 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
             DbStudentContract dbCon = new DbStudentContract();
             dbCon.connect();
             dbCon.execFinancialHistory(myUI, studentId, dataTable);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Debt), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Repayment), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Balance), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Debt), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Repayment), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Balance), Table.Align.RIGHT);
 
             if (dataTable.getContainerDataSource().size() != 0) {
                 excelBtn.setEnabled(true);
@@ -78,7 +78,7 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
                     excelReport.getTotalsRow().getCell(3).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.Balance)));
+                    excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Balance)));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {

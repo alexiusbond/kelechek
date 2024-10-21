@@ -19,7 +19,7 @@ import kg.alex.indigo.dao.DbAccTransactions;
 import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.dao.DbSchool;
 import kg.alex.indigo.domain.SchoolAccounting;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTreeTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
@@ -64,13 +64,13 @@ public class MonthReportOld implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        selectAllIncomesBtn = new Button(myUI.getMessage(IndigoMessages.AllIncomes));
+        selectAllIncomesBtn = new Button(myUI.getMessage(Messages.AllIncomes));
         selectAllIncomesBtn.setWidth(Settings.PERCENTS100);
         selectAllIncomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllIncomesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllIncomesBtn.addClickListener(this);
 
-        deselectAllIncomesBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllIncomesBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllIncomesBtn.setWidth(Settings.PERCENTS100);
         deselectAllIncomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllIncomesBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -90,13 +90,13 @@ public class MonthReportOld implements Button.ClickListener,
         incomeCategoriesTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         incomeCategoriesTable.addValueChangeListener(this);
 
-        selectAllSchoolsBtn = new Button(myUI.getMessage(IndigoMessages.AllSchools));
+        selectAllSchoolsBtn = new Button(myUI.getMessage(Messages.AllSchools));
         selectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         selectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllSchoolsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllSchoolsBtn.addClickListener(this);
 
-        deselectAllSchoolsBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllSchoolsBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         deselectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllSchoolsBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -116,13 +116,13 @@ public class MonthReportOld implements Button.ClickListener,
         schoolsTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         schoolsTable.addValueChangeListener(this);
 
-        selectAllOutcomesBtn = new Button(myUI.getMessage(IndigoMessages.AllOutcomes));
+        selectAllOutcomesBtn = new Button(myUI.getMessage(Messages.AllOutcomes));
         selectAllOutcomesBtn.setWidth(Settings.PERCENTS100);
         selectAllOutcomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllOutcomesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllOutcomesBtn.addClickListener(this);
 
-        deselectAllOutcomesBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllOutcomesBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllOutcomesBtn.setWidth(Settings.PERCENTS100);
         deselectAllOutcomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllOutcomesBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -152,8 +152,8 @@ public class MonthReportOld implements Button.ClickListener,
                 logger.error(e);
                 logger.catching(e);
             }
-            outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(IndigoMessages.Title));
-            incomeCategoriesTable.setVisibleColumns(myUI.getMessage(IndigoMessages.Title));
+            outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
+            incomeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
         }
         try {
             DbSchool dbs = new DbSchool();
@@ -164,9 +164,9 @@ public class MonthReportOld implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
+        schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -174,7 +174,7 @@ public class MonthReportOld implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -182,20 +182,20 @@ public class MonthReportOld implements Button.ClickListener,
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        fromDateDF = new DateField(myUI.getMessage(IndigoMessages.FromDate));
+        fromDateDF = new DateField(myUI.getMessage(Messages.FromDate));
         fromDateDF.setRequired(true);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
-        fromDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setResolution(Resolution.MONTH);
         fromDateDF.setDateFormat(Settings.yearMonthPattern);
         fromDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new DateField(myUI.getMessage(IndigoMessages.TillDate));
+        tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setRequired(true);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
-        tillDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setResolution(Resolution.MONTH);
         tillDateDF.setDateFormat(Settings.yearMonthPattern);
@@ -207,13 +207,13 @@ public class MonthReportOld implements Button.ClickListener,
         tillDate.setTime(tillDateDF.getValue());
         tillDate.set(Calendar.DAY_OF_MONTH, tillDate.getActualMaximum(Calendar.DAY_OF_MONTH));
 
-        cashBoxSelect = new ComboBox(myUI.getMessage(IndigoMessages.CashBox));
+        cashBoxSelect = new ComboBox(myUI.getMessage(Messages.CashBox));
         cashBoxSelect.setNullSelectionAllowed(false);
         cashBoxSelect.setRequired(true);
         cashBoxSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cashBoxSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        cashBoxSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         cashBoxSelect.setWidth(Settings.PERCENTS100);
-        cashBoxSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        cashBoxSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         cashBoxSelect.setFilteringMode(FilteringMode.CONTAINS);
         cashBoxSelect.addValueChangeListener(this);
         try {
@@ -258,7 +258,7 @@ public class MonthReportOld implements Button.ClickListener,
         rightLayout.setImmediate(true);
 
         incomesDataTable = new FormattedTreeTable(myUI);
-        incomesDataTable.setCaption(myUI.getMessage(IndigoMessages.Incomes));
+        incomesDataTable.setCaption(myUI.getMessage(Messages.Incomes));
         incomesDataTable.setFooterVisible(true);
         incomesDataTable.setSizeFull();
         incomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -267,7 +267,7 @@ public class MonthReportOld implements Button.ClickListener,
         incomesDataTable.addStyleName("noWrapFooter");
 
         outcomesDataTable = new FormattedTreeTable(myUI);
-        outcomesDataTable.setCaption(myUI.getMessage(IndigoMessages.Expenses));
+        outcomesDataTable.setCaption(myUI.getMessage(Messages.Expenses));
         outcomesDataTable.setFooterVisible(true);
         outcomesDataTable.setSizeFull();
         outcomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -334,32 +334,32 @@ public class MonthReportOld implements Button.ClickListener,
                                     if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                                         catIds.addAll((Set<Integer>) outcomeCategoriesTable.getValue());
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                        nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue()
+                                                        nextSchool, myUI.getMessage(Messages.Title)).getValue()
                                                         + " - " + Settings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                        nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue()
-                                                        + " - " + myUI.getMessage(IndigoMessages.Total),
+                                                        nextSchool, myUI.getMessage(Messages.Title)).getValue()
+                                                        + " - " + myUI.getMessage(Messages.Total),
                                                 Table.Align.RIGHT);
                                     }
                                     if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                                         catIds.addAll((Set<Integer>) incomeCategoriesTable.getValue());
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                        nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue()
+                                                        nextSchool, myUI.getMessage(Messages.Title)).getValue()
                                                         + " - " + Settings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                        nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue()
-                                                        + " - " + myUI.getMessage(IndigoMessages.Total),
+                                                        nextSchool, myUI.getMessage(Messages.Title)).getValue()
+                                                        + " - " + myUI.getMessage(Messages.Total),
                                                 Table.Align.RIGHT);
                                         SchoolAccounting scAcc = dbTr.exec_get_totals((Integer) nextSchool, 2, 2, current.getTime(),
                                                 tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                         incomesDataTable.setColumnFooter(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue() + " - "
-                                                + Settings.ymdf.format(current.getTime()), myUI.getMessage(IndigoMessages.PreviousBalance) + " ("
+                                                nextSchool, myUI.getMessage(Messages.Title)).getValue() + " - "
+                                                + Settings.ymdf.format(current.getTime()), myUI.getMessage(Messages.PreviousBalance) + " ("
                                                 + Settings.df.format(prev_date.getTime()) + "): " + Settings.dFormat2.format(scAcc.getPrevious_balance())
-                                                + "; " + myUI.getMessage(IndigoMessages.Total) + ": " + incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(IndigoMessages.Title)).getValue() + " - "
+                                                + "; " + myUI.getMessage(Messages.Total) + ": " + incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
+                                                nextSchool, myUI.getMessage(Messages.Title)).getValue() + " - "
                                                 + Settings.ymdf.format(current.getTime())));
                                     }
                                 }
@@ -367,16 +367,16 @@ public class MonthReportOld implements Button.ClickListener,
                                     SchoolAccounting scAcc = dbTr.exec_get_totals(myUI.getUser().getSchool().getId(), 2, 2, current.getTime(),
                                             tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
-                                            Settings.ymdf.format(current.getTime()), myUI.getMessage(IndigoMessages.PreviousBalance) + " ("
+                                            Settings.ymdf.format(current.getTime()), myUI.getMessage(Messages.PreviousBalance) + " ("
                                                     + Settings.df.format(prev_date.getTime()) + ") - " + Settings.dFormat2.format(scAcc.getPrevious_balance())
-                                                    + "; " + myUI.getMessage(IndigoMessages.Total) + " - " + incomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())));
+                                                    + "; " + myUI.getMessage(Messages.Total) + " - " + incomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())));
                                     incomesDataTable.setColumnAlignment(Settings.ymdf.format(current.getTime()), Table.Align.RIGHT);
                                     outcomesDataTable.setColumnAlignment(Settings.ymdf.format(current.getTime()), Table.Align.RIGHT);
                                 }
                                 current.add(Calendar.MONTH, 1);
                             }
-                            incomesDataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Total) + "", Table.Align.RIGHT);
-                            outcomesDataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Total) + "", Table.Align.RIGHT);
+                            incomesDataTable.setColumnAlignment(myUI.getMessage(Messages.Total) + "", Table.Align.RIGHT);
+                            outcomesDataTable.setColumnAlignment(myUI.getMessage(Messages.Total) + "", Table.Align.RIGHT);
                             dbTr.close();
                         } catch (Exception e) {
                             logger.error(e);
@@ -392,7 +392,7 @@ public class MonthReportOld implements Button.ClickListener,
                         && !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     if (incomesDataTable.getContainerDataSource().size() != 0
                             && outcomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(IndigoMessages.Incomes));
+                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(Messages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -406,7 +406,7 @@ public class MonthReportOld implements Button.ClickListener,
                             excelReport.getTotalsRow().getCell(i).setCellValue(incomesDataTable.getColumnFooter(next));
                             i++;
                         }
-                        excelReport.setNextTable(outcomesDataTable, myUI.getMessage(IndigoMessages.Expenses));
+                        excelReport.setNextTable(outcomesDataTable, myUI.getMessage(Messages.Expenses));
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -423,7 +423,7 @@ public class MonthReportOld implements Button.ClickListener,
                         excelReport.sendConverted();
                     } else if (incomesDataTable.getContainerDataSource().size() != 0
                             && outcomesDataTable.getContainerDataSource().size() == 0) {
-                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(IndigoMessages.Incomes));
+                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(Messages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -440,7 +440,7 @@ public class MonthReportOld implements Button.ClickListener,
                         excelReport.sendConverted();
                     } else if (incomesDataTable.getContainerDataSource().size() == 0
                             && outcomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(IndigoMessages.Expenses));
+                        excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(Messages.Expenses));
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -458,7 +458,7 @@ public class MonthReportOld implements Button.ClickListener,
                     }
                 } else if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     if (outcomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(IndigoMessages.Expenses));
+                        excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(Messages.Expenses));
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -476,7 +476,7 @@ public class MonthReportOld implements Button.ClickListener,
                     }
                 } else if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                     if (incomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(IndigoMessages.Incomes));
+                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(Messages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -527,8 +527,8 @@ public class MonthReportOld implements Button.ClickListener,
                     logger.error(e);
                     logger.catching(e);
                 }
-                outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(IndigoMessages.Title));
-                incomeCategoriesTable.setVisibleColumns(myUI.getMessage(IndigoMessages.Title));
+                outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
+                incomeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
             } else {
                 outcomeCategoriesTable.getContainerDataSource().removeAllItems();
                 incomeCategoriesTable.getContainerDataSource().removeAllItems();

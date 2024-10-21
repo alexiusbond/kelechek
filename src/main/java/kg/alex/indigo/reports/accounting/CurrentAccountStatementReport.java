@@ -18,7 +18,7 @@ import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.dao.DbSchool;
 import kg.alex.indigo.domain.School;
 import kg.alex.indigo.domain.StudentInfoPdf;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.pdf.CurrentAccountStatementPdf;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTable;
@@ -76,9 +76,9 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(IndigoMessages.Title));
+        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -86,7 +86,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         pdfBtn = new Button();
-        pdfBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
+        pdfBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
         pdfBtn.setWidth(Settings.PERCENTS100);
         pdfBtn.setEnabled(false);
         pdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -95,7 +95,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         pdfBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -103,31 +103,31 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        fromDateDF = new DateField(myUI.getMessage(IndigoMessages.FromDate));
+        fromDateDF = new DateField(myUI.getMessage(Messages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setRequired(true);
-        fromDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new DateField(myUI.getMessage(IndigoMessages.TillDate));
+        tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setRequired(true);
-        tillDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
-        currencySelect = new ComboBox(myUI.getMessage(IndigoMessages.Currency));
+        currencySelect = new ComboBox(myUI.getMessage(Messages.Currency));
         currencySelect.setNullSelectionAllowed(false);
         currencySelect.setRequired(true);
         currencySelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        currencySelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        currencySelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         currencySelect.setWidth(Settings.PERCENTS100);
-        currencySelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        currencySelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         currencySelect.setFilteringMode(FilteringMode.CONTAINS);
         currencySelect.addValueChangeListener(this);
         try {
@@ -178,10 +178,10 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                     dbat.exec_current_account_statement(myUI, (Integer) employeeCategoriesTable.getValue(), fromDateDF.getValue(),
                             tillDateDF.getValue(), dataTable, (Integer) currencySelect.getValue(), myUI.getUser().getSchool().getId());
 
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Rate), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Accrual), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Payout), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Balance), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Rate), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Accrual), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Payout), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Balance), Table.Align.RIGHT);
                     if (dataTable.getContainerDataSource().size() != 0) {
                         pdfBtn.setEnabled(true);
                         excelBtn.setEnabled(true);
@@ -202,11 +202,11 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                 if (school != null && school.getAddress() != null) {
                     new CurrentAccountStatementPdf(myUI, dataTable,
                             employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
-                                    myUI.getMessage(IndigoMessages.Title)).getValue().toString(),
+                                    myUI.getMessage(Messages.Title)).getValue().toString(),
                             currencySelect.getItemCaption(currencySelect.getValue()),
                             fromDateDF.getValue(), tillDateDF.getValue(), school);
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.FillSchoolInfo),
+                    Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -218,15 +218,15 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
-                            myUI.getMessage(IndigoMessages.Title)).getValue()
+                            myUI.getMessage(Messages.Title)).getValue()
                             + "( " + currencySelect.getItemCaption(currencySelect.getValue()) + ") "
-                            + myUI.getMessage(IndigoMessages.From) + " " + Settings.df.format(fromDateDF.getValue()) + " "
-                            + myUI.getMessage(IndigoMessages.To) + " " + Settings.df.format(tillDateDF.getValue()));
+                            + myUI.getMessage(Messages.From) + " " + Settings.df.format(fromDateDF.getValue()) + " "
+                            + myUI.getMessage(Messages.To) + " " + Settings.df.format(tillDateDF.getValue()));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
                     excelReport.getTotalsRow().getCell(3).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.Balance)));
+                    excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Balance)));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {

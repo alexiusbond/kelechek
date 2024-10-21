@@ -19,7 +19,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.Attachment;
 import kg.alex.indigo.domain.EmployeeExam;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -78,9 +78,9 @@ public class DbEmployeeExam extends BaseDb {
         while (result.next()) {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
-            item.getItemProperty(Settings.button).setValue(edv.createButton(myUI.getMessage(IndigoMessages.DeleteButton),
+            item.getItemProperty(Settings.button).setValue(edv.createButton(myUI.getMessage(Messages.DeleteButton),
                     id, Settings.dbEmployeeExams, FontAwesome.MINUS_SQUARE));
-            ComboBox cb = edv.createCombobox(0, myUI.getMessage(IndigoMessages.Exam), null, true);
+            ComboBox cb = edv.createCombobox(0, myUI.getMessage(Messages.Exam), null, true);
             try {
                 DbExam dbe = new DbExam();
                 dbe.connect();
@@ -91,12 +91,12 @@ public class DbEmployeeExam extends BaseDb {
                 logger.catching(ex);
             }
             cb.setValue(result.getInt("ex.hr_exam_id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Exam)).setValue(cb);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Score)).setValue(
-                    edv.createTextField(result.getString("ex.score"), myUI.getMessage(IndigoMessages.Score),
-                            new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 10, false), true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.IssueDate)).setValue(edv.createDateField(result.getDate("ex.date_of_issue"),
-                    myUI.getMessage(IndigoMessages.IssueDate), null, true, Settings.datePattern, Resolution.DAY));
+            item.getItemProperty(myUI.getMessage(Messages.Exam)).setValue(cb);
+            item.getItemProperty(myUI.getMessage(Messages.Score)).setValue(
+                    edv.createTextField(result.getString("ex.score"), myUI.getMessage(Messages.Score),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), 1, 10, false), true));
+            item.getItemProperty(myUI.getMessage(Messages.IssueDate)).setValue(edv.createDateField(result.getDate("ex.date_of_issue"),
+                    myUI.getMessage(Messages.IssueDate), null, true, Settings.datePattern, Resolution.DAY));
 
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
@@ -106,7 +106,7 @@ public class DbEmployeeExam extends BaseDb {
             a.setUnique_name(result.getString("a.unique_name"));
             a.setExtension(result.getString("a.extension"));
             a.setName(result.getString("a.name"));
-            Button b = edv.createButton(myUI.getMessage(IndigoMessages.DownLoad), id, Settings.download_button, FontAwesome.DOWNLOAD);
+            Button b = edv.createButton(myUI.getMessage(Messages.DownLoad), id, Settings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setData(a);
             hl.addComponent(b);
@@ -115,8 +115,8 @@ public class DbEmployeeExam extends BaseDb {
             upload.setId(id);
             upload.setData(b);
             hl.addComponent(upload);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Document)).setValue(hl);
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
+            item.getItemProperty(myUI.getMessage(Messages.Document)).setValue(hl);
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
@@ -129,15 +129,15 @@ public class DbEmployeeExam extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Exam), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Score), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.IssueDate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Exam), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Score), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.IssueDate), String.class, null);
         while (result.next()) {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Exam)).setValue(result.getString("e.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Score)).setValue(result.getString("ex.score"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.IssueDate)).setValue(Settings.df.format(result.getDate("ex.date_of_issue")));
+            item.getItemProperty(myUI.getMessage(Messages.Exam)).setValue(result.getString("e.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Score)).setValue(result.getString("ex.score"));
+            item.getItemProperty(myUI.getMessage(Messages.IssueDate)).setValue(Settings.df.format(result.getDate("ex.date_of_issue")));
         }
         return container;
     }

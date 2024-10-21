@@ -13,7 +13,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.EmployeeChildren;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 
 import java.sql.*;
@@ -86,26 +86,26 @@ public class DbEmployeeChildren extends BaseDb {
             String id = result.getString("ech.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    edv.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.FullName)).setValue(
+                    edv.createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(myUI.getMessage(Messages.FullName)).setValue(
                     edv.createTextField(result.getString("ech.fullname"),
-                            myUI.getMessage(IndigoMessages.FullName),
-                            new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true), true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.DateOfBirth)).setValue(
+                            myUI.getMessage(Messages.FullName),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), true));
+            item.getItemProperty(myUI.getMessage(Messages.DateOfBirth)).setValue(
                     edv.createDateField(result.getDate("ech.date_of_birth"),
-                            myUI.getMessage(IndigoMessages.DateOfBirth), null,
+                            myUI.getMessage(Messages.DateOfBirth), null,
                             true, Settings.datePattern, Resolution.DAY));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Institution)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Institution)).setValue(
                     edv.createTextField(result.getString("ech.institution"),
-                            myUI.getMessage(IndigoMessages.Institution),
-                            new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 300, true), false));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.EducationStatus)).setValue(
+                            myUI.getMessage(Messages.Institution),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 300, true), false));
+            item.getItemProperty(myUI.getMessage(Messages.EducationStatus)).setValue(
                     edv.createCombobox(result.getInt("ech.hr_education_status_id"),
-                            myUI.getMessage(IndigoMessages.EducationStatus), Settings.dbHrEducationStatus, false));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.HealthStatus)).setValue(
+                            myUI.getMessage(Messages.EducationStatus), Settings.dbHrEducationStatus, false));
+            item.getItemProperty(myUI.getMessage(Messages.HealthStatus)).setValue(
                     edv.createCombobox(result.getInt("ech.hr_health_status_id"),
-                            myUI.getMessage(IndigoMessages.HealthStatus), Settings.dbHealthStatus, true));
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
+                            myUI.getMessage(Messages.HealthStatus), Settings.dbHealthStatus, true));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
@@ -121,19 +121,19 @@ public class DbEmployeeChildren extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.FullName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.DateOfBirth), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Institution), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.HealthStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.DateOfBirth), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Institution), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.EducationStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.HealthStatus), String.class, null);
         while (result.next()) {
             String id = result.getString("ech.id");
             Item item = container.addItem(id);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.FullName)).setValue(result.getString("ech.fullname"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.DateOfBirth)).setValue(Settings.df.format(result.getDate("ech.date_of_birth")));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Institution)).setValue(result.getString("ech.institution"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.EducationStatus)).setValue(result.getString("es.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.HealthStatus)).setValue(result.getString("h.name"));
+            item.getItemProperty(myUI.getMessage(Messages.FullName)).setValue(result.getString("ech.fullname"));
+            item.getItemProperty(myUI.getMessage(Messages.DateOfBirth)).setValue(Settings.df.format(result.getDate("ech.date_of_birth")));
+            item.getItemProperty(myUI.getMessage(Messages.Institution)).setValue(result.getString("ech.institution"));
+            item.getItemProperty(myUI.getMessage(Messages.EducationStatus)).setValue(result.getString("es.name"));
+            item.getItemProperty(myUI.getMessage(Messages.HealthStatus)).setValue(result.getString("h.name"));
         }
         return container;
     }

@@ -8,7 +8,7 @@ package kg.alex.indigo.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,12 +27,12 @@ public class DbSalaryCategories extends BaseDb {
         ResultSet result = stat.executeQuery();
 
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("c.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(result.getString("c.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Code)).setValue(result.getString("code"));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Code)).setValue(result.getString("code"));
         }
         return container;
     }
@@ -46,12 +46,12 @@ public class DbSalaryCategories extends BaseDb {
         ResultSet result = stat.executeQuery();
 
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("c.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(result.getString("sc.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Code)).setValue(result.getString("code"));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(result.getString("sc.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Code)).setValue(result.getString("code"));
         }
         return container;
     }

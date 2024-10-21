@@ -10,7 +10,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbRelative;
 import kg.alex.indigo.domain.StudentInfoPdf;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.utils.Decliner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -680,28 +680,28 @@ public class ContractSchoolPdf_2024_ru {
                     Object obj = iter.next();
                     if ((Integer) obj == 1) {
                         f_name = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(IndigoMessages.FullName)).getValue().toString();
+                                myUI.getMessage(Messages.FullName)).getValue().toString();
                         f_work_place = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(IndigoMessages.WorkPlace)).getValue().toString();
+                                myUI.getMessage(Messages.WorkPlace)).getValue().toString();
                     }
                     if ((Integer) obj == 2) {
                         m_name = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(IndigoMessages.FullName)).getValue().toString();
+                                myUI.getMessage(Messages.FullName)).getValue().toString();
                         m_work_place = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(IndigoMessages.WorkPlace)).getValue().toString();
+                                myUI.getMessage(Messages.WorkPlace)).getValue().toString();
 
                     }
                     if ((Integer) relativeCont.getContainerProperty(obj,
                             Settings.is_main).getValue() == 1) {
                         text18.add(new Phrase("Контактный тел: ", ordFont));
                         text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(IndigoMessages.Phone)).getValue().toString(), ordFont));
+                                myUI.getMessage(Messages.Phone)).getValue().toString(), ordFont));
                         text18.add(Chunk.NEWLINE);
                         text18.add(new Phrase("Адрес места жительства: ", ordFont));
                         text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(IndigoMessages.Address)).getValue().toString(), ordFont));
+                                myUI.getMessage(Messages.Address)).getValue().toString(), ordFont));
                         passport = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(IndigoMessages.Passport)).getValue().toString();
+                                myUI.getMessage(Messages.Passport)).getValue().toString();
                     }
                 }
                 text11.add(new Phrase("Ф.И.О. отца: " + f_name, ordFont));
@@ -797,9 +797,9 @@ public class ContractSchoolPdf_2024_ru {
                 for (Object obj : instPlanCont.getItemIds()) {
                     TContract.addCell(new Phrase(n + "", ordFont));
                     TContract.addCell(new Phrase(Settings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(IndigoMessages.Date)).getValue()).getValue()), ordFont));
+                            myUI.getMessage(Messages.Date)).getValue()).getValue()), ordFont));
                     TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(IndigoMessages.Amount)).getValue()).getValue(), ordFont));
+                            myUI.getMessage(Messages.Amount)).getValue()).getValue(), ordFont));
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("", ordFont));
                     n += 1;

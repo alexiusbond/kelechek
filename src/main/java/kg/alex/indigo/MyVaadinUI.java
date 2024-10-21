@@ -16,7 +16,7 @@ import kg.alex.indigo.dao.DbEmployeeMessage;
 import kg.alex.indigo.dao.DbSchool;
 import kg.alex.indigo.dao.DbUserDetails;
 import kg.alex.indigo.domain.UserDetails;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.ViewManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,9 +63,9 @@ public class MyVaadinUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
         r = request;
-        i18nBundle = ResourceBundle.getBundle(IndigoMessages.class.getName(), new Locale("ru"));
+        i18nBundle = ResourceBundle.getBundle(Messages.class.getName(), new Locale("ru"));
 
-        getPage().setTitle(i18nBundle.getString(IndigoMessages.AppTitle));
+        getPage().setTitle(i18nBundle.getString(Messages.AppTitle));
 
         ViewManager viewManager = new ViewManager(this);
         viewManager.switchScreen(LoginScreen.class.getName(), new LoginScreen(this));
@@ -97,7 +97,7 @@ public class MyVaadinUI extends UI {
     @Override
     public void setLocale(Locale locale) {
         super.setLocale(locale);
-        i18nBundle = ResourceBundle.getBundle(IndigoMessages.class.getName(),
+        i18nBundle = ResourceBundle.getBundle(Messages.class.getName(),
                 getLocale());
     }
 

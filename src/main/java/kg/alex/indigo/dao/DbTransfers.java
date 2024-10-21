@@ -17,7 +17,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.SchoolAccounting;
 import kg.alex.indigo.domain.Transfer;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.TransfersView;
 import kg.alex.indigo.utils.FormattedTreeTable;
 import org.apache.logging.log4j.LogManager;
@@ -57,8 +57,8 @@ public class DbTransfers extends BaseDb {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    v.createButton(myUi.getMessage(IndigoMessages.DeleteButton), id, Settings.dbTransfers));
-            ComboBox cb = v.createCombobox(0, myUi.getMessage(IndigoMessages.Category), null,
+                    v.createButton(myUi.getMessage(Messages.DeleteButton), id, Settings.dbTransfers));
+            ComboBox cb = v.createCombobox(0, myUi.getMessage(Messages.Category), null,
                     true, acc_invoice_type_id == 1);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
@@ -70,31 +70,31 @@ public class DbTransfers extends BaseDb {
                 logger.error(e);
                 logger.catching(e);
             }
-            cb.setItemCaptionPropertyId(myUi.getMessage(IndigoMessages.FullName));
+            cb.setItemCaptionPropertyId(myUi.getMessage(Messages.FullName));
             cb.setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Category)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Category)).setValue(cb);
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            cb = v.createCombobox(result.getInt("t.acc_currency_id"), myUi.getMessage(IndigoMessages.Currency), Settings.dbAcc_currency, true, false);
+            cb = v.createCombobox(result.getInt("t.acc_currency_id"), myUi.getMessage(Messages.Currency), Settings.dbAcc_currency, true, false);
             cb.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Currency)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Currency)).setValue(cb);
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             TextField tf = v.createTextFieldWithProperty(
-                    result.getDouble("t.amount"), myUi.getMessage(IndigoMessages.Amount),
-                    new DoubleRangeValidator(myUi.getMessage(IndigoMessages.NotificationWrongValue), null, null),
+                    result.getDouble("t.amount"), myUi.getMessage(Messages.Amount),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), null, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), true);
             tf.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Amount)).setValue(tf);
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(tf);
             tf = v.createTextFieldWithProperty(
-                    result.getDouble("t.currency_rate"), myUi.getMessage(IndigoMessages.Rate),
-                    new DoubleRangeValidator(myUi.getMessage(IndigoMessages.NotificationWrongValue), 0.01, null),
+                    result.getDouble("t.currency_rate"), myUi.getMessage(Messages.Rate),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(4),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Rate)).setValue(tf);
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Note)).setValue(v.createTextField(
-                    result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(IndigoMessages.NotificationWrongValue),
+            item.getItemProperty(myUi.getMessage(Messages.Rate)).setValue(tf);
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(v.createTextField(
+                    result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(Messages.NotificationWrongValue),
                             null, 250, acc_invoice_type_id == 1), acc_invoice_type_id != 1));
-            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(IndigoMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {
                 totalUSD += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
                 totalKGS += result.getDouble("t.amount");
@@ -145,11 +145,11 @@ public class DbTransfers extends BaseDb {
         stat.setDate(3, new java.sql.Date(till_date.getTime()));
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Currency), String.class, "USD");
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Rate), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Currency), String.class, "USD");
+        container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.FullName), String.class, null);
         t.setContainerDataSource(container);
 
         int id = 1;
@@ -157,15 +157,15 @@ public class DbTransfers extends BaseDb {
             Item item;
             if (container.getItem(result.getString("ac.id")) == null) {
                 item = container.addItem(result.getString("ac.id"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(result.getString("category"));
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue("USD");
+                item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(result.getString("category"));
+                item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue("USD");
                 if (result.getInt("t.acc_currency_id") == 1) {
                     if (result.getDouble("t.currency_rate") != 0) {
-                        container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
+                        container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                                 result.getDouble("t.amount") / result.getDouble("t.currency_rate"));
                     }
                 } else {
-                    container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
+                    container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                             result.getDouble("t.amount"));
                 }
                 container.setChildrenAllowed(result.getString("ac.id"), true);
@@ -173,24 +173,24 @@ public class DbTransfers extends BaseDb {
             } else {
                 if (result.getInt("t.acc_currency_id") == 1) {
                     if (result.getDouble("t.currency_rate") != 0) {
-                        container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
-                                (Double) container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(IndigoMessages.Amount)).getValue()
+                        container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
+                                (Double) container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(Messages.Amount)).getValue()
                                         + (result.getDouble("t.amount") / result.getDouble("t.currency_rate")));
                     }
                 } else {
-                    container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
-                            (Double) container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(IndigoMessages.Amount)).getValue()
+                    container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
+                            (Double) container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(Messages.Amount)).getValue()
                                     + result.getDouble("t.amount"));
                 }
             }
             item = container.addItem(Integer.toString(id));
             container.setChildrenAllowed(Integer.toString(id), false);
             container.setParent(Integer.toString(id), result.getString("ac.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue(result.getString("acu.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("t.amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(result.getString("t.note"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.FullName)).setValue(result.getString("fullname"));
+            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(result.getString("acu.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(result.getDouble("t.currency_rate"));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("t.amount"));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(result.getString("t.note"));
+            item.getItemProperty(myUI.getMessage(Messages.FullName)).setValue(result.getString("fullname"));
             id++;
         }
     }

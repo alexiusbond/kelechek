@@ -19,7 +19,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.*;
 import kg.alex.indigo.domain.SchoolAccounting;
 import kg.alex.indigo.domain.StudentInfoPdf;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.pdf.AccountingByDatesPdf;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTable;
@@ -70,13 +70,13 @@ public class DateReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        selectAllIncomesBtn = new Button(myUI.getMessage(IndigoMessages.AllIncomes));
+        selectAllIncomesBtn = new Button(myUI.getMessage(Messages.AllIncomes));
         selectAllIncomesBtn.setWidth(Settings.PERCENTS100);
         selectAllIncomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllIncomesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllIncomesBtn.addClickListener(this);
 
-        deselectAllIncomesBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllIncomesBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllIncomesBtn.setWidth(Settings.PERCENTS100);
         deselectAllIncomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllIncomesBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -96,13 +96,13 @@ public class DateReport implements Button.ClickListener,
         incomeCategoriesTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         incomeCategoriesTable.addValueChangeListener(this);
 
-        selectAllOutcomesBtn = new Button(myUI.getMessage(IndigoMessages.AllOutcomes));
+        selectAllOutcomesBtn = new Button(myUI.getMessage(Messages.AllOutcomes));
         selectAllOutcomesBtn.setWidth(Settings.PERCENTS100);
         selectAllOutcomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllOutcomesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllOutcomesBtn.addClickListener(this);
 
-        deselectAllOutcomesBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllOutcomesBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllOutcomesBtn.setWidth(Settings.PERCENTS100);
         deselectAllOutcomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllOutcomesBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -132,10 +132,10 @@ public class DateReport implements Button.ClickListener,
             logger.catching(e);
         }
 
-        outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(IndigoMessages.Title));
-        incomeCategoriesTable.setVisibleColumns(myUI.getMessage(IndigoMessages.Title));
+        outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
+        incomeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -143,7 +143,7 @@ public class DateReport implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -152,7 +152,7 @@ public class DateReport implements Button.ClickListener,
         excelBtn.addClickListener(this);
 
         pdfBtn = new Button();
-        pdfBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
+        pdfBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
         pdfBtn.setWidth(Settings.PERCENTS100);
         pdfBtn.setEnabled(false);
         pdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -160,31 +160,31 @@ public class DateReport implements Button.ClickListener,
         pdfBtn.setIcon(FontAwesome.FILE_PDF_O);
         pdfBtn.addClickListener(this);
 
-        fromDateDF = new DateField(myUI.getMessage(IndigoMessages.FromDate));
+        fromDateDF = new DateField(myUI.getMessage(Messages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setRequired(true);
-        fromDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new DateField(myUI.getMessage(IndigoMessages.TillDate));
+        tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setRequired(true);
-        tillDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
-        cashBoxSelect = new ComboBox(myUI.getMessage(IndigoMessages.CashBox));
+        cashBoxSelect = new ComboBox(myUI.getMessage(Messages.CashBox));
         cashBoxSelect.setNullSelectionAllowed(false);
         cashBoxSelect.setRequired(true);
         cashBoxSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cashBoxSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        cashBoxSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         cashBoxSelect.setWidth(Settings.PERCENTS100);
-        cashBoxSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        cashBoxSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         cashBoxSelect.setFilteringMode(FilteringMode.CONTAINS);
         cashBoxSelect.addValueChangeListener(this);
         try {
@@ -197,7 +197,7 @@ public class DateReport implements Button.ClickListener,
             logger.catching(e);
         }
         Item item = cashBoxSelect.getContainerDataSource().addItem(0);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(myUI.getMessage(IndigoMessages.All));
+        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(myUI.getMessage(Messages.All));
 
         leftGrid.addComponent(cashBoxSelect, 0, 0, 3, 0);
         leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
@@ -225,14 +225,14 @@ public class DateReport implements Button.ClickListener,
         rightLayout.setImmediate(true);
 
         incomesDataTable = new FormattedTable(myUI);
-        incomesDataTable.setCaption(myUI.getMessage(IndigoMessages.Incomes));
+        incomesDataTable.setCaption(myUI.getMessage(Messages.Incomes));
         incomesDataTable.setSizeFull();
         incomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         incomesDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         incomesDataTable.addStyleName("noWrapHeader");
 
         outcomesDataTable = new FormattedTable(myUI);
-        outcomesDataTable.setCaption(myUI.getMessage(IndigoMessages.Expenses));
+        outcomesDataTable.setCaption(myUI.getMessage(Messages.Expenses));
         outcomesDataTable.setSizeFull();
         outcomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         outcomesDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -302,8 +302,8 @@ public class DateReport implements Button.ClickListener,
                             incomesDataTable.setContainerDataSource(dbsc.exec_report_by_date(myUI, 1,
                                     myUI.getUser().getSchool().getId(), (Integer) cashBoxSelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(),
                                     incomeCategoriesTable));
-                            incomesDataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
-                            incomesDataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Rate), Table.Align.RIGHT);
+                            incomesDataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+                            incomesDataTable.setColumnAlignment(myUI.getMessage(Messages.Rate), Table.Align.RIGHT);
                             if (incomesDataTable.getContainerDataSource().size() != 0) {
                                 excelBtn.setEnabled(true);
                                 pdfBtn.setEnabled(true);
@@ -332,8 +332,8 @@ public class DateReport implements Button.ClickListener,
                             outcomesDataTable.setContainerDataSource(dbsc.exec_report_by_date(myUI, 2,
                                     myUI.getUser().getSchool().getId(), (Integer) cashBoxSelect.getValue(),
                                     fromDateDF.getValue(), tillDateDF.getValue(), outcomeCategoriesTable));
-                            outcomesDataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
-                            outcomesDataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Rate), Table.Align.RIGHT);
+                            outcomesDataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+                            outcomesDataTable.setColumnAlignment(myUI.getMessage(Messages.Rate), Table.Align.RIGHT);
                             if (outcomesDataTable.getContainerDataSource().size() != 0) {
                                 excelBtn.setEnabled(true);
                                 pdfBtn.setEnabled(true);
@@ -353,16 +353,16 @@ public class DateReport implements Button.ClickListener,
                                 myUI.getUser().getSchool().getCurrency_id(), (Integer) cashBoxSelect.getValue(),
                                 fromDateDF.getValue(), tillDateDF.getValue(), Settings.convertCollectionToStr(catIds));
 
-                        incomeTtlLab.setValue("<b>" + myUI.getMessage(IndigoMessages.IncomesTotal) + ": " + Settings.dFormat2.format(
+                        incomeTtlLab.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal) + ": " + Settings.dFormat2.format(
                                 schoolAcc.getTotal_income()) + getCurrency() + "</b>");
-                        expenseTtlLab.setValue("<b>" + myUI.getMessage(IndigoMessages.ExpensesTotal) + ": " + Settings.dFormat2.format(
+                        expenseTtlLab.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal) + ": " + Settings.dFormat2.format(
                                 schoolAcc.getTotal_outcome()) + getCurrency() + "</b>");
-                        ttlLab.setValue("<b>" + myUI.getMessage(IndigoMessages.CashBox) + ": " + Settings.dFormat2.format(
+                        ttlLab.setValue("<b>" + myUI.getMessage(Messages.CashBox) + ": " + Settings.dFormat2.format(
                                 (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + getCurrency() + "</b>");
                         Calendar c = Calendar.getInstance();
                         c.setTime(fromDateDF.getValue());
                         c.add(Calendar.DAY_OF_MONTH, -1);
-                        prev_balanceLab.setValue("<b>" + myUI.getMessage(IndigoMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + "): " + Settings.dFormat2.format(
+                        prev_balanceLab.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + "): " + Settings.dFormat2.format(
                                 schoolAcc.getPrevious_balance()) + getCurrency() + "</b>");
                         dbtr.close();
                     } catch (Exception e) {
@@ -416,10 +416,10 @@ public class DateReport implements Button.ClickListener,
                                     row = excelReport.getWorkbook().getSheet(sheet).createRow(++rowNum);
 
                                     Cell cell = row.createCell(1);
-                                    cell.setCellValue(myUI.getMessage(IndigoMessages.Accountant));
+                                    cell.setCellValue(myUI.getMessage(Messages.Accountant));
                                     cell.setCellStyle(style);
                                     cell = row.createCell(5);
-                                    cell.setCellValue(myUI.getMessage(IndigoMessages.Director));
+                                    cell.setCellValue(myUI.getMessage(Messages.Director));
                                     cell.setCellStyle(style);
                                     row = excelReport.getWorkbook().getSheet(sheet).createRow(++rowNum);
                                     row.createCell(1).setCellValue(studentInfo.getAccountant().getSurname() + " "
@@ -435,22 +435,22 @@ public class DateReport implements Button.ClickListener,
                                             new CellRangeAddress(excelReport.getTotalsRow().getRowNum(), excelReport.getTotalsRow().getRowNum(),
                                                     excelReport.getTotalsRow().getFirstCellNum(), excelReport.getTotalsRow().getLastCellNum() - 1));
                                     excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getFirstCellNum()).setCellValue(
-                                            myUI.getMessage(IndigoMessages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + getCurrency() + "\t "
-                                                    + myUI.getMessage(IndigoMessages.ExpensesTotal) + ": " + Settings.dFormat2.format(
+                                            myUI.getMessage(Messages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + getCurrency() + "\t "
+                                                    + myUI.getMessage(Messages.ExpensesTotal) + ": " + Settings.dFormat2.format(
                                                     schoolAcc.getTotal_outcome()) + getCurrency() + "\t "
-                                                    + myUI.getMessage(IndigoMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime())
+                                                    + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime())
                                                     + "): " + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + getCurrency() + "\t "
-                                                    + myUI.getMessage(IndigoMessages.CashBox) + ": " + Settings.dFormat2.format(
+                                                    + myUI.getMessage(Messages.CashBox) + ": " + Settings.dFormat2.format(
                                                     (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + getCurrency() + "\t ");
                                 }
                             }
                         }
                     } else {
-                        Notification.show(myUI.getMessage(IndigoMessages.FillSchoolInfo),
+                        Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NoAccountant),
+                    Notification.show(myUI.getMessage(Messages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
                 if (excelReport != null) {
@@ -477,14 +477,14 @@ public class DateReport implements Button.ClickListener,
                     if (studentInfo.getSchool().getAddress() != null) {
                         new AccountingByDatesPdf(myUI, studentInfo, (IndexedContainer) incomesDataTable.getContainerDataSource(),
                                 (IndexedContainer) outcomesDataTable.getContainerDataSource(),
-                                myUI.getMessage(IndigoMessages.From) + " " + Settings.df.format(fromDateDF.getValue())
-                                        + " " + myUI.getMessage(IndigoMessages.To) + " " + Settings.df.format(tillDateDF.getValue()));
+                                myUI.getMessage(Messages.From) + " " + Settings.df.format(fromDateDF.getValue())
+                                        + " " + myUI.getMessage(Messages.To) + " " + Settings.df.format(tillDateDF.getValue()));
                     } else {
-                        Notification.show(myUI.getMessage(IndigoMessages.FillSchoolInfo),
+                        Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NoAccountant),
+                    Notification.show(myUI.getMessage(Messages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {

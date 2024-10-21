@@ -14,7 +14,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.EmployeeMessage;
 import kg.alex.indigo.domain.OrderMessage;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.SendOrderView;
 import org.tepi.filtertable.FilterTable;
 
@@ -83,48 +83,48 @@ public class DbOrderMessage extends BaseDb {
         }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Employee), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.OrderNumber), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Message), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Student), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Year), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Discount), Integer.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Status), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Employee), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.OrderNumber), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Message), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Student), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Year), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Discount), Integer.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
         container.addContainerProperty(Settings.button, HorizontalLayout.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
         int unread = 0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("em.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Date)).setValue(Settings.df.format(
+            item.getItemProperty(myUi.getMessage(Messages.Date)).setValue(Settings.df.format(
                     result.getDate("om.creation_date")));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Employee)).setValue(result.getString("employee"));
+            item.getItemProperty(myUi.getMessage(Messages.Employee)).setValue(result.getString("employee"));
             if (result.getInt("om.student_id") == 0) {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Student)).setValue(result.getString("student_info"));
+                item.getItemProperty(myUi.getMessage(Messages.Student)).setValue(result.getString("student_info"));
             } else {
-                item.getItemProperty(myUi.getMessage(IndigoMessages.Student)).setValue(result.getString("student"));
+                item.getItemProperty(myUi.getMessage(Messages.Student)).setValue(result.getString("student"));
             }
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Year)).setValue(result.getString("y.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Discount)).setValue(result.getInt("discount"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Message)).setValue(result.getString("om.message"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(result.getString("om.order_title"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.OrderNumber)).setValue(result.getString("om.order_number"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Status)).setValue(result.getString("mst.name"));
+            item.getItemProperty(myUi.getMessage(Messages.Year)).setValue(result.getString("y.name"));
+            item.getItemProperty(myUi.getMessage(Messages.Discount)).setValue(result.getInt("discount"));
+            item.getItemProperty(myUi.getMessage(Messages.Message)).setValue(result.getString("om.message"));
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(result.getString("om.order_title"));
+            item.getItemProperty(myUi.getMessage(Messages.OrderNumber)).setValue(result.getString("om.order_number"));
+            item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(result.getString("mst.name"));
             item.getItemProperty(Settings.status_id).setValue(result.getInt("mst.id"));
             EmployeeMessage employeeMessage = new EmployeeMessage();
             employeeMessage.setId(result.getInt("em.id"));
             employeeMessage.setOrder_message_id(result.getInt("om.id"));
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
-            hl.addComponent(view.createButton(myUi.getMessage(IndigoMessages.DeleteButton),
+            hl.addComponent(view.createButton(myUi.getMessage(Messages.DeleteButton),
                     Settings.actDelete, FontAwesome.BAN, employeeMessage));
             OrderMessage orderMessage = new OrderMessage();
             orderMessage.setTitle(result.getString("om.order_title"));
             orderMessage.setContent(result.getString("om.order_content"));
             orderMessage.setOrder_number(result.getString("om.order_number"));
             orderMessage.setDate(result.getDate("om.creation_date"));
-            hl.addComponent(view.createButton(myUi.getMessage(IndigoMessages.ViewDocument),
+            hl.addComponent(view.createButton(myUi.getMessage(Messages.ViewDocument),
                     Settings.actPdf, FontAwesome.FILE_PDF_O, orderMessage));
             item.getItemProperty(Settings.button).setValue(hl);
             if (result.getInt("mst.id") == 2) {
@@ -133,11 +133,11 @@ public class DbOrderMessage extends BaseDb {
         }
         if (t != null) {
             t.setContainerDataSource(container);
-            t.setColumnAlignment(myUi.getMessage(IndigoMessages.Discount), CustomTable.Align.RIGHT);
-            t.setColumnFooter(myUi.getMessage(IndigoMessages.Title),
-                    myUi.getMessage(IndigoMessages.UnRead) + ": " + unread);
-            t.setColumnFooter(myUi.getMessage(IndigoMessages.Status),
-                    myUi.getMessage(IndigoMessages.Total) + ": " + container.size());
+            t.setColumnAlignment(myUi.getMessage(Messages.Discount), CustomTable.Align.RIGHT);
+            t.setColumnFooter(myUi.getMessage(Messages.Title),
+                    myUi.getMessage(Messages.UnRead) + ": " + unread);
+            t.setColumnFooter(myUi.getMessage(Messages.Status),
+                    myUi.getMessage(Messages.Total) + ": " + container.size());
         }
         return container;
     }

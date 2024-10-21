@@ -17,7 +17,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.Attachment;
 import kg.alex.indigo.domain.Definition;
 import kg.alex.indigo.domain.EmployeeEducation;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -97,27 +97,27 @@ public class DbEmployeeEducation extends BaseDb {
             String id = result.getString("ed.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    edv.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Department)).setValue(
+                    edv.createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(myUI.getMessage(Messages.Department)).setValue(
                     edv.createTextField(result.getString("ed.department"),
-                            myUI.getMessage(IndigoMessages.Department),
-                            new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 250, true), true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Start)).setValue(
+                            myUI.getMessage(Messages.Department),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 250, true), true));
+            item.getItemProperty(myUI.getMessage(Messages.Start)).setValue(
                     edv.createDateField(result.getDate("ed.start_date"),
-                            myUI.getMessage(IndigoMessages.Start), null, true,
+                            myUI.getMessage(Messages.Start), null, true,
                             Settings.yearPattern, Resolution.YEAR));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.End)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.End)).setValue(
                     edv.createDateField(result.getDate("ed.end_date"),
-                            myUI.getMessage(IndigoMessages.End), null, true,
+                            myUI.getMessage(Messages.End), null, true,
                             Settings.yearPattern, Resolution.YEAR));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Country)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Country)).setValue(
                     edv.createCombobox(result.getInt("ed.country_id"),
-                            myUI.getMessage(IndigoMessages.Country), Settings.dbCountry, true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.EduLevel)).setValue(
+                            myUI.getMessage(Messages.Country), Settings.dbCountry, true));
+            item.getItemProperty(myUI.getMessage(Messages.EduLevel)).setValue(
                     edv.createCombobox(result.getInt("ed.education_level_id"),
-                            myUI.getMessage(IndigoMessages.EduLevel), Settings.dbEduLevel, true));
+                            myUI.getMessage(Messages.EduLevel), Settings.dbEduLevel, true));
             final ComboBox cb = edv.createCombobox(result.getInt("ed.hr_university_id"),
-                    myUI.getMessage(IndigoMessages.University), Settings.dbUniversityTable, true);
+                    myUI.getMessage(Messages.University), Settings.dbUniversityTable, true);
             cb.setNewItemsAllowed(true);
             cb.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
                 try {
@@ -128,8 +128,8 @@ public class DbEmployeeEducation extends BaseDb {
                     if (id1 != 0) {
                         for (Object next : container.getItemIds()) {
                             Item item1 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.University)).getValue()).getContainerDataSource()).addItem(id1);
-                            item1.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(newItemCaption);
+                                    myUI.getMessage(Messages.University)).getValue()).getContainerDataSource()).addItem(id1);
+                            item1.getItemProperty(myUI.getMessage(Messages.Title)).setValue(newItemCaption);
                             cb.setValue(id1);
                         }
                     }
@@ -138,7 +138,7 @@ public class DbEmployeeEducation extends BaseDb {
                     logger.catching(e);
                 }
             });
-            item.getItemProperty(myUI.getMessage(IndigoMessages.University)).setValue(cb);
+            item.getItemProperty(myUI.getMessage(Messages.University)).setValue(cb);
 
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
@@ -149,7 +149,7 @@ public class DbEmployeeEducation extends BaseDb {
                 a.setUnique_name(result.getString("a.unique_name"));
                 a.setExtension(result.getString("a.extension"));
                 a.setName(result.getString("a.name"));
-                Button b = edv.createButton(myUI.getMessage(IndigoMessages.DownLoad), id, Settings.download_button, FontAwesome.DOWNLOAD);
+                Button b = edv.createButton(myUI.getMessage(Messages.DownLoad), id, Settings.download_button, FontAwesome.DOWNLOAD);
                 b.setStyleName(ValoTheme.BUTTON_SMALL);
                 b.setData(a);
                 hl.addComponent(b);
@@ -158,9 +158,9 @@ public class DbEmployeeEducation extends BaseDb {
                 upload.setId(id);
                 upload.setData(b);
                 hl.addComponent(upload);
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Document)).setValue(hl);
+                item.getItemProperty(myUI.getMessage(Messages.Document)).setValue(hl);
             }
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
@@ -186,22 +186,22 @@ public class DbEmployeeEducation extends BaseDb {
         stat.setInt(3, own_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.EduLevel), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.EducationalOrganization), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Department), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Country), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Period), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.EduLevel), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.EducationalOrganization), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Department), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Country), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Period), String.class, null);
         while (result.next()) {
             if (own_id == 2 && result.getInt("id") == 0) {
                 continue;
             }
             String id = result.getString("id");
             Item item = container.addItem(id);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Department)).setValue(result.getString("dep"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Period)).setValue(result.getString("period"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Country)).setValue(result.getString("country"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.EducationalOrganization)).setValue(result.getString("org"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.EduLevel)).setValue(result.getString("level"));
+            item.getItemProperty(myUI.getMessage(Messages.Department)).setValue(result.getString("dep"));
+            item.getItemProperty(myUI.getMessage(Messages.Period)).setValue(result.getString("period"));
+            item.getItemProperty(myUI.getMessage(Messages.Country)).setValue(result.getString("country"));
+            item.getItemProperty(myUI.getMessage(Messages.EducationalOrganization)).setValue(result.getString("org"));
+            item.getItemProperty(myUI.getMessage(Messages.EduLevel)).setValue(result.getString("level"));
         }
         return container;
     }

@@ -11,7 +11,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.dao.DbSchool;
 import kg.alex.indigo.dao.DbStudentPayment;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.tableexport.ExcelExport;
 import kg.alex.indigo.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
@@ -50,7 +50,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         leftGrid.setSpacing(true);
         leftGrid.setMargin(new MarginInfo(false, false, false, true));
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth("100%");
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -58,7 +58,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth("100%");
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -66,20 +66,20 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        fromDateDF = new DateField(myUI.getMessage(IndigoMessages.FromDate));
+        fromDateDF = new DateField(myUI.getMessage(Messages.FromDate));
         fromDateDF.setWidth("100%");
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setRequired(true);
-        fromDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new DateField(myUI.getMessage(IndigoMessages.TillDate));
+        tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setWidth("100%");
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setRequired(true);
-        tillDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
@@ -89,17 +89,17 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         typeOG.setNullSelectionAllowed(false);
         typeOG.setWidth("100%");
         typeOG.addValueChangeListener(this);
-        typeOG.addItem(myUI.getMessage(IndigoMessages.AggregatedReport));
-        typeOG.addItem(myUI.getMessage(IndigoMessages.DetailedReport));
-        typeOG.setValue(myUI.getMessage(IndigoMessages.AggregatedReport));
+        typeOG.addItem(myUI.getMessage(Messages.AggregatedReport));
+        typeOG.addItem(myUI.getMessage(Messages.DetailedReport));
+        typeOG.setValue(myUI.getMessage(Messages.AggregatedReport));
 
-        schoolSelect = new ComboBox(myUI.getMessage(IndigoMessages.School));
+        schoolSelect = new ComboBox(myUI.getMessage(Messages.School));
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setRequired(true);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        schoolSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        schoolSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         schoolSelect.setWidth("100%");
-        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
         schoolSelect.addValueChangeListener(this);
         try {
@@ -116,13 +116,13 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         }
         schoolSelect.setVisible(currentUser.hasRole(Settings.rnBank));
 
-        currencySelect = new ComboBox(myUI.getMessage(IndigoMessages.Currency));
+        currencySelect = new ComboBox(myUI.getMessage(Messages.Currency));
         currencySelect.setNullSelectionAllowed(false);
         currencySelect.setRequired(true);
         currencySelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        currencySelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        currencySelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         currencySelect.setWidth("100%");
-        currencySelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        currencySelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         currencySelect.setFilteringMode(FilteringMode.CONTAINS);
         currencySelect.addValueChangeListener(this);
         try {
@@ -169,17 +169,17 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
                 try {
                     DbStudentPayment dbCon = new DbStudentPayment();
                     dbCon.connect();
-                    if (typeOG.getValue().equals(myUI.getMessage(IndigoMessages.DetailedReport))) {
+                    if (typeOG.getValue().equals(myUI.getMessage(Messages.DetailedReport))) {
                         dbCon.execSQL_Payments(myUI, (Integer) currencySelect.getValue(), (Integer) schoolSelect.getValue(),
                                 fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
 
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Rate), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.Rate), Table.Align.RIGHT);
                     } else {
                         dbCon.execSQL_Payments_group_by_date(myUI, (Integer) currencySelect.getValue(), (Integer) schoolSelect.getValue(),
                                 fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.TransactionsQuantity), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.TransactionsQuantity), Table.Align.RIGHT);
                     }
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -194,24 +194,24 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     ExcelExport excelReport = new ExcelExport(dataTable);
-                    excelReport.setReportTitle(typeOG.getValue() + " - [" + myUI.getMessage(IndigoMessages.From).toLowerCase() + " "
+                    excelReport.setReportTitle(typeOG.getValue() + " - [" + myUI.getMessage(Messages.From).toLowerCase() + " "
                             + Settings.df.format(fromDateDF.getValue())
-                            + " " + myUI.getMessage(IndigoMessages.To).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()) + "]");
+                            + " " + myUI.getMessage(Messages.To).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
-                    if (typeOG.getValue().equals(myUI.getMessage(IndigoMessages.DetailedReport))) {
+                    if (typeOG.getValue().equals(myUI.getMessage(Messages.DetailedReport))) {
                         excelReport.getTotalsRow().getCell(1).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(2).setCellFormula(null);
-                        excelReport.getTotalsRow().getCell(2).setCellValue(dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.Amount)));
+                        excelReport.getTotalsRow().getCell(2).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Amount)));
                         excelReport.getTotalsRow().getCell(4).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(5).setCellFormula(null);
-                        excelReport.getTotalsRow().getCell(5).setCellValue(dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.TransactionNumber)));
+                        excelReport.getTotalsRow().getCell(5).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.TransactionNumber)));
                     } else {
                         excelReport.getTotalsRow().getCell(1).setCellFormula(null);
-                        excelReport.getTotalsRow().getCell(1).setCellValue(dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.Amount)));
+                        excelReport.getTotalsRow().getCell(1).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Amount)));
                         excelReport.getTotalsRow().getCell(3).setCellFormula(null);
-                        excelReport.getTotalsRow().getCell(3).setCellValue(dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.TransactionsQuantity)));
+                        excelReport.getTotalsRow().getCell(3).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.TransactionsQuantity)));
                     }
                     excelReport.sendConverted();
                 }

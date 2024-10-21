@@ -12,7 +12,7 @@ import com.vaadin.data.validator.RegexpValidator;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.EmployeePhoneNumber;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -64,16 +64,16 @@ public class DbEmployeePhoneNumber extends BaseDb {
             String id = result.getString("epn.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    edv.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Type)).setValue(
+                    edv.createButton(myUI.getMessage(Messages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(
                     edv.createCombobox(result.getInt("epn.hr_phone_type_id"),
-                            myUI.getMessage(IndigoMessages.Type), Settings.dbPhoneType, true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Number)).setValue(
+                            myUI.getMessage(Messages.Type), Settings.dbPhoneType, true));
+            item.getItemProperty(myUI.getMessage(Messages.Number)).setValue(
                     edv.createTextField(result.getString("epn.number"),
-                            myUI.getMessage(IndigoMessages.Number),
+                            myUI.getMessage(Messages.Number),
                             new RegexpValidator("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s0-9]*$", true,
-                                    myUI.getMessage(IndigoMessages.NotificationWrongValue)), true));
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
+                                    myUI.getMessage(Messages.NotificationWrongValue)), true));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }

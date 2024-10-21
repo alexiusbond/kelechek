@@ -18,7 +18,7 @@ import kg.alex.indigo.dao.DbClassName;
 import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.dao.DbLeavingReasons;
 import kg.alex.indigo.dao.DbStudentOrder;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
@@ -49,17 +49,17 @@ public class OutOfList implements Button.ClickListener,
         buildLeftPanel();
         buildRightLayout();
         NATURAL_COL_ORDER = new String[]{
-                myUI.getMessage(IndigoMessages.Id),
-                myUI.getMessage(IndigoMessages.FirstName),
-                myUI.getMessage(IndigoMessages.LastName),
-                myUI.getMessage(IndigoMessages.Year),
-                myUI.getMessage(IndigoMessages.Reasons),
-                myUI.getMessage(IndigoMessages.FromClass),
-                myUI.getMessage(IndigoMessages.ToClass),
-                myUI.getMessage(IndigoMessages.Date),
-                myUI.getMessage(IndigoMessages.Net),
-                myUI.getMessage(IndigoMessages.Paid),
-                myUI.getMessage(IndigoMessages.Left)};
+                myUI.getMessage(Messages.Id),
+                myUI.getMessage(Messages.FirstName),
+                myUI.getMessage(Messages.LastName),
+                myUI.getMessage(Messages.Year),
+                myUI.getMessage(Messages.Reasons),
+                myUI.getMessage(Messages.FromClass),
+                myUI.getMessage(Messages.ToClass),
+                myUI.getMessage(Messages.Date),
+                myUI.getMessage(Messages.Net),
+                myUI.getMessage(Messages.Paid),
+                myUI.getMessage(Messages.Left)};
     }
 
     private void buildLeftPanel() {
@@ -68,25 +68,25 @@ public class OutOfList implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelectMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Year));
+        yearSelectMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.Year));
         yearSelectMCB.setRequired(true);
         yearSelectMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-        yearSelectMCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        yearSelectMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelectMCB.setWidth(Settings.PERCENTS100);
-        yearSelectMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        yearSelectMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelectMCB.setFilteringMode(FilteringMode.CONTAINS);
-        yearSelectMCB.setClearButtonCaption(myUI.getMessage(IndigoMessages.Clear));
+        yearSelectMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         yearSelectMCB.setShowSelectAllButton((filter, page) -> true);
-        yearSelectMCB.setSelectAllButtonCaption(myUI.getMessage(IndigoMessages.SelectAll));
+        yearSelectMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
 
-        reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Reasons));
+        reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.Reasons));
         reasonsMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         reasonsMCB.setWidth(Settings.PERCENTS100);
-        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
-        reasonsMCB.setClearButtonCaption(myUI.getMessage(IndigoMessages.Clear));
+        reasonsMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         reasonsMCB.setShowSelectAllButton((filter, page) -> true);
-        reasonsMCB.setSelectAllButtonCaption(myUI.getMessage(IndigoMessages.SelectAll));
+        reasonsMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
 
         try {
             DbDefinition dbd = new DbDefinition();
@@ -104,13 +104,13 @@ public class OutOfList implements Button.ClickListener,
         }
         yearSelectMCB.addValueChangeListener(this);
 
-        selectAllBtn = new Button(myUI.getMessage(IndigoMessages.AllClasses));
+        selectAllBtn = new Button(myUI.getMessage(Messages.AllClasses));
         selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
-        deselectAllBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -137,9 +137,9 @@ public class OutOfList implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        fromClassTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
+        fromClassTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -147,7 +147,7 @@ public class OutOfList implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -196,17 +196,17 @@ public class OutOfList implements Button.ClickListener,
                             myUI.getUser().getSchool().getId(), this);
                     dataTable.setContainerDataSource(dataCont);
                     dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Net), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Paid), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Left), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Net), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Paid), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Left), Table.Align.RIGHT);
 
-                    dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Id),
-                            myUI.getMessage(IndigoMessages.Students) + ": " + dataCont.size());
-                    dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Net),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Id),
+                            myUI.getMessage(Messages.Students) + ": " + dataCont.size());
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Net),
                             Settings.dFormat2.format(nets));
-                    dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Paid),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Paid),
                             Settings.dFormat2.format(paid_amounts));
-                    dataTable.setColumnFooter(myUI.getMessage(IndigoMessages.Left),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Left),
                             Settings.dFormat2.format(nets - paid_amounts));
                     if (dataCont.size() != 0) {
                         excelBtn.setEnabled(true);
@@ -221,11 +221,11 @@ public class OutOfList implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
-                    excelReport.setReportTitle(myUI.getMessage(IndigoMessages.OutOfReport));
+                    excelReport.setReportTitle(myUI.getMessage(Messages.OutOfReport));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(0).setCellValue(dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.Id)));
+                    excelReport.getTotalsRow().getCell(0).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Id)));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {
@@ -260,7 +260,7 @@ public class OutOfList implements Button.ClickListener,
                     reasons.append(", ");
                 }
                 reasons.append(reasonsMCB.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.Title)).getValue());
+                        myUI.getMessage(Messages.Title)).getValue());
                 isFirst = false;
             }
             return reasons.toString();

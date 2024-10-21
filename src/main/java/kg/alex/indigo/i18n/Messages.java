@@ -3,7 +3,7 @@ package kg.alex.indigo.i18n;
 import java.io.Serializable;
 import java.util.ListResourceBundle;
 
-public class IndigoMessages extends ListResourceBundle implements Serializable {
+public class Messages extends ListResourceBundle implements Serializable {
 
     static int ids = 0;
     // Application

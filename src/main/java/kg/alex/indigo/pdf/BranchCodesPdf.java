@@ -12,7 +12,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import kg.alex.indigo.MyVaadinUI;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,7 +57,7 @@ public class BranchCodesPdf {
 
                     document.open();
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(IndigoMessages.Branches), fontBold);
+                    Paragraph spr = new Paragraph(myUI.getMessage(Messages.Branches), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);
@@ -71,8 +71,8 @@ public class BranchCodesPdf {
                     infoTable.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     infoTable.addCell(new Phrase(" №", ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.CourseCode), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Title), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.CourseCode), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.Title), ordFontBold));
 
                     Iterator<?> iter = branchesCont.getItemIds().iterator();
                     int i = 1;
@@ -80,14 +80,14 @@ public class BranchCodesPdf {
                         Object id = iter.next();
                         infoTable.addCell(new Phrase(i + "", tableFont));
                         if (branchesCont.getContainerProperty(id,
-                                myUI.getMessage(IndigoMessages.Code)).getValue() != null) {
+                                myUI.getMessage(Messages.Code)).getValue() != null) {
                             infoTable.addCell(new Phrase(branchesCont.getContainerProperty(id,
-                                    myUI.getMessage(IndigoMessages.Code)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Code)).getValue().toString(), tableFont));
                         } else {
                             infoTable.addCell(new Phrase(" ", tableFont));
                         }
                         infoTable.addCell(new Phrase(branchesCont.getContainerProperty(id,
-                                myUI.getMessage(IndigoMessages.Title)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.Title)).getValue().toString(), tableFont));
                         i++;
                     }
                     document.add(infoTable);

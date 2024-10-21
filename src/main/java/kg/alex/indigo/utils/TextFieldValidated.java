@@ -3,7 +3,7 @@ package kg.alex.indigo.utils;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.TextField;
 import kg.alex.indigo.MyVaadinUI;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 public class TextFieldValidated extends TextField {
 
@@ -36,10 +36,10 @@ public class TextFieldValidated extends TextField {
                     if (value != null
                             && value.toString().startsWith("-")) {
                         throw new Validator.InvalidValueException(
-                                myui.getMessage(IndigoMessages.NotificationWrongValue));
+                                myui.getMessage(Messages.NotificationWrongValue));
                     } else {
                         throw new Validator.InvalidValueException(
-                                myui.getMessage(IndigoMessages.NotificationWrongValue));
+                                myui.getMessage(Messages.NotificationWrongValue));
                     }
                 }
             }

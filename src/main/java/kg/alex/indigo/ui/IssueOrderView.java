@@ -12,7 +12,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.*;
 import kg.alex.indigo.domain.StudentOrder;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,14 +42,14 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         this.myUI = myUI;
 
         String[] STUDENTS_NATURAL_COL_ORDER = new String[]{Settings.button,
-                myUI.getMessage(IndigoMessages.Id), myUI.getMessage(IndigoMessages.FirstName),
-                myUI.getMessage(IndigoMessages.LastName), myUI.getMessage(IndigoMessages.ClassName),
-                myUI.getMessage(IndigoMessages.EducationStatus)};
-        HISTORY_NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(IndigoMessages.Date),
-                myUI.getMessage(IndigoMessages.OrderType), myUI.getMessage(IndigoMessages.FromClass),
-                myUI.getMessage(IndigoMessages.ToClass), myUI.getMessage(IndigoMessages.FromEducationStatus),
-                myUI.getMessage(IndigoMessages.ToEducationStatus), myUI.getMessage(IndigoMessages.Year),
-                myUI.getMessage(IndigoMessages.Reasons)};
+                myUI.getMessage(Messages.Id), myUI.getMessage(Messages.FirstName),
+                myUI.getMessage(Messages.LastName), myUI.getMessage(Messages.ClassName),
+                myUI.getMessage(Messages.EducationStatus)};
+        HISTORY_NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(Messages.Date),
+                myUI.getMessage(Messages.OrderType), myUI.getMessage(Messages.FromClass),
+                myUI.getMessage(Messages.ToClass), myUI.getMessage(Messages.FromEducationStatus),
+                myUI.getMessage(Messages.ToEducationStatus), myUI.getMessage(Messages.Year),
+                myUI.getMessage(Messages.Reasons)};
         buildSettingsLayout();
 
         VerticalLayout tablesLay = new VerticalLayout();
@@ -60,7 +60,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         studentsTable = new FilterTable();
         studentsTable.setFilterDecorator(new MyFilterDecorator(myUI));
         studentsTable.setStyleName(ValoTheme.TABLE_COMPACT);
-        studentsTable.setCaption(myUI.getMessage(IndigoMessages.AllStudents));
+        studentsTable.setCaption(myUI.getMessage(Messages.AllStudents));
         studentsTable.setSizeFull();
         studentsTable.setNullSelectionAllowed(false);
         studentsTable.setMultiSelect(true);
@@ -79,13 +79,13 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
             logger.catching(e);
         }
         studentsTable.setVisibleColumns((Object[]) STUDENTS_NATURAL_COL_ORDER);
-        studentsTable.setColumnFooter(myUI.getMessage(IndigoMessages.EducationStatus),
+        studentsTable.setColumnFooter(myUI.getMessage(Messages.EducationStatus),
                 "total  " + studentsTable.size());
         tablesLay.addComponent(studentsTable);
 
         historyTable = new Table();
         historyTable.setStyleName(ValoTheme.TABLE_COMPACT);
-        historyTable.setCaption(myUI.getMessage(IndigoMessages.OrdersHistory));
+        historyTable.setCaption(myUI.getMessage(Messages.OrdersHistory));
         historyTable.setSizeFull();
         historyTable.setSelectable(false);
         tablesLay.addComponent(historyTable);
@@ -107,32 +107,32 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         settingsLay.setSpacing(true);
         settingsLay.setWidth(Settings.PERCENTS100);
 
-        DateField dateDF = new DateField(myUI.getMessage(IndigoMessages.Date));
+        DateField dateDF = new DateField(myUI.getMessage(Messages.Date));
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
-        dateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        dateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         dateDF.setWidth(Settings.PERCENTS100);
         dateDF.setValue(new Date());
         dateDF.setDateFormat(Settings.datePattern);
         settingsLay.addComponent(dateDF);
 
-        orderSelect = new ComboBox(myUI.getMessage(IndigoMessages.OrderType));
+        orderSelect = new ComboBox(myUI.getMessage(Messages.OrderType));
         orderSelect.setNullSelectionAllowed(false);
         orderSelect.setRequired(true);
-        orderSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        orderSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         orderSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         orderSelect.setWidth(Settings.PERCENTS100);
-        orderSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        orderSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         orderSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(orderSelect);
 
-        classSelect = new ComboBox(myUI.getMessage(IndigoMessages.ClassName));
+        classSelect = new ComboBox(myUI.getMessage(Messages.ClassName));
         classSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         classSelect.setWidth(Settings.PERCENTS100);
-        classSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        classSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         classSelect.setFilteringMode(FilteringMode.CONTAINS);
         classSelect.setRequired(true);
-        classSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        classSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         try {
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
@@ -145,14 +145,14 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         }
         settingsLay.addComponent(classSelect);
 
-        reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Reasons));
+        reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.Reasons));
         reasonsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         reasonsMCB.setWidth(Settings.PERCENTS100);
-        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
-        reasonsMCB.setClearButtonCaption(myUI.getMessage(IndigoMessages.Clear));
+        reasonsMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         reasonsMCB.setShowSelectAllButton((filter, page) -> true);
-        reasonsMCB.setSelectAllButtonCaption(myUI.getMessage(IndigoMessages.SelectAll));
+        reasonsMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         settingsLay.addComponent(reasonsMCB);
 
         try {
@@ -170,7 +170,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
             logger.error(e);
             logger.catching(e);
         }
-        saveBtn = new Button(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn = new Button(myUI.getMessage(Messages.SaveButton));
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         settingsLay.addComponent(saveBtn);
@@ -246,53 +246,53 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                             .setValue(so.getTo_class_id());
                                     studentsTable.getContainerProperty(next, Settings.education_status_id)
                                             .setValue(so.getTo_education_status_id());
-                                    Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(IndigoMessages.ClassName));
-                                    Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(IndigoMessages.EducationStatus));
+                                    Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(Messages.ClassName));
+                                    Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(Messages.EducationStatus));
                                     if (cl_filled != null && !cl_filled.equals("")) {
-                                        studentsTable.setFilterFieldValue(myUI.getMessage(IndigoMessages.ClassName), null);
+                                        studentsTable.setFilterFieldValue(myUI.getMessage(Messages.ClassName), null);
                                         studentsTable.getContainerProperty(next,
-                                                        myUI.getMessage(IndigoMessages.ClassName))
+                                                        myUI.getMessage(Messages.ClassName))
                                                 .setValue(classSelect.getItemCaption(classSelect.getValue()));
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(IndigoMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(IndigoMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(orderSelect.getContainerProperty(orderSelect.getValue(),
-                                                            myUI.getMessage(IndigoMessages.EducationStatus)).getValue());
+                                                            myUI.getMessage(Messages.EducationStatus)).getValue());
                                         }
-                                        studentsTable.setFilterFieldValue(myUI.getMessage(IndigoMessages.ClassName), cl_filled);
+                                        studentsTable.setFilterFieldValue(myUI.getMessage(Messages.ClassName), cl_filled);
                                     } else if (edu_filled != null && !edu_filled.equals("")) {
-                                        studentsTable.setFilterFieldValue(myUI.getMessage(IndigoMessages.EducationStatus), null);
+                                        studentsTable.setFilterFieldValue(myUI.getMessage(Messages.EducationStatus), null);
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(IndigoMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(IndigoMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(orderSelect.getContainerProperty(orderSelect.getValue(),
-                                                            myUI.getMessage(IndigoMessages.EducationStatus)).getValue());
+                                                            myUI.getMessage(Messages.EducationStatus)).getValue());
                                         }
                                         studentsTable.getContainerProperty(next,
-                                                        myUI.getMessage(IndigoMessages.ClassName))
+                                                        myUI.getMessage(Messages.ClassName))
                                                 .setValue(classSelect.getItemCaption(classSelect.getValue()));
-                                        studentsTable.setFilterFieldValue(myUI.getMessage(IndigoMessages.EducationStatus), edu_filled);
+                                        studentsTable.setFilterFieldValue(myUI.getMessage(Messages.EducationStatus), edu_filled);
                                     } else {
                                         studentsTable.getContainerProperty(next,
-                                                        myUI.getMessage(IndigoMessages.ClassName))
+                                                        myUI.getMessage(Messages.ClassName))
                                                 .setValue(classSelect.getItemCaption(classSelect.getValue()));
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(IndigoMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(IndigoMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(orderSelect.getContainerProperty(orderSelect.getValue(),
-                                                            myUI.getMessage(IndigoMessages.EducationStatus)).getValue());
+                                                            myUI.getMessage(Messages.EducationStatus)).getValue());
                                         }
                                     }
                                     dbsc.exec_update_status(so.getStudent_id(), 1, myUI.getUser().getId());
@@ -301,18 +301,18 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                             }
                         }
                         if (counter != 0) {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved) + " " + counter,
+                            Notification.show(myUI.getMessage(Messages.ValueSaved) + " " + counter,
                                     Notification.Type.WARNING_MESSAGE);
                             historyTable.setContainerDataSource(null);
                         }
                         dbso.close();
                         dbsc.close();
                     } else {
-                        Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NotificationNothingIsSelected),
+                    Notification.show(myUI.getMessage(Messages.NotificationNothingIsSelected),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -320,7 +320,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 logger.catching(e);
             }
         } else if (source.getDescription()
-                .equals(myUI.getMessage(IndigoMessages.Details))) {
+                .equals(myUI.getMessage(Messages.Details))) {
             try {
                 selected_student_id = Integer.parseInt(source.getData().toString());
                 DbStudentOrder dbso = new DbStudentOrder();
@@ -328,21 +328,21 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 historyTable.setContainerDataSource(dbso.execSQL(myUI, selected_student_id, this));
                 dbso.close();
                 historyTable.setVisibleColumns((Object[]) HISTORY_NATURAL_COL_ORDER);
-                historyTable.setCaption(myUI.getMessage(IndigoMessages.OrdersHistory) + " - "
+                historyTable.setCaption(myUI.getMessage(Messages.OrdersHistory) + " - "
                         + studentsTable.getContainerProperty(selected_student_id,
-                        myUI.getMessage(IndigoMessages.FirstName)).getValue() + " "
+                        myUI.getMessage(Messages.FirstName)).getValue() + " "
                         + studentsTable.getContainerProperty(selected_student_id,
-                        myUI.getMessage(IndigoMessages.LastName)).getValue());
+                        myUI.getMessage(Messages.LastName)).getValue());
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
             }
         } else if (source.getDescription()
-                .equals(myUI.getMessage(IndigoMessages.DeleteButton))) {
-            ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                    myUI.getMessage(IndigoMessages.ConfirmDeletion),
-                    myUI.getMessage(IndigoMessages.Yes),
-                    myUI.getMessage(IndigoMessages.No),
+                .equals(myUI.getMessage(Messages.DeleteButton))) {
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete(Integer.parseInt(source.getData().toString()));
@@ -399,52 +399,52 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 studentsTable.getContainerProperty(selected_student_id, Settings.education_status_id)
                         .setValue(historyTable.getContainerProperty(
                                 id, Settings.from_education_status_id).getValue());
-                Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(IndigoMessages.ClassName));
-                Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(IndigoMessages.EducationStatus));
+                Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(Messages.ClassName));
+                Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(Messages.EducationStatus));
                 if (cl_filled != null && !cl_filled.equals("")) {
-                    studentsTable.setFilterFieldValue(myUI.getMessage(IndigoMessages.ClassName), null);
+                    studentsTable.setFilterFieldValue(myUI.getMessage(Messages.ClassName), null);
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(IndigoMessages.ClassName))
+                                    myUI.getMessage(Messages.ClassName))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(IndigoMessages.FromClass)).getValue().toString());
+                                    id, myUI.getMessage(Messages.FromClass)).getValue().toString());
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(IndigoMessages.EducationStatus))
+                                    myUI.getMessage(Messages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(IndigoMessages.FromEducationStatus)).getValue().toString());
-                    studentsTable.setFilterFieldValue(myUI.getMessage(IndigoMessages.ClassName), cl_filled);
+                                    id, myUI.getMessage(Messages.FromEducationStatus)).getValue().toString());
+                    studentsTable.setFilterFieldValue(myUI.getMessage(Messages.ClassName), cl_filled);
                 } else if (edu_filled != null && !edu_filled.equals("")) {
-                    studentsTable.setFilterFieldValue(myUI.getMessage(IndigoMessages.EducationStatus), null);
+                    studentsTable.setFilterFieldValue(myUI.getMessage(Messages.EducationStatus), null);
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(IndigoMessages.ClassName))
+                                    myUI.getMessage(Messages.ClassName))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(IndigoMessages.FromClass)).getValue().toString());
+                                    id, myUI.getMessage(Messages.FromClass)).getValue().toString());
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(IndigoMessages.EducationStatus))
+                                    myUI.getMessage(Messages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(IndigoMessages.FromEducationStatus)).getValue().toString());
-                    studentsTable.setFilterFieldValue(myUI.getMessage(IndigoMessages.EducationStatus), edu_filled);
+                                    id, myUI.getMessage(Messages.FromEducationStatus)).getValue().toString());
+                    studentsTable.setFilterFieldValue(myUI.getMessage(Messages.EducationStatus), edu_filled);
                 } else {
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(IndigoMessages.ClassName))
+                                    myUI.getMessage(Messages.ClassName))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(IndigoMessages.FromClass)).getValue().toString());
+                                    id, myUI.getMessage(Messages.FromClass)).getValue().toString());
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(IndigoMessages.EducationStatus))
+                                    myUI.getMessage(Messages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(IndigoMessages.FromEducationStatus)).getValue().toString());
+                                    id, myUI.getMessage(Messages.FromEducationStatus)).getValue().toString());
                 }
 
                 historyTable.getContainerDataSource().removeItem(id);
                 if (historyTable.getContainerDataSource().size() != 0) {
                     historyTable.getContainerProperty(((IndexedContainer) historyTable.getContainerDataSource()).firstItemId(), Settings.button)
-                            .setValue(createButton(myUI.getMessage(IndigoMessages.DeleteButton),
+                            .setValue(createButton(myUI.getMessage(Messages.DeleteButton),
                                     ((IndexedContainer) historyTable.getContainerDataSource())
                                             .firstItemId().toString(), FontAwesome.MINUS));
                 }
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);
@@ -480,7 +480,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                     reasons.append(", ");
                 }
                 reasons.append(reasonsMCB.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.Title)).getValue());
+                        myUI.getMessage(Messages.Title)).getValue());
                 isFirst = false;
             }
             return reasons.toString();

@@ -9,7 +9,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.ComboBox;
 import kg.alex.indigo.MyVaadinUI;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 /**
  * @author alex
@@ -31,7 +31,7 @@ public class ExistsValidator implements Validator {
     @Override
     public void validate(Object value) throws InvalidValueException {
         if (!isValid(value)) {
-            throw new InvalidValueException(myUi.getMessage(IndigoMessages.ExistsNotification));
+            throw new InvalidValueException(myUi.getMessage(Messages.ExistsNotification));
         }
     }
 

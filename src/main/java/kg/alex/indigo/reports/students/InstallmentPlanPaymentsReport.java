@@ -19,7 +19,7 @@ import kg.alex.indigo.dao.*;
 import kg.alex.indigo.domain.StudentContract;
 import kg.alex.indigo.domain.StudentInfoPdf;
 import kg.alex.indigo.domain.StudentPayment;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.pdf.InstallmentPlanPaymentsPdf;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTable;
@@ -66,10 +66,10 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
         this.splitPanel = splitPanel;
         buildLeftPanel();
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Date),
-                myUI.getMessage(IndigoMessages.Rate), myUI.getMessage(IndigoMessages.Amount),
-                myUI.getMessage(IndigoMessages.Currency), myUI.getMessage(IndigoMessages.WhoPaid),
-                myUI.getMessage(IndigoMessages.PaymentCategoryType)};
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Date),
+                myUI.getMessage(Messages.Rate), myUI.getMessage(Messages.Amount),
+                myUI.getMessage(Messages.Currency), myUI.getMessage(Messages.WhoPaid),
+                myUI.getMessage(Messages.PaymentCategoryType)};
     }
 
     private void buildLeftPanel() {
@@ -77,13 +77,13 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDefinition dbd = new DbDefinition();
@@ -100,7 +100,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         classTable = new FilterTable();
         classTable.setFilterDecorator(new MyFilterDecorator(myUI));
         classTable.setStyleName(ValoTheme.TABLE_SMALL);
-        classTable.setCaption(myUI.getMessage(IndigoMessages.AllClasses));
+        classTable.setCaption(myUI.getMessage(Messages.AllClasses));
         classTable.setSizeFull();
         classTable.setNullSelectionAllowed(false);
         classTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
@@ -117,12 +117,12 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
         studentsTable = new FilterTable();
         studentsTable.setFilterDecorator(new MyFilterDecorator(myUI));
         studentsTable.setStyleName(ValoTheme.TABLE_SMALL);
-        studentsTable.setCaption(myUI.getMessage(IndigoMessages.AllStudents));
+        studentsTable.setCaption(myUI.getMessage(Messages.AllStudents));
         studentsTable.setSizeFull();
         studentsTable.setNullSelectionAllowed(false);
         studentsTable.setMultiSelect(false);
@@ -132,17 +132,17 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         studentsTable.setSelectable(true);
         studentsTable.addValueChangeListener(this);
 
-        instPlanCkb = new CheckBox(myUI.getMessage(IndigoMessages.InstallmentPlan));
+        instPlanCkb = new CheckBox(myUI.getMessage(Messages.InstallmentPlan));
         instPlanCkb.setWidth(Settings.PERCENTS100);
         instPlanCkb.setValue(true);
         instPlanCkb.addValueChangeListener(this);
 
-        paymentsCkb = new CheckBox(myUI.getMessage(IndigoMessages.Payments));
+        paymentsCkb = new CheckBox(myUI.getMessage(Messages.Payments));
         paymentsCkb.setWidth(Settings.PERCENTS100);
         paymentsCkb.setValue(false);
         paymentsCkb.addValueChangeListener(this);
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -150,7 +150,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         makePdfBtn = new Button();
-        makePdfBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToPdf));
+        makePdfBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
         makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.setEnabled(false);
         makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -159,7 +159,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         makePdfBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -216,18 +216,18 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                     studInfo.getContractInfo().setPaid(ttl_payment);
                     if (instPlanCkb.getValue()) {
                         studInfo.getContractInfo().setTotalInstallments(
-                                installmentTable.getColumnFooter(myUI.getMessage(IndigoMessages.Amount)));
+                                installmentTable.getColumnFooter(myUI.getMessage(Messages.Amount)));
                     }
                     if (paymentsCkb.getValue()) {
                         studInfo.getContractInfo().setTotalPayments(
-                                paymentsTable.getColumnFooter(myUI.getMessage(IndigoMessages.Amount)));
+                                paymentsTable.getColumnFooter(myUI.getMessage(Messages.Amount)));
                     }
                     studInfo.setYear(yearSelect.getContainerProperty(yearSelect.getValue(),
-                            myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                            myUI.getMessage(Messages.Title)).getValue().toString());
                     makePdfBtn.setEnabled(true);
                     excelBtn.setEnabled(true);
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NoAccountant),
+                    Notification.show(myUI.getMessage(Messages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             }
@@ -236,11 +236,11 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                     new InstallmentPlanPaymentsPdf(myUI, studInfo, installmentCont, paymentsCont);
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.FillSchoolInfo),
+                    Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } else {
-                Notification.show(myUI.getMessage(IndigoMessages.NoAccountant),
+                Notification.show(myUI.getMessage(Messages.NoAccountant),
                         Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == excelBtn) {
@@ -314,7 +314,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         installmentCont = null;
         paymentsCont = null;
         if (instPlanCkb.getValue()) {
-            instCaption = new Label(myUI.getMessage(IndigoMessages.InstallmentPlan));
+            instCaption = new Label(myUI.getMessage(Messages.InstallmentPlan));
             instCaption.setStyleName(ValoTheme.LABEL_LARGE);
 
             installmentTable = new FormattedTable(myUI);
@@ -334,9 +334,9 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 logger.error(e);
                 logger.catching(e);
             }
-            installmentTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
-            installmentTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount),
-                    myUI.getMessage(IndigoMessages.Total) + ": "
+            installmentTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+            installmentTable.setColumnFooter(myUI.getMessage(Messages.Amount),
+                    myUI.getMessage(Messages.Total) + ": "
                             + Settings.dFormat2.format(total_inst) + " " + currency);
             if (!paymentsCkb.getValue()) {
                 rightGrid.addComponent(instCaption, 0, 4, 6, 4);
@@ -354,7 +354,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             rightGrid.setColumnExpandRatio(5, 0.36f);
         }
         if (paymentsCkb.getValue()) {
-            paymentsCaption = new Label(myUI.getMessage(IndigoMessages.Payments));
+            paymentsCaption = new Label(myUI.getMessage(Messages.Payments));
             paymentsCaption.setStyleName(ValoTheme.LABEL_LARGE);
 
             paymentsTable = new FormattedTable(myUI);
@@ -374,8 +374,8 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 logger.error(e);
                 logger.catching(e);
             }
-            paymentsTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
-            paymentsTable.setColumnFooter(myUI.getMessage(IndigoMessages.Amount), myUI.getMessage(IndigoMessages.Total) + ": "
+            paymentsTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+            paymentsTable.setColumnFooter(myUI.getMessage(Messages.Amount), myUI.getMessage(Messages.Total) + ": "
                     + Settings.dFormat2.format(total_pay) + " " + currency);
 
             if (!instPlanCkb.getValue()) {
@@ -396,52 +396,52 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         contractLab = new Label();
         contractLab.setSizeFull();
         contractLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        contractLab.setValue(myUI.getMessage(IndigoMessages.Contract) + ":");
+        contractLab.setValue(myUI.getMessage(Messages.Contract) + ":");
         rightGrid.addComponent(contractLab, 3, 0, 4, 0);
 
         discountLab = new Label();
         discountLab.setSizeFull();
         discountLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        discountLab.setValue(myUI.getMessage(IndigoMessages.Discount) + ":");
+        discountLab.setValue(myUI.getMessage(Messages.Discount) + ":");
         rightGrid.addComponent(discountLab, 3, 1, 4, 1);
 
         correctionLab = new Label();
         correctionLab.setSizeFull();
         correctionLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        correctionLab.setValue(myUI.getMessage(IndigoMessages.Discount) + ":");
+        correctionLab.setValue(myUI.getMessage(Messages.Discount) + ":");
         rightGrid.addComponent(correctionLab, 3, 2, 4, 2);
 
         debtLab = new Label();
         debtLab.setSizeFull();
         debtLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        debtLab.setValue(myUI.getMessage(IndigoMessages.PreviousYearDebt) + ":");
+        debtLab.setValue(myUI.getMessage(Messages.PreviousYearDebt) + ":");
         rightGrid.addComponent(debtLab, 3, 3, 4, 3);
 
         netLab = new Label();
         netLab.setSizeFull();
         netLab.setContentMode(ContentMode.HTML);
         netLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        netLab.setValue(myUI.getMessage(IndigoMessages.Net) + ":");
+        netLab.setValue(myUI.getMessage(Messages.Net) + ":");
         rightGrid.addComponent(netLab, 5, 0, 6, 0);
 
         paidLab = new Label();
         paidLab.setSizeFull();
         paidLab.setContentMode(ContentMode.HTML);
         paidLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        paidLab.setValue(myUI.getMessage(IndigoMessages.Paid) + ":");
+        paidLab.setValue(myUI.getMessage(Messages.Paid) + ":");
         rightGrid.addComponent(paidLab, 5, 1, 6, 1);
 
         leftLab = new Label();
         leftLab.setSizeFull();
         leftLab.setContentMode(ContentMode.HTML);
         leftLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        leftLab.setValue(myUI.getMessage(IndigoMessages.Left) + ":");
+        leftLab.setValue(myUI.getMessage(Messages.Left) + ":");
         rightGrid.addComponent(leftLab, 5, 2, 6, 2);
 
         planDebt = new Label();
         planDebt.setSizeFull();
         planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
-        planDebt.setValue(myUI.getMessage(IndigoMessages.InstPlanDebt) + ":");
+        planDebt.setValue(myUI.getMessage(Messages.InstPlanDebt) + ":");
         rightGrid.addComponent(planDebt, 5, 3, 6, 3);
     }
 
@@ -460,25 +460,25 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             Label loginLab = new Label();
             loginLab.setSizeFull();
             loginLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-            loginLab.setValue(myUI.getMessage(IndigoMessages.Id) + ": " + studInfo.getStudent().getLogin());
+            loginLab.setValue(myUI.getMessage(Messages.Id) + ": " + studInfo.getStudent().getLogin());
             rightGrid.addComponent(loginLab, 1, 0, 2, 0);
 
             Label nameLab = new Label();
             nameLab.setSizeFull();
             nameLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-            nameLab.setValue(myUI.getMessage(IndigoMessages.FirstName) + ": " + studInfo.getStudent().getName());
+            nameLab.setValue(myUI.getMessage(Messages.FirstName) + ": " + studInfo.getStudent().getName());
             rightGrid.addComponent(nameLab, 1, 1, 2, 1);
 
             Label surnameLab = new Label();
             surnameLab.setSizeFull();
             surnameLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-            surnameLab.setValue(myUI.getMessage(IndigoMessages.LastName) + ": " + studInfo.getStudent().getSurname());
+            surnameLab.setValue(myUI.getMessage(Messages.LastName) + ": " + studInfo.getStudent().getSurname());
             rightGrid.addComponent(surnameLab, 1, 2, 2, 2);
 
             Label classLab = new Label();
             classLab.setSizeFull();
             classLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-            classLab.setValue(myUI.getMessage(IndigoMessages.ClassName) + ": " + studInfo.getStudent().getClass_name());
+            classLab.setValue(myUI.getMessage(Messages.ClassName) + ": " + studInfo.getStudent().getClass_name());
             rightGrid.addComponent(classLab, 1, 3, 2, 3);
         }
     }
@@ -521,55 +521,55 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 1) {
                 discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.Amount)).getValue())).append("%");
+                        myUI.getMessage(Messages.Amount)).getValue())).append("%");
                 if (iter.hasNext()) {
                     discounts.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 2) {
                 discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.Amount)).getValue())).append(" ").append(currency);
+                        myUI.getMessage(Messages.Amount)).getValue())).append(" ").append(currency);
                 if (iter.hasNext()) {
                     discounts.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 3) {
                 discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.FreeAmount)).getValue())).append("%");
+                        myUI.getMessage(Messages.FreeAmount)).getValue())).append("%");
                 if (iter.hasNext()) {
                     discounts.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 4) {
                 discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.FreeAmount)).getValue())).append(" ").append(currency);
+                        myUI.getMessage(Messages.FreeAmount)).getValue())).append(" ").append(currency);
                 if (iter.hasNext()) {
                     discounts.append(", ");
                 }
             }
         }
         corrections = c.getCorrectionDetails() == null ? "0.00 " + currency : c.getCorrectionDetails();
-        contractLab.setValue(myUI.getMessage(IndigoMessages.Contract) + ": " + Settings.dFormat2.format(c.getAmount()) + " " + currency);
-        discountLab.setValue(myUI.getMessage(IndigoMessages.Discount) + ": " + discounts.toString());
-        correctionLab.setValue(myUI.getMessage(IndigoMessages.Correction) + ": " + corrections);
+        contractLab.setValue(myUI.getMessage(Messages.Contract) + ": " + Settings.dFormat2.format(c.getAmount()) + " " + currency);
+        discountLab.setValue(myUI.getMessage(Messages.Discount) + ": " + discounts.toString());
+        correctionLab.setValue(myUI.getMessage(Messages.Correction) + ": " + corrections);
         if (debt > 0) {
             debtLab.setStyleName(ValoTheme.LABEL_FAILURE);
         } else {
             debtLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         }
-        debtLab.setValue(myUI.getMessage(IndigoMessages.PreviousYearDebt) + ": " + Settings.dFormat2.format(debt) + " " + currency);
-        netLab.setValue(myUI.getMessage(IndigoMessages.Net) + ": " + Settings.dFormat2.format(c.getContr_with_disc() + debt
+        debtLab.setValue(myUI.getMessage(Messages.PreviousYearDebt) + ": " + Settings.dFormat2.format(debt) + " " + currency);
+        netLab.setValue(myUI.getMessage(Messages.Net) + ": " + Settings.dFormat2.format(c.getContr_with_disc() + debt
                 + c.getCorrection()) + " " + currency);
-        paidLab.setValue(myUI.getMessage(IndigoMessages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + " " + currency);
-        leftLab.setValue(myUI.getMessage(IndigoMessages.Left) + ": " + Settings.dFormat2.format(
+        paidLab.setValue(myUI.getMessage(Messages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + " " + currency);
+        leftLab.setValue(myUI.getMessage(Messages.Left) + ": " + Settings.dFormat2.format(
                 (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection()) + " " + currency);
         if ((c.getPlan_debt() - ttl_payment) > 0) {
             planDebt.setStyleName(ValoTheme.LABEL_FAILURE);
-            planDebt.setValue(myUI.getMessage(IndigoMessages.InstPlanDebt) + ": " + Settings.dFormat2.format(
+            planDebt.setValue(myUI.getMessage(Messages.InstPlanDebt) + ": " + Settings.dFormat2.format(
                     c.getPlan_debt() - ttl_payment + c.getCorrection()) + " " + currency);
         } else {
             planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
-            planDebt.setValue(myUI.getMessage(IndigoMessages.InstPlanDebt) + ": " + Settings.dFormat2.format(0.0) + " " + currency);
+            planDebt.setValue(myUI.getMessage(Messages.InstPlanDebt) + ": " + Settings.dFormat2.format(0.0) + " " + currency);
         }
     }
 }

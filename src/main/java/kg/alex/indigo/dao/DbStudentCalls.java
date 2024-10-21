@@ -10,7 +10,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.reports.students.CallsReport;
 import kg.alex.indigo.ui.StudentDefinitionView;
 
@@ -53,17 +53,17 @@ public class DbStudentCalls extends BaseDb {
             String id = result.getString("sc.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    dw.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id,
+                    dw.createButton(myUI.getMessage(Messages.DeleteButton), id,
                             Settings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format(result.getDate("sc.modification_date")));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WhoCalled)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.WhoCalled)).setValue(
                     result.getString("fullname"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                     dw.createTextFieldNote(result.getString("sc.note"),
-                            myUI.getMessage(IndigoMessages.Note), id));
+                            myUI.getMessage(Messages.Note), id));
             item.getItemProperty(Settings.crud_status)
-                    .setValue(myUI.getMessage(IndigoMessages.Update));
+                    .setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
@@ -104,25 +104,25 @@ public class DbStudentCalls extends BaseDb {
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.WhoCalled), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WhoCalled), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sc.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.FirstName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.LastName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(
                     result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ClassName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                     result.getString("vcs.class_name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                     result.getString("sc.note"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WhoCalled)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.WhoCalled)).setValue(
                     result.getString("fullname"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format((result.getDate("date"))));
             cr.total++;
         }

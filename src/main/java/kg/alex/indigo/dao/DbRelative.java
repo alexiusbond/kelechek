@@ -9,7 +9,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,26 +32,26 @@ public class DbRelative extends BaseDb {
         stat.setInt(1, stud_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.FullName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.WorkPlace), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Phone), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Address), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Passport), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FullName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.WorkPlace), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Phone), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Address), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Passport), String.class, null);
         container.addContainerProperty(Settings.is_main, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("sr.relatives_id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.FullName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.FullName)).setValue(
                     result.getString("sr.fullname"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.WorkPlace)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
                     result.getString("sr.work_place"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Phone)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                     result.getString("sr.phone"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Address)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
                     result.getString("sr.address"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Passport)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                     result.getString("sr.passport"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Phone)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                     result.getString("sr.phone"));
             item.getItemProperty(Settings.is_main).setValue(
                     result.getInt("sr.is_main"));

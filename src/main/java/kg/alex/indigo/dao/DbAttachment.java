@@ -13,7 +13,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.Attachment;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -64,22 +64,22 @@ public class DbAttachment extends BaseDb {
         stat.setInt(3, employee_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Details), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Type), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Details), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Type), String.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
 
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(result.getString("name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Type)).setValue(result.getString("type"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Details)).setValue(result.getString("details"));
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(result.getString("name"));
+            item.getItemProperty(myUi.getMessage(Messages.Type)).setValue(result.getString("type"));
+            item.getItemProperty(myUi.getMessage(Messages.Details)).setValue(result.getString("details"));
             Attachment a = new Attachment();
             a.setId(result.getInt("id"));
             a.setUnique_name(result.getString("unique_name"));
             a.setName(result.getString("name"));
-            com.vaadin.ui.Button b = edv.createButton(myUi.getMessage(IndigoMessages.DownLoad), a.getId() + "",
+            com.vaadin.ui.Button b = edv.createButton(myUi.getMessage(Messages.DownLoad), a.getId() + "",
                     Settings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setData(a);

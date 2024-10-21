@@ -17,7 +17,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbAccCategory;
 import kg.alex.indigo.dao.DbAccTransactions;
 import kg.alex.indigo.dao.DbDefinition;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTreeTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
@@ -74,9 +74,9 @@ public class PayoutsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(IndigoMessages.Title));
+        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -84,7 +84,7 @@ public class PayoutsReport implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -92,29 +92,29 @@ public class PayoutsReport implements Button.ClickListener,
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        fromDateDF = new PopupDateField(myUI.getMessage(IndigoMessages.FromDate));
-        fromDateDF.setInputPrompt(myUI.getMessage(IndigoMessages.AnyDate));
+        fromDateDF = new PopupDateField(myUI.getMessage(Messages.FromDate));
+        fromDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setResolution(Resolution.DAY);
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new PopupDateField(myUI.getMessage(IndigoMessages.TillDate));
-        tillDateDF.setInputPrompt(myUI.getMessage(IndigoMessages.AnyDate));
+        tillDateDF = new PopupDateField(myUI.getMessage(Messages.TillDate));
+        tillDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setResolution(Resolution.DAY);
         tillDateDF.addValueChangeListener(this);
 
-        currencySelect = new ComboBox(myUI.getMessage(IndigoMessages.Currency));
+        currencySelect = new ComboBox(myUI.getMessage(Messages.Currency));
         currencySelect.setNullSelectionAllowed(false);
         currencySelect.setRequired(true);
         currencySelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        currencySelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        currencySelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         currencySelect.setWidth(Settings.PERCENTS100);
-        currencySelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        currencySelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         currencySelect.setFilteringMode(FilteringMode.CONTAINS);
         currencySelect.addValueChangeListener(this);
         try {
@@ -128,13 +128,13 @@ public class PayoutsReport implements Button.ClickListener,
         }
         currencySelect.setValue(2);
 
-        selectAllBtn = new Button(myUI.getMessage(IndigoMessages.AllCategories));
+        selectAllBtn = new Button(myUI.getMessage(Messages.AllCategories));
         selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
-        deselectAllBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -177,9 +177,9 @@ public class PayoutsReport implements Button.ClickListener,
                     dbat.connect();
                     dbat.exec_account_remains(myUI, employeeCategoriesTable, (Integer) currencySelect.getValue(),
                             myUI.getUser().getSchool().getId(), fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Remain), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Salary), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Ratio), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Remain), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Salary), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Ratio), Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -192,15 +192,15 @@ public class PayoutsReport implements Button.ClickListener,
             }
         } else if (source == excelBtn) {
             try {
-                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(IndigoMessages.SalariesReport) + " ("
+                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(Messages.SalariesReport) + " ("
                         + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
-                excelReport.setReportTitle(myUI.getMessage(IndigoMessages.SalariesReport) + " ("
+                excelReport.setReportTitle(myUI.getMessage(Messages.SalariesReport) + " ("
                         + currencySelect.getItemCaption(currencySelect.getValue()) + ") ");
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getLastCellNum() - 1).setCellFormula(null);
                 excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getLastCellNum() - 1).setCellValue(
-                        dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.Ratio)));
+                        dataTable.getColumnFooter(myUI.getMessage(Messages.Ratio)));
                 excelReport.sendConverted();
             } catch (Exception e) {
                 logger.error(e);

@@ -15,7 +15,7 @@ import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.Definition;
 import kg.alex.indigo.domain.EmployeeWork;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,12 +100,12 @@ public class DbEmployeeWork extends BaseDb {
             String id = result.getString("ew.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    edv.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
-            ComboBox cb = edv.createCombobox(0, myUI.getMessage(IndigoMessages.MainPosition),
+                    edv.createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
+            ComboBox cb = edv.createCombobox(0, myUI.getMessage(Messages.MainPosition),
                     null, true);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.MainPosition)).setValue(cb);
+            item.getItemProperty(myUI.getMessage(Messages.MainPosition)).setValue(cb);
             ComboBoxMultiselect cb3 = edv.createComboboxMulti(
-                    myUI.getMessage(IndigoMessages.ExtraPositions), false);
+                    myUI.getMessage(Messages.ExtraPositions), false);
             try {
                 DbDefinition dbDef = new DbDefinition();
                 dbDef.connect();
@@ -122,8 +122,8 @@ public class DbEmployeeWork extends BaseDb {
             if (result.getString("extra_positions") != null) {
                 cb3.setValue(Settings.convertToSet(result.getString("extra_positions")));
             }
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraPositions)).setValue(cb3);
-            cb = edv.createCombobox(0, myUI.getMessage(IndigoMessages.WorkingStatus), null, true);
+            item.getItemProperty(myUI.getMessage(Messages.ExtraPositions)).setValue(cb3);
+            cb = edv.createCombobox(0, myUI.getMessage(Messages.WorkingStatus), null, true);
             try {
                 DbDefinition dbd = new DbDefinition();
                 dbd.connect();
@@ -134,9 +134,9 @@ public class DbEmployeeWork extends BaseDb {
                 logger.catching(e);
             }
             cb.setValue(result.getInt("ew.working_status_id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WorkingStatus)).setValue(cb);
+            item.getItemProperty(myUI.getMessage(Messages.WorkingStatus)).setValue(cb);
             final ComboBox cb2 = edv.createCombobox(result.getInt("ew.hr_work_place_id"),
-                    myUI.getMessage(IndigoMessages.WorkPlace), Settings.dbWork_placeTable, true);
+                    myUI.getMessage(Messages.WorkPlace), Settings.dbWork_placeTable, true);
             cb2.setNewItemsAllowed(true);
             cb2.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
                 try {
@@ -147,8 +147,8 @@ public class DbEmployeeWork extends BaseDb {
                     if (id1 != 0) {
                         for (Object next : container.getItemIds()) {
                             Item item1 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id1);
-                            item1.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(newItemCaption);
+                                    myUI.getMessage(Messages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id1);
+                            item1.getItemProperty(myUI.getMessage(Messages.Title)).setValue(newItemCaption);
                             cb2.setValue(id1);
                         }
                     }
@@ -157,16 +157,16 @@ public class DbEmployeeWork extends BaseDb {
                     logger.catching(e);
                 }
             });
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WorkPlace)).setValue(cb2);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Start)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.WorkPlace)).setValue(cb2);
+            item.getItemProperty(myUI.getMessage(Messages.Start)).setValue(
                     edv.createDateField(result.getDate("ew.start_date"),
-                            myUI.getMessage(IndigoMessages.Start), null, true, Settings.datePattern, Resolution.DAY));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.End)).setValue(
+                            myUI.getMessage(Messages.Start), null, true, Settings.datePattern, Resolution.DAY));
+            item.getItemProperty(myUI.getMessage(Messages.End)).setValue(
                     edv.createDateField(result.getDate("ew.end_date"),
-                            myUI.getMessage(IndigoMessages.End), null, false, Settings.datePattern, Resolution.DAY));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Sapat)).setValue(
-                    edv.createCheckBox(result.getBoolean("ew.is_sapat"), myUI.getMessage(IndigoMessages.Sapat)));
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
+                            myUI.getMessage(Messages.End), null, false, Settings.datePattern, Resolution.DAY));
+            item.getItemProperty(myUI.getMessage(Messages.Sapat)).setValue(
+                    edv.createCheckBox(result.getBoolean("ew.is_sapat"), myUI.getMessage(Messages.Sapat)));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
@@ -186,23 +186,23 @@ public class DbEmployeeWork extends BaseDb {
         stat.setInt(2, own_id);
         ResultSet result = stat.executeQuery();
         final IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.WorkPlace), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Sapat), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.MainPosition), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ExtraPositions), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.WorkingStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Period), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WorkPlace), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Sapat), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.MainPosition), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ExtraPositions), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WorkingStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Period), String.class, null);
 
         while (result.next()) {
             String id = result.getString("ew.id");
             Item item = container.addItem(id);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WorkPlace)).setValue(result.getString("wp.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Sapat)).setValue(result.getInt("ew.is_sapat") == 1 ?
-                    myUI.getMessage(IndigoMessages.Yes) : myUI.getMessage(IndigoMessages.No));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.MainPosition)).setValue(result.getString("p.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraPositions)).setValue(result.getString("extra_positions"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WorkingStatus)).setValue(result.getString("ws.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Period)).setValue("с " + Settings.df.format(result.getDate("ew.start_date"))
+            item.getItemProperty(myUI.getMessage(Messages.WorkPlace)).setValue(result.getString("wp.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Sapat)).setValue(result.getInt("ew.is_sapat") == 1 ?
+                    myUI.getMessage(Messages.Yes) : myUI.getMessage(Messages.No));
+            item.getItemProperty(myUI.getMessage(Messages.MainPosition)).setValue(result.getString("p.name"));
+            item.getItemProperty(myUI.getMessage(Messages.ExtraPositions)).setValue(result.getString("extra_positions"));
+            item.getItemProperty(myUI.getMessage(Messages.WorkingStatus)).setValue(result.getString("ws.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Period)).setValue("с " + Settings.df.format(result.getDate("ew.start_date"))
                     + (result.getDate("ew.end_date") == null ? "" : " по " + Settings.df.format(result.getDate("ew.end_date"))));
         }
         return container;

@@ -2,7 +2,7 @@ package kg.alex.indigo;
 
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 public class LoginScreen extends VerticalLayout {
 
@@ -11,7 +11,7 @@ public class LoginScreen extends VerticalLayout {
         setSizeFull();
         setStyleName("mainLayout");
 
-        Label captionLbl = new Label(myUI.getMessage(IndigoMessages.AppTitle));
+        Label captionLbl = new Label(myUI.getMessage(Messages.AppTitle));
         captionLbl.setStyleName("mainPage");
         captionLbl.setSizeUndefined();
 
@@ -25,7 +25,7 @@ public class LoginScreen extends VerticalLayout {
         hl.setSpacing(true);
         hl.addStyleName("loginLayout");
 
-        Panel loginPanel = new Panel(myUI.getMessage(IndigoMessages.Login));
+        Panel loginPanel = new Panel(myUI.getMessage(Messages.Login));
         loginPanel.setStyleName("well");
         loginPanel.addStyleName("loginPanel");
         loginPanel.setHeight("25%");

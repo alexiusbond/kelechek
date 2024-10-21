@@ -5,7 +5,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.Year;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,24 +25,24 @@ public class DbYear extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Period), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.PeriodKg), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.StartDate), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.EndDate), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Period), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.PeriodKg), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.StartDate), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.EndDate), String.class, null);
         container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("y.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("y.name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Period)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Period)).setValue(
                     result.getString("y.period"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.PeriodKg)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.PeriodKg)).setValue(
                     result.getString("y.period_kg"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.StartDate)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.StartDate)).setValue(
                     Settings.df.format(result.getDate("y.start_date")));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.EndDate)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.EndDate)).setValue(
                     Settings.df.format(result.getDate("y.end_date")));
             item.getItemProperty(Settings.id).setValue(result.getInt("y.id"));
         }

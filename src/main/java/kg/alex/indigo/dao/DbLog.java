@@ -9,7 +9,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +31,7 @@ public class DbLog extends BaseDb {
                 + "(eo.to_date IS NULL or date(eo.to_date) >=  date(dl.datetime)) and eo.hr_orders_id = 1 "
                 + "left join hr_orders as ord on ord.id=eo.hr_orders_id "
                 + "where eo.school_id = ? ";
-        if (logType.equals(myUi.getMessage(IndigoMessages.SystemLogs))) {
+        if (logType.equals(myUi.getMessage(Messages.SystemLogs))) {
             sql += "and dl.table_name != 'transactions' ";
         } else {
             sql += "and dl.table_name = 'transactions' ";
@@ -47,29 +47,29 @@ public class DbLog extends BaseDb {
         }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Employee), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.TableName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.ColumnName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.Action), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.OldField), String.class, null);
-        container.addContainerProperty(myUi.getMessage(IndigoMessages.NewField), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Employee), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.TableName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ColumnName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Action), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.OldField), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.NewField), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("dl.id"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Date)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Date)).setValue(
                     Settings.df.format(result.getDate("dl.datetime")));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Employee)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Employee)).setValue(
                     result.getString("fullname"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.TableName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.TableName)).setValue(
                     result.getString("dl.table_name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.ColumnName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ColumnName)).setValue(
                     result.getString("dl.column_name"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.Action)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Action)).setValue(
                     result.getString("dl.action"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.OldField)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.OldField)).setValue(
                     result.getString("dl.old_field"));
-            item.getItemProperty(myUi.getMessage(IndigoMessages.NewField)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.NewField)).setValue(
                     result.getString("dl.new_field"));
         }
         return container;

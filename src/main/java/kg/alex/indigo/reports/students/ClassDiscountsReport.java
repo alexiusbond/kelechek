@@ -17,7 +17,7 @@ import kg.alex.indigo.dao.DbClassName;
 import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.dao.DbDiscount;
 import kg.alex.indigo.dao.DbStudentDiscount;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
@@ -57,13 +57,13 @@ public class ClassDiscountsReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        selectAllClassesBtn = new Button(myUI.getMessage(IndigoMessages.AllClasses));
+        selectAllClassesBtn = new Button(myUI.getMessage(Messages.AllClasses));
         selectAllClassesBtn.setWidth(Settings.PERCENTS100);
         selectAllClassesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllClassesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllClassesBtn.addClickListener(this);
 
-        deselectAllClassesBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllClassesBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllClassesBtn.setWidth(Settings.PERCENTS100);
         deselectAllClassesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllClassesBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -91,15 +91,15 @@ public class ClassDiscountsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        selectAllDiscountsBtn = new Button(myUI.getMessage(IndigoMessages.AllDiscounts));
+        selectAllDiscountsBtn = new Button(myUI.getMessage(Messages.AllDiscounts));
         selectAllDiscountsBtn.setWidth(Settings.PERCENTS100);
         selectAllDiscountsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllDiscountsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllDiscountsBtn.addClickListener(this);
 
-        deselectAllDiscountsBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllDiscountsBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllDiscountsBtn.setWidth(Settings.PERCENTS100);
         deselectAllDiscountsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllDiscountsBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -119,7 +119,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
         discountsTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         discountsTable.addValueChangeListener(this);
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -127,7 +127,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -135,25 +135,25 @@ public class ClassDiscountsReport implements Button.ClickListener,
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        yearSelect = new ComboBox(myUI.getMessage(IndigoMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        yearSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-        educationStatusMCB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        educationStatusMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         educationStatusMCB.setWidth(Settings.PERCENTS100);
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
-        educationStatusMCB.setClearButtonCaption(myUI.getMessage(IndigoMessages.Clear));
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
-        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(IndigoMessages.SelectAll));
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
@@ -216,32 +216,32 @@ public class ClassDiscountsReport implements Button.ClickListener,
                             this);
                     for (Object next : (Set<?>) classTable.getValue()) {
                         dataTable.setColumnAlignment(classTable.getContainerProperty(
-                                next, myUI.getMessage(IndigoMessages.Title)).getValue() + " "
-                                + myUI.getMessage(IndigoMessages.Students), Table.Align.RIGHT);
+                                next, myUI.getMessage(Messages.Title)).getValue() + " "
+                                + myUI.getMessage(Messages.Students), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(classTable.getContainerProperty(
-                                next, myUI.getMessage(IndigoMessages.Title)).getValue() + " "
-                                + myUI.getMessage(IndigoMessages.DiscountAmount), Table.Align.RIGHT);
+                                next, myUI.getMessage(Messages.Title)).getValue() + " "
+                                + myUI.getMessage(Messages.DiscountAmount), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(classTable.getContainerProperty(
-                                next, myUI.getMessage(IndigoMessages.Title)).getValue()
-                                + " " + myUI.getMessage(IndigoMessages.Average) + "%", Table.Align.RIGHT);
+                                next, myUI.getMessage(Messages.Title)).getValue()
+                                + " " + myUI.getMessage(Messages.Average) + "%", Table.Align.RIGHT);
                         try {
                             dataTable.setColumnFooter(classTable.getContainerProperty(
-                                            next, myUI.getMessage(IndigoMessages.Title)).getValue()
-                                            + " " + myUI.getMessage(IndigoMessages.Average) + "%",
+                                            next, myUI.getMessage(Messages.Title)).getValue()
+                                            + " " + myUI.getMessage(Messages.Average) + "%",
                                     Settings.dFormat2.format(Double.parseDouble(
                                             dataTable.getColumnFooter(classTable.getContainerProperty(
-                                                    next, myUI.getMessage(IndigoMessages.Title)).getValue()
-                                                    + " " + myUI.getMessage(IndigoMessages.Average) + "%"))
+                                                    next, myUI.getMessage(Messages.Title)).getValue()
+                                                    + " " + myUI.getMessage(Messages.Average) + "%"))
                                             / dataTable.getContainerDataSource().size()));
                         } catch (Exception ignored) {
                         }
                     }
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Total) + " "
-                            + myUI.getMessage(IndigoMessages.Students), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Total) + " "
-                            + myUI.getMessage(IndigoMessages.DiscountAmount), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Total) + " "
-                            + myUI.getMessage(IndigoMessages.Average) + "%", Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Total) + " "
+                            + myUI.getMessage(Messages.Students), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Total) + " "
+                            + myUI.getMessage(Messages.DiscountAmount), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Total) + " "
+                            + myUI.getMessage(Messages.Average) + "%", Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -256,7 +256,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
-                    excelReport.setReportTitle(myUI.getMessage(IndigoMessages.SchoolDiscounts));
+                    excelReport.setReportTitle(myUI.getMessage(Messages.SchoolDiscounts));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     Iterator<?> school_iter = ((Set<?>) classTable.getValue()).iterator();
@@ -265,14 +265,14 @@ public class ClassDiscountsReport implements Button.ClickListener,
                         Object next = school_iter.next();
                         excelReport.getTotalsRow().getCell(i).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(i).setCellValue(
-                                dataTable.getColumnFooter(classTable.getContainerProperty(next, myUI.getMessage(IndigoMessages.Title)).getValue()
-                                        + " " + myUI.getMessage(IndigoMessages.Average) + "%"));
+                                dataTable.getColumnFooter(classTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()
+                                        + " " + myUI.getMessage(Messages.Average) + "%"));
                         i += 3;
                     }
                     excelReport.getTotalsRow().getCell(i).setCellFormula(null);
                     excelReport.getTotalsRow().getCell(i).setCellValue(
-                            dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.Total) + " "
-                                    + myUI.getMessage(IndigoMessages.Average) + "%"));
+                            dataTable.getColumnFooter(myUI.getMessage(Messages.Total) + " "
+                                    + myUI.getMessage(Messages.Average) + "%"));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {
@@ -305,7 +305,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
                 discountsTable.setContainerDataSource(dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue(),
                         myUI.getUser().getSchool().getCurrency_id()));
                 dbd.close();
-                discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(IndigoMessages.Title)});
+                discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);

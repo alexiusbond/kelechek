@@ -15,7 +15,7 @@ import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.DbDefinition;
 import kg.alex.indigo.dao.DbPosition;
 import kg.alex.indigo.domain.Position;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -48,11 +48,11 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
     public PositionDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        PERMISSION_NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.ClassCaption),
-                myUI.getMessage(IndigoMessages.Functions)};
-        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Title),
-                myUI.getMessage(IndigoMessages.Category),
-                myUI.getMessage(IndigoMessages.Status)};
+        PERMISSION_NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.ClassCaption),
+                myUI.getMessage(Messages.Functions)};
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Title),
+                myUI.getMessage(Messages.Category),
+                myUI.getMessage(Messages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -100,7 +100,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(IndigoMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -108,7 +108,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(IndigoMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -116,53 +116,53 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(IndigoMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(IndigoMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new TextField(myUI.getMessage(IndigoMessages.Title));
+        nameTF = new TextField(myUI.getMessage(Messages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameTF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        nameTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(IndigoMessages.NotificationWrongValue), 1, 100, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false));
         settingsLay.addComponent(nameTF);
 
-        categorySelect = new ComboBox(myUI.getMessage(IndigoMessages.Category));
+        categorySelect = new ComboBox(myUI.getMessage(Messages.Category));
         categorySelect.setNullSelectionAllowed(false);
         categorySelect.setRequired(true);
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        categorySelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        categorySelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         categorySelect.setWidth(Settings.PERCENTS100);
-        categorySelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        categorySelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         categorySelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(categorySelect);
 
-        statusSelect = new ComboBox(myUI.getMessage(IndigoMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
-        statusSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        statusSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setWidth(Settings.PERCENTS100);
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -180,7 +180,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         settingsLay.addComponent(statusSelect);
 
         permissionTable = new Table();
-        permissionTable.setCaption(myUI.getMessage(IndigoMessages.Permissions));
+        permissionTable.setCaption(myUI.getMessage(Messages.Permissions));
         permissionTable.setStyleName(ValoTheme.TABLE_SMALL);
         permissionTable.setSizeFull();
         permissionTable.setSelectable(false);
@@ -204,10 +204,10 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
             nameTF.focus();
             statusSelect.setValue(2);
         } else if (source == deleteBtn && dataTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(IndigoMessages.Question),
-                    myUI.getMessage(IndigoMessages.ConfirmDeletion),
-                    myUI.getMessage(IndigoMessages.Yes),
-                    myUI.getMessage(IndigoMessages.No),
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
@@ -222,10 +222,10 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                         int id = dbp.exec_insert(getPosition(0));
                         if (id != 0) {
                             addDataContainerItem(id);
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
@@ -240,17 +240,17 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                         }
                         if (status != 0) {
                             updateDataContainer();
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(IndigoMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     }
                     dbp.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -311,7 +311,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                myUI.getMessage(Messages.Title)).getValue().toString());
         categorySelect.setValue(
                 dataTable.getContainerProperty(dataTable.getValue(),
                         Settings.hr_position_category_id).getValue());
@@ -320,9 +320,9 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                         Settings.activity_status_id).getValue());
         clearPermissionTable();
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Permissions)).getValue() != null) {
+                myUI.getMessage(Messages.Permissions)).getValue() != null) {
             setPermTable_options(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(IndigoMessages.Permissions)).getValue().toString());
+                    myUI.getMessage(Messages.Permissions)).getValue().toString());
         }
     }
 
@@ -335,39 +335,39 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
     private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Title)).setValue(nameTF.getValue());
+                myUI.getMessage(Messages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.hr_position_category_id).setValue(categorySelect
                 .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Category)).setValue(categorySelect
+                myUI.getMessage(Messages.Category)).setValue(categorySelect
                 .getContainerProperty(categorySelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue());
+                        myUI.getMessage(Messages.Title)).getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Permissions)).setValue(permJoinSingleStr());
+                myUI.getMessage(Messages.Permissions)).setValue(permJoinSingleStr());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.activity_status_id).setValue(statusSelect
                 .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(IndigoMessages.Status)).setValue(statusSelect.
+                myUI.getMessage(Messages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
     }
 
     private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                 nameTF.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Category)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Category)).setValue(
                 categorySelect.getContainerProperty(categorySelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Permissions)).setValue(permJoinSingleStr());
+                        myUI.getMessage(Messages.Title)).getValue());
+        item.getItemProperty(myUI.getMessage(Messages.Permissions)).setValue(permJoinSingleStr());
         item.getItemProperty(Settings.hr_position_category_id).setValue(
                 categorySelect.getValue());
-        item.getItemProperty(myUI.getMessage(IndigoMessages.Status)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(IndigoMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         item.getItemProperty(Settings.activity_status_id).setValue(
                 statusSelect.getValue());
         item.getItemProperty(Settings.id).setValue(id);
@@ -402,7 +402,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
             }
             dbd.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(IndigoMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);
@@ -428,9 +428,9 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                 permMCB.setWidth(Settings.PERCENTS100);
                 permMCB.setShowSelectAllButton((filter, page) -> true);
                 permMCB.addItems(convertStrToSet(permissionCont.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.Value)).getValue().toString()));
+                        myUI.getMessage(Messages.Value)).getValue().toString()));
                 permissionCont.getContainerProperty(next,
-                        myUI.getMessage(IndigoMessages.Functions)).setValue(permMCB);
+                        myUI.getMessage(Messages.Functions)).setValue(permMCB);
             }
             permissionTable.setContainerDataSource(permissionCont);
             permissionTable.setVisibleColumns((Object[]) PERMISSION_NATURAL_COL_ORDER);
@@ -455,10 +455,10 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         while (iter.hasNext()) {
             Object next = iter.next();
             if (Settings.convertCollectionToStr((Set) ((ComboBoxMultiselect) (permissionTable
-                    .getContainerProperty(next, myUI.getMessage(IndigoMessages.Functions))
+                    .getContainerProperty(next, myUI.getMessage(Messages.Functions))
                     .getValue())).getValue()) != null) {
                 permissions.append(next).append(":").append(Settings.convertCollectionToStr((Set) ((ComboBoxMultiselect) (permissionTable
-                        .getContainerProperty(next, myUI.getMessage(IndigoMessages.Functions))
+                        .getContainerProperty(next, myUI.getMessage(Messages.Functions))
                         .getValue())).getValue())).append(";");
             }
         }
@@ -476,7 +476,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         if (permissionCont != null) {
             for (int i = 0; i < permissionCont.size(); i++) {
                 ((ComboBoxMultiselect) permissionCont.getContainerProperty(permissionCont.getIdByIndex(i),
-                        myUI.getMessage(IndigoMessages.Functions)).getValue()).setValue(null);
+                        myUI.getMessage(Messages.Functions)).getValue()).setValue(null);
             }
         }
     }
@@ -491,7 +491,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                     Item itm = permissionCont.getItem(byClassName[0]);
                     if (itm != null) {
                         ((ComboBoxMultiselect) itm.getItemProperty(
-                                myUI.getMessage(IndigoMessages.Functions)).getValue())
+                                myUI.getMessage(Messages.Functions)).getValue())
                                 .setValue(convertStrToSet(byClassName[1]));
                     }
                 }

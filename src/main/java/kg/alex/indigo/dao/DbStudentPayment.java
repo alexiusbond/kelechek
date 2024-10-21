@@ -14,7 +14,7 @@ import com.vaadin.ui.*;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.StudentPayment;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.reports.students.ClassPaymentsReport;
 import kg.alex.indigo.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.indigo.ui.StudentDefinitionView;
@@ -74,33 +74,33 @@ public class DbStudentPayment extends BaseDb {
             }
             String id = result.getString("sp.id");
             Item item = container.addItem(id);
-            Button btn = dw.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id,
+            Button btn = dw.createButton(myUI.getMessage(Messages.DeleteButton), id,
                     Settings.dbStudentPayments, FontAwesome.MINUS_SQUARE);
             btn.setEnabled(!isDisabled);
             if (!currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actDelete)) {
                 btn.setEnabled(false);
             }
             item.getItemProperty(Settings.button).setValue(btn);
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
             if (!currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actModify)) {
                 isDisabled = true;
             }
             ComboBox cb = dw.createComboboxPayment(result.getInt("sp.payment_category_id"),
-                    myUI.getMessage(IndigoMessages.PaymentCategoryType), id);
-            cb.setId(myUI.getMessage(IndigoMessages.Payments));
+                    myUI.getMessage(Messages.PaymentCategoryType), id);
+            cb.setId(myUI.getMessage(Messages.Payments));
             cb.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.PaymentCategoryType)).setValue(cb);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.PaymentType)).setValue(
-                    dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(IndigoMessages.PaymentType), id,
+            item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(cb);
+            item.getItemProperty(myUI.getMessage(Messages.PaymentType)).setValue(
+                    dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(Messages.PaymentType), id,
                             Settings.dbPaymentType, false, false, false, isDisabled));
-            TextField amountUSDTf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(IndigoMessages.AmountUSD), id);
-            amountUSDTf.setId(myUI.getMessage(IndigoMessages.Payments));
+            TextField amountUSDTf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(Messages.AmountUSD), id);
+            amountUSDTf.setId(myUI.getMessage(Messages.Payments));
             amountUSDTf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.AmountUSD)).setValue(amountUSDTf);
-            TextField amountKGSTf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(IndigoMessages.AmountKGS), id);
-            amountKGSTf.setId(myUI.getMessage(IndigoMessages.Payments));
+            item.getItemProperty(myUI.getMessage(Messages.AmountUSD)).setValue(amountUSDTf);
+            TextField amountKGSTf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(Messages.AmountKGS), id);
+            amountKGSTf.setId(myUI.getMessage(Messages.Payments));
             amountKGSTf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.AmountKGS)).setValue(amountKGSTf);
+            item.getItemProperty(myUI.getMessage(Messages.AmountKGS)).setValue(amountKGSTf);
             if (result.getInt("sp.acc_currency_id") == 1) {
                 amountKGSTf.setRequired(true);
                 amountUSDTf.removeValueChangeListener(dw);
@@ -114,15 +114,15 @@ public class DbStudentPayment extends BaseDb {
                 amountKGSTf.setRequired(false);
                 amountKGSTf.addValueChangeListener(dw);
             }
-            TextField tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), 4, myUI.getMessage(IndigoMessages.Rate), id);
+            TextField tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), 4, myUI.getMessage(Messages.Rate), id);
             tf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(tf);
-            tf = dw.createTextField(result.getString("sp.who_paid"), myUI.getMessage(IndigoMessages.WhoPaid), id, false, false);
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(tf);
+            tf = dw.createTextField(result.getString("sp.who_paid"), myUI.getMessage(Messages.WhoPaid), id, false, false);
             tf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WhoPaid)).setValue(tf);
+            item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(tf);
             DateField df = dw.createDateField(result.getTimestamp("sp.modification_date"),
-                    myUI.getMessage(IndigoMessages.Date), id, false, false);
-            df.setId(myUI.getMessage(IndigoMessages.Payments));
+                    myUI.getMessage(Messages.Date), id, false, false);
+            df.setId(myUI.getMessage(Messages.Payments));
             df.setEnabled(!isDisabled);
             if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
                 df.setRangeStart(myUI.getUser().getTransactions_start_date());
@@ -130,17 +130,17 @@ public class DbStudentPayment extends BaseDb {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.MINUTE, -1441);
                 df.setRangeStart(calendar.getTime());
-                df.addValidator(new DateRangeValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                df.addValidator(new DateRangeValidator(myUI.getMessage(Messages.NotificationWrongValue),
                         df.getRangeStart(), df.getRangeEnd(), Resolution.MINUTE));
             }
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(df);
-            tf = dw.createTextFieldNote(result.getString("sp.note"), myUI.getMessage(IndigoMessages.Note), id);
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(df);
+            tf = dw.createTextFieldNote(result.getString("sp.note"), myUI.getMessage(Messages.Note), id);
             tf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(tf);
-            Button b = dw.createButton(myUI.getMessage(IndigoMessages.Print), id,
-                    myUI.getMessage(IndigoMessages.Invoice), FontAwesome.PRINT);
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(tf);
+            Button b = dw.createButton(myUI.getMessage(Messages.Print), id,
+                    myUI.getMessage(Messages.Invoice), FontAwesome.PRINT);
             b.setEnabled(currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actPrint));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Print)).setValue(b);
+            item.getItemProperty(myUI.getMessage(Messages.Print)).setValue(b);
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("sp.acc_currency_id"));
             item.getItemProperty(Settings.old_amount).setValue(result.getDouble("sp.amount"));
             item.getItemProperty(Settings.old_date).setValue(result.getDate("sp.modification_date"));
@@ -240,26 +240,26 @@ public class DbStudentPayment extends BaseDb {
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Rate), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Currency), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.WhoPaid), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.PaymentCategoryType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WhoPaid), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PaymentCategoryType), String.class, null);
         container.addContainerProperty(Settings.payment_category_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format((result.getDate("sp.modification_date"))));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(
                     result.getDouble("sp.dollar_rate"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                     result.getDouble("sp.amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(
                     result.getString("cur.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WhoPaid)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.PaymentCategoryType)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(
                     result.getString("pc.name"));
             item.getItemProperty(Settings.payment_category_id).setValue(
                     result.getInt("pc.id"));
@@ -302,37 +302,37 @@ public class DbStudentPayment extends BaseDb {
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Rate), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Currency), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.PaymentCategoryType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PaymentCategoryType), String.class, null);
         container.addContainerProperty(Settings.payment_category_id, Integer.class, 0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.WhoPaid), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WhoPaid), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.FirstName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.LastName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(
                     result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.ClassName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                     result.getString("vcs.class_name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(
                     result.getDouble("sp.dollar_rate"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                     result.getDouble("sp.amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(
                     result.getString("cur.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format((result.getDate("sp.modification_date"))));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.PaymentCategoryType)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(
                     result.getString("pc.name"));
             item.getItemProperty(Settings.payment_category_id).setValue(
                     result.getInt("sp.payment_category_id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.WhoPaid)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
             double amount;
             if (myUI.getUser().getSchool().getCurrency_id() == result.getInt("acc_currency_id")) {
@@ -431,29 +431,29 @@ public class DbStudentPayment extends BaseDb {
         stat.setDate(4, new java.sql.Date(till.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.StudentId), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.FullName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Currency), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Rate), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.TransactionNumber), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Status), String.class, "Успешно");
+        container.addContainerProperty(myUI.getMessage(Messages.StudentId), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.TransactionNumber), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Status), String.class, "Успешно");
         t.setContainerDataSource(container);
         double total = 0.0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(Settings.dtmf.format((result.getTimestamp("sp.modification_date"))));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Rate)).setValue(result.getDouble("sp.dollar_rate"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue(result.getString("c.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.TransactionNumber)).setValue(result.getString("sp.bank_transaction_id"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.StudentId)).setValue(result.getString("st.login"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.FullName)).setValue(result.getString("fullname"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.dtmf.format((result.getTimestamp("sp.modification_date"))));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(result.getDouble("sp.dollar_rate"));
+            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(Messages.TransactionNumber)).setValue(result.getString("sp.bank_transaction_id"));
+            item.getItemProperty(myUI.getMessage(Messages.StudentId)).setValue(result.getString("st.login"));
+            item.getItemProperty(myUI.getMessage(Messages.FullName)).setValue(result.getString("fullname"));
             total += result.getDouble("amount");
         }
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.Amount), Settings.dFormat2.format(total));
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.TransactionNumber), container.size() + "");
+        t.setColumnFooter(myUI.getMessage(Messages.Amount), Settings.dFormat2.format(total));
+        t.setColumnFooter(myUI.getMessage(Messages.TransactionNumber), container.size() + "");
         return container;
     }
 
@@ -474,24 +474,24 @@ public class DbStudentPayment extends BaseDb {
         stat.setDate(4, new java.sql.Date(till.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Currency), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.TransactionsQuantity), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.TransactionsQuantity), Integer.class, 0);
         t.setContainerDataSource(container);
         double totalAmount = 0.0;
         int totalQuantity = 0;
         while (result.next()) {
             Item item = container.addItem(Settings.df.format((result.getDate("sp.modification_date"))));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Date)).setValue(Settings.df.format((result.getDate("sp.modification_date"))));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.TransactionsQuantity)).setValue(result.getInt("quantity"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Currency)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format((result.getDate("sp.modification_date"))));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(Messages.TransactionsQuantity)).setValue(result.getInt("quantity"));
+            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(result.getString("c.name"));
             totalAmount += result.getDouble("amount");
             totalQuantity += result.getDouble("quantity");
         }
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.Amount), Settings.dFormat2.format(totalAmount));
-        t.setColumnFooter(myUI.getMessage(IndigoMessages.TransactionsQuantity), totalQuantity + "");
+        t.setColumnFooter(myUI.getMessage(Messages.Amount), Settings.dFormat2.format(totalAmount));
+        t.setColumnFooter(myUI.getMessage(Messages.TransactionsQuantity), totalQuantity + "");
         return container;
     }
 }

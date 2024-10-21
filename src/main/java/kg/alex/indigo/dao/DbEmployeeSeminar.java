@@ -13,7 +13,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.EmployeeSeminar;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 
 import java.sql.Date;
@@ -69,24 +69,24 @@ public class DbEmployeeSeminar extends BaseDb {
             String id = result.getString("es.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    edv.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(
+                    edv.createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                     edv.createTextField(result.getString("es.name"),
-                            myUI.getMessage(IndigoMessages.Title),
-                            new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true), true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Subject)).setValue(
+                            myUI.getMessage(Messages.Title),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), true));
+            item.getItemProperty(myUI.getMessage(Messages.Subject)).setValue(
                     edv.createTextField(result.getString("es.subject"),
-                            myUI.getMessage(IndigoMessages.Subject),
-                            new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true), true));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(
+                            myUI.getMessage(Messages.Subject),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), true));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                     edv.createTextField(result.getString("es.note"),
-                            myUI.getMessage(IndigoMessages.Note),
-                            new StringLengthValidator(myUI.getMessage(IndigoMessages.NotificationWrongValue), null, 200, true), false));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.IssueDate)).setValue(
+                            myUI.getMessage(Messages.Note),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), false));
+            item.getItemProperty(myUI.getMessage(Messages.IssueDate)).setValue(
                     edv.createDateField(result.getDate("es.date_of_issue"),
-                            myUI.getMessage(IndigoMessages.IssueDate), null,
+                            myUI.getMessage(Messages.IssueDate), null,
                             true, Settings.datePattern, Resolution.DAY));
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
@@ -99,17 +99,17 @@ public class DbEmployeeSeminar extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Subject), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(IndigoMessages.IssueDate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Subject), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.IssueDate), String.class, null);
         while (result.next()) {
             String id = result.getString("es.id");
             Item item = container.addItem(id);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(result.getString("es.name"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Subject)).setValue(result.getString("es.subject"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Note)).setValue(result.getString("es.note"));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.IssueDate)).setValue(Settings.df.format(result.getDate("es.date_of_issue")));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(result.getString("es.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Subject)).setValue(result.getString("es.subject"));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(result.getString("es.note"));
+            item.getItemProperty(myUI.getMessage(Messages.IssueDate)).setValue(Settings.df.format(result.getDate("es.date_of_issue")));
         }
         return container;
     }

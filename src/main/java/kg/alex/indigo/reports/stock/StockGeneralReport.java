@@ -10,7 +10,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.dao.*;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.tableexport.EnhancedFormatExcelExport;
 import kg.alex.indigo.utils.FormattedTreeTable;
 import kg.alex.indigo.utils.MyFilterDecorator;
@@ -62,7 +62,7 @@ public class StockGeneralReport implements Button.ClickListener,
         productsTable.setNullSelectionAllowed(false);
         productsTable.addValueChangeListener(this);
 
-        generateBtn = new Button(myUI.getMessage(IndigoMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -70,7 +70,7 @@ public class StockGeneralReport implements Button.ClickListener,
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(IndigoMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -78,20 +78,20 @@ public class StockGeneralReport implements Button.ClickListener,
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        fromDateDF = new DateField(myUI.getMessage(IndigoMessages.FromDate));
+        fromDateDF = new DateField(myUI.getMessage(Messages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         fromDateDF.setRequired(true);
-        fromDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new DateField(myUI.getMessage(IndigoMessages.TillDate));
+        tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
         tillDateDF.setRequired(true);
-        tillDateDF.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
@@ -101,28 +101,28 @@ public class StockGeneralReport implements Button.ClickListener,
         operationOG.addStyleName(ValoTheme.OPTIONGROUP_SMALL);
         operationOG.setNullSelectionAllowed(false);
         operationOG.setWidth(Settings.PERCENTS100);
-        operationOG.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        operationOG.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         operationOG.addValueChangeListener(this);
 
-        stocksMSB = new ComboBoxMultiselect(myUI.getMessage(IndigoMessages.Stocks));
+        stocksMSB = new ComboBoxMultiselect(myUI.getMessage(Messages.Stocks));
         stocksMSB.setRequired(true);
         stocksMSB.setStyleName(ValoTheme.COMBOBOX_TINY);
-        stocksMSB.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        stocksMSB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         stocksMSB.setWidth(Settings.PERCENTS100);
-        stocksMSB.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        stocksMSB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         stocksMSB.setFilteringMode(FilteringMode.CONTAINS);
-        stocksMSB.setClearButtonCaption(myUI.getMessage(IndigoMessages.Clear));
+        stocksMSB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         stocksMSB.setShowSelectAllButton((filter, page) -> true);
-        stocksMSB.setSelectAllButtonCaption(myUI.getMessage(IndigoMessages.SelectAll));
+        stocksMSB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         stocksMSB.addValueChangeListener(this);
 
-        schoolSelect = new ComboBox(myUI.getMessage(IndigoMessages.School));
+        schoolSelect = new ComboBox(myUI.getMessage(Messages.School));
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setRequired(true);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        schoolSelect.setRequiredError(myUI.getMessage(IndigoMessages.RequiredField));
+        schoolSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         schoolSelect.setWidth(Settings.PERCENTS100);
-        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
         schoolSelect.addValueChangeListener(this);
         try {
@@ -136,13 +136,13 @@ public class StockGeneralReport implements Button.ClickListener,
         }
         schoolSelect.setValue(myUI.getUser().getSchool().getId());
 
-        selectAllBtn = new Button(myUI.getMessage(IndigoMessages.AllCategories));
+        selectAllBtn = new Button(myUI.getMessage(Messages.AllCategories));
         selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
-        deselectAllBtn = new Button(myUI.getMessage(IndigoMessages.Clear));
+        deselectAllBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -157,7 +157,7 @@ public class StockGeneralReport implements Button.ClickListener,
             dbPC.connect();
             operationOG.setContainerDataSource(dbCon.exec_for_select(myUI, Settings.dbOperation, true));
             Item item = operationOG.getContainerDataSource().addItem(0);
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Title)).setValue(myUI.getMessage(IndigoMessages.General));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(myUI.getMessage(Messages.General));
             if (operationOG.getContainerDataSource() != null) {
                 operationOG.setValue(((IndexedContainer) operationOG.getContainerDataSource()).firstItemId());
             }
@@ -213,19 +213,19 @@ public class StockGeneralReport implements Button.ClickListener,
                         dbCon.exec_stock_balance(myUI, productsTable, fromDateDF.getValue(), tillDateDF.getValue(),
                                 Settings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
 
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.StockIncome) + " - " + myUI.getMessage(IndigoMessages.Quantity), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.StockOutcome) + " - " + myUI.getMessage(IndigoMessages.Quantity), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.StockIncome) + " - " + myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.StockOutcome) + " - " + myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.PreviousBalance) + " " +
-                                myUI.getMessage(IndigoMessages.ToThe).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Quantity), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Quantity), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.PreviousBalance) + " " +
+                                myUI.getMessage(Messages.ToThe).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()), Table.Align.RIGHT);
                     } else {
                         dbCon.exec_stock_operations(myUI, productsTable, fromDateDF.getValue(), tillDateDF.getValue(), (Integer) operationOG.getValue(),
                                 Settings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Quantity), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.AveragePrice), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.AverageRate), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(IndigoMessages.Amount), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.Quantity), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.AveragePrice), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.AverageRate), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
                     }
 
 
@@ -242,11 +242,11 @@ public class StockGeneralReport implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
-                    excelReport.setReportTitle(myUI.getMessage(IndigoMessages.StockGeneralReport) + " ("
+                    excelReport.setReportTitle(myUI.getMessage(Messages.StockGeneralReport) + " ("
                             + operationOG.getContainerProperty(operationOG.getValue(),
-                            myUI.getMessage(IndigoMessages.Title)).getValue() + ") - [" + myUI.getMessage(IndigoMessages.From).toLowerCase() + " "
+                            myUI.getMessage(Messages.Title)).getValue() + ") - [" + myUI.getMessage(Messages.From).toLowerCase() + " "
                             + Settings.df.format(fromDateDF.getValue())
-                            + " " + myUI.getMessage(IndigoMessages.To).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()) + "]");
+                            + " " + myUI.getMessage(Messages.To).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
@@ -254,20 +254,20 @@ public class StockGeneralReport implements Button.ClickListener,
                         excelReport.getTotalsRow().getCell(1).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(2).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(2).setCellValue(
-                                dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.StockIncome)
-                                        + " - " + myUI.getMessage(IndigoMessages.Amount)));
+                                dataTable.getColumnFooter(myUI.getMessage(Messages.StockIncome)
+                                        + " - " + myUI.getMessage(Messages.Amount)));
                         excelReport.getTotalsRow().getCell(3).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(4).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(4).setCellValue(
-                                dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.StockOutcome)
-                                        + " - " + myUI.getMessage(IndigoMessages.Amount)));
+                                dataTable.getColumnFooter(myUI.getMessage(Messages.StockOutcome)
+                                        + " - " + myUI.getMessage(Messages.Amount)));
                         excelReport.getTotalsRow().getCell(5).setCellFormula(null);
                     } else {
                         excelReport.getTotalsRow().getCell(1).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(3).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(4).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(5).setCellFormula(null);
-                        excelReport.getTotalsRow().getCell(5).setCellValue(dataTable.getColumnFooter(myUI.getMessage(IndigoMessages.Amount)));
+                        excelReport.getTotalsRow().getCell(5).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Amount)));
                     }
                     excelReport.sendConverted();
                 }

@@ -16,7 +16,7 @@ import com.vaadin.ui.Table;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.StudentInfoPdf;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,8 +80,8 @@ public class SummaryReportPdf {
                     table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(table_date);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(IndigoMessages.Yearly)
-                            + " " + myUI.getMessage(IndigoMessages.Report), fontBold);
+                    Paragraph spr = new Paragraph(myUI.getMessage(Messages.Yearly)
+                            + " " + myUI.getMessage(Messages.Report), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);
@@ -102,15 +102,15 @@ public class SummaryReportPdf {
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
                         pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         pdfTable.addCell(new Phrase(" №", tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.School), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Total_Active), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Contract), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Discount), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Correction), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.PreviousYearDebt), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Net), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Paid), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(IndigoMessages.Left), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.School), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Total_Active), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Contract), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Discount), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Correction), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.PreviousYearDebt), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Net), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Paid), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Left), tableFontBold));
                         pdfTable.addCell(new Phrase(Settings.percentage, tableFontBold));
 
                         Iterator<?> iter = dataTable.getContainerDataSource().getItemIds().iterator();
@@ -123,24 +123,24 @@ public class SummaryReportPdf {
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             pdfTable.addCell(new Phrase(j + "", tableFont));
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.School)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.School)).getValue().toString(), tableFont));
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Total_Active)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Total_Active)).getValue().toString(), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Contract)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Contract)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Discount)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Discount)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Correction)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Correction)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.PreviousYearDebt)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.PreviousYearDebt)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Net)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Net)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Paid)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Paid)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(IndigoMessages.Left)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Left)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
                                     Settings.percentage).getValue()), tableFont));
                             j++;
@@ -148,21 +148,21 @@ public class SummaryReportPdf {
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.Total_Active)), tableFontBold));
+                                myUI.getMessage(Messages.Total_Active)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.Contract)), tableFontBold));
+                                myUI.getMessage(Messages.Contract)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.Discount)), tableFontBold));
+                                myUI.getMessage(Messages.Discount)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.Correction)), tableFontBold));
+                                myUI.getMessage(Messages.Correction)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.PreviousYearDebt)), tableFontBold));
+                                myUI.getMessage(Messages.PreviousYearDebt)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.Net)), tableFontBold));
+                                myUI.getMessage(Messages.Net)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.Paid)), tableFontBold));
+                                myUI.getMessage(Messages.Paid)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(IndigoMessages.Left)), tableFontBold));
+                                myUI.getMessage(Messages.Left)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
                                 Settings.percentage), tableFontBold));
 
@@ -177,8 +177,8 @@ public class SummaryReportPdf {
                     T2.getDefaultCell().setBorder(0);
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
-                    T2.addCell(new Phrase(myUI.getMessage(IndigoMessages.Accountant), ordFontBold));
-                    T2.addCell(new Phrase(myUI.getMessage(IndigoMessages.Director), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Accountant), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
                     T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
                             + studentInfo.getAccountant().getName() + " " +
                             (studentInfo.getAccountant().getMiddle_name() == null ?

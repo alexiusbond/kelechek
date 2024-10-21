@@ -26,7 +26,7 @@ import kg.alex.indigo.dao.DbEmployeeOrder;
 import kg.alex.indigo.dao.DbSchool;
 import kg.alex.indigo.domain.AccCategory;
 import kg.alex.indigo.domain.EmployeeOrder;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,12 +51,12 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
     public EmployeeTransferView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(IndigoMessages.Id),
-                myUI.getMessage(IndigoMessages.FirstName),
-                myUI.getMessage(IndigoMessages.LastName),
-                myUI.getMessage(IndigoMessages.MainPosition),
-                myUI.getMessage(IndigoMessages.FromDate),
-                myUI.getMessage(IndigoMessages.Note)};
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Id),
+                myUI.getMessage(Messages.FirstName),
+                myUI.getMessage(Messages.LastName),
+                myUI.getMessage(Messages.MainPosition),
+                myUI.getMessage(Messages.FromDate),
+                myUI.getMessage(Messages.Note)};
 
         GridLayout gl = new GridLayout(2, 3);
         gl.setMargin(true);
@@ -67,25 +67,25 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         Label caption = new Label();
         caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
-        caption.setValue(myUI.getMessage(IndigoMessages.TransferInstruction));
+        caption.setValue(myUI.getMessage(Messages.TransferInstruction));
         caption.setStyleName("tableCpt");
         gl.addComponent(caption, 0, 0, 1, 0);
 
         search1TF = new TextField();
         search1TF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         search1TF.setWidth(Settings.PERCENTS100);
-        search1TF.setInputPrompt(myUI.getMessage(IndigoMessages.Search) + " ("
-                + myUI.getMessage(IndigoMessages.Id) + " / " + myUI.getMessage(IndigoMessages.FirstName) + " / "
-                + myUI.getMessage(IndigoMessages.LastName) + " / " + myUI.getMessage(IndigoMessages.Position) + ")");
+        search1TF.setInputPrompt(myUI.getMessage(Messages.Search) + " ("
+                + myUI.getMessage(Messages.Id) + " / " + myUI.getMessage(Messages.FirstName) + " / "
+                + myUI.getMessage(Messages.LastName) + " / " + myUI.getMessage(Messages.Position) + ")");
         search1TF.addValueChangeListener(this);
         gl.addComponent(search1TF);
 
         search2TF = new TextField();
         search2TF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         search2TF.setWidth(Settings.PERCENTS100);
-        search1TF.setInputPrompt(myUI.getMessage(IndigoMessages.Search) + " ("
-                + myUI.getMessage(IndigoMessages.Id) + " / " + myUI.getMessage(IndigoMessages.FirstName) + " / "
-                + myUI.getMessage(IndigoMessages.LastName) + " / " + myUI.getMessage(IndigoMessages.Position) + ")");
+        search1TF.setInputPrompt(myUI.getMessage(Messages.Search) + " ("
+                + myUI.getMessage(Messages.Id) + " / " + myUI.getMessage(Messages.FirstName) + " / "
+                + myUI.getMessage(Messages.LastName) + " / " + myUI.getMessage(Messages.Position) + ")");
         search2TF.addValueChangeListener(this);
         gl.addComponent(search2TF);
 
@@ -126,7 +126,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         settingsLay.setSpacing(true);
         settingsLay.setSizeFull();
 
-        saveBtn = new Button(myUI.getMessage(IndigoMessages.SaveButton));
+        saveBtn = new Button(myUI.getMessage(Messages.SaveButton));
         saveBtn.setWidth(Settings.PERCENTS100);
         saveBtn.setStyleName(ValoTheme.BUTTON_FRIENDLY);
         saveBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -135,7 +135,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         settingsLay.addComponent(saveBtn, 1, 0);
         settingsLay.setComponentAlignment(saveBtn, Alignment.BOTTOM_CENTER);
 
-        cancelBtn = new Button(myUI.getMessage(IndigoMessages.CancelButton));
+        cancelBtn = new Button(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setWidth(Settings.PERCENTS100);
         cancelBtn.setStyleName(ValoTheme.BUTTON_FRIENDLY);
         cancelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -144,14 +144,14 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         settingsLay.addComponent(cancelBtn, 2, 0);
         settingsLay.setComponentAlignment(cancelBtn, Alignment.BOTTOM_CENTER);
 
-        Label l1 = new Label(myUI.getMessage(IndigoMessages.School) + " 1:");
+        Label l1 = new Label(myUI.getMessage(Messages.School) + " 1:");
         l1.setSizeUndefined();
 
         school1Select = new ComboBox();
         school1Select.setNullSelectionAllowed(false);
         school1Select.setStyleName(ValoTheme.COMBOBOX_SMALL);
         school1Select.setWidth(Settings.PERCENTS100);
-        school1Select.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        school1Select.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         school1Select.setFilteringMode(FilteringMode.CONTAINS);
         school1Select.addValueChangeListener(this);
 
@@ -163,14 +163,14 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         hl1.setExpandRatio(school1Select, 1);
         settingsLay.addComponent(hl1, 0, 0);
 
-        Label l2 = new Label(myUI.getMessage(IndigoMessages.School) + " 2:");
+        Label l2 = new Label(myUI.getMessage(Messages.School) + " 2:");
         l2.setSizeUndefined();
 
         school2Select = new ComboBox();
         school2Select.setNullSelectionAllowed(false);
         school2Select.setStyleName(ValoTheme.COMBOBOX_SMALL);
         school2Select.setWidth(Settings.PERCENTS100);
-        school2Select.setItemCaptionPropertyId(myUI.getMessage(IndigoMessages.Title));
+        school2Select.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         school2Select.setFilteringMode(FilteringMode.CONTAINS);
         school2Select.addValueChangeListener(this);
 
@@ -208,10 +208,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         String str;
 
         Embedded photoEmb = new Embedded();
-        if (item.getItemProperty(myUI.getMessage(IndigoMessages.Photo)).getValue() == null) {
+        if (item.getItemProperty(myUI.getMessage(Messages.Photo)).getValue() == null) {
             photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS_HR + "no_photo.jpg")));
         } else {
-            photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS_HR + item.getItemProperty(myUI.getMessage(IndigoMessages.Photo)).getValue())));
+            photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS_HR + item.getItemProperty(myUI.getMessage(Messages.Photo)).getValue())));
         }
         photoEmb.setImmediate(true);
         photoEmb.setWidth("120px");
@@ -221,22 +221,22 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         idLb.setWidth(Settings.PERCENTS100);
         idLb.setContentMode(ContentMode.HTML);
         idLb.setStyleName(ValoTheme.LABEL_SUCCESS);
-        idLb.setValue("<b>" + myUI.getMessage(IndigoMessages.Id) + ":</b> " + item.getItemProperty(myUI.getMessage(IndigoMessages.Id)).getValue().toString());
+        idLb.setValue("<b>" + myUI.getMessage(Messages.Id) + ":</b> " + item.getItemProperty(myUI.getMessage(Messages.Id)).getValue().toString());
         gl.addComponent(idLb, 1, 0);
 
         Label fullNameLb = new Label();
         fullNameLb.setWidth(Settings.PERCENTS100);
         fullNameLb.setContentMode(ContentMode.HTML);
         fullNameLb.setStyleName(ValoTheme.LABEL_SUCCESS);
-        fullNameLb.setValue("<b>" + myUI.getMessage(IndigoMessages.FullName) + ":</b> " + item.getItemProperty(myUI.getMessage(IndigoMessages.FirstName)).getValue()
-                + " " + item.getItemProperty(myUI.getMessage(IndigoMessages.LastName)).getValue());
+        fullNameLb.setValue("<b>" + myUI.getMessage(Messages.FullName) + ":</b> " + item.getItemProperty(myUI.getMessage(Messages.FirstName)).getValue()
+                + " " + item.getItemProperty(myUI.getMessage(Messages.LastName)).getValue());
         gl.addComponent(fullNameLb, 2, 0);
 
         Label mainPositionLb = new Label();
         mainPositionLb.setWidth(Settings.PERCENTS100);
         mainPositionLb.setContentMode(ContentMode.HTML);
         mainPositionLb.setStyleName(ValoTheme.LABEL_SUCCESS);
-        mainPositionLb.setValue("<b>" + myUI.getMessage(IndigoMessages.MainPositionShort) + ":</b> " + item.getItemProperty(myUI.getMessage(IndigoMessages.Position)).getValue());
+        mainPositionLb.setValue("<b>" + myUI.getMessage(Messages.MainPositionShort) + ":</b> " + item.getItemProperty(myUI.getMessage(Messages.Position)).getValue());
         gl.addComponent(mainPositionLb, 1, 1);
 
         Label mainBranchLb = new Label();
@@ -244,10 +244,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         mainBranchLb.setContentMode(ContentMode.HTML);
         mainBranchLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item.getItemProperty(myUI.getMessage(IndigoMessages.MainBranch)).getValue() != null) {
-            str = item.getItemProperty(myUI.getMessage(IndigoMessages.MainBranch)).getValue().toString();
+        if (item.getItemProperty(myUI.getMessage(Messages.MainBranch)).getValue() != null) {
+            str = item.getItemProperty(myUI.getMessage(Messages.MainBranch)).getValue().toString();
         }
-        mainBranchLb.setValue("<b>" + myUI.getMessage(IndigoMessages.MainBranchShort) + ":</b> " + str);
+        mainBranchLb.setValue("<b>" + myUI.getMessage(Messages.MainBranchShort) + ":</b> " + str);
         gl.addComponent(mainBranchLb, 2, 1);
 
         Label extraPositionsLb = new Label();
@@ -255,10 +255,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         extraPositionsLb.setContentMode(ContentMode.HTML);
         extraPositionsLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraPosition)).getValue() != null) {
-            str = item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraPosition)).getValue().toString();
+        if (item.getItemProperty(myUI.getMessage(Messages.ExtraPosition)).getValue() != null) {
+            str = item.getItemProperty(myUI.getMessage(Messages.ExtraPosition)).getValue().toString();
         }
-        extraPositionsLb.setValue("<b>" + myUI.getMessage(IndigoMessages.ExtraPosition) + ":</b> " + str);
+        extraPositionsLb.setValue("<b>" + myUI.getMessage(Messages.ExtraPosition) + ":</b> " + str);
         gl.addComponent(extraPositionsLb, 1, 2, 2, 2);
 
         Label extraBranchesLb = new Label();
@@ -266,10 +266,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         extraBranchesLb.setContentMode(ContentMode.HTML);
         extraBranchesLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraBranches)).getValue() != null) {
-            str = item.getItemProperty(myUI.getMessage(IndigoMessages.ExtraBranches)).getValue().toString();
+        if (item.getItemProperty(myUI.getMessage(Messages.ExtraBranches)).getValue() != null) {
+            str = item.getItemProperty(myUI.getMessage(Messages.ExtraBranches)).getValue().toString();
         }
-        extraBranchesLb.setValue("<b>" + myUI.getMessage(IndigoMessages.ExtraBranches) + ":</b> " + str);
+        extraBranchesLb.setValue("<b>" + myUI.getMessage(Messages.ExtraBranches) + ":</b> " + str);
         gl.addComponent(extraBranchesLb, 1, 3, 2, 3);
 
         Label lessonsLb = new Label();
@@ -277,10 +277,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         lessonsLb.setContentMode(ContentMode.HTML);
         lessonsLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item.getItemProperty(myUI.getMessage(IndigoMessages.Lessons)).getValue() != null) {
-            str = item.getItemProperty(myUI.getMessage(IndigoMessages.Lessons)).getValue().toString();
+        if (item.getItemProperty(myUI.getMessage(Messages.Lessons)).getValue() != null) {
+            str = item.getItemProperty(myUI.getMessage(Messages.Lessons)).getValue().toString();
         }
-        lessonsLb.setValue("<b>" + myUI.getMessage(IndigoMessages.Lessons) + " (" + myUI.getUser().getCurrent_year().getName() + "):</b> " + str);
+        lessonsLb.setValue("<b>" + myUI.getMessage(Messages.Lessons) + " (" + myUI.getUser().getCurrent_year().getName() + "):</b> " + str);
         gl.addComponent(lessonsLb, 1, 4, 2, 4);
 
         Label spouseLb = new Label();
@@ -288,10 +288,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         spouseLb.setContentMode(ContentMode.HTML);
         spouseLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item.getItemProperty(myUI.getMessage(IndigoMessages.SpouseInfo)).getValue() != null) {
-            str = item.getItemProperty(myUI.getMessage(IndigoMessages.SpouseInfo)).getValue().toString();
+        if (item.getItemProperty(myUI.getMessage(Messages.SpouseInfo)).getValue() != null) {
+            str = item.getItemProperty(myUI.getMessage(Messages.SpouseInfo)).getValue().toString();
         }
-        spouseLb.setValue("<b>" + myUI.getMessage(IndigoMessages.SpouseInfo) + ":</b> " + str);
+        spouseLb.setValue("<b>" + myUI.getMessage(Messages.SpouseInfo) + ":</b> " + str);
         gl.addComponent(spouseLb, 1, 5, 2, 5);
 
         Label childrenLb = new Label();
@@ -299,16 +299,16 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         childrenLb.setContentMode(ContentMode.HTML);
         childrenLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item.getItemProperty(myUI.getMessage(IndigoMessages.Children)).getValue() != null) {
-            str = item.getItemProperty(myUI.getMessage(IndigoMessages.Children)).getValue().toString();
+        if (item.getItemProperty(myUI.getMessage(Messages.Children)).getValue() != null) {
+            str = item.getItemProperty(myUI.getMessage(Messages.Children)).getValue().toString();
         }
-        childrenLb.setValue("<b>" + myUI.getMessage(IndigoMessages.Children) + ":</b> " + str);
+        childrenLb.setValue("<b>" + myUI.getMessage(Messages.Children) + ":</b> " + str);
         gl.addComponent(childrenLb, 1, 6, 2, 6);
 
         Label captionOrders = new Label();
         captionOrders.setWidth(Settings.PERCENTS100);
         captionOrders.setContentMode(ContentMode.HTML);
-        captionOrders.setValue(myUI.getMessage(IndigoMessages.OrdersHistory));
+        captionOrders.setValue(myUI.getMessage(Messages.OrdersHistory));
         captionOrders.setStyleName("tableCpt");
         gl.addComponent(captionOrders, 0, 7, 2, 7);
 
@@ -339,14 +339,14 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         final Button source = event.getButton();
         if (source == saveBtn) {
             if (!Settings.validateTable(myUI, data1Table) || !Settings.validateTable(myUI, data2Table)) {
-                Notification.show(myUI.getMessage(IndigoMessages.NotificationWrongValue),
+                Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                         Notification.Type.WARNING_MESSAGE);
             } else {
                 try {
                     int st = insertTableValuesToDb(data1Table);
                     int st2 = insertTableValuesToDb(data2Table);
                     if (st != 0 || st2 != 0) {
-                        Notification.show(myUI.getMessage(IndigoMessages.ValueSaved),
+                        Notification.show(myUI.getMessage(Messages.ValueSaved),
                                 Notification.Type.HUMANIZED_MESSAGE);
                         setTableOptions(data1Table, (Integer) school1Select.getValue());
                         setTableOptions(data2Table, (Integer) school2Select.getValue());
@@ -382,10 +382,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         } else if (data1Table != null && data1Table.size() > 0 && property == search1TF) {
             if (property.getValue() != null && property.getValue().toString().length() > 1) {
                 Container.Filter filter = new Or(
-                        new SimpleStringFilter(myUI.getMessage(IndigoMessages.FirstName), property.getValue().toString(), true, false),
-                        new SimpleStringFilter(myUI.getMessage(IndigoMessages.LastName), property.getValue().toString(), true, false),
-                        new SimpleStringFilter(myUI.getMessage(IndigoMessages.Id), property.getValue().toString(), true, false),
-                        new SimpleStringFilter(myUI.getMessage(IndigoMessages.Position), property.getValue().toString(), true, false));
+                        new SimpleStringFilter(myUI.getMessage(Messages.FirstName), property.getValue().toString(), true, false),
+                        new SimpleStringFilter(myUI.getMessage(Messages.LastName), property.getValue().toString(), true, false),
+                        new SimpleStringFilter(myUI.getMessage(Messages.Id), property.getValue().toString(), true, false),
+                        new SimpleStringFilter(myUI.getMessage(Messages.Position), property.getValue().toString(), true, false));
 
                 ((IndexedContainer) data1Table.getContainerDataSource()).removeAllContainerFilters();
                 ((IndexedContainer) data1Table.getContainerDataSource()).addContainerFilter(filter);
@@ -395,10 +395,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         } else if (data2Table != null && data2Table.size() > 0 && property == search2TF) {
             if (property.getValue() != null && property.getValue().toString().length() > 1) {
                 Container.Filter filter = new Or(
-                        new SimpleStringFilter(myUI.getMessage(IndigoMessages.FirstName), property.getValue().toString(), true, false),
-                        new SimpleStringFilter(myUI.getMessage(IndigoMessages.LastName), property.getValue().toString(), true, false),
-                        new SimpleStringFilter(myUI.getMessage(IndigoMessages.Id), property.getValue().toString(), true, false),
-                        new SimpleStringFilter(myUI.getMessage(IndigoMessages.Position), property.getValue().toString(), true, false));
+                        new SimpleStringFilter(myUI.getMessage(Messages.FirstName), property.getValue().toString(), true, false),
+                        new SimpleStringFilter(myUI.getMessage(Messages.LastName), property.getValue().toString(), true, false),
+                        new SimpleStringFilter(myUI.getMessage(Messages.Id), property.getValue().toString(), true, false),
+                        new SimpleStringFilter(myUI.getMessage(Messages.Position), property.getValue().toString(), true, false));
 
                 ((IndexedContainer) data2Table.getContainerDataSource()).removeAllContainerFilters();
                 ((IndexedContainer) data2Table.getContainerDataSource()).addContainerFilter(filter);
@@ -420,7 +420,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
             logger.catching(e);
         }
         t.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-        t.setColumnExpandRatio(myUI.getMessage(IndigoMessages.Note), 1);
+        t.setColumnExpandRatio(myUI.getMessage(Messages.Note), 1);
     }
 
     private int insertTableValuesToDb(Table t) {
@@ -438,13 +438,13 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                     eo.setSchool_id((Integer) t.getContainerProperty(next, Settings.school_id).getValue());
                     eo.setPosition_id((Integer) t.getContainerProperty(next, Settings.position_id).getValue());
                     eo.setFrom_date(((DateField) t.getContainerProperty(
-                            next, myUI.getMessage(IndigoMessages.FromDate)).getValue()).getValue());
+                            next, myUI.getMessage(Messages.FromDate)).getValue()).getValue());
                     if (((TextField) t.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Note)).getValue()).getValue() != null
+                            myUI.getMessage(Messages.Note)).getValue()).getValue() != null
                             && !((TextField) t.getContainerProperty(next,
-                            myUI.getMessage(IndigoMessages.Note)).getValue()).getValue().equals("")) {
+                            myUI.getMessage(Messages.Note)).getValue()).getValue().equals("")) {
                         eo.setNote(((TextField) t.getContainerProperty(next,
-                                myUI.getMessage(IndigoMessages.Note)).getValue()).getValue());
+                                myUI.getMessage(Messages.Note)).getValue()).getValue());
                     }
                     eo.setM_employee_id(myUI.getUser().getId());
                     st = dbeo.exec_insert(eo);
@@ -453,7 +453,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                     eo.setOrder_id(8);
                     st = dbeo.exec_insert(eo);
                     eo.setPosition_id((Integer) ((ComboBox) t.getContainerProperty(
-                            next, myUI.getMessage(IndigoMessages.MainPosition)).getValue()).getValue());
+                            next, myUI.getMessage(Messages.MainPosition)).getValue()).getValue());
                     eo.setOrder_id(1);
                     st = dbeo.exec_insert(eo);
                     DbAccCategory dbAc = new DbAccCategory();

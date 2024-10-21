@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.indigo.MyVaadinUI;
 import kg.alex.indigo.Settings;
 import kg.alex.indigo.domain.EmployeeBranch;
-import kg.alex.indigo.i18n.IndigoMessages;
+import kg.alex.indigo.i18n.Messages;
 import kg.alex.indigo.ui.EmployeeDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -70,18 +70,18 @@ public class DbEmployeeBranch extends BaseDb {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    edv.createButton(myUI.getMessage(IndigoMessages.DeleteButton), id, Settings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(IndigoMessages.Branch)).setValue(
+                    edv.createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(myUI.getMessage(Messages.Branch)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_branch_id"),
-                            myUI.getMessage(IndigoMessages.Branch), Settings.dbBranchTable, true));
+                            myUI.getMessage(Messages.Branch), Settings.dbBranchTable, true));
             if (result.getInt("ex.hr_importance_id") == 1) {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Main)).setValue(
-                        edv.createCheckBox(true, myUI.getMessage(IndigoMessages.Main)));
+                item.getItemProperty(myUI.getMessage(Messages.Main)).setValue(
+                        edv.createCheckBox(true, myUI.getMessage(Messages.Main)));
             } else {
-                item.getItemProperty(myUI.getMessage(IndigoMessages.Main)).setValue(
-                        edv.createCheckBox(false, myUI.getMessage(IndigoMessages.Main)));
+                item.getItemProperty(myUI.getMessage(Messages.Main)).setValue(
+                        edv.createCheckBox(false, myUI.getMessage(Messages.Main)));
             }
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(IndigoMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
