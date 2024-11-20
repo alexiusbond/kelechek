@@ -265,6 +265,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.setId(in_out_id + "");
         setGridData(in_out_id);
         grid.setSizeFull();
+        grid.setEditorEnabled(false);
         grid.setEditorBuffered(true);
         grid.addItemClickListener((ItemClickEvent.ItemClickListener) event -> {
             if (!(Boolean) event.getItem().getItemProperty(Settings.is_disabled).getValue()) {
