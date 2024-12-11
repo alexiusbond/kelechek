@@ -75,7 +75,7 @@ public class DbEmployeeWork extends BaseDb {
         if (ew.getEnd() != null) {
             stat.setDate(4, new Date(ew.getEnd().getTime()));
         } else {
-            stat.setNull(4, Types.VARCHAR);
+            stat.setNull(4, Types.DATE);
         }
         stat.setInt(5, ew.getWorking_status_id());
         stat.setBoolean(6, ew.isSapat());

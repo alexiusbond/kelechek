@@ -45,7 +45,7 @@ public class DbStudentDiscount extends BaseDb {
                 + "discount_value,creation_date) VALUES(?,?,?,?,?,NOW(),?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (d.getFree_entry_amount() == 0.0) {
-            stat.setNull(1, Types.VARCHAR);
+            stat.setNull(1, Types.DOUBLE);
         } else {
             stat.setDouble(1, d.getFree_entry_amount());
         }

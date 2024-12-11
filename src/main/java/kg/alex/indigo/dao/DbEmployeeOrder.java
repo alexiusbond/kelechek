@@ -102,7 +102,7 @@ public class DbEmployeeOrder extends BaseDb {
         if (eo.getTo_date() != null) {
             stat.setDate(++counter, new java.sql.Date(eo.getTo_date().getTime()));
         } else {
-            stat.setNull(++counter, Types.VARCHAR);
+            stat.setNull(++counter, Types.DATE);
         }
         if (eo.getNote() != null) {
             stat.setString(++counter, eo.getNote());

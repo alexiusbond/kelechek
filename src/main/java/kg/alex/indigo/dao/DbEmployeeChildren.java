@@ -40,7 +40,7 @@ public class DbEmployeeChildren extends BaseDb {
         if (ech.getEducation_status_id() != 0) {
             stat.setInt(5, ech.getEducation_status_id());
         } else {
-            stat.setNull(5, Types.VARCHAR);
+            stat.setNull(5, Types.INTEGER);
         }
         stat.setInt(6, ech.getHealth_status_id());
         int st = stat.executeUpdate();
@@ -65,7 +65,7 @@ public class DbEmployeeChildren extends BaseDb {
         if (ech.getEducation_status_id() != 0) {
             stat.setInt(4, ech.getEducation_status_id());
         } else {
-            stat.setNull(4, Types.VARCHAR);
+            stat.setNull(4, Types.INTEGER);
         }
         stat.setInt(5, ech.getHealth_status_id());
         stat.setInt(6, ech.getId());
