@@ -608,6 +608,7 @@ public class Messages_ru extends kg.alex.indigo.i18n.Messages {
             {StudentId, "Номер ученика"},
             {StudentsPossessive, "ученика"},
             {Age, "Возраст"},
+            {NoDirectorAssigned, "Не назначен директор школы"},
     };
 
     @Override
