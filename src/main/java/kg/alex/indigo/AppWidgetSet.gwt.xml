@@ -40,5 +40,4 @@
     <inherits name="org.vaadin.teemu.ratingstars.gwt.RatingStarsWidgetset"/>
     <inherits name="org.vaadin.grid.cellrenderers.RenderersCollectionWidgetSet"/>
     <inherits name="org.vaadin.sparklines.SparklinesWidgetset"/>
-
 </module>
