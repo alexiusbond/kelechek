@@ -107,19 +107,24 @@ public class MyVaadinUI extends UI {
 
     public void workingDetails(Subject currentUser) {
         try {
-            DbSchool dbs = new DbSchool();
-            dbs.connect();
-            setSchoolCont(dbs.execSchoolSel(this, 0));
-            dbs.close();
+            DbUserDetails dbu = new DbUserDetails();
+            dbu.connect();
+            setUser(dbu.execSQLUserInfo(currentUser.getPrincipal().toString()));
+            dbu.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
         try {
-            DbUserDetails dbu = new DbUserDetails();
-            dbu.connect();
-            setUser(dbu.execSQLUserInfo(currentUser.getPrincipal().toString()));
-            dbu.close();
+            DbSchool dbs = new DbSchool();
+            dbs.connect();
+            if (currentUser.isPermitted(Settings.prmShowAllSchools + ":" + Settings.prmMenu) ||
+                getUser().getPosition_id() == 116) {
+                setSchoolCont(dbs.execSchoolSel(this, 0, this.getUser().getId()));
+            } else {
+                setSchoolCont(dbs.execSchoolSel(this, getUser().getSchool().getId(), this.getUser().getId()));
+            }
+            dbs.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);

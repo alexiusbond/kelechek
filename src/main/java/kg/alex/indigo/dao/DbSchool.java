@@ -26,11 +26,11 @@ public class DbSchool extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
 
         String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, t.name, "
-                + "s.activity_status_id, ac.name, s.city, s.address, "
-                + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
-                + "left join activity_status as ac on ac.id = s.activity_status_id "
-                + "left join school_type as t on t.id = s.school_type_id "
-                + "order by CAST(s.code AS UNSIGNED)";
+                     + "s.activity_status_id, ac.name, s.city, s.address, "
+                     + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
+                     + "left join activity_status as ac on ac.id = s.activity_status_id "
+                     + "left join school_type as t on t.id = s.school_type_id "
+                     + "order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -90,8 +90,8 @@ public class DbSchool extends BaseDb {
 
     public int exec_update(School scl) throws SQLException {
         String sql = "UPDATE school SET code = ?, name_ru = ?, name_kg = ?, name_en = ?, activity_status_id = ?, " +
-                "address = ?, inn = ?, bank = ?, bank_account = ?, phone = ?, photo = ?, city = ?, school_type_id = ? " +
-                "WHERE id = ?";
+                     "address = ?, inn = ?, bank = ?, bank_account = ?, phone = ?, photo = ?, city = ?, school_type_id = ? " +
+                     "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());
         stat.setString(2, scl.getName_ru());
@@ -149,9 +149,9 @@ public class DbSchool extends BaseDb {
 
     public int exec_insert(School scl) throws SQLException {
         String sql = "INSERT IGNORE INTO school (code, name_ru, name_kg, name_en, "
-                + "activity_status_id, city, address, inn, bank, "
-                + "bank_account, phone, photo, school_type_id) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                     + "activity_status_id, city, address, inn, bank, "
+                     + "bank_account, phone, photo, school_type_id) "
+                     + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());
         stat.setString(2, scl.getName_ru());
@@ -214,8 +214,8 @@ public class DbSchool extends BaseDb {
     public School execSchool(int scl_id) throws SQLException {
         School scl = new School();
         String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.activity_status_id, s.city, s.address, "
-                + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id, s.okpo, s.bik, s.swift " +
-                "FROM school as s where s.id = ?";
+                     + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id, s.okpo, s.bik, s.swift " +
+                     "FROM school as s where s.id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
@@ -240,12 +240,19 @@ public class DbSchool extends BaseDb {
         return scl;
     }
 
-    public IndexedContainer execSchoolSel(MyVaadinUI myUI, int except_id) throws SQLException {
-        String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.name_kg, " +
-                "s.photo, s.code, s.primary_code, s.secondary_code, s.school_type_id, s.acc_currency_id from school as s " +
-                "where s.id != ? order by CAST(s.code AS UNSIGNED)";
+    public IndexedContainer execSchoolSel(MyVaadinUI myUI, int school_id, int employee_id) throws SQLException {
+        String sql = "SELECT s.id, s.school_type_id, s.acc_currency_id, " +
+                     "concat(s.code, ' - ', s.name_ru) as name, s.name_kg, " +
+                     "s.photo, s.code, s.primary_code, s.secondary_code from school as s where s.is_visible = 1 ";
+        if (school_id != 0) {
+            sql += "and s.id = ? ";
+        } else {
+            sql += "and s.id not in (select school_id from employee_hide_school where employee_id = ?) ";
+        }
+        sql += " order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, except_id);
+        stat.setInt(1, school_id != 0 ? school_id : employee_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
 
@@ -272,9 +279,37 @@ public class DbSchool extends BaseDb {
         return container;
     }
 
+    public IndexedContainer execSchoolSel(MyVaadinUI myUI, int except_id) throws SQLException {
+        String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.name_kg, " +
+                     "s.photo, s.code, s.primary_code, s.secondary_code from school as s " +
+                     "where s.id != ? order by CAST(s.code AS UNSIGNED)";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, except_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.TitleKg), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PrimaryCode), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.SecondaryCode), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Logo), String.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("s.id"));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(result.getString("name"));
+            item.getItemProperty(myUI.getMessage(Messages.TitleKg)).setValue(result.getString("s.name_kg"));
+            item.getItemProperty(myUI.getMessage(Messages.Code)).setValue(result.getString("s.code"));
+            item.getItemProperty(myUI.getMessage(Messages.PrimaryCode)).setValue(result.getString("s.primary_code"));
+            item.getItemProperty(myUI.getMessage(Messages.SecondaryCode)).setValue(result.getString("s.secondary_code"));
+            item.getItemProperty(myUI.getMessage(Messages.Logo)).setValue(result.getString("s.photo"));
+        }
+        return container;
+    }
+
     public IndexedContainer execSchoolSel(MyVaadinUI myUI, String school_type_ids) throws SQLException {
         String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.code from school as s " +
-                "where s.school_type_id in (" + school_type_ids + ") order by CAST(s.code AS UNSIGNED)";
+                     "where s.school_type_id in (" + school_type_ids + ") order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -292,8 +327,8 @@ public class DbSchool extends BaseDb {
 
     public String execGet_logo(String st_login) throws SQLException {
         String sql = "SELECT sc.photo FROM school as sc "
-                + "left join student as st on st.school_id = sc.id "
-                + "where st.login = ?";
+                     + "left join student as st on st.school_id = sc.id "
+                     + "where st.login = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, st_login);
         ResultSet result = stat.executeQuery();

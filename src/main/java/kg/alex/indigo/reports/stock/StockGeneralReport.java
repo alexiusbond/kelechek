@@ -128,7 +128,8 @@ public class StockGeneralReport implements Button.ClickListener,
         try {
             DbSchool dbs = new DbSchool();
             dbs.connect();
-            schoolSelect.setContainerDataSource(dbs.execSchoolSel(myUI, 1));
+            schoolSelect.setContainerDataSource(
+                    dbs.execSchoolSel(myUI, Settings.MAIN_OFFICE_ID));
             dbs.close();
         } catch (Exception e) {
             logger.error(e);

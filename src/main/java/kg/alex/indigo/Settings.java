@@ -27,6 +27,7 @@ import java.util.*;
  */
 public class Settings implements Serializable {
 
+    public static final int MAIN_OFFICE_ID = 42;
     public static final String PATH_TO_UPLOADS = "/home/indigo/";
     public static final String PATH_TO_UPLOADS_HR = "/home/indigo/hr/";
     public static final DecimalFormat dFormat2 = new DecimalFormat("#,##0.00");
@@ -330,7 +331,7 @@ public class Settings implements Serializable {
     public static final String prmTabExtraInfo = "вкладка доп. информации";
     public static final String prmTabDocuments = "вкладка документов";
     public static final String prmChangeYear = "ChangeYear";
-    public static final String prmChangeSchool = "ChangeSchool";
+    public static final String prmShowAllSchools = "ShowAllSchools";
     public static final String prmProductMovementsReport = "отчет по передвижениям товара";
     public static final String prmStockGeneralReport = "общий отчет по складам";
     public static final String prmConfirmationControl = "контроль подтверждений";
