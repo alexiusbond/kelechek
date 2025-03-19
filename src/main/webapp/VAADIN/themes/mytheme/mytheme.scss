@@ -40,22 +40,22 @@
   .v-label-mainPage {
     font-size: 40px;
     font-weight: bold;
-    color: #1b3977;
+    color: $v-focus-color;
     letter-spacing: 0.05em;
   }
   .v-horizontallayout-loginLayout {
-    background-color: #1b3977;
+    background-color: $v-focus-color;
   }
   .v-panel-caption-loginPanel {
     line-height: 35px;
-    color: #1b3977;
+    color: $v-focus-color;
     font-weight: 500;
     font-size: 20px;
   }
   .v-label-mylabel {
     font-size: 24px;
     font-weight: bold;
-    color: #1b3977;
+    color: $v-focus-color;
     letter-spacing: 0.05em;
   }
   .v-menubar .v-menubar-menuitem {
@@ -65,7 +65,7 @@
     padding-left: 50px;
     font-size: 17px;
     color: #fff;
-    background-color: #1b3977;
+    background-color: $v-focus-color;
   }
   .v-upload .v-button {
     height: 23px;
@@ -109,7 +109,7 @@
     padding-left: 30px;
     font-size: 17px;
     font-weight: 600;
-    background-color: #1b3977;
+    background-color: $v-focus-color;
     background-image: -webkit-linear-gradient(top, #3B5998 2%, #3B5998 98%);
     background-image: -moz-linear-gradient(to bottom, #3B5998 2%, #3B5998 98%);
     color: #fff;
@@ -134,7 +134,7 @@
     font-size: 13px;
     font-weight: bold;
     color: #fff;
-    background-color: #1b3977;
+    background-color: $v-focus-color;
     padding-left: 15px;
     padding-right: 15px;
     padding-top: 3px;
@@ -297,7 +297,7 @@
   }
 
   .v-accordion-item-caption > .v-caption {
-    background: #1b3977;
+    background: $v-focus-color;
     color: #fff;
   }
 
