@@ -133,7 +133,7 @@ public class ContractIndigoSptPdf_2026 {
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.1. Мектептин милдеттери:", boldUnderlinedFont));
+                paragraph.add(new Phrase("2.1. Мектептин милдеттери:", boldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -151,7 +151,7 @@ public class ContractIndigoSptPdf_2026 {
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2 Мектептин укуктары:", boldUnderlinedFont));
+                paragraph.add(new Phrase("2.2 Мектептин укуктары:", boldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -291,7 +291,7 @@ public class ContractIndigoSptPdf_2026 {
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.1. Школа обязуется:", boldUnderlinedFont));
+                paragraph.add(new Phrase("2.1. Школа обязуется:", boldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -308,7 +308,7 @@ public class ContractIndigoSptPdf_2026 {
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2 Школа имеет право:", boldUnderlinedFont));
+                paragraph.add(new Phrase("2.2 Школа имеет право:", boldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -361,7 +361,7 @@ public class ContractIndigoSptPdf_2026 {
                 document.newPage();
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3. Ата-эненин укуктары:", boldUnderlinedFont));
+                paragraph.add(new Phrase("2.3. Ата-эненин укуктары:", boldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -425,7 +425,7 @@ public class ContractIndigoSptPdf_2026 {
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.4. Ата-эненин милдеттери:", boldUnderlinedFont));
+                paragraph.add(new Phrase("2.4. Ата-эненин милдеттери:", boldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -496,7 +496,7 @@ public class ContractIndigoSptPdf_2026 {
                 document.newPage();
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3. Родители обязаны:", boldUnderlinedFont));
+                paragraph.add(new Phrase("2.3. Родители обязаны:", boldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -563,7 +563,7 @@ public class ContractIndigoSptPdf_2026 {
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.4. Родители имеют право:", boldUnderlinedFont));
+                paragraph.add(new Phrase("2.4. Родители имеют право:", boldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -1172,20 +1172,43 @@ public class ContractIndigoSptPdf_2026 {
 
         Font f_font = new Font(Font.FontFamily.UNDEFINED, 10, Font.NORMAL);
 
+        @Override
         public void onEndPage(PdfWriter writer, Document document) {
-            PdfContentByte cb = writer.getDirectContent();
             try {
-                Phrase ft = new Phrase(String.format(" %d",
-                        writer.getPageNumber()), f_font);
-                ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, ft,
-                        (document.right() - 30),
-                        document.bottom() - 10, 0);
+                PdfContentByte cb = writer.getDirectContent();
+
+                float signatureRectX = 435f;
+                float signatureRectY = 15f;
+                float signatureRectWidth = 70f;
+                float signatureRectHeight = 20f;
+
+                cb.saveState();
+                cb.rectangle(signatureRectX, signatureRectY, signatureRectWidth, signatureRectHeight);
+                cb.stroke();
+                cb.restoreState();
+
+                float centerY = signatureRectY + (signatureRectHeight / 2);
+
+                // Чтобы опустить текст чуть ниже центра,
+                // вычитаем 3 pt из centerY (корректируйте по вкусу).
+                float offsetY = centerY - 3f;
+
+                float pageNumberX = 560f;
+
+                ColumnText.showTextAligned(
+                        cb,
+                        Element.ALIGN_RIGHT,
+                        new Phrase(String.format("%d", writer.getPageNumber()), f_font),
+                        pageNumberX,
+                        offsetY,
+                        0
+                );
 
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
             }
         }
-
     }
+
 }

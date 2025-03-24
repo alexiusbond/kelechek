@@ -252,7 +252,6 @@ public class DbSchool extends BaseDb {
         sql += " order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id != 0 ? school_id : employee_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
 
