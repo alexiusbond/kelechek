@@ -499,6 +499,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG.addItem(myUI.getMessage(Messages.AsylkechContract));
         contractTypeOG.addItem(myUI.getMessage(Messages.IndigoWestContract));
         contractTypeOG.addItem(myUI.getMessage(Messages.KidsContract));
+        contractTypeOG.addItem(myUI.getMessage(Messages.IndigoSptContract));
         contractTypeOG.addItem(myUI.getMessage(Messages.SchoolContrRu));
         contractTypeOG.addItem(myUI.getMessage(Messages.SchoolContrKg));
 
@@ -1360,6 +1361,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     new ContractIndigoWestPdf(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.KidsContract))) {
                                     new ContractKidsPdf(myUI, studInfo, instPlanCont);
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.IndigoSptContract))) {
+                                        new ContractIndigoSptPdf_2026(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.SchoolContrRu))) {
                                     if (myUI.getUser().getCurrent_year().getId() == 10) {
                                         new ContractSchoolPdf_2025_ru(myUI, studInfo, instPlanCont);

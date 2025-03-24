@@ -479,6 +479,7 @@ public class Messages_ru extends kg.alex.indigo.i18n.Messages {
             {AsylkechContract, "Договор Asylkech"},
             {IndigoWestContract, "Договор Indigo West"},
             {KidsContract, "Договор Детсад"},
+            {IndigoSptContract, "Договор Indigo SPT"},
             {SchoolContrRu, "Договор Сапат (RU)"},
             {SchoolContrKg, "Договор Сапат (KG)"},
             {CallsReport, "Отчет о вызовах"},
