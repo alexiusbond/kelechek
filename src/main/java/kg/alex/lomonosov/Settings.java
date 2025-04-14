@@ -27,7 +27,7 @@ import java.util.*;
  */
 public class Settings implements Serializable {
 
-    public static final int MAIN_OFFICE_ID = 42;
+    public static final int MAIN_OFFICE_ID = 0;
     public static final String PATH_TO_UPLOADS = "/home/lomonosov/";
     public static final String PATH_TO_UPLOADS_HR = "/home/lomonosov/hr/";
     public static final DecimalFormat dFormat2 = new DecimalFormat("#,##0.00");

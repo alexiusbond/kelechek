@@ -305,7 +305,7 @@ public class SettingsView extends GridLayout {
 
         Label sebatExamLab = new Label();
         sebatExamLab.setSizeUndefined();
-        sebatExamLab.setValue(myUI.getMessage(Messages.SapatExam));
+        sebatExamLab.setValue(myUI.getMessage(Messages.LomonosovExam));
 
         ComboBox sebatExamCb = new ComboBox();
         sebatExamCb.setNullSelectionAllowed(false);

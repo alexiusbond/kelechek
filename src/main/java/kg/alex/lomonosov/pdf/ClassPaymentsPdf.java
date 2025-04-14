@@ -159,7 +159,7 @@ public class ClassPaymentsPdf {
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
                     T2.addCell(new Phrase(myUI.getMessage(Messages.Accountant), ordFontBold));
-                    T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.President), ordFontBold));
                     T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
                             + studentInfo.getAccountant().getName() + " " +
                             (studentInfo.getAccountant().getMiddle_name() == null ?

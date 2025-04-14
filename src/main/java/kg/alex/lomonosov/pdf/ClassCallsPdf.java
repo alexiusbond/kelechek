@@ -143,7 +143,7 @@ public class ClassCallsPdf {
                     T2.getDefaultCell().setBorder(0);
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
-                    T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.President), ordFontBold));
                     T2.addCell("");
                     T2.addCell(new Phrase(studentInfo.getDirector().getSurname() + " "
                             + studentInfo.getDirector().getName() + " " +

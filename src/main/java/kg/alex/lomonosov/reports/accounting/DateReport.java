@@ -419,7 +419,7 @@ public class DateReport implements Button.ClickListener,
                                     cell.setCellValue(myUI.getMessage(Messages.Accountant));
                                     cell.setCellStyle(style);
                                     cell = row.createCell(5);
-                                    cell.setCellValue(myUI.getMessage(Messages.Director));
+                                    cell.setCellValue(myUI.getMessage(Messages.President));
                                     cell.setCellStyle(style);
                                     row = excelReport.getWorkbook().getSheet(sheet).createRow(++rowNum);
                                     row.createCell(1).setCellValue(studentInfo.getAccountant().getSurname() + " "

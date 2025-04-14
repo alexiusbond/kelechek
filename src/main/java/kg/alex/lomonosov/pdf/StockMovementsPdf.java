@@ -185,7 +185,7 @@ public class StockMovementsPdf {
                     T2.addCell(new Phrase(" ", ordFont));
                     T2.addCell(new Phrase(" ", ordFont));
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(Messages.Director) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.President) + ": ", ordFontBold));
                     p.add(new Phrase(schoolInfo.getDirector().getSurname() + " "
                             + schoolInfo.getDirector().getName() + " " +
                             (schoolInfo.getDirector().getMiddle_name() == null ?

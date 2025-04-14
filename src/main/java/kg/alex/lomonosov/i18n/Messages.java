@@ -202,7 +202,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String ExtraPosition = generateId();
     public static final String ExtraPositions = generateId();
     public static final String TotalWorkExperience = generateId();
-    public static final String SapatWorkExperience = generateId();
+    public static final String LomonosovWorkExperience = generateId();
     public static final String ExtraBranches = generateId();
     public static final String GenerateButton = generateId();
     public static final String Functions = generateId();
@@ -293,7 +293,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String Left = generateId();
     public static final String TotalHours = generateId();
     public static final String WorkPlace = generateId();
-    public static final String Sapat = generateId();
+    public static final String Lomonosov = generateId();
     public static final String Passport = generateId();
     public static final String PassportGiven = generateId();
     public static final String PassportDate = generateId();
@@ -401,8 +401,8 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String FromAge = generateId();
     public static final String To = generateId();
     public static final String ToAge = generateId();
-    public static final String Director = generateId();
-    public static final String SapatExam = generateId();
+    public static final String President = generateId();
+    public static final String LomonosovExam = generateId();
     public static final String AllClasses = generateId();
     public static final String All = generateId();
     public static final String AllIncomes = generateId();
@@ -469,12 +469,6 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String Summary = generateId();
     public static final String Report = generateId();
     public static final String ToPlan = generateId();
-    public static final String AsylkechContract = generateId();
-    public static final String IndigoWestContract = generateId();
-    public static final String KidsContract = generateId();
-    public static final String IndigoSptContract = generateId();
-    public static final String SchoolContrRu = generateId();
-    public static final String SchoolContrKg = generateId();
     public static final String CallsReport = generateId();
     public static final String ContractTypes = generateId();
     public static final String DiscountAmount = generateId();

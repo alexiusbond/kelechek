@@ -194,6 +194,7 @@ public class DbDefinition extends BaseDb {
         sql += "order by t.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
+        System.out.println(stat);
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(Settings.position_id, Integer.class, 0);

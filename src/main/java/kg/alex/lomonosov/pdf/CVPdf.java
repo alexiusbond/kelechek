@@ -215,7 +215,7 @@ public class CVPdf {
                     paragraph.add(new Phrase(employeeExtraInfo.getExtraPositions() + "\n", ordFont));
                     paragraph.add(new Phrase(myUI.getMessage(Messages.TotalWorkExperience) + ": ", ordFontBold));
                     paragraph.add(new Phrase(employeeExtraInfo.getWorkExperience() + "\n", ordFont));
-                    paragraph.add(new Phrase(myUI.getMessage(Messages.SapatWorkExperience) + ": ", ordFontBold));
+                    paragraph.add(new Phrase(myUI.getMessage(Messages.LomonosovWorkExperience) + ": ", ordFontBold));
                     paragraph.add(new Phrase(employeeExtraInfo.getWorkExperienceSapat() + "\n", ordFont));
                     paragraph.add(new Phrase(myUI.getMessage(Messages.MainBranch) + ": ", ordFontBold));
                     paragraph.add(new Phrase(employeeExtraInfo.getMainBranch() + "\n", ordFont));
