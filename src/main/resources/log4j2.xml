@@ -7,8 +7,8 @@
             <PatternLayout pattern="%-5p %c{1} [%t] - %m%n"/>
         </Console>
         #Апендер для вывода логов в файл
-        <RollingFile name="indigo" fileName="/home/indigo/indigo.log"
-                     filePattern="/home/indigo/indigo-%d{MM-dd-yyyy}-%i.log">
+        <RollingFile name="lomonosov" fileName="/home/lomonosov/lomonosov.log"
+                     filePattern="/home/lomonosov/lomonosov-%d{MM-dd-yyyy}-%i.log">
             <PatternLayout pattern="%d %d{Z} [%t] %-5p (%F:%L) - %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -19,8 +19,8 @@
 
     <Loggers>
 
-        <Logger name="kg.alex.indigo">
-            <AppenderRef ref="indigo"/>
+        <Logger name="kg.alex.lomonosov">
+            <AppenderRef ref="lomonosov"/>
         </Logger>
 
         <Root level="all">

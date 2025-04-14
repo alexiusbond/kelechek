@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context debug="5" docBase="/indigo" path="/indigo" reloadable="true">
-    <Resource name="jdbc/indigo"
+<Context debug="5" docBase="/lomonosov" path="/lomonosov" reloadable="true">
+    <Resource name="jdbc/lomonosov"
               auth="Container"
               type="javax.sql.DataSource"
               factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
@@ -21,8 +21,8 @@
               jmxEnabled="true"
               jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;
             org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
-              username="indigo"
-              password="i4]#kS0Nzgqc(WfG"
+              username="lomonosov"
+              password="}$43~jUT1I;w_4XJ56"
               driverClassName="com.mysql.cj.jdbc.Driver"
-              url="jdbc:mysql://localhost:3306/indigo?sessionVariables=sql_mode='NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'&amp;jdbcCompliantTruncation=false&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useTimezone=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Asia/Bishkek"/>
+              url="jdbc:mysql://localhost:3306/lomonosov?sessionVariables=sql_mode='NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'&amp;jdbcCompliantTruncation=false&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useTimezone=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Asia/Bishkek"/>
 </Context>

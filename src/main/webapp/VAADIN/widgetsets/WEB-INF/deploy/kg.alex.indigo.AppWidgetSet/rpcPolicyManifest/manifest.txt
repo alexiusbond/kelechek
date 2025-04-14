@@ -1,2 +1,0 @@
-# Module kg.alex.indigo.AppWidgetSet
-# RPC service class, partial path of RPC policy file
