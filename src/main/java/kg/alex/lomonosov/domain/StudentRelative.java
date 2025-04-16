@@ -12,7 +12,7 @@ public class StudentRelative implements Serializable {
     private int id;
     private int student_id;
     private String fullName;
-    private String work_place;
+    private String givenBy;
     private String phone;
     private String address;
     private String passport;
@@ -70,14 +70,6 @@ public class StudentRelative implements Serializable {
         this.fullName = fullName;
     }
 
-    public String getWork_place() {
-        return work_place;
-    }
-
-    public void setWork_place(String work_place) {
-        this.work_place = work_place;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -118,4 +110,11 @@ public class StudentRelative implements Serializable {
         this.relative_id = relative_id;
     }
 
+    public String getGivenBy() {
+        return givenBy;
+    }
+
+    public void setGivenBy(String givenBy) {
+        this.givenBy = givenBy;
+    }
 }

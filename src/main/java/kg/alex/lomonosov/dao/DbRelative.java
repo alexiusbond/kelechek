@@ -23,7 +23,7 @@ public class DbRelative extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int stud_id) throws SQLException {
 
-        String sql = "SELECT sr.fullname, sr.work_place, sr.phone, "
+        String sql = "SELECT sr.fullname, sr.given_by, sr.phone, "
                 + "sr.address, sr.passport, sr.relatives_id, sr.is_main "
                 + "FROM student_relatives as sr where sr.student_id = ? "
                 + "and (sr.relatives_id = 1 or sr.relatives_id = 2) "
@@ -33,7 +33,7 @@ public class DbRelative extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(Messages.FullName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(Messages.WorkPlace), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.GivenBy), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Phone), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Address), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Passport), String.class, null);
@@ -43,8 +43,8 @@ public class DbRelative extends BaseDb {
             Item item = container.addItem(result.getInt("sr.relatives_id"));
             item.getItemProperty(myUi.getMessage(Messages.FullName)).setValue(
                     result.getString("sr.fullname"));
-            item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
-                    result.getString("sr.work_place"));
+            item.getItemProperty(myUi.getMessage(Messages.GivenBy)).setValue(
+                    result.getString("sr.given_by"));
             item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                     result.getString("sr.phone"));
             item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(

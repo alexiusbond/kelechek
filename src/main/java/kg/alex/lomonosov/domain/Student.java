@@ -15,6 +15,7 @@ public class Student implements Serializable {
     private String password;
     private String name;
     private String surname;
+    private String address;
     private String middle_name;
     private int gender_id;
     private Date birth_date;
@@ -26,6 +27,14 @@ public class Student implements Serializable {
     private int school_id;
     private int entering_year_id;
     private int employee_id;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public int getId() {
         return id;

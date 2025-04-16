@@ -222,8 +222,6 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                         studInfo.getContractInfo().setTotalPayments(
                                 paymentsTable.getColumnFooter(myUI.getMessage(Messages.Amount)));
                     }
-                    studInfo.setYear(yearSelect.getContainerProperty(yearSelect.getValue(),
-                            myUI.getMessage(Messages.Title)).getValue().toString());
                     makePdfBtn.setEnabled(true);
                     excelBtn.setEnabled(true);
                 } else {

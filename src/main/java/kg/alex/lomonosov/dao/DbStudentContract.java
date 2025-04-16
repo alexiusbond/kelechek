@@ -223,7 +223,7 @@ public class DbStudentContract extends BaseDb {
                 "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) - " +
                 "SUM(IF(payment_category_id = 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) FROM student_payments as sp " +
                 "WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, vc.amount, vc.full_details, " +
-                "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, sr.address, sr.work_place, rel.name, ";
+                "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, sr.address, rel.name, ";
         if (from_date != null && till_date != null) {
             sql += "(select get_contract_with_discounts(c.amount, st.id, ?, ?, ?)) as contr_with_disc, " +
                     "GROUP_CONCAT(DISTINCT " +
@@ -420,7 +420,6 @@ public class DbStudentContract extends BaseDb {
         container.addContainerProperty(myUI.getMessage(Messages.Relative), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Phone), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Address), String.class, null);
-        container.addContainerProperty(myUI.getMessage(Messages.WorkPlace), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
             item.getItemProperty(myUI.getMessage(Messages.EducationStatus)).setValue(
@@ -444,8 +443,6 @@ public class DbStudentContract extends BaseDb {
                         result.getString("sr.phone"));
                 item.getItemProperty(myUI.getMessage(Messages.Address)).setValue(
                         result.getString("sr.address"));
-                item.getItemProperty(myUI.getMessage(Messages.WorkPlace)).setValue(
-                        result.getString("sr.work_place"));
             }
             double prevYearDebt = result.getDouble("prev_debt");
             if (prevYearDebt >= 0) {

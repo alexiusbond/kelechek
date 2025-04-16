@@ -25,7 +25,6 @@ public class DbUserDetails extends BaseDb {
     }
 
     public UserDetails execSQLUserInfo(String login) throws SQLException {
-        Subject currentUser = SecurityUtils.getSubject();
         String sql = "select e.id, ord.working_status_id, eb.hr_branch_id, e.login, concat(e.surname, ' ', e.name) as fullname, "
                 + "eo.school_id, sch.name_ru, sch.school_type_id, sch.acc_currency_id, sch.photo, sch.code, pos.id, "
                 + "y.id, y.name, y.is_last, y.installment_date_limit, sch.transactions_start_date "

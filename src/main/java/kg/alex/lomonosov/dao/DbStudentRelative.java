@@ -31,7 +31,7 @@ public class DbStudentRelative extends BaseDb {
                                            StudentDefinitionView dw) throws SQLException {
 
 
-        String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.work_place, "
+        String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.given_by, "
                 + "sr.phone, sr.address, sr.passport, sr.is_main, sr.relatives_id "
                 + "FROM student_relatives as sr where sr.student_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -54,8 +54,8 @@ public class DbStudentRelative extends BaseDb {
                 item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                         dw.createTextField(result.getString("sr.phone"),
                                 myUi.getMessage(Messages.Phone), id, true, true));
-                item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
-                        dw.createTextField(result.getString("sr.work_place"),
+                item.getItemProperty(myUi.getMessage(Messages.GivenBy)).setValue(
+                        dw.createTextField(result.getString("sr.given_by"),
                                 myUi.getMessage(Messages.WorkPlace), id, true, true));
                 item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                         dw.createTextField(result.getString("sr.passport"),
@@ -72,8 +72,8 @@ public class DbStudentRelative extends BaseDb {
                 item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                         dw.createTextField(result.getString("sr.phone"),
                                 myUi.getMessage(Messages.Phone), id, true, false));
-                item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
-                        dw.createTextField(result.getString("sr.work_place"),
+                item.getItemProperty(myUi.getMessage(Messages.GivenBy)).setValue(
+                        dw.createTextField(result.getString("sr.given_by"),
                                 myUi.getMessage(Messages.WorkPlace), id, true, false));
                 item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                         dw.createTextField(result.getString("sr.passport"),
@@ -92,12 +92,12 @@ public class DbStudentRelative extends BaseDb {
 
     public int exec_insert(StudentRelative r) throws SQLException {
         String sql = "INSERT INTO student_relatives (student_id, fullname, "
-                + "work_place, phone, address, passport, is_main, relatives_id) "
+                + "given_by, phone, address, passport, is_main, relatives_id) "
                 + "VALUES(?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, r.getStudent_id());
         stat.setString(2, r.getFullName());
-        stat.setString(3, r.getWork_place());
+        stat.setString(3, r.getGivenBy());
         stat.setString(4, r.getPhone());
         stat.setString(5, r.getAddress());
         stat.setString(6, r.getPassport());
@@ -106,21 +106,14 @@ public class DbStudentRelative extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int exec_delete(String id) throws SQLException {
-        String sql = "DELETE FROM student_relatives WHERE id = ?";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, id);
-        return stat.executeUpdate();
-    }
-
     public int exec_update(StudentRelative sr) throws SQLException {
         String sql = "Update student_relatives set student_id = ?, "
-                + "fullname = ?, work_place = ?, phone = ?, address = ?, "
+                + "fullname = ?, given_by = ?, phone = ?, address = ?, "
                 + "passport = ?, is_main = ?, relatives_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sr.getStudent_id());
         stat.setString(2, sr.getFullName());
-        stat.setString(3, sr.getWork_place());
+        stat.setString(3, sr.getGivenBy());
         stat.setString(4, sr.getPhone());
         stat.setString(5, sr.getAddress());
         stat.setString(6, sr.getPassport());

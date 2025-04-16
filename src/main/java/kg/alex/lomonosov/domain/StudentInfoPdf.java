@@ -9,9 +9,7 @@ import java.io.Serializable;
 
 public class StudentInfoPdf implements Serializable {
 
-    private String period;
-    private String period_kg;
-    private String year;
+    private Year year;
     private Employee director;
     private Employee accountant;
     private StudentRelative relative;
@@ -19,11 +17,11 @@ public class StudentInfoPdf implements Serializable {
     private Student student;
     private ContractInfo contractInfo;
 
-    public String getYear() {
+    public Year getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Year year) {
         this.year = year;
     }
 
@@ -65,22 +63,6 @@ public class StudentInfoPdf implements Serializable {
 
     public void setDirector(Employee director) {
         this.director = director;
-    }
-
-    public String getPeriod_kg() {
-        return period_kg;
-    }
-
-    public void setPeriod_kg(String period_kg) {
-        this.period_kg = period_kg;
-    }
-
-    public String getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(String period) {
-        this.period = period;
     }
 
     public School getSchool() {
