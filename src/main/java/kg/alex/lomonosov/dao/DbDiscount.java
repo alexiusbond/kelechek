@@ -30,20 +30,17 @@ public class DbDiscount extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
 
         String sql = "SELECT d.id, d.name, d.amount, d.activity_status_id, dt.name, d.discount_type_id, " +
-                "d.acc_currency_id, ac.name, d.year_id, y.name, cur.name FROM discount as d " +
-                "left join discount_type as dt on dt.id = d.discount_type_id " +
-                "left join acc_currency as cur on cur.id = d.acc_currency_id " +
-                "left join year as y on y.id = d.year_id " +
-                "left join activity_status as ac on ac.id = d.activity_status_id " +
-                "order by y.id DESC, d.id DESC";
+                     "ac.name, d.year_id, y.name FROM discount as d " +
+                     "left join discount_type as dt on dt.id = d.discount_type_id " +
+                     "left join year as y on y.id = d.year_id " +
+                     "left join activity_status as ac on ac.id = d.activity_status_id " +
+                     "order by y.id DESC, d.id DESC";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Value), Double.class, 0.0);
-        container.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(Messages.Currency), String.class, null);
         container.addContainerProperty(Settings.discount_type_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(Messages.DiscountType), String.class, null);
         container.addContainerProperty(Settings.year_id, Integer.class, 0);
@@ -58,10 +55,6 @@ public class DbDiscount extends BaseDb {
                     result.getString("d.name"));
             item.getItemProperty(myUi.getMessage(Messages.Value)).setValue(
                     result.getDouble("d.amount"));
-            item.getItemProperty(Settings.acc_currency_id).setValue(
-                    result.getInt("d.acc_currency_id"));
-            item.getItemProperty(myUi.getMessage(Messages.Currency)).setValue(
-                    result.getString("cur.name"));
             item.getItemProperty(Settings.discount_type_id).setValue(
                     result.getInt("d.discount_type_id"));
             item.getItemProperty(myUi.getMessage(Messages.DiscountType)).setValue(

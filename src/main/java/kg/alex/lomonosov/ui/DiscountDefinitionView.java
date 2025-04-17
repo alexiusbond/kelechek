@@ -40,7 +40,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
     private final String[] NATURAL_COL_ORDER;
     private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBox currencySelect, discTypeSelect, statusSelect, yearSelect;
+    private ComboBox discTypeSelect, statusSelect, yearSelect;
     private TextField nameTF, valueTF;
     private PopupButton copyButton;
     private boolean isNew;
@@ -49,9 +49,12 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
     public DiscountDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.DiscountType), myUI.getMessage(Messages.Title),
-                myUI.getMessage(Messages.Value), myUI.getMessage(Messages.Currency),
-                myUI.getMessage(Messages.Year), myUI.getMessage(Messages.Status)};
+        NATURAL_COL_ORDER = new String[]{
+                myUI.getMessage(Messages.DiscountType),
+                myUI.getMessage(Messages.Title),
+                myUI.getMessage(Messages.Value),
+                myUI.getMessage(Messages.Year),
+                myUI.getMessage(Messages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -181,15 +184,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                 myUI.getMessage(Messages.NotificationWrongValue), 0.01, null));
         settingsLay.addComponent(valueTF);
 
-        currencySelect = new ComboBox(myUI.getMessage(Messages.Currency));
-        currencySelect.setNullSelectionAllowed(true);
-        currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        currencySelect.setWidth(Settings.PERCENTS100);
-        currencySelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
-        currencySelect.setFilteringMode(FilteringMode.CONTAINS);
-        currencySelect.setEnabled(false);
-        settingsLay.addComponent(currencySelect);
-
         statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
@@ -205,8 +199,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                     dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
             discTypeSelect.setContainerDataSource(
                     dbDef.exec_for_select(myUI, Settings.dbDiscountType, true));
-            currencySelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, Settings.dbAcc_currency, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -352,21 +344,12 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                 valueTF.addValidator(new DoubleRangeValidator(
                         myUI.getMessage(Messages.NotificationWrongValue), 0.01, null));
             }
-            if (discTypeSelect.isEnabled() && ((Integer) discTypeSelect.getValue() == 2 || (Integer) discTypeSelect.getValue() == 4)) {
-                currencySelect.setEnabled(true);
-                currencySelect.setRequired(true);
-                currencySelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
-            } else {
-                currencySelect.setValue(null);
-                currencySelect.setEnabled(false);
-                currencySelect.setRequired(false);
-            }
         } else if (property == yearSelect && yearSelect.getValue() != null
-                && dataTable.getValue() != null) {
+                   && dataTable.getValue() != null) {
             try {
                 ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
                         myUI.getMessage(Messages.ConfirmDiscountCopy)
-                                + yearSelect.getContainerProperty(yearSelect.getValue(),
+                        + yearSelect.getContainerProperty(yearSelect.getValue(),
                                         myUI.getMessage(Messages.Title))
                                 .getValue().toString() + " года?",
                         myUI.getMessage(Messages.Yes),
@@ -395,9 +378,8 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         nameTF.setEnabled(true);
         valueTF.setEnabled(true);
         if (dataTable.getValue() != null && dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id) != null &&
-                ((Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id).getValue() == 2 ||
-                        (Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id).getValue() == 4)) {
-            currencySelect.setEnabled(true);
+            ((Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id).getValue() == 2 ||
+             (Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id).getValue() == 4)) {
         }
         statusSelect.setEnabled(true);
     }
@@ -422,7 +404,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         valueTF.setEnabled(false);
         discTypeSelect.setEnabled(false);
         statusSelect.setEnabled(false);
-        currencySelect.setEnabled(false);
     }
 
     private void fillFields() {
@@ -432,9 +413,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                 myUI.getMessage(Messages.Value)).getValue().toString());
         discTypeSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id).getValue());
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(), Settings.status_id).getValue());
-        if (dataTable.getContainerProperty(dataTable.getValue(), Settings.acc_currency_id).getValue() != null) {
-            currencySelect.setValue(dataTable.getContainerProperty(dataTable.getValue(), Settings.acc_currency_id).getValue());
-        }
     }
 
     private void clearFields() {
@@ -443,7 +421,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         valueTF.removeAllValidators();
         discTypeSelect.setValue(null);
         statusSelect.setValue(null);
-        currencySelect.setValue(null);
     }
 
     private void updateDataContainer() {
@@ -464,14 +441,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                         myUI.getMessage(Messages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect.getValue());
-        if (currencySelect.getValue() != null) {
-            dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(Messages.Currency)).setValue(currencySelect
-                    .getContainerProperty(currencySelect.getValue(),
-                            myUI.getMessage(Messages.Title)).getValue().toString());
-            dataTable.getContainerProperty(dataTable.getValue(),
-                    Settings.acc_currency_id).setValue(currencySelect.getValue());
-        }
     }
 
     private void addDataContainerItem(int id) {
@@ -494,12 +463,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         item.getItemProperty(Settings.year_id).setValue(
                 myUI.getUser().getCurrent_year().getId());
         item.getItemProperty(Settings.id).setValue(id);
-        if (currencySelect.getValue() != null) {
-            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(
-                    currencySelect.getContainerProperty(currencySelect.getValue(),
-                            myUI.getMessage(Messages.Title)).getValue().toString());
-            item.getItemProperty(Settings.acc_currency_id).setValue(currencySelect.getValue());
-        }
         dataTable.setValue(id);
     }
 
@@ -510,9 +473,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         d.setAmount((Double) valueTF.getPropertyDataSource().getValue());
         d.setYear_id(myUI.getUser().getCurrent_year().getId());
         d.setStatus_id((Integer) statusSelect.getValue());
-        if (currencySelect.getValue() != null) {
-            d.setCurrency_id((Integer) currencySelect.getValue());
-        }
+        d.setCurrency_id(1);
         d.setId(i);
         return d;
     }

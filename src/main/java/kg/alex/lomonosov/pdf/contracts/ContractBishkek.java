@@ -8,7 +8,6 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import kg.alex.lomonosov.MyVaadinUI;
 import kg.alex.lomonosov.Settings;
-import kg.alex.lomonosov.dao.DbRelative;
 import kg.alex.lomonosov.domain.StudentInfoPdf;
 import kg.alex.lomonosov.i18n.Messages;
 import kg.alex.lomonosov.utils.Decliner;
@@ -19,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Iterator;
 
 public class ContractBishkek {
 
@@ -52,7 +50,6 @@ public class ContractBishkek {
                 BaseFont baseFontBold = BaseFont.createFont(FONT_LOCATION2, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
                 Font ordFont = new Font(baseFont, 11);
                 Font ordBoldFont = new Font(baseFontBold, 11);
-                Font ordBoldUnderlinedFont = new Font(baseFontBold, 11, Font.UNDERLINE);
 
                 document.open();
 
@@ -576,199 +573,118 @@ public class ContractBishkek {
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
-                float[] table_info_colsWidth = {1.5f, 1f};
-                PdfPTable table_info = new PdfPTable(2);
+                float[] table_info_colsWidth = {1f, 0.2f, 1f};
+                PdfPTable table_info = new PdfPTable(3);
                 table_info.getDefaultCell().setBorder(0);
                 table_info.setWidthPercentage(90f);
                 table_info.setWidths(table_info_colsWidth);
-                Paragraph text10 = new Paragraph();
-                text10.add(new Phrase("Школа: " + studentInfo.getSchool().getName_ru(), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Адрес: " + studentInfo.getSchool().getAddress(), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("ИНН: " + studentInfo.getSchool().getInn(), ordFont));
-                text10.add(Chunk.NEWLINE);
-                String[] banks = studentInfo.getSchool().getBank().split("<br>");
-                String[] bankAccounts = studentInfo.getSchool().getBank_account().split("<br>");
-                for (int i = 0; i < banks.length; i++) {
-                    text10.add(new Phrase("Банк: " + banks[i], ordFont));
-                    text10.add(Chunk.NEWLINE);
-                    text10.add(new Phrase("Р/счет: " + bankAccounts[i], ordFont));
-                    text10.add(Chunk.NEWLINE);
-                }
-                text10.add(new Phrase("Тел.: " + studentInfo.getSchool().getPhone(), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Директор Школы: " + studentInfo.getDirector().getSurname() + " "
-                                      + studentInfo.getDirector().getName() + " " +
-                                      (studentInfo.getDirector().getMiddle_name() == null ?
-                                              "" : studentInfo.getDirector().getMiddle_name()), ordFont));
-                text10.add(Chunk.NEWLINE);
-
-                IndexedContainer relativeCont = null;
-                table_info.addCell(text10);
-                try {
-                    DbRelative dbr = new DbRelative();
-                    dbr.connect();
-                    relativeCont = dbr.execSQL(myUI, studentInfo.getStudent().getId());
-                    dbr.close();
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
-                }
-                Paragraph text11 = new Paragraph();
-                Paragraph text18 = new Paragraph();
-                Iterator<?> iter = null;
-                if (relativeCont != null) {
-                    iter = relativeCont.getItemIds().iterator();
-                }
-                String f_name = "";
-                String m_name = "";
-                String passport = "";
-                while (iter != null && iter.hasNext()) {
-                    Object obj = iter.next();
-                    if ((Integer) obj == 1) {
-                        f_name = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.FullName)).getValue().toString();
-                    }
-                    if ((Integer) obj == 2) {
-                        m_name = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.FullName)).getValue().toString();
-
-                    }
-                    if ((Integer) relativeCont.getContainerProperty(obj,
-                            Settings.is_main).getValue() == 1) {
-                        text18.add(new Phrase("Контактный тел: ", ordFont));
-                        text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Phone)).getValue().toString(), ordFont));
-                        text18.add(Chunk.NEWLINE);
-                        text18.add(new Phrase("Адрес места жительства: ", ordFont));
-                        text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Address)).getValue().toString(), ordFont));
-                        passport = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Passport)).getValue().toString();
-                    }
-                }
-                text11.add(new Phrase("Ф.И.О. отца: " + f_name, ordFont));
-                text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Ф.И.О. матери: " + m_name, ordFont));
-                text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Данные паспорта: ", ordFont));
-                text11.add(new Phrase(passport, ordFont));
-                text11.add(text18);
-                table_info.addCell(text11);
-                table_info.addCell(new Phrase(" (М.П)", ordFont));
-                table_info.addCell(new Phrase("Подпись отца: ________________", ordFont));
-                table_info.addCell(new Phrase(" ", ordFont));
-                table_info.addCell(new Phrase("Подпись матери: ________________", ordFont));
-
+                table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                table_info.addCell(new Phrase("Образовательное учреждение", ordBoldFont));
+                table_info.addCell(new Phrase(""));
+                table_info.addCell(new Phrase("Родители (законные представители)", ordBoldFont));
+                table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                table_info.addCell(new Phrase("Учреждение Научно-образовательный\nкомплекс «Школа Ломоносова»\n" +
+                                              "Адрес: Кыргызская Республика, город\n" +
+                                              "Бишкек, ул. Джунусалиева, 175\n" +
+                                              "school.bishkek@lomonosov.kg\n" +
+                                              "Номер свидетельства о гос.рег.:\n" +
+                                              "183927-3301-У-е\n" +
+                                              "Номер лицензии:\n" +
+                                              "В2019-0020 от 2 августа 2019 г.", ordFont));
+                table_info.addCell(new Phrase(""));
+                table_info.addCell(new Phrase(studentInfo.getRelative().getFullName() + "\n" +
+                                              "Домашний̆ адрес: " + studentInfo.getRelative().getAddress() + "\n" +
+                                              "Телефон: " + studentInfo.getRelative().getPhone() + "\n" +
+                                              "Паспортные данные:\n" +
+                                              "Номер паспорта: " + studentInfo.getRelative().getPassport() + "\n" +
+                                              "Кем выдан: " + studentInfo.getRelative().getGivenBy(), ordFont));
+                table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                table_info.addCell(new Phrase("Президент образовательного учреждения", ordBoldFont));
+                table_info.addCell(new Phrase(""));
+                table_info.addCell(new Phrase("Родители (законные представители):", ordBoldFont));
+                table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                table_info.addCell(new Phrase("____________________Турдакунова Н. Б.", ordBoldFont));
+                table_info.addCell(new Phrase(""));
+                table_info.addCell(new Phrase("____________________________________", ordBoldFont));
                 document.add(table_info);
                 document.add(new Paragraph(10, " "));
 
-                Paragraph text15 = new Paragraph();
-                text15.setIndentationLeft(30);
-                text15.setIndentationRight(30);
-                text15.add(new Phrase("График оплаты", ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("ID ученика: ", ordFont));
-                text15.add(new Phrase(studentInfo.getStudent().getLogin(), ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Ф.И.О. Ученика: ", ordFont));
-                text15.add(new Phrase(studentInfo.getStudent().getSurname() + " "
-                                      + studentInfo.getStudent().getName() + " " + studentInfo.getStudent().getMiddle_name(), ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Кл.: ", ordFont));
-                text15.add(new Phrase(studentInfo.getStudent().getClass_name(), ordBoldFont));
-                text15.add(new Phrase(". Дата регистрации: ", ordFont));
-                text15.add(new Phrase(Settings.df.format(studentInfo.getContractInfo().getCreationDate()), ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("ИТОГО взноса: ", ordFont));
-                text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getContract()) + ""), ordBoldFont));
-                text15.add(new Phrase(" долларов США.", ordFont));
-                text15.add(Chunk.NEWLINE);
-                if (studentInfo.getContractInfo().getDebt() >= 0) {
-                    text15.add(new Phrase("Долг с предыдущего года: ", ordFont));
-                } else {
-                    text15.add(new Phrase("Переплата с предыдущего года: ", ordFont));
-                }
-                text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getDebt()) + ""), ordBoldFont));
-                text15.add(new Phrase(" долларов США.", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Скидка: ", ordFont));
-                if (studentInfo.getContractInfo().getDiscountStr() != null) {
-                    text15.add(new Phrase(studentInfo.getContractInfo().getDiscountStr(), ordBoldFont));
-                    text15.add(new Phrase(" (вид скидки прописью, %)", ordFont));
-                }
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Корректировка: ", ordFont));
-                if (studentInfo.getContractInfo().getCorrectionStr() != null) {
-                    text15.add(new Phrase(studentInfo.getContractInfo().getCorrectionStr(), ordBoldFont));
-                }
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Предоплата: ", ordFont));
-                text15.add(new Phrase(studentInfo.getContractInfo().getInitialPayment() == null ? "0.00" :
-                        Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()) + "", ordBoldFont));
-                text15.add(new Phrase(" долларов США.", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Остаток: ", ordFont));
-                text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()) + "", ordBoldFont));
-                text15.add(new Phrase(" долларов США.", ordFont));
-                document.add(text15);
+                document.newPage();
+                spr = new Paragraph();
+                spr.add(new Phrase("Приложение №1", ordBoldFont));
+                spr.add(Chunk.NEWLINE);
+
+                spr.add(new Phrase("к договору № " + String.format("%07d", studentInfo.getContractInfo().getContractNumber()) + " от " +
+                                   Settings.dateRu.format(studentInfo.getContractInfo().getCreationDate()), ordBoldFont));
+                spr.add(Chunk.NEWLINE);
+
+                spr.setAlignment(Element.ALIGN_CENTER);
+                document.add(spr);
                 document.add(new Paragraph(10, " "));
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(0);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("1. Согласно пункту 5.1. настоящего договора, установленная сумма оплаты за оказание образовательных услуг в 2025-2026 учебном году составляет 365 000 (Триста шестьдесят пять тысяч) сом", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("2. С учётом предоставленной персональной скидки в размере _____% Договора стоимость образовательных услуг по Договору №____от «___» _______ 2025 г. составляет ___________________(_______________________________________________________________) сом за 2025-2026 учебный год.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3. В случае оглашения Родителем суммы оплаты по настоящему Договору третьим лицам, предоставленная персональная скидка автоматически аннулируется.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
 
                 Paragraph text16 = new Paragraph();
                 text16.setIndentationLeft(30);
                 text16.setIndentationRight(30);
-                text16.add(new Phrase("Таблица 1.", ordBoldFont));
+                text16.setAlignment(Element.ALIGN_CENTER);
+                text16.add(new Phrase("График платежей на " + studentInfo.getYear().getName() + " учебный год.", ordBoldFont));
                 document.add(text16);
                 document.add(new Paragraph(10, " "));
-                text16.add(Chunk.NEWLINE);
 
-                float[] TContract_colsWidth = {1f, 4f, 4f, 4f, 4f};
-                PdfPTable TContract = new PdfPTable(5);
-                TContract.setWidthPercentage(90f);
-                TContract.setWidths(TContract_colsWidth);
-                TContract.addCell(new Phrase("№", ordBoldFont));
-                TContract.addCell(new Phrase("Дата оплаты", ordBoldFont));
-                TContract.addCell(new Phrase("Сумма", ordBoldFont));
-                TContract.addCell(new Phrase("Потверждающий документ", ordBoldFont));
-                TContract.addCell(new Phrase("Подпись ", ordBoldFont));
+                float[] TContract_colsWidth = {0.3f, 1f, 1f};
+                PdfPTable tableInstallments = new PdfPTable(3);
+                tableInstallments.setWidthPercentage(90f);
+                tableInstallments.setWidths(TContract_colsWidth);
+                tableInstallments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                tableInstallments.addCell(new Phrase("№ платежа", ordBoldFont));
+                tableInstallments.addCell(new Phrase("Часть годовой оплаты", ordBoldFont));
+                tableInstallments.addCell(new Phrase("Срок оплаты", ordBoldFont));
                 int n = 1;
                 for (Object obj : instPlanCont.getItemIds()) {
-                    TContract.addCell(new Phrase(n + "", ordFont));
-                    TContract.addCell(new Phrase(Settings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(Messages.Date)).getValue()).getValue()), ordFont));
-                    TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
+                    tableInstallments.addCell(new Phrase(n + "", ordFont));
+                    tableInstallments.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
                             myUI.getMessage(Messages.Amount)).getValue()).getValue(), ordFont));
-                    TContract.addCell(new Phrase("", ordFont));
-                    TContract.addCell(new Phrase("", ordFont));
+                    tableInstallments.addCell(new Phrase(Settings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
+                            myUI.getMessage(Messages.Date)).getValue()).getValue()), ordFont));
                     n += 1;
                 }
-                TContract.addCell(new Phrase("", ordFont));
-                TContract.addCell(new Phrase("Итого:", ordBoldFont));
-                TContract.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getNet()) + "", ordBoldFont));
-                TContract.addCell(new Phrase("", ordFont));
-                TContract.addCell(new Phrase("", ordFont));
+                tableInstallments.addCell(new Phrase("Итого:", ordBoldFont));
+                tableInstallments.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getNet()), ordBoldFont));
+                tableInstallments.addCell(new Phrase("", ordFont));
+                document.add(tableInstallments);
+                document.add(new Paragraph(80, " "));
 
-                document.add(TContract);
-
-                paragraph = new Paragraph();
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.add(Chunk.NEWLINE);
-                paragraph.add(new Phrase("Подпись Родителя: ", ordBoldFont));
-                document.add(paragraph);
-                document.add(new Paragraph(5, " "));
-                paragraph = new Paragraph();
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.add(new Phrase("Директор: ", ordBoldFont));
-                document.add(paragraph);
-                document.add(new Paragraph(5, " "));
-                paragraph = new Paragraph();
-                paragraph.setIndentationLeft(30);
-                paragraph.setIndentationRight(30);
-                paragraph.add(new Phrase("Печать ", ordBoldFont));
-                document.add(paragraph);
+                table_info = new PdfPTable(3);
+                table_info.getDefaultCell().setBorder(0);
+                table_info.setWidthPercentage(90f);
+                table_info.setWidths(table_info_colsWidth);
+                table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                table_info.addCell(new Phrase("Президент образовательного учреждения", ordFont));
+                table_info.addCell(new Phrase(""));
+                table_info.addCell(new Phrase("Родители (законные представители):", ordFont));
+                table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                table_info.addCell(new Phrase("____________________Турдакунова Н. Б.", ordBoldFont));
+                table_info.addCell(new Phrase(""));
+                table_info.addCell(new Phrase("____________________________________", ordBoldFont));
+                document.add(table_info);
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
