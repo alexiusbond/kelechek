@@ -16,16 +16,7 @@ public class Contract implements Serializable {
     private int school_id;
     private int year_id;
     private int employee_id;
-    private int duration;
     private double value;
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
 
     public int getEmployee_id() {
         return employee_id;

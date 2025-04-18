@@ -38,7 +38,6 @@ public class Messages_ru extends kg.alex.lomonosov.i18n.Messages {
                                        + "Пожалуйста, попробуйте позже!"},
             {Title, "Название"},
             {ValidityMonths, "Валидность (месяцев)"},
-            {DurationInMonths, "Длительность (месяцев)"},
             {Description, "Описание"},
             {Block, "Блок"},
             {Room, "Помещение"},

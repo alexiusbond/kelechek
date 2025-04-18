@@ -377,10 +377,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         dataTable.setEnabled(false);
         nameTF.setEnabled(true);
         valueTF.setEnabled(true);
-        if (dataTable.getValue() != null && dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id) != null &&
-            ((Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id).getValue() == 2 ||
-             (Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.discount_type_id).getValue() == 4)) {
-        }
         statusSelect.setEnabled(true);
     }
 

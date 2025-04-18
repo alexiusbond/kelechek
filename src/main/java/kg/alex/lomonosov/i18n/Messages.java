@@ -39,7 +39,6 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String ChangePasswordButton = generateId();
     public static final String SystemClosedNotification = generateId();
     public static final String Title = generateId();
-    public static final String DurationInMonths = generateId();
     public static final String ValidityMonths = generateId();
     public static final String Description = generateId();
     public static final String Block = generateId();

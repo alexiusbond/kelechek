@@ -6,7 +6,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.DoubleRangeValidator;
-import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
@@ -43,10 +42,10 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect, yearSelect;
     private PopupButton copyButton;
-    private TextField nameTF, valueTF, durationTF;
+    private TextField nameTF, valueTF;
     private boolean isNew;
     private VerticalLayout settingsLay;
-    private String amountTitle;
+    private final String amountTitle;
 
     public ContractDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -55,7 +54,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Title),
                 amountTitle, myUI.getMessage(Messages.School),
-                myUI.getMessage(Messages.Year), myUI.getMessage(Messages.DurationInMonths)
+                myUI.getMessage(Messages.Year)
                 , myUI.getMessage(Messages.Status)};
         buildSettingsLayout();
 
@@ -173,17 +172,6 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         valueTF.setWidth(Settings.PERCENTS100);
         valueTF.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.01, null));
         settingsLay.addComponent(valueTF);
-
-        ObjectProperty<Integer> propertyDuration = new ObjectProperty<>(1);
-        durationTF = new TextField(myUI.getMessage(Messages.DurationInMonths), propertyDuration);
-        durationTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        durationTF.setRequired(true);
-        durationTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
-        durationTF.setNullRepresentation("");
-        durationTF.setConverter(Settings.getStringToIntegerConverter());
-        durationTF.setWidth(Settings.PERCENTS100);
-        durationTF.addValidator(new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 1, 12));
-        settingsLay.addComponent(durationTF);
 
         statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
@@ -349,7 +337,6 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         dataTable.setEnabled(false);
         nameTF.setEnabled(true);
         valueTF.setEnabled(true);
-        durationTF.setEnabled(true);
         statusSelect.setEnabled(true);
     }
 
@@ -371,7 +358,6 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         dataTable.setEnabled(true);
         nameTF.setEnabled(false);
         valueTF.setEnabled(false);
-        durationTF.setEnabled(false);
         statusSelect.setEnabled(false);
     }
 
@@ -380,8 +366,6 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
                 myUI.getMessage(Messages.Title)).getValue().toString());
         valueTF.getPropertyDataSource().setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 amountTitle).getValue());
-        durationTF.getPropertyDataSource().setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(Messages.DurationInMonths)).getValue());
         statusSelect.setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).getValue().toString()));
     }
@@ -389,7 +373,6 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
     private void clearFields() {
         nameTF.setValue("");
         valueTF.setValue(null);
-        durationTF.setValue(null);
         statusSelect.setValue(null);
     }
 
@@ -398,9 +381,6 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
                 myUI.getMessage(Messages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(), amountTitle).setValue(
                 valueTF.getPropertyDataSource().getValue());
-        dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(Messages.DurationInMonths)).setValue(
-                durationTF.getPropertyDataSource().getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(Messages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
@@ -420,8 +400,6 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
                 nameTF.getValue());
         item.getItemProperty(amountTitle).setValue(
                 valueTF.getPropertyDataSource().getValue());
-        item.getItemProperty(myUI.getMessage(Messages.DurationInMonths)).setValue(
-                durationTF.getPropertyDataSource().getValue());
         item.getItemProperty(myUI.getMessage(Messages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(Messages.Title)).getValue().toString());
@@ -442,7 +420,6 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         Contract c = new Contract();
         c.setName(nameTF.getValue());
         c.setValue((Double) valueTF.getPropertyDataSource().getValue());
-        c.setDuration((Integer) durationTF.getPropertyDataSource().getValue());
         c.setYear_id(myUI.getUser().getCurrent_year().getId());
         c.setSchool_id(myUI.getUser().getSchool().getId());
         c.setStatus_id((Integer) statusSelect.getValue());

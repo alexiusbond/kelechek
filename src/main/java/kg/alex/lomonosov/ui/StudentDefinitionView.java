@@ -26,6 +26,7 @@ import kg.alex.lomonosov.domain.*;
 import kg.alex.lomonosov.i18n.Messages;
 import kg.alex.lomonosov.pdf.Invoice2023PDF;
 import kg.alex.lomonosov.pdf.contracts.ContractBishkek;
+import kg.alex.lomonosov.pdf.contracts.ContractKarakol;
 import kg.alex.lomonosov.utils.ExistsValidator;
 import kg.alex.lomonosov.utils.FormattedTable;
 import kg.alex.lomonosov.utils.MyFilterDecorator;
@@ -110,7 +111,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private FormattedTable correctionsTable;
     private Button printButton;
     private Button financialHistoryButton;
-    private Button changeIdButton;
     private IndexedContainer productsContainer = null,
             acsGivContainer = null, acsRecContainer = null, instPlanCont = null,
             paymentCont = null, discountCont = null, correctionCont = null, callsCont = null;
@@ -482,16 +482,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         financialHistoryButton.setEnabled(false);
         financialHistoryButton.addClickListener(this);
         buttonsLay.addComponent(financialHistoryButton);
-
-        if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmChangeId)) {
-            changeIdButton = new Button();
-            changeIdButton.setDescription(myUI.getMessage(Messages.ChangeId));
-            changeIdButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
-            changeIdButton.setIcon(FontAwesome.USER);
-            changeIdButton.setEnabled(false);
-            changeIdButton.addClickListener(this);
-            buttonsLay.addComponent(changeIdButton);
-        }
 
         printButton = new PopupButton(myUI.getMessage(Messages.Print));
         printButton.setDescription(myUI.getMessage(Messages.Print));
@@ -1051,7 +1041,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         dbs.close();
                         DbEmployee dbEmployee = new DbEmployee();
                         dbEmployee.connect();
-                        studInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                        studInfo.setDirector(dbEmployee.exec_president(1));
                         studInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
                         dbEmployee.close();
                         DbSchool dbSchool = new DbSchool();
@@ -1065,8 +1055,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (contractCB.getValue() != null) {
                         studInfo.getContractInfo().setContract((Double) (contractCB.getContainerProperty(contractCB.getValue(),
                                 myUI.getMessage(Messages.Amount)).getValue()));
-                        studInfo.getContractInfo().setDuration((Integer) (contractCB.getContainerProperty(contractCB.getValue(),
-                                myUI.getMessage(Messages.DurationInMonths)).getValue()));
                     }
                     studInfo.getContractInfo().setDebt(debt);
                     if (discountsTable.size() > 0) {
@@ -1144,11 +1132,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (studInfo.getRelative() != null && studInfo.getRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
-                                saveBtn.click();
                                 if (myUI.getUser().getSchool().getId() == 44) {
                                     new ContractBishkek(myUI, studInfo, instPlanCont);
                                 } else {
-
+                                    new ContractKarakol(myUI, studInfo, instPlanCont);
                                 }
                             } else {
                                 Notification.show(myUI.getMessage(Messages.NoDirectorAssigned),
@@ -1177,25 +1164,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.FirstName)).getValue() + " " +
                                                                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.LastName)).getValue() + "; " +
                                                                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.ClassName)).getValue(), st_id));
-            }
-        } else if (source == changeIdButton) {
-            if (studDataTable.getValue() != null) {
-                try {
-                    DbStudent dbCon = new DbStudent();
-                    dbCon.connect();
-                    int st_id = (Integer) studDataTable.getValue();
-                    String login = generateStudId(
-                            (Integer) studDataTable.getContainerProperty(st_id, Settings.entering_year_id).getValue(),
-                            studDataTable.getContainerProperty(st_id,
-                                    myUI.getMessage(Messages.EnteringYear)).getValue().toString());
-                    dbCon.exec_updateLogin(st_id, login);
-                    loginTF.setValue(login);
-                    studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.Id)).setValue(login);
-                    dbCon.close();
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
-                }
             }
         } else if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
             delRelIds.add((String) source.getData());
@@ -1248,9 +1216,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 fillFields();
                 recount();
                 printButton.setEnabled(true);
-                if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmChangeId)) {
-                    changeIdButton.setEnabled(true);
-                }
                 if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmFinancialHistoryInfo)) {
                     financialHistoryButton.setEnabled(true);
                 }
@@ -1430,6 +1395,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         modifyBtn.setEnabled(false);
         createBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
+        printButton.setEnabled(false);
+        financialHistoryButton.setEnabled(false);
         saveBtn.setEnabled(true);
         cancelBtn.setEnabled(true);
         studDataTable.setEnabled(false);
@@ -1483,6 +1450,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         } else {
             deleteBtn.setEnabled(false);
+        }
+        if (studDataTable.getValue() != null) {
+            printButton.setEnabled(true);
+            if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmFinancialHistoryInfo)) {
+                financialHistoryButton.setEnabled(true);
+            }
         }
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);

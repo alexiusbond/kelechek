@@ -19,9 +19,9 @@ import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-public class ContractBishkek {
+public class ContractKarakol {
 
-    static final Logger logger = LogManager.getLogger(ContractBishkek.class);
+    static final Logger logger = LogManager.getLogger(ContractKarakol.class);
     private final static String FONT_LOCATION = "/home/lomonosov/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/lomonosov/TimesNewRomanBold.ttf";
     private final MyVaadinUI myUI;
@@ -30,7 +30,7 @@ public class ContractBishkek {
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
 
-    public ContractBishkek(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractKarakol(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.studentInfo = st_info;
 
@@ -573,7 +573,7 @@ public class ContractBishkek {
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
-                float[] table_info_colsWidth = {1f, 0.2f, 1f};
+                float[] table_info_colsWidth = {1.2f, 0.2f, 1f};
                 PdfPTable table_info = new PdfPTable(3);
                 table_info.getDefaultCell().setBorder(0);
                 table_info.setWidthPercentage(90f);
@@ -583,14 +583,13 @@ public class ContractBishkek {
                 table_info.addCell(new Phrase(""));
                 table_info.addCell(new Phrase("Родители (законные представители)", ordBoldFont));
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                table_info.addCell(new Phrase("Учреждение Научно-образовательный\nкомплекс «Школа Ломоносова»\n" +
-                                              "Адрес: Кыргызская Республика, город\n" +
-                                              "Бишкек, ул. Джунусалиева, 175\n" +
-                                              "school.bishkek@lomonosov.kg\n" +
-                                              "Номер свидетельства о гос.рег.:\n" +
-                                              "183927-3301-У-е\n" +
-                                              "Номер лицензии:\n" +
-                                              "В2019-0020 от 2 августа 2019 г.\n\n", ordFont));
+                table_info.addCell(new Phrase("Филиал \"Международная школа творчества и\n" +
+                                              "технологии” Учреждения Научно-образовательный\n" +
+                                              "комплекс “Школа-Ломоносова» в городе Каракол\"\n" +
+                                              "Адрес: Кыргызская Республика, 722206,\n" +
+                                              "г. Каракол, ул. Тыныстанова, 55\n" +
+                                              "e-mail: karakol@lomonosov.kg\n" +
+                                              "ИНН: 42808202410248\n\n", ordFont));
                 table_info.addCell(new Phrase(""));
                 table_info.addCell(new Phrase(studentInfo.getRelative().getFullName() + "\n" +
                                               "Домашний̆ адрес: " + studentInfo.getRelative().getAddress() + "\n" +
@@ -598,6 +597,16 @@ public class ContractBishkek {
                                               "Паспортные данные:\n" +
                                               "Номер паспорта: " + studentInfo.getRelative().getPassport() + "\n" +
                                               "Кем выдан: " + studentInfo.getRelative().getGivenBy(), ordFont));
+                table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                table_info.addCell(new Phrase("Банковские реквизиты:", ordBoldFont));
+                table_info.addCell(new Phrase(""));
+                table_info.addCell(new Phrase("", ordBoldFont));
+                table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                table_info.addCell(new Phrase("Филиал ОАО «Оптима Банк»\n" +
+                                              "Р/с 1090620854130104\n" +
+                                              "БИК 109006\n\n", ordFont));
+                table_info.addCell(new Phrase(""));
+                table_info.addCell(new Phrase("", ordFont));
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                 table_info.addCell(new Phrase("Президент образовательного учреждения", ordBoldFont));
                 table_info.addCell(new Phrase(""));

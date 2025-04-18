@@ -26,7 +26,6 @@ public class ContractInfo implements Serializable {
     private Double left;
     private Double net;
     private int students;
-    private int duration;
     private int contractNumber;
     private Date creationDate;
 
@@ -52,14 +51,6 @@ public class ContractInfo implements Serializable {
 
     public void setTotalInstallments(String totalInstallments) {
         this.totalInstallments = totalInstallments;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
     }
 
     public Double getInstallmentPlanDebt() {
