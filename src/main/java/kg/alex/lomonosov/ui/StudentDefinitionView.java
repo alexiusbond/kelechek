@@ -1233,8 +1233,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         } else if (property == contractCB) {
             recountInstPlanLabel();
-        } else if (property == installmentTable) {
-            recountInstPlanLabel();
         } else if (property == statusesOG) {
             setStudDataTable(property.getValue().toString());
             repaint();
@@ -2767,7 +2765,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbStudentCorrection dbsd = new DbStudentCorrection();
             dbsd.connect();
             correctionsTable.setContainerDataSource(
-                    dbsd.execSQL_St_Discounts(myUI, (Integer) studDataTable.getValue(),
+                    dbsd.execSQLStudentCorrections(myUI, (Integer) studDataTable.getValue(),
                             myUI.getUser().getCurrent_year().getId(), this));
             dbsd.close();
         } catch (Exception e) {
@@ -3189,19 +3187,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         installmentTable.setSizeFull();
         installmentTable.setSelectable(false);
         installmentTable.setStyleName(ValoTheme.TABLE_SMALL);
-        installmentTable.setNullSelectionAllowed(false);
 
         discountsTable = new FormattedTable(myUI);
         discountsTable.setSizeFull();
         discountsTable.setSelectable(false);
         discountsTable.setStyleName(ValoTheme.TABLE_SMALL);
-        discountsTable.setNullSelectionAllowed(false);
 
         correctionsTable = new FormattedTable(myUI);
         correctionsTable.setSizeFull();
         correctionsTable.setSelectable(false);
         correctionsTable.setStyleName(ValoTheme.TABLE_SMALL);
-        correctionsTable.setNullSelectionAllowed(false);
 
         contractCB = new ComboBox(myUI.getMessage(Messages.Contract));
         contractCB.setWidth(Settings.PERCENTS100);

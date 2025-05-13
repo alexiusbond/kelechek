@@ -30,8 +30,8 @@ public class DbStudentCorrection extends BaseDb {
         super();
     }
 
-    public IndexedContainer execSQL_St_Discounts(MyVaadinUI myUI, int stud_id, int year_id,
-                                                 StudentDefinitionView dw) throws SQLException {
+    public IndexedContainer execSQLStudentCorrections(MyVaadinUI myUI, int stud_id, int year_id,
+                                                      StudentDefinitionView dw) throws SQLException {
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT t.id, t.correction_type_id, t.amount, t.note, " +
                 "CONCAT(e.surname, ' ', e.name) AS employee FROM student_correction AS t " +
