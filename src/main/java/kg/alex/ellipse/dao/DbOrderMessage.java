@@ -150,8 +150,8 @@ public class DbOrderMessage extends BaseDb {
                 "FROM order_messages WHERE id = (SELECT MAX(id) FROM order_messages " +
                 "WHERE year_id = ? AND discount_unit_id in (" + discount_unit_ids + ") AND " +
                 "(student_id = ? OR student_id IS NULL AND " +
-                "(LOWER(SUBSTRING_INDEX(order_content, 'Сапаттын', 1)) LIKE '%" + studentFullName.toLowerCase() + "%' " +
-                "OR transliterate_func(LOWER(SUBSTRING_INDEX(order_content, 'Сапаттын', 1))) LIKE '%"
+                "(LOWER(SUBSTRING_INDEX(order_content, 'Эллипстин', 1)) LIKE '%" + studentFullName.toLowerCase() + "%' " +
+                "OR transliterate_func(LOWER(SUBSTRING_INDEX(order_content, 'Эллипстин', 1))) LIKE '%"
                 + studentFullName.toLowerCase().replace(" ", "-") + "%')))";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);

@@ -437,7 +437,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 discount = discountTF.getPropertyDataSource().getValue() + " сом жеңилдик берилсин.";
             }
             contentRTA.setValue(school + class_name + "-классынын окуучусу " + student
-                    + "га “Сапаттын” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
+                    + "га “Эллипстин” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
                     "Жобосунун 3-пунктунун негизинде "
                     + yearSelect.getItemCaption(yearSelect.getValue())
                     + "-окуу жылынын окуу төлөмүндө " + discount);
