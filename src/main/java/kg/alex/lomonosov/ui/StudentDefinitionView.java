@@ -693,7 +693,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             contractLay.addComponent(discountLab);
             contractLay.setComponentAlignment(discountLab, Alignment.BOTTOM_LEFT);
             contractLay.addComponent(correctionLab);
-            contractLay.setComponentAlignment(contractLab, Alignment.BOTTOM_LEFT);
+            contractLay.setComponentAlignment(correctionLab, Alignment.BOTTOM_LEFT);
             contractLay.addComponent(debtLab);
             contractLay.setComponentAlignment(debtLab, Alignment.BOTTOM_LEFT);
             contractLay.addComponent(netLab);
@@ -4240,6 +4240,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private void clearContractInfo() {
         contractLab.setValue(myUI.getMessage(Messages.Contract) + ":");
         discountLab.setValue(myUI.getMessage(Messages.Discount) + ":");
+        correctionLab.setValue(myUI.getMessage(Messages.Correction) + ":");
         debtLab.setValue(myUI.getMessage(Messages.PreviousYearDebt) + ":");
         netLab.setValue(myUI.getMessage(Messages.Net) + ":");
         paidLab.setValue(myUI.getMessage(Messages.Paid) + ":");
