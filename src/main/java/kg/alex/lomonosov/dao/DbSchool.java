@@ -95,48 +95,48 @@ public class DbSchool extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());
         stat.setString(2, scl.getName_ru());
-        if (scl.getName_kg() != null && !scl.getName_kg().equals("")) {
+        if (scl.getName_kg() != null && !scl.getName_kg().isEmpty()) {
             stat.setString(3, scl.getName_kg());
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
-        if (scl.getName_en() != null && !scl.getName_en().equals("")) {
+        if (scl.getName_en() != null && !scl.getName_en().isEmpty()) {
             stat.setString(4, scl.getName_en());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
         stat.setInt(5, scl.getStatus_id());
-        if (scl.getAddress() != null && !scl.getAddress().equals("")) {
+        if (scl.getAddress() != null && !scl.getAddress().isEmpty()) {
             stat.setString(6, scl.getAddress());
         } else {
             stat.setNull(6, Types.VARCHAR);
         }
-        if (scl.getInn() != null && !scl.getInn().equals("")) {
+        if (scl.getInn() != null && !scl.getInn().isEmpty()) {
             stat.setString(7, scl.getInn());
         } else {
             stat.setNull(7, Types.VARCHAR);
         }
-        if (scl.getBank() != null && !scl.getBank().equals("")) {
+        if (scl.getBank() != null && !scl.getBank().isEmpty()) {
             stat.setString(8, scl.getBank());
         } else {
             stat.setNull(8, Types.VARCHAR);
         }
-        if (scl.getBank_account() != null && !scl.getBank_account().equals("")) {
+        if (scl.getBank_account() != null && !scl.getBank_account().isEmpty()) {
             stat.setString(9, scl.getBank_account());
         } else {
             stat.setNull(9, Types.VARCHAR);
         }
-        if (scl.getPhone() != null && !scl.getPhone().equals("")) {
+        if (scl.getPhone() != null && !scl.getPhone().isEmpty()) {
             stat.setString(10, scl.getPhone());
         } else {
             stat.setNull(10, Types.VARCHAR);
         }
-        if (scl.getPhoto() != null && !scl.getPhoto().equals("")) {
+        if (scl.getPhoto() != null && !scl.getPhoto().isEmpty()) {
             stat.setString(11, scl.getPhoto());
         } else {
             stat.setNull(11, Types.VARCHAR);
         }
-        if (scl.getCity() != null && !scl.getCity().equals("")) {
+        if (scl.getCity() != null && !scl.getCity().isEmpty()) {
             stat.setString(12, scl.getCity());
         } else {
             stat.setNull(12, Types.VARCHAR);
@@ -155,48 +155,48 @@ public class DbSchool extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());
         stat.setString(2, scl.getName_ru());
-        if (scl.getName_kg() != null && !scl.getName_kg().equals("")) {
+        if (scl.getName_kg() != null && !scl.getName_kg().isEmpty()) {
             stat.setString(3, scl.getName_kg());
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
-        if (scl.getName_en() != null && !scl.getName_en().equals("")) {
+        if (scl.getName_en() != null && !scl.getName_en().isEmpty()) {
             stat.setString(4, scl.getName_en());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
         stat.setInt(5, scl.getStatus_id());
-        if (scl.getCity() != null && !scl.getCity().equals("")) {
+        if (scl.getCity() != null && !scl.getCity().isEmpty()) {
             stat.setString(6, scl.getCity());
         } else {
             stat.setNull(6, Types.VARCHAR);
         }
-        if (scl.getAddress() != null && !scl.getAddress().equals("")) {
+        if (scl.getAddress() != null && !scl.getAddress().isEmpty()) {
             stat.setString(7, scl.getAddress());
         } else {
             stat.setNull(7, Types.VARCHAR);
         }
-        if (scl.getInn() != null && !scl.getInn().equals("")) {
+        if (scl.getInn() != null && !scl.getInn().isEmpty()) {
             stat.setString(8, scl.getInn());
         } else {
             stat.setNull(8, Types.VARCHAR);
         }
-        if (scl.getBank() != null && !scl.getBank().equals("")) {
+        if (scl.getBank() != null && !scl.getBank().isEmpty()) {
             stat.setString(9, scl.getBank());
         } else {
             stat.setNull(9, Types.VARCHAR);
         }
-        if (scl.getBank_account() != null && !scl.getBank_account().equals("")) {
+        if (scl.getBank_account() != null && !scl.getBank_account().isEmpty()) {
             stat.setString(10, scl.getBank_account());
         } else {
             stat.setNull(10, Types.VARCHAR);
         }
-        if (scl.getPhone() != null && !scl.getPhone().equals("")) {
+        if (scl.getPhone() != null && !scl.getPhone().isEmpty()) {
             stat.setString(11, scl.getPhone());
         } else {
             stat.setNull(11, Types.VARCHAR);
         }
-        if (scl.getPhoto() != null && scl.getPhoto().equals("")) {
+        if (scl.getPhoto() != null && scl.getPhoto().isEmpty()) {
             stat.setString(12, scl.getPhoto());
         } else {
             stat.setNull(12, Types.VARCHAR);

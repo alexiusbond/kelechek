@@ -288,7 +288,7 @@ public class MyVaadinUI extends UI {
     public static class LogoutListener implements Button.ClickListener {
 
         private static final long serialVersionUID = 1L;
-        private MyVaadinUI myUI;
+        private final MyVaadinUI myUI;
 
         public LogoutListener(MyVaadinUI myUi) {
             this.myUI = myUi;

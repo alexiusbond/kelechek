@@ -32,7 +32,7 @@ public class DebtsPdf {
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private String currency;
+    private final String currency;
 
 
     public DebtsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,

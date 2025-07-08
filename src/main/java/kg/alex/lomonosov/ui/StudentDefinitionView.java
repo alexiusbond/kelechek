@@ -750,7 +750,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if (source == plusCallButton) {
             addCallsItem();
         } else if (source == divideBtn) {
-            if (divideTF.getValue() != null && !divideTF.getValue().equals("")) {
+            if (divideTF.getValue() != null && !divideTF.getValue().isEmpty()) {
                 recount();
                 addInstallmentPlanItem(true);
                 recountInstPlanLabel();

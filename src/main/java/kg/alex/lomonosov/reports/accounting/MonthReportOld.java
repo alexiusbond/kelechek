@@ -31,8 +31,8 @@ import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.tepi.filtertable.FilterTreeTable;
 
-import java.util.Calendar;
 import java.util.*;
+import java.util.Calendar;
 
 public class MonthReportOld implements Button.ClickListener,
         Property.ValueChangeListener {

@@ -138,7 +138,7 @@ public class DbStudentOrder extends BaseDb {
         stat.setInt(6, so.getFrom_education_status_id());
         stat.setInt(7, so.getTo_education_status_id());
         stat.setInt(8, so.getEmployee_id());
-        if (so.getReasons() != null && !so.getReasons().equals("")) {
+        if (so.getReasons() != null && !so.getReasons().isEmpty()) {
             stat.setString(9, so.getReasons());
         } else {
             stat.setNull(9, Types.VARCHAR);

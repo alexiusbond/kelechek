@@ -16,7 +16,7 @@ import kg.alex.lomonosov.i18n.Messages;
  */
 public class FormattedTreeTable extends TreeTable {
 
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
 
     public FormattedTreeTable(MyVaadinUI myUi) {
         super();

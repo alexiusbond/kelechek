@@ -741,10 +741,10 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             logger.error(e);
             logger.catching(e);
         }
-        if (noteTF.getValue() != null && !noteTF.getValue().equals("")) {
+        if (noteTF.getValue() != null && !noteTF.getValue().isEmpty()) {
             inv.setNote(noteTF.getValue());
         }
-        if (note2TF.getValue() != null && !note2TF.getValue().equals("")) {
+        if (note2TF.getValue() != null && !note2TF.getValue().isEmpty()) {
             inv.setNote2(note2TF.getValue());
         }
         inv.setAcc_invoice_type_id(acc_invoice_type_id);

@@ -83,7 +83,7 @@ public class DbStudentCorrection extends BaseDb {
         stat.setInt(3, cc.getCorrection_type_id());
         stat.setDouble(4, cc.getAmount());
         stat.setInt(5, cc.getEmployee_id());
-        if (cc.getNote() != null && !cc.getNote().equals("")) {
+        if (cc.getNote() != null && !cc.getNote().isEmpty()) {
             stat.setString(6, cc.getNote());
         } else {
             stat.setNull(6, Types.VARCHAR);
@@ -102,7 +102,7 @@ public class DbStudentCorrection extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cc.getCorrection_type_id());
         stat.setDouble(2, cc.getAmount());
-        if (cc.getNote() != null && !cc.getNote().equals("")) {
+        if (cc.getNote() != null && !cc.getNote().isEmpty()) {
             stat.setString(3, cc.getNote());
         } else {
             stat.setNull(3, Types.VARCHAR);

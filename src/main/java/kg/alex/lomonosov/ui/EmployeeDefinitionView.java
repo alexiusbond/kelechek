@@ -3574,8 +3574,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 for (Object next : questioningTable.getItemIds()) {
                     if (((TextField) questioningTable.getItem(next).getItemProperty(
                             myUI.getMessage(Messages.Answer)).getValue()).getValue() != null
-                            && !((TextField) questioningTable.getItem(next).getItemProperty(
-                            myUI.getMessage(Messages.Answer)).getValue()).getValue().equals("")) {
+                        && !((TextField) questioningTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.Answer)).getValue()).getValue().isEmpty()) {
                         EmployeeQuestioning eq = new EmployeeQuestioning();
                         eq.setEmployee_id(employee_id);
                         eq.setQuestion_id(Integer.parseInt(next.toString()));
@@ -3951,8 +3951,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     }
                     if (((TextField) supervisionTable.getItem(next).getItemProperty(
                             myUI.getMessage(Messages.Note)).getValue()).getValue() != null
-                            && !((TextField) supervisionTable.getItem(next).getItemProperty(
-                            myUI.getMessage(Messages.Note)).getValue()).getValue().equals("")) {
+                        && !((TextField) supervisionTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.Note)).getValue()).getValue().isEmpty()) {
                         eo.setNote(((TextField) supervisionTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Note)).getValue()).getValue());
                     }
@@ -4047,8 +4047,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     }
                     if (((TextField) ordersTable.getItem(next).getItemProperty(
                             myUI.getMessage(Messages.Note)).getValue()).getValue() != null
-                            && !((TextField) ordersTable.getItem(next).getItemProperty(
-                            myUI.getMessage(Messages.Note)).getValue()).getValue().equals("")) {
+                        && !((TextField) ordersTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.Note)).getValue()).getValue().isEmpty()) {
                         eo.setNote(((TextField) ordersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Note)).getValue()).getValue());
                     }
@@ -5106,7 +5106,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void insertEmployeeSpouse(EmployeeSpouse es) {
         try {
             if (spouseHealthCB.getValue() != null &&
-                    spouseFullNameTF.getValue() != null && !spouseFullNameTF.getValue().equals("")) {
+                    spouseFullNameTF.getValue() != null && !spouseFullNameTF.getValue().isEmpty()) {
                 DbEmployeeSpouse dbes = new DbEmployeeSpouse();
                 dbes.connect();
                 int st = dbes.exec_insert(es);
@@ -5230,7 +5230,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private String checkPassword() {
         String password = "";
         if (passwordTF.getValue() != null
-                && !passwordTF.getValue().equals("")) {
+            && !passwordTF.getValue().isEmpty()) {
             password = (new Sha256Hash(passwordTF.getValue()).toString());
         }
         return password;
@@ -5243,7 +5243,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         e.setPassword(new Sha256Hash(passwordTF.getValue()).toString());
         e.setName(nameTF.getValue());
         e.setSurname(surnameTF.getValue());
-        if (middleNameTF.getValue() != null && !middleNameTF.getValue().equals("")) {
+        if (middleNameTF.getValue() != null && !middleNameTF.getValue().isEmpty()) {
             e.setMiddle_name(middleNameTF.getValue());
         }
         e.setGender_id((Integer) genderCB.getValue());
@@ -5441,8 +5441,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (property == loginTF) {
-            photoUpl.setEnabled(isNew && loginTF.getValue() != null && !loginTF.getValue().equals("")
-                    && loginTF.isEnabled());
+            photoUpl.setEnabled(isNew && loginTF.getValue() != null && !loginTF.getValue().isEmpty()
+                                && loginTF.isEnabled());
         } else if (property == noPhonesCkb) {
             phonesTable.setEnabled(!noPhonesCkb.getValue());
             plusPhonesButton.setEnabled(!noPhonesCkb.getValue());

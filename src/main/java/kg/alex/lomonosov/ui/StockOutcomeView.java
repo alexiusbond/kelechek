@@ -903,7 +903,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         } else {
             inv.setInvoiceNumberStr(invoicesTable.getContainerProperty(inv_id, myUI.getMessage(Messages.InvoiceNumber)).getValue().toString());
         }
-        if (noteTF.getValue() != null && !noteTF.getValue().equals("")) {
+        if (noteTF.getValue() != null && !noteTF.getValue().isEmpty()) {
             inv.setNote(noteTF.getValue());
         }
         inv.setCreation_date(dateDF.getValue());

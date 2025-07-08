@@ -161,7 +161,7 @@ public class ExcelExport extends TableExport {
     public ExcelExport(final Table table, final Workbook wkbk, final String shtName,
                        final String rptTitle, final String xptFileName, final boolean hasTotalsRow) {
         super(table);
-        if ((null == shtName) || ("".equals(shtName))) {
+        if ((null == shtName) || (shtName.isEmpty())) {
             this.sheetName = "Table Export";
         } else {
             this.sheetName = shtName;
@@ -171,7 +171,7 @@ public class ExcelExport extends TableExport {
         } else {
             this.reportTitle = rptTitle;
         }
-        if ((null == xptFileName) || ("".equals(xptFileName))) {
+        if ((null == xptFileName) || (xptFileName.isEmpty())) {
             this.exportFileName = "Table-Export.xls";
         } else {
             this.exportFileName = xptFileName;
@@ -312,7 +312,7 @@ public class ExcelExport extends TableExport {
      * @return the int
      */
     protected int addTitleRow() {
-        if ((null == reportTitle) || ("".equals(reportTitle))) {
+        if ((null == reportTitle) || (reportTitle.isEmpty())) {
             return 0;
         }
         rowNum = 0;

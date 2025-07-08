@@ -59,7 +59,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private Label netLab;
     private Label paidLab;
     private Label leftLab;
-    private String currency;
+    private final String currency;
 
     public InstallmentPlanPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -446,7 +446,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private void buildStudInfo() {
         if (studentsTable.getValue() != null) {
             Embedded photoEmb = new Embedded();
-            if (studInfo.getStudent().getPhoto() != null && !studInfo.getStudent().getPhoto().equals("")) {
+            if (studInfo.getStudent().getPhoto() != null && !studInfo.getStudent().getPhoto().isEmpty()) {
                 photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + studInfo.getStudent().getPhoto())));
             } else {
                 photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + "no_photo.jpg")));

@@ -94,7 +94,7 @@ public class DbEmployee extends BaseDb {
                                     IndexedContainer workingStatCont, boolean withAdmin,
                                     boolean withHr, int branch_id, int employee_id) throws SQLException {
 
-        if (working_statuses.equals("")) {
+        if (working_statuses.isEmpty()) {
             working_statuses = "-1";
         }
         String sql = "SELECT e.id, e.login, e.name, e.surname, e.middle_name, e.date_of_birth, e.photo, e.can_advisor, "
@@ -550,7 +550,7 @@ public class DbEmployee extends BaseDb {
 
     public int exec_update(Employee e, String pass) throws SQLException {
         String sql = "UPDATE employee SET login = ?, name = ?, surname = ?, middle_name = ?, ";
-        if (pass != null && !pass.equals("")) {
+        if (pass != null && !pass.isEmpty()) {
             sql += ("password='" + pass + "',");
         }
         sql += "date_of_birth = ?, nationality_id = ?, gender_id = ?, hr_martial_status_id = ?, employee_id = ?, " +
@@ -770,11 +770,11 @@ public class DbEmployee extends BaseDb {
             sql += "AND ebr.id IN (" + params.get(myUI.getMessage(Messages.ExtraBranches)) + ") ";
         }
         if (params.get(myUI.getMessage(Messages.FirstName)) != null
-            && !params.get(myUI.getMessage(Messages.FirstName)).equals("")) {
+            && !params.get(myUI.getMessage(Messages.FirstName)).isEmpty()) {
             sql += "AND e.name LIKE  '%" + params.get(myUI.getMessage(Messages.FirstName)) + "%' ";
         }
         if (params.get(myUI.getMessage(Messages.LastName)) != null
-            && !params.get(myUI.getMessage(Messages.LastName)).equals("")) {
+            && !params.get(myUI.getMessage(Messages.LastName)).isEmpty()) {
             sql += "AND e.surname LIKE  '%" + params.get(myUI.getMessage(Messages.LastName)) + "%' ";
         }
         if (params.get(myUI.getMessage(Messages.FromAge)) != null

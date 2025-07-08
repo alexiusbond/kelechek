@@ -136,7 +136,7 @@ public class Invoice2023PDF {
                 } else {
                     nameInvPar.add(new Chunk("Принято от: ", bold_font));
                 }
-                if (invoiceInfo.getWhoPaidFullName() != null && !invoiceInfo.getWhoPaidFullName().equals("")) {
+                if (invoiceInfo.getWhoPaidFullName() != null && !invoiceInfo.getWhoPaidFullName().isEmpty()) {
                     nameInvPar.add(new Chunk(invoiceInfo.getLogin() + ", " + invoiceInfo.getClass_name() + ", "
                             + invoiceInfo.getStudentFullName() + " (" + invoiceInfo.getWhoPaidFullName() + ")", normal_font));
                 } else {

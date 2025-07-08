@@ -24,22 +24,22 @@ public class DbEmployeeExtraInfo extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, eei.getEmployee_id());
         stat.setInt(2, eei.getHealth_status_id());
-        if (!eei.getHobbies().equals("") && eei.getHobbies() != null) {
+        if (!eei.getHobbies().isEmpty() && eei.getHobbies() != null) {
             stat.setString(3, eei.getHobbies());
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
-        if (!eei.getPhobias().equals("") && eei.getPhobias() != null) {
+        if (!eei.getPhobias().isEmpty() && eei.getPhobias() != null) {
             stat.setString(4, eei.getPhobias());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
-        if (!eei.getHealth_notes().equals("") && eei.getHealth_notes() != null) {
+        if (!eei.getHealth_notes().isEmpty() && eei.getHealth_notes() != null) {
             stat.setString(5, eei.getHealth_notes());
         } else {
             stat.setNull(5, Types.VARCHAR);
         }
-        if (!eei.getShort_notes().equals("") && eei.getShort_notes() != null) {
+        if (!eei.getShort_notes().isEmpty() && eei.getShort_notes() != null) {
             stat.setString(6, eei.getShort_notes());
         } else {
             stat.setNull(6, Types.VARCHAR);
@@ -57,22 +57,22 @@ public class DbEmployeeExtraInfo extends BaseDb {
                 + "hr_health_status_id = ?, hobbies = ?, fobbies = ?, health_notes = ?, info = ? WHERE employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, eei.getHealth_status_id());
-        if (!eei.getHobbies().equals("") && eei.getHobbies() != null) {
+        if (!eei.getHobbies().isEmpty() && eei.getHobbies() != null) {
             stat.setString(2, eei.getHobbies());
         } else {
             stat.setNull(2, Types.VARCHAR);
         }
-        if (!eei.getPhobias().equals("") && eei.getPhobias() != null) {
+        if (!eei.getPhobias().isEmpty() && eei.getPhobias() != null) {
             stat.setString(3, eei.getPhobias());
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
-        if (!eei.getHealth_notes().equals("") && eei.getHealth_notes() != null) {
+        if (!eei.getHealth_notes().isEmpty() && eei.getHealth_notes() != null) {
             stat.setString(4, eei.getHealth_notes());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
-        if (!eei.getShort_notes().equals("") && eei.getShort_notes() != null) {
+        if (!eei.getShort_notes().isEmpty() && eei.getShort_notes() != null) {
             stat.setString(5, eei.getShort_notes());
         } else {
             stat.setNull(5, Types.VARCHAR);

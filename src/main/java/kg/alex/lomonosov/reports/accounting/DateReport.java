@@ -31,12 +31,10 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTreeTable;
 
-import java.util.Calendar;
 import java.util.*;
+import java.util.Calendar;
 
 public class DateReport implements Button.ClickListener,
         Property.ValueChangeListener {
@@ -44,7 +42,6 @@ public class DateReport implements Button.ClickListener,
     static final Logger logger = LogManager.getLogger(DateReport.class);
     private final MyVaadinUI myUI;
     private final HorizontalSplitPanel splitPanel;
-    private final Subject currentUser = SecurityUtils.getSubject();
     public FormattedTable incomesDataTable, outcomesDataTable;
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
     private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn,

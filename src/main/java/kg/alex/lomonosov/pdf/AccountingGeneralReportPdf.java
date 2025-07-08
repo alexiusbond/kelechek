@@ -1,8 +1,8 @@
 package kg.alex.lomonosov.pdf;
 
+import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.server.StreamResource;
 import kg.alex.lomonosov.MyVaadinUI;

@@ -70,7 +70,7 @@ public class MyLoginForm extends LoginForm {
     @Override
     protected void login(String userName, String password) {
         boolean error = false;
-        if (userName != null && password != null && !userName.equals("") && !password.equals("")) {
+        if (userName != null && password != null && !userName.isEmpty() && !password.isEmpty()) {
             try {
                 MyVaadinUI.getInstance().login(userName, password);
                 // Switch to the protected view

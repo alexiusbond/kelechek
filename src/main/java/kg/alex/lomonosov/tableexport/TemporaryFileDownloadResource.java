@@ -28,7 +28,7 @@ public class TemporaryFileDownloadResource extends StreamResource {
     /**
      * The content type.
      */
-    private String contentType;
+    private final String contentType;
 
     /**
      * Instantiates a new temporary file download resource.

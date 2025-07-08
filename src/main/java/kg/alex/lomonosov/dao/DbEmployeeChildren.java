@@ -32,7 +32,7 @@ public class DbEmployeeChildren extends BaseDb {
         stat.setInt(1, ech.getEmployee_id());
         stat.setString(2, ech.getFullName());
         stat.setDate(3, new Date(ech.getDate_of_birth().getTime()));
-        if (!ech.getInstitution().equals("") && ech.getInstitution() != null) {
+        if (!ech.getInstitution().isEmpty() && ech.getInstitution() != null) {
             stat.setString(4, ech.getInstitution());
         } else {
             stat.setNull(4, Types.VARCHAR);
@@ -57,7 +57,7 @@ public class DbEmployeeChildren extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ech.getFullName());
         stat.setDate(2, new Date(ech.getDate_of_birth().getTime()));
-        if (!ech.getInstitution().equals("") && ech.getInstitution() != null) {
+        if (!ech.getInstitution().isEmpty() && ech.getInstitution() != null) {
             stat.setString(3, ech.getInstitution());
         } else {
             stat.setNull(3, Types.VARCHAR);

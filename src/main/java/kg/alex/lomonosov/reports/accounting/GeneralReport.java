@@ -15,8 +15,8 @@ import com.vaadin.data.util.ListSet;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.*;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.lomonosov.MyVaadinUI;
 import kg.alex.lomonosov.Settings;
@@ -37,8 +37,8 @@ import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
-import java.util.Calendar;
 import java.util.*;
+import java.util.Calendar;
 
 public class GeneralReport implements Button.ClickListener,
         Property.ValueChangeListener {

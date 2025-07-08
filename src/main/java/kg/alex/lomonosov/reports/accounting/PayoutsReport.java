@@ -217,7 +217,7 @@ public class PayoutsReport implements Button.ClickListener,
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (excelBtn.isEnabled()) {
-            if (property == employeeCategoriesTable || property == currencySelect || property == fromDateDF || property == currencySelect) {
+            if (property == employeeCategoriesTable || property == currencySelect || property == fromDateDF) {
                 excelBtn.setEnabled(false);
                 dataTable.getContainerDataSource().removeAllItems();
             }

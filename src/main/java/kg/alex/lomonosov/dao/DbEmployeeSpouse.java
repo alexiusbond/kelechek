@@ -25,12 +25,12 @@ public class DbEmployeeSpouse extends BaseDb {
         stat.setInt(1, es.getEmployee_id());
         stat.setInt(2, es.getHealth_status_id());
         stat.setString(3, es.getFullName());
-        if (!es.getPhone().equals("") && es.getPhone() != null) {
+        if (!es.getPhone().isEmpty() && es.getPhone() != null) {
             stat.setString(4, es.getPhone());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
-        if (!es.getHealth_notes().equals("") && es.getHealth_notes() != null) {
+        if (!es.getHealth_notes().isEmpty() && es.getHealth_notes() != null) {
             stat.setString(5, es.getHealth_notes());
         } else {
             stat.setNull(5, Types.VARCHAR);
@@ -49,12 +49,12 @@ public class DbEmployeeSpouse extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, es.getHealth_status_id());
         stat.setString(2, es.getFullName());
-        if (!es.getPhone().equals("") && es.getPhone() != null) {
+        if (!es.getPhone().isEmpty() && es.getPhone() != null) {
             stat.setString(3, es.getPhone());
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
-        if (!es.getHealth_notes().equals("") && es.getHealth_notes() != null) {
+        if (!es.getHealth_notes().isEmpty() && es.getHealth_notes() != null) {
             stat.setString(4, es.getHealth_notes());
         } else {
             stat.setNull(4, Types.VARCHAR);

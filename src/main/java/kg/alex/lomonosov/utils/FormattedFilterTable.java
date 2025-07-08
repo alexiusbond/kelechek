@@ -15,7 +15,7 @@ import org.tepi.filtertable.FilterTable;
  * @author alex
  */
 public class FormattedFilterTable extends FilterTable {
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
 
     public FormattedFilterTable(MyVaadinUI myUi) {
         super();

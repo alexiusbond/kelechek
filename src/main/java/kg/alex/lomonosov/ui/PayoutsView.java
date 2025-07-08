@@ -657,7 +657,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             logger.error(e);
             logger.catching(e);
         }
-        if (noteTF.getValue() != null && !noteTF.getValue().equals("")) {
+        if (noteTF.getValue() != null && !noteTF.getValue().isEmpty()) {
             inv.setNote(noteTF.getValue());
         }
         inv.setAcc_invoice_type_id(2);

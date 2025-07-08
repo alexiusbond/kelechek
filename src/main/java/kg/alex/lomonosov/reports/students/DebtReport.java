@@ -45,7 +45,7 @@ public class DebtReport implements Button.ClickListener,
     private DateField tillDateDF, fromDateDF;
     private FormattedTable dataTable;
     private IndexedContainer installmentCont;
-    private String currency;
+    private final String currency;
 
     public DebtReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

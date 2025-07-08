@@ -41,11 +41,9 @@ public class ClassDiscountsReport implements Button.ClickListener,
             selectAllDiscountsBtn, deselectAllDiscountsBtn, excelBtn;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
-    private String currency;
 
     public ClassDiscountsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
         this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();

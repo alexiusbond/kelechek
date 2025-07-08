@@ -8,8 +8,6 @@ package kg.alex.lomonosov.dao;
 import kg.alex.lomonosov.domain.School;
 import kg.alex.lomonosov.domain.UserDetails;
 import kg.alex.lomonosov.domain.Year;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

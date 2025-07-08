@@ -235,7 +235,7 @@ public class DbTransfers extends BaseDb {
         stat.setInt(3, acr.getCurrency_id());
         stat.setDouble(4, acr.getAmount());
         stat.setDouble(5, acr.getRate());
-        if (acr.getNote() != null && !acr.getNote().equals("")) {
+        if (acr.getNote() != null && !acr.getNote().isEmpty()) {
             stat.setString(6, acr.getNote());
         } else {
             stat.setNull(6, Types.VARCHAR);
@@ -262,7 +262,7 @@ public class DbTransfers extends BaseDb {
         stat.setInt(2, acr.getCurrency_id());
         stat.setDouble(3, acr.getAmount());
         stat.setDouble(4, acr.getRate());
-        if (acr.getNote() != null && !acr.getNote().equals("")) {
+        if (acr.getNote() != null && !acr.getNote().isEmpty()) {
             stat.setString(5, acr.getNote());
         } else {
             stat.setNull(5, Types.VARCHAR);

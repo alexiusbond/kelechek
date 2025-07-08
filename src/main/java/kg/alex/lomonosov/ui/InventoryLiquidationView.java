@@ -475,7 +475,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                         myUI.getMessage(Messages.InvoiceNumber)).getValue().toString());
             }
             invoiceNumberTF.addValueChangeListener(this);
-        } else if (property == codeTF && codeTF.getValue() != null && !codeTF.getValue().equals("")) {
+        } else if (property == codeTF && codeTF.getValue() != null && !codeTF.getValue().isEmpty()) {
             parsedValues = codeTF.getValue().split("-");
             if (parsedValues.length > 0) {
                 setValueByItemCaption(blockSelect, parsedValues[0]);
@@ -727,7 +727,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         } else {
             inv.setInvoiceNumberStr(invoicesTable.getContainerProperty(inv_id, myUI.getMessage(Messages.InvoiceNumber)).getValue().toString());
         }
-        if (noteTF.getValue() != null && !noteTF.getValue().equals("")) {
+        if (noteTF.getValue() != null && !noteTF.getValue().isEmpty()) {
             inv.setNote(noteTF.getValue());
         }
         inv.setCreation_date(dateDF.getValue());

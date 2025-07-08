@@ -40,7 +40,7 @@ public abstract class AbstractExcelUploader<T> implements Upload.Receiver, Uploa
     }
 
     public void setSheetAt(int index) {
-        if (!sheetName.equals("")) {
+        if (!sheetName.isEmpty()) {
             throw new IllegalArgumentException("already defined sheetName (" + sheetName + ")");
         } else if (index < 0) {
             throw new IllegalArgumentException("index cannot be negative.");
@@ -125,7 +125,7 @@ public abstract class AbstractExcelUploader<T> implements Upload.Receiver, Uploa
 
             if (sheetAt > 0) {
                 sheet = wb.getSheetAt(sheetAt);
-            } else if (!sheetName.equals("")) {
+            } else if (!sheetName.isEmpty()) {
                 sheet = wb.getSheet(sheetName);
             }
             ;
@@ -178,7 +178,7 @@ public abstract class AbstractExcelUploader<T> implements Upload.Receiver, Uploa
 
             if (sheetAt > 0) {
                 sheet = wb.getSheetAt(sheetAt);
-            } else if (!sheetName.equals("")) {
+            } else if (!sheetName.isEmpty()) {
                 sheet = wb.getSheet(sheetName);
             }
             ;

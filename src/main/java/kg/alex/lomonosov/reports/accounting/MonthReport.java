@@ -28,8 +28,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTreeTable;
 
-import java.util.Calendar;
 import java.util.*;
+import java.util.Calendar;
 
 public class MonthReport implements Button.ClickListener,
         Property.ValueChangeListener {

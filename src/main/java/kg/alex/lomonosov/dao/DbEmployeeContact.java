@@ -23,17 +23,17 @@ public class DbEmployeeContact extends BaseDb {
         stat.setInt(1, ec.getEmployee_id());
         stat.setString(2, ec.getBirth_place());
         stat.setString(3, ec.getAddress());
-        if (ec.getEmail() != null && !ec.getEmail().equals("")) {
+        if (ec.getEmail() != null && !ec.getEmail().isEmpty()) {
             stat.setString(4, ec.getEmail());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
-        if (ec.getPassport() != null && !ec.getPassport().equals("")) {
+        if (ec.getPassport() != null && !ec.getPassport().isEmpty()) {
             stat.setString(5, ec.getPassport());
         } else {
             stat.setNull(5, Types.VARCHAR);
         }
-        if (ec.getPassportGiven() != null && !ec.getPassportGiven().equals("")) {
+        if (ec.getPassportGiven() != null && !ec.getPassportGiven().isEmpty()) {
             stat.setString(6, ec.getPassportGiven());
         } else {
             stat.setNull(6, Types.VARCHAR);
@@ -43,7 +43,7 @@ public class DbEmployeeContact extends BaseDb {
         } else {
             stat.setNull(7, Types.DATE);
         }
-        if (ec.getInn() != null && !ec.getInn().equals("")) {
+        if (ec.getInn() != null && !ec.getInn().isEmpty()) {
             stat.setString(8, ec.getInn());
         } else {
             stat.setNull(8, Types.VARCHAR);
@@ -62,17 +62,17 @@ public class DbEmployeeContact extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ec.getBirth_place());
         stat.setString(2, ec.getAddress());
-        if (ec.getEmail() != null && !ec.getEmail().equals("")) {
+        if (ec.getEmail() != null && !ec.getEmail().isEmpty()) {
             stat.setString(3, ec.getEmail());
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
-        if (ec.getPassport() != null && !ec.getPassport().equals("")) {
+        if (ec.getPassport() != null && !ec.getPassport().isEmpty()) {
             stat.setString(4, ec.getPassport());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
-        if (ec.getPassportGiven() != null && !ec.getPassportGiven().equals("")) {
+        if (ec.getPassportGiven() != null && !ec.getPassportGiven().isEmpty()) {
             stat.setString(5, ec.getPassportGiven());
         } else {
             stat.setNull(5, Types.VARCHAR);
@@ -82,7 +82,7 @@ public class DbEmployeeContact extends BaseDb {
         } else {
             stat.setNull(6, Types.DATE);
         }
-        if (ec.getInn() != null && !ec.getInn().equals("")) {
+        if (ec.getInn() != null && !ec.getInn().isEmpty()) {
             stat.setString(7, ec.getInn());
         } else {
             stat.setNull(7, Types.VARCHAR);

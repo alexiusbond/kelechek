@@ -15,7 +15,7 @@ import kg.alex.lomonosov.i18n.Messages;
  * @author alex
  */
 public class FormattedTable extends Table {
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
 
     public FormattedTable(MyVaadinUI myUi) {
         super();

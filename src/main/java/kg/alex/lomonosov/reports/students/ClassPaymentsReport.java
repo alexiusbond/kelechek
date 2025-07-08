@@ -44,7 +44,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
     private DateField tillDateDF, fromDateDF;
     private FormattedTable dataTable;
     private IndexedContainer paymentsCont;
-    private String currency;
+    private final String currency;
 
     public ClassPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

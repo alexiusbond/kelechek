@@ -441,8 +441,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                             next, myUI.getMessage(Messages.FromDate)).getValue()).getValue());
                     if (((TextField) t.getContainerProperty(next,
                             myUI.getMessage(Messages.Note)).getValue()).getValue() != null
-                            && !((TextField) t.getContainerProperty(next,
-                            myUI.getMessage(Messages.Note)).getValue()).getValue().equals("")) {
+                        && !((TextField) t.getContainerProperty(next,
+                            myUI.getMessage(Messages.Note)).getValue()).getValue().isEmpty()) {
                         eo.setNote(((TextField) t.getContainerProperty(next,
                                 myUI.getMessage(Messages.Note)).getValue()).getValue());
                     }

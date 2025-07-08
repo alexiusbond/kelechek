@@ -465,7 +465,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         if (permissions.length() > 1) {
             permissions = new StringBuilder(permissions.substring(0, permissions.length() - 1));
         }
-        if (permissions.toString().equals("")) {
+        if (permissions.toString().isEmpty()) {
             return null;
         } else {
             return permissions.toString();

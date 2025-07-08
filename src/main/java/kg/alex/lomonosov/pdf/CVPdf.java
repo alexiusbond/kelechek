@@ -35,7 +35,7 @@ public class CVPdf {
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Font fontBold;
     private Font captionFont;
     private Font ordFont;

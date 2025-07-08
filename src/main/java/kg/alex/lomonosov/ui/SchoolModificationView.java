@@ -360,7 +360,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         phoneTF.setValue(school.getPhone());
         statusSelect.setValue(school.getStatus_id());
         typeSelect.setValue(school.getSchool_type_id());
-        if (school.getPhoto() != null && !school.getPhoto().equals("")) {
+        if (school.getPhoto() != null && !school.getPhoto().isEmpty()) {
             photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS
                     + school.getPhoto())));
             photoName = school.getPhoto();

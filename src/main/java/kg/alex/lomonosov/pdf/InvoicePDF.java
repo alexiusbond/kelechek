@@ -117,7 +117,7 @@ public class InvoicePDF {
                 } else {
                     namePar.add(new Chunk("Принято от: ", bold_font));
                 }
-                if (student.getWhoPaidFullName() != null && !student.getWhoPaidFullName().equals("")) {
+                if (student.getWhoPaidFullName() != null && !student.getWhoPaidFullName().isEmpty()) {
                     namePar.add(new Chunk(student.getLogin() + ", " + student.getClass_name() + ", "
                             + student.getStudentFullName() + " (" + student.getWhoPaidFullName() + ")", underlined_font));
                 } else {
@@ -226,7 +226,7 @@ public class InvoicePDF {
                 } else {
                     nameInvPar.add(new Chunk("Принято от: ", bold_font));
                 }
-                if (student.getWhoPaidFullName() != null && !student.getWhoPaidFullName().equals("")) {
+                if (student.getWhoPaidFullName() != null && !student.getWhoPaidFullName().isEmpty()) {
                     nameInvPar.add(new Chunk(student.getLogin() + ", " + student.getClass_name() + ", "
                             + student.getStudentFullName() + " (" + student.getWhoPaidFullName() + ")", underlined_font));
                 } else {

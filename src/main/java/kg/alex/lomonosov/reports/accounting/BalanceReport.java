@@ -36,8 +36,8 @@ import org.tepi.filtertable.FilterTreeTable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.*;
+import java.util.Calendar;
 
 public class BalanceReport implements Button.ClickListener,
         Property.ValueChangeListener, Serializable {

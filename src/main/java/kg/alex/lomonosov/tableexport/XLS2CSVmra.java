@@ -40,9 +40,9 @@ import java.util.ArrayList;
  * @author Nick Burch
  */
 public class XLS2CSVmra implements HSSFListener {
-    private int minColumns;
-    private POIFSFileSystem fs;
-    private PrintStream output;
+    private final int minColumns;
+    private final POIFSFileSystem fs;
+    private final PrintStream output;
 
     private int lastRowNumber;
     private int lastColumnNumber;
@@ -50,7 +50,7 @@ public class XLS2CSVmra implements HSSFListener {
     /**
      * Should we output the formula, or the value it has?
      */
-    private boolean outputFormulaValues = true;
+    private final boolean outputFormulaValues = true;
 
     /**
      * For parsing Formulas
@@ -69,7 +69,7 @@ public class XLS2CSVmra implements HSSFListener {
     private int sheetIndex = -1;
     private BoundSheetRecord[] orderedBSRs;
     @SuppressWarnings("rawtypes")
-    private ArrayList boundSheetRecords = new ArrayList();
+    private final ArrayList boundSheetRecords = new ArrayList();
 
     // For handling formulas with string results
     private int nextRow;

@@ -256,7 +256,7 @@ public class DbAccCategory extends BaseDb {
         }
         stat.setInt(4, ac.getType_id());
         stat.setInt(5, ac.getStatus_id());
-        if (ac.getNote() != null && !ac.getNote().equals("")) {
+        if (ac.getNote() != null && !ac.getNote().isEmpty()) {
             stat.setString(6, ac.getNote());
         } else {
             stat.setNull(6, Types.VARCHAR);
