@@ -128,15 +128,15 @@ public class DbDefinition extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
-        for (int i = 0; i < containerProperties.size(); i++) {
-            container.addContainerProperty(containerProperties.get(i), Integer.class, null);
+        for (String property : containerProperties) {
+            container.addContainerProperty(property, Integer.class, null);
         }
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(result.getString("t.name"));
-            for (int i = 0; i < containerProperties.size(); i++) {
-                item.getItemProperty(containerProperties.get(i)).setValue(
-                        result.getInt(containerProperties.get(i)));
+            for (String containerProperty : containerProperties) {
+                item.getItemProperty(containerProperty).setValue(
+                        result.getInt(containerProperty));
             }
         }
         return container;

@@ -8,6 +8,7 @@ package kg.alex.ellipse.dao;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.domain.StudentInstallmentPlan;
@@ -48,7 +49,8 @@ public class DbStudentInstallmentPlan extends BaseDb {
                             Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
             java.util.Date date = result.getDate("ip.date_of_payment");
             item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
-                    dw.createDateField(date, myUI.getMessage(Messages.Date), id, false, true));
+                    dw.createDateField(date, myUI.getMessage(Messages.Date), id, true, true,
+                            Settings.datePattern, Resolution.DAY));
             item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                     dw.createTextFieldDouble(result.getDouble("ip.amount"), 2, myUI.getMessage(Messages.Amount), id));
             item.getItemProperty(Settings.status_id)

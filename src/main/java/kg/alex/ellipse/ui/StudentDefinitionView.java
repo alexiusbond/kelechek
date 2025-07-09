@@ -3,6 +3,7 @@ package kg.alex.ellipse.ui;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.Validator;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
@@ -25,8 +26,7 @@ import kg.alex.ellipse.dao.*;
 import kg.alex.ellipse.domain.*;
 import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.pdf.Invoice2023PDF;
-import kg.alex.ellipse.pdf.contracts.ContractBishkek;
-import kg.alex.ellipse.pdf.contracts.ContractKarakol;
+import kg.alex.ellipse.pdf.contracts.ContractPdf;
 import kg.alex.ellipse.utils.ExistsValidator;
 import kg.alex.ellipse.utils.FormattedTable;
 import kg.alex.ellipse.utils.MyFilterDecorator;
@@ -171,7 +171,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         horSplitPanel.setFirstComponent(gridStudLay);
         horSplitPanel.setSecondComponent(contractLay);
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Id),
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.StudentId),
                 myUI.getMessage(Messages.FirstName), myUI.getMessage(Messages.LastName),
                 myUI.getMessage(Messages.ClassName), myUI.getMessage(Messages.EducationStatus),
                 myUI.getMessage(Messages.EnteringYear),
@@ -527,10 +527,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         fieldsLay1 = new FormLayout();
         fieldsLay1.setSpacing(false);
 
-        loginTF = new TextField(myUI.getMessage(Messages.Id));
+        loginTF = new TextField(myUI.getMessage(Messages.StudentId));
         loginTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         loginTF.setWidth(Settings.PERCENTS100);
-        loginTF.setEnabled(false);
         fieldsLay1.addComponent(loginTF);
 
         nameTF = new TextField(myUI.getMessage(Messages.FirstName));
@@ -581,14 +580,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         fieldsLay2 = new FormLayout();
         fieldsLay2.setSpacing(false);
 
-        birthDateDF = new DateField(myUI.getMessage(Messages.DateOfBirth));
-        birthDateDF.setRangeEnd(new Date());
-        birthDateDF.setWidth(Settings.PERCENTS100);
-        birthDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
-        birthDateDF.setRequired(true);
-        birthDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
-        birthDateDF.setDateFormat(Settings.datePattern);
-        birthDateDF.setValue(new Date());
+        birthDateDF = createDateField(new Date(), null, null, false, true,
+                Settings.datePattern, Resolution.DAY);
+        birthDateDF.setCaption(myUI.getMessage(Messages.DateOfBirth));
         fieldsLay2.addComponent(birthDateDF);
 
         addressTF = new TextField(myUI.getMessage(Messages.Address));
@@ -617,7 +611,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.error(e);
             logger.catching(e);
         }
-        classCB.addValueChangeListener(this);
         fieldsLay2.addComponent(classCB);
 
         statusCB = new ComboBox(myUI.getMessage(Messages.EducationStatus));
@@ -868,9 +861,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                         DbStudent dbst = new DbStudent();
                                         dbst.connect();
                                         if (isNew) {
-                                            loginTF.setValue(generateStudId(
-                                                    myUI.getUser().getCurrent_year().getId(),
-                                                    myUI.getUser().getCurrent_year().getName()));
                                             Student student = getStudent(0);
                                             int id = dbst.exec_insert(student);
                                             if (id != 0) {
@@ -1132,11 +1122,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (studInfo.getRelative() != null && studInfo.getRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
-                                if (myUI.getUser().getSchool().getId() == 44) {
-                                    new ContractBishkek(myUI, studInfo, instPlanCont);
-                                } else {
-                                    new ContractKarakol(myUI, studInfo, instPlanCont);
-                                }
+                                new ContractPdf(myUI, studInfo, instPlanCont);
                             } else {
                                 Notification.show(myUI.getMessage(Messages.NoDirectorAssigned),
                                         Notification.Type.WARNING_MESSAGE);
@@ -1221,16 +1207,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 }
                 setContractCb(contr_id);
             }
-        } else if (property == classCB) {
-            if (classCB.getValue() != null) {
-                photoUpl.setEnabled(true);
-                if (isNew) {
-                    loginTF.setValue(generateStudId(myUI.getUser().getCurrent_year().getId(),
-                            myUI.getUser().getCurrent_year().getName()));
-                }
-            } else {
-                photoUpl.setEnabled(false);
-            }
         } else if (property == contractCB) {
             recountInstPlanLabel();
         } else if (property == statusesOG) {
@@ -1263,95 +1239,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     amountUSDTf.setRequired(true);
                 }
             }
-            /*if (((ComboBox) paymentsTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.PaymentCategoryType)).getValue()).getValue() != null
-                    && (((TextField) paymentsTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.AmountUSD)).getValue()).getValue() != null
-                    || ((TextField) paymentsTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.AmountKGS)).getValue()).getValue() != null)
-                    && ((DateField) paymentsTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Date)).getValue()).getValue() != null) {
-
-                AccTransaction trUSD = null, trKGS = null;
-                if (paymentsTable.getContainerProperty(itemId, Settings.old_date).getValue() != null
-                        && DateUtils.truncate(((DateField) paymentsTable.getContainerProperty(itemId,
-                        myUI.getMessage(Messages.Date)).getValue()).getValue(), java.util.Calendar.DAY_OF_MONTH).compareTo(
-                        (Date) paymentsTable.getContainerProperty(itemId, Settings.old_date).getValue()) != 0) {
-                    trUSD = insertTestPayments((Date) paymentsTable.getContainerProperty(itemId,
-                            Settings.old_date).getValue(), "", 2);
-                    trKGS = insertTestPayments((Date) paymentsTable.getContainerProperty(itemId,
-                            Settings.old_date).getValue(), "", 1);
-                }
-                if (trUSD == null) {
-                    trUSD = insertTestPayments(((DateField) paymentsTable.getContainerProperty(itemId,
-                            myUI.getMessage(Messages.Date)).getValue()).getValue(), "", 2);
-                }
-                if (trUSD != null) {
-                    amountUSDTf.removeAllValidators();
-                    if ((Integer) ((ComboBox) paymentsTable.getContainerProperty(itemId,
-                            myUI.getMessage(Messages.PaymentCategoryType)).getValue()).getValue() == 3) {
-                        amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.LowBalance)
-                                + Settings.dFormat2.format(trUSD.getOverLimit())
-                                + " " + Settings.USD + " (" + Settings.df.format(trUSD.getDate()) + ")", 0.01,
-                                (Double) amountUSDTf.getPropertyDataSource().getValue() - trUSD.getOverLimit()));
-                    } else {
-                        amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.LowBalance)
-                                + Settings.dFormat2.format(trUSD.getOverLimit())
-                                + " " + Settings.USD + " (" + Settings.df.format(trUSD.getDate()) + ")",
-                                (Double) amountUSDTf.getPropertyDataSource().getValue() + trUSD.getOverLimit(), null));
-                    }
-                    Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(trUSD.getOverLimit())
-                                    + " " + Settings.USD + "(" + Settings.df.format(trUSD.getDate()) + ")",
-                            Notification.Type.ERROR_MESSAGE);
-                } else {
-                    amountUSDTf.removeAllValidators();
-                    amountUSDTf.addValidator(new DoubleRangeValidator(
-                            myUI.getMessage(Messages.NotificationWrongValue), 0.1, null));
-                }
-                if (trKGS == null) {
-                    trKGS = insertTestPayments(((DateField) paymentsTable.getContainerProperty(itemId,
-                            myUI.getMessage(Messages.Date)).getValue()).getValue(), "", 1);
-                }
-                if (trKGS != null) {
-                    amountKGSTf.removeAllValidators();
-                    if ((Integer) ((ComboBox) paymentsTable.getContainerProperty(itemId,
-                            myUI.getMessage(Messages.PaymentCategoryType)).getValue()).getValue() == 3) {
-                        amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.LowBalance)
-                                + Settings.dFormat2.format(trKGS.getOverLimit())
-                                + " " + Settings.KGS + " (" + Settings.df.format(trKGS.getDate()) + ")", 0.01,
-                                (Double) amountKGSTf.getPropertyDataSource().getValue() - trKGS.getOverLimit()));
-                    } else {
-                        amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.LowBalance)
-                                + Settings.dFormat2.format(trKGS.getOverLimit())
-                                + " " + Settings.KGS + " (" + Settings.df.format(trKGS.getDate()) + ")",
-                                (Double) amountKGSTf.getPropertyDataSource().getValue() + trKGS.getOverLimit(), null));
-                    }
-                    Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(trKGS.getOverLimit())
-                                    + " " + Settings.KGS + "(" + Settings.df.format(trKGS.getDate()) + ")",
-                            Notification.Type.ERROR_MESSAGE);
-                } else {
-                    amountKGSTf.removeAllValidators();
-                    amountKGSTf.addValidator(new DoubleRangeValidator(
-                            myUI.getMessage(Messages.NotificationWrongValue), 0.1, null));
-                }
-            }*/
-        } else if (property instanceof TextField && property != nameTF && property != loginTF
-                   && property != surnameTF && property != addressTF && property != middleNameTF && property != divideTF
+        } else if (property instanceof TextField && tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
                    && ((TextField) property).getDescription().equals(myUI.getMessage(Messages.Amount))) {
-            if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
-                recountInstPlanLabel();
-            }
-        } else if (property instanceof TextField && property != nameTF && property != loginTF
-                   && property != surnameTF && property != addressTF && property != middleNameTF && property != divideTF
-                   && (((TextField) property).getDescription().equals(myUI.getMessage(Messages.DiscountAmount))
-                       || ((TextField) property).getDescription().equals(myUI.getMessage(Messages.CorrectionAmount)))) {
-            if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
-                recountInstPlanLabel();
-            }
-        } else if (property instanceof DateField && property != birthDateDF
-                   && property != currDate) {
-            if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
-            }
+            recountInstPlanLabel();
         } else if (property instanceof CheckBox) {
             if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
                 familyTableCheck((Boolean) property.getValue(), property);
@@ -1528,7 +1418,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void fillFields() {
         loginTF.setValue(studDataTable.getContainerDataSource().getContainerProperty(
-                studDataTable.getValue(), myUI.getMessage(Messages.Id)).getValue().toString());
+                studDataTable.getValue(), myUI.getMessage(Messages.StudentId)).getValue().toString());
         nameTF.setValue(studDataTable.getContainerDataSource().getContainerProperty(
                 studDataTable.getValue(), myUI.getMessage(Messages.FirstName)).getValue().toString());
         surnameTF.setValue(studDataTable.getContainerDataSource().getContainerProperty(
@@ -1547,7 +1437,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         classCB.removeValueChangeListener(this);
         classCB.setValue(studDataTable.getContainerDataSource().getContainerProperty(
                 studDataTable.getValue(), Settings.class_name_id).getValue());
-        classCB.addValueChangeListener(this);
         statusCB.setValue(studDataTable.getContainerDataSource().getContainerProperty(
                 studDataTable.getValue(), Settings.education_status_id).getValue());
         if (studDataTable.getContainerProperty(studDataTable.getValue(),
@@ -1605,7 +1494,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void updateDataContainer(Item relativeItem) {
         studDataTable.getContainerProperty(studDataTable.getValue(),
-                myUI.getMessage(Messages.Id)).setValue(loginTF.getValue());
+                myUI.getMessage(Messages.StudentId)).setValue(loginTF.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(Messages.FirstName)).setValue(nameTF.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
@@ -1643,7 +1532,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void addDataContainerItem(int id, Item relativeItem) {
         Item item = ((IndexedContainer) studDataTable.getContainerDataSource()).addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(Messages.Id)).setValue(loginTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.StudentId)).setValue(loginTF.getValue());
         item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(nameTF.getValue());
         item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(surnameTF.getValue());
         item.getItemProperty(myUI.getMessage(Messages.Address)).setValue(addressTF.getValue());
@@ -1955,6 +1844,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.Phone),
                     myUI.getMessage(Messages.Passport),
                     myUI.getMessage(Messages.GivenBy),
+                    myUI.getMessage(Messages.IssueDate),
                     myUI.getMessage(Messages.Responsible)};
         }
         try {
@@ -1987,6 +1877,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             productsContainer.addContainerProperty(
                     myUI.getMessage(Messages.GivenBy), TextField.class, null);
             productsContainer.addContainerProperty(
+                    myUI.getMessage(Messages.IssueDate), DateField.class, null);
+            productsContainer.addContainerProperty(
                     myUI.getMessage(Messages.Phone), TextField.class, null);
             productsContainer.addContainerProperty(
                     myUI.getMessage(Messages.Address), TextField.class, null);
@@ -2012,31 +1904,24 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         return btn;
     }
 
-    public TextField createTextField(String value, String description, String itemId,
-                                     boolean isFamTab, boolean isMain) {
+    public TextField createTextField(String value, String description, String itemId, Validator validator, boolean isRequired) {
         TextField tf = new TextField();
         tf.setDescription(description);
-        if (!isFamTab) {
-            tf.setRequired(true);
-            tf.setRequiredError(myUI.getMessage(Messages.RequiredField));
-            tf.addValidator(new StringLengthValidator(
-                    myUI.getMessage(Messages.NotificationWrongValue), null, 100, false));
-        }
-        if (isMain) {
-            tf.setRequired(true);
-            tf.setRequiredError(myUI.getMessage(Messages.RequiredField));
-
-        }
-        tf.addValidator(new StringLengthValidator(
-                myUI.getMessage(Messages.NotificationWrongValue), null, 100, false));
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
         tf.setWidth(Settings.PERCENTS100);
+        tf.setData(itemId);
+
         if (value != null) {
             tf.setValue(value);
         }
-        tf.setData(itemId);
-        tf.addValueChangeListener(this);
-        tf.setImmediate(true);
+
+        if (isRequired) {
+            tf.setRequired(true);
+            tf.setRequiredError(myUI.getMessage(Messages.RequiredField));
+        }
+        if (validator != null) {
+            tf.addValidator(validator);
+        }
         return tf;
     }
 
@@ -2084,42 +1969,23 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         return tf;
     }
 
-    public TextField createTextFieldNote(String value, String description, String itemId) {
-        TextField tf = new TextField();
-        tf.setDescription(description);
-        tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth(Settings.PERCENTS100);
-        if (value != null) {
-            tf.setValue(value);
-        }
-        tf.setData(itemId);
-        tf.setImmediate(true);
-        return tf;
-    }
-
-    public DateField createDateField(Date value, String description, String itemId, boolean setDefDate,
-                                     boolean isFutureAvailable) {
+    public DateField createDateField(Date value, String description, String itemId, boolean isFutureAvailable, boolean isRequired,
+                                     String format, Resolution resolution) {
         DateField df = new DateField();
         df.setDescription(description);
-        df.setRequired(true);
-        df.setRequiredError(myUI.getMessage(Messages.RequiredField));
         df.setStyleName(ValoTheme.DATEFIELD_TINY);
         df.setWidth(Settings.PERCENTS100);
-        if (setDefDate) {
-            df.setValue(new Date());
-        } else {
-            df.setValue(value);
-        }
         df.setData(itemId);
-        df.addValueChangeListener(this);
-        df.setImmediate(true);
+        if (isRequired) {
+            df.setRequired(true);
+            df.setRequiredError(myUI.getMessage(Messages.RequiredField));
+        }
         if (!isFutureAvailable) {
             df.setRangeEnd(new Date());
-            df.setDateFormat(Settings.dateTimeMinPattern);
-            df.setResolution(Resolution.MINUTE);
-        } else {
-            df.setDateFormat(Settings.datePattern);
         }
+        df.setDateFormat(format);
+        df.setResolution(resolution);
+        df.setValue(value);
         return df;
     }
 
@@ -2307,6 +2173,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 Notification.Type.WARNING_MESSAGE);
                         return false;
                     }
+                    if (!((DateField) relativesTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.IssueDate)).getValue()).isValid()) {
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
+                                Notification.Type.WARNING_MESSAGE);
+                        return false;
+                    }
                     if (!((TextField) relativesTable.getItem(next).getItemProperty(
                             myUI.getMessage(Messages.Passport)).getValue()).isValid()) {
                         Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
@@ -2337,7 +2209,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             Notification.Type.WARNING_MESSAGE);
                     return false;
                 }
-
             }
             return true;
         }
@@ -2446,6 +2317,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.Phone),
                     myUI.getMessage(Messages.Passport),
                     myUI.getMessage(Messages.GivenBy),
+                    myUI.getMessage(Messages.IssueDate),
                     myUI.getMessage(Messages.Responsible)};
         }
         String id = Settings.FreshItem + (--r_table_counter);
@@ -2461,15 +2333,28 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(Messages.Responsible)).setValue(
                 createCheckBox(false, myUI.getMessage(Messages.Responsible), id));
         item.getItemProperty(myUI.getMessage(Messages.FullName)).setValue(
-                createTextField(null, myUI.getMessage(Messages.FullName), id, false, false));
+                createTextField(null, myUI.getMessage(Messages.FullName), id,
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
+                                1, 250, false), true));
         item.getItemProperty(myUI.getMessage(Messages.Passport)).setValue(
-                createTextField(null, myUI.getMessage(Messages.Passport), id, true, false));
+                createTextField(null, myUI.getMessage(Messages.Passport), id,
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
+                                null, 50, true), false));
         item.getItemProperty(myUI.getMessage(Messages.Phone)).setValue(
-                createTextField(null, myUI.getMessage(Messages.Phone), id, true, false));
+                createTextField(null, myUI.getMessage(Messages.Phone), id,
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
+                                null, 100, true), false));
         item.getItemProperty(myUI.getMessage(Messages.GivenBy)).setValue(
-                createTextField(null, myUI.getMessage(Messages.GivenBy), id, true, false));
+                createTextField(null, myUI.getMessage(Messages.GivenBy), id,
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
+                                null, 100, true), false));
+        item.getItemProperty(myUI.getMessage(Messages.IssueDate)).setValue(
+                createDateField(null, myUI.getMessage(Messages.IssueDate), id, false, false,
+                        Settings.datePattern, Resolution.DAY));
         item.getItemProperty(myUI.getMessage(Messages.Address)).setValue(
-                createTextField(null, myUI.getMessage(Messages.Address), id, true, false));
+                createTextField(null, myUI.getMessage(Messages.Address), id,
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
+                                null, 300, true), false));
         item.getItemProperty(myUI.getMessage(Messages.RelativeType)).setValue(
                 createCombobox(0, myUI.getMessage(Messages.RelativeType), id,
                         Settings.dbRelatives, false, false, false, false));
@@ -2564,6 +2449,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 myUI.getMessage(Messages.FullName)).getValue()).getValue());
         rel.setGivenBy(((TextField) item.getItemProperty(
                 myUI.getMessage(Messages.GivenBy)).getValue()).getValue());
+        rel.setIssueDate(((DateField) item.getItemProperty(
+                myUI.getMessage(Messages.IssueDate)).getValue()).getValue());
         rel.setPhone(((TextField) item.getItemProperty(
                 myUI.getMessage(Messages.Phone)).getValue()).getValue());
         rel.setAddress(((TextField) item.getItemProperty(
@@ -2608,7 +2495,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         sp.setNoteForCashBox(studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(Messages.ClassName)).getValue().toString() + " "
                              + studDataTable.getContainerProperty(studDataTable.getValue(),
-                myUI.getMessage(Messages.Id)).getValue().toString() + " "
+                myUI.getMessage(Messages.StudentId)).getValue().toString() + " "
                              + studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(Messages.FirstName)).getValue().toString() + " "
                              + studDataTable.getContainerProperty(studDataTable.getValue(),
@@ -2988,8 +2875,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
         item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(
-                createTextField(wh_paid, myUI.getMessage(Messages.WhoPaid), id, false, false));
-        DateField df = createDateField(null, myUI.getMessage(Messages.Date), id, true, false);
+                createTextField(wh_paid, myUI.getMessage(Messages.WhoPaid), id, new StringLengthValidator(
+                        myUI.getMessage(Messages.NotificationWrongValue), 1, 120, false), true));
+        DateField df = createDateField(null, myUI.getMessage(Messages.Date), id, true, true,
+                Settings.dateTimeMinPattern, Resolution.MINUTE);
         df.setId(myUI.getMessage(Messages.Payments));
         if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
             df.setRangeStart(myUI.getUser().getTransactions_start_date());
@@ -3002,7 +2891,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
         item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(df);
         item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
-                createTextFieldNote(null, myUI.getMessage(Messages.Note), id));
+                createTextField(null, myUI.getMessage(Messages.Note), id, new StringLengthValidator(
+                        myUI.getMessage(Messages.NotificationWrongValue), null, 100, true), false));
         item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(cb);
         item.getItemProperty(Settings.acc_currency_id).setValue(1);
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
@@ -3030,7 +2920,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format(new Date()));
         item.getItemProperty(myUI.getMessage(Messages.WhoCalled)).setValue(myUI.getUser().getFullName());
         item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
-                createTextFieldNote(null, myUI.getMessage(Messages.Note), id));
+                createTextField(null, myUI.getMessage(Messages.Note), id, new StringLengthValidator(
+                        myUI.getMessage(Messages.NotificationWrongValue), null, 100, true), false));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         callsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CALLS);
 
@@ -3057,7 +2948,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                 createTextFieldDisc(null, null, myUI.getMessage(Messages.DiscountAmount), id, true));
         item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
-                createTextField(null, myUI.getMessage(Messages.Note), id, true, false));
+                createTextField(null, myUI.getMessage(Messages.Note), id, new StringLengthValidator(
+                        myUI.getMessage(Messages.NotificationWrongValue), null, 150, true), false));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         discountsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_DISCOUNTS);
     }
@@ -3082,7 +2974,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                 createTextFieldDouble(null, 2, myUI.getMessage(Messages.CorrectionAmount), id));
         item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
-                createTextField(null, myUI.getMessage(Messages.Note), id, true, false));
+                createTextField(null, myUI.getMessage(Messages.Note), id, new StringLengthValidator(
+                        myUI.getMessage(Messages.NotificationWrongValue), null, 250, false), false));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         correctionsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CORRECTIONS);
     }
@@ -3103,7 +2996,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     createButton(myUI.getMessage(Messages.DeleteButton), id,
                             Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
             DateField df = createDateField(currDate.getValue(), myUI.getMessage(Messages.Date),
-                    id, false, true);
+                    id, true, true, Settings.datePattern, Resolution.DAY);
             if (myUI.getUser().getSchool().getSchool_type_id() == 6) {
                 df.setRangeEnd(new Date(myUI.getUser().getCurrent_year().getInstallment_date_limit()));
             }
@@ -3145,7 +3038,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             createButton(myUI.getMessage(Messages.DeleteButton), id,
                                     Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
                     DateField df = createDateField(cal.getTime(), myUI.getMessage(Messages.Date), id,
-                            false, true);
+                            true, true, Settings.datePattern, Resolution.DAY);
                     if (myUI.getUser().getSchool().getSchool_type_id() == 6) {
                         df.setRangeEnd(new Date(myUI.getUser().getCurrent_year().getInstallment_date_limit()));
                     }
@@ -3831,15 +3724,15 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         instPlanLay.addComponent(instPlanDifLab, 1, 2);
     }
 
-    private void familyTableCheck(boolean b, Property property) {
-        if (b) {
+    private void familyTableCheck(boolean isMain, Property property) {
+        if (isMain) {
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Passport)).getValue()).setRequired(true);
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Passport)).getValue()).setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Passport)).getValue()).addValidator(new StringLengthValidator(
-                    myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false));
+                    myUI.getMessage(Messages.NotificationWrongValue), 1, 50, false));
 
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.GivenBy)).getValue()).setRequired(true);
@@ -3849,13 +3742,18 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.GivenBy)).getValue()).addValidator(new StringLengthValidator(
                     myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false));
 
+            ((DateField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
+                    myUI.getMessage(Messages.IssueDate)).getValue()).setRequired(true);
+            ((DateField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
+                    myUI.getMessage(Messages.IssueDate)).getValue()).setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
+
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Address)).getValue()).setRequired(true);
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Address)).getValue()).setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Address)).getValue()).addValidator(new StringLengthValidator(
-                    myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false));
+                    myUI.getMessage(Messages.NotificationWrongValue), 1, 300, false));
 
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Phone)).getValue()).setRequired(true);
@@ -3868,31 +3766,25 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Passport)).getValue()).setRequired(false);
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
-                    myUI.getMessage(Messages.Passport)).getValue()).setRequiredError("");
-            ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Passport)).getValue()).removeAllValidators();
 
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.GivenBy)).getValue()).setRequired(false);
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
-                    myUI.getMessage(Messages.GivenBy)).getValue()).setRequiredError("");
-            ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.GivenBy)).getValue()).removeAllValidators();
+
+            ((DateField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
+                    myUI.getMessage(Messages.IssueDate)).getValue()).setRequired(false);
 
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Address)).getValue()).setRequired(false);
-            ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
-                    myUI.getMessage(Messages.Address)).getValue()).setRequiredError("");
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Address)).getValue()).removeAllValidators();
 
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Phone)).getValue()).setRequired(false);
             ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
-                    myUI.getMessage(Messages.Phone)).getValue()).setRequiredError("");
-            ((TextField) relativesTable.getContainerProperty(((CheckBox) property).getData(),
                     myUI.getMessage(Messages.Phone)).getValue()).removeAllValidators();
-
         }
     }
 
@@ -3950,14 +3842,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbDefinition dbCon = new DbDefinition();
             dbCon.connect();
             if (delDiscIds.size() > 0) {
-                for (int i = 0; i < delDiscIds.size(); i++) {
+                for (String delDiscId : delDiscIds) {
                     try {
                     } catch (Exception ex) {
                         logger.error(ex);
                         logger.catching(ex);
                     }
-                    dbsd.exec_update_emp_id(myUI.getUser().getId(), delDiscIds.get(i));
-                    dbCon.exec_delete(delDiscIds.get(i), Settings.dbStudentDiscount);
+                    dbsd.exec_update_emp_id(myUI.getUser().getId(), delDiscId);
+                    dbCon.exec_delete(delDiscId, Settings.dbStudentDiscount);
                 }
             }
             contr_with_disc = (Double) contractCB.getContainerProperty(contractCB.getValue(), myUI.getMessage(Messages.Amount)).getValue();
@@ -3991,8 +3883,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbDefinition dbCon = new DbDefinition();
             dbCon.connect();
             if (delCorrectionIds.size() > 0) {
-                for (int i = 0; i < delCorrectionIds.size(); i++) {
-                    dbCon.exec_delete(delCorrectionIds.get(i), Settings.dbStudentCorrection);
+                for (String delCorrectionId : delCorrectionIds) {
+                    dbCon.exec_delete(delCorrectionId, Settings.dbStudentCorrection);
                 }
             }
             if (correctionsTable.getContainerDataSource().size() > 0) {
@@ -4023,8 +3915,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (delRelIds.size() > 0) {
                 DbDefinition dbCon = new DbDefinition();
                 dbCon.connect();
-                for (int i = 0; i < delRelIds.size(); i++) {
-                    dbCon.exec_delete(delRelIds.get(i), Settings.dbStudentRelatives);
+                for (String delRelId : delRelIds) {
+                    dbCon.exec_delete(delRelId, Settings.dbStudentRelatives);
                 }
                 dbCon.close();
             }
@@ -4061,10 +3953,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbStudentPayment dbsp = new DbStudentPayment();
             DbAccTransactions dbat = new DbAccTransactions();
             dbsp.connect();
-            for (int i = 0; i < delPayIds.size(); i++) {
-                dbat.exec_delete(Settings.dbColumnStudent_payments_id, delPayIds.get(i), dbsp.getConnection());//delete transaction
-                dbsp.exec_update_emp_id(myUI.getUser().getId(), delPayIds.get(i));
-                dbsp.exec_delete(delPayIds.get(i));
+            for (String delPayId : delPayIds) {
+                dbat.exec_delete(Settings.dbColumnStudent_payments_id, delPayId, dbsp.getConnection());//delete transaction
+                dbsp.exec_update_emp_id(myUI.getUser().getId(), delPayId);
+                dbsp.exec_delete(delPayId);
             }
             if (paymentsTable.getContainerDataSource().size() > 0) {
                 for (Object next : paymentsTable.getItemIds()) {
@@ -4189,8 +4081,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbStudentCalls dbsc = new DbStudentCalls();
             dbsc.connect();
             if (delCallIds.size() > 0) {
-                for (int i = 0; i < delCallIds.size(); i++) {
-                    dbsc.exec_delete(delCallIds.get(i));
+                for (String delCallId : delCallIds) {
+                    dbsc.exec_delete(delCallId);
                 }
             }
             if (callsTable.getContainerDataSource().size() > 0) {
@@ -4322,60 +4214,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
         studDataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-    }
-
-    private String generateStudId(int yearId, String yearName) {
-        String generated_id = null;
-        try {
-            DbStudent dbCon = new DbStudent();
-            dbCon.connect();
-            String school_code = (Integer) classCB.getContainerProperty(
-                    classCB.getValue(), myUI.getMessage(Messages.ClassNumber)).getValue() < 7 ?
-                    myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
-                            myUI.getMessage(Messages.PrimaryCode)).getValue().toString() :
-                    myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
-                            myUI.getMessage(Messages.SecondaryCode)).getValue().toString();
-            String school_level = null;
-            if ((Integer) classCB.getContainerProperty(
-                    classCB.getValue(), myUI.getMessage(Messages.ClassNumber)).getValue() < 7 &&
-                !myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
-                        myUI.getMessage(Messages.PrimaryCode)).getValue().equals(
-                        myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
-                                myUI.getMessage(Messages.SecondaryCode)).getValue())) {
-                school_level = myUI.getMessage(Messages.PrimaryCode);
-            } else if ((Integer) classCB.getContainerProperty(
-                    classCB.getValue(), myUI.getMessage(Messages.ClassNumber)).getValue() >= 7 &&
-                       !myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
-                               myUI.getMessage(Messages.PrimaryCode)).getValue().equals(
-                               myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
-                                       myUI.getMessage(Messages.SecondaryCode)).getValue())) {
-                myUI.getMessage(Messages.SecondaryCode);
-            }
-            int year_ord = Integer.parseInt(yearName.substring(2, 4));
-            String class_num = Integer.toString(year_ord - (Integer) classCB.getContainerProperty(
-                    classCB.getValue(), Settings.class_order_number).getValue());
-            char cl = (Integer) classCB.getContainerProperty(classCB.getValue(), Settings.class_type_id).getValue() >= 4
-                    ? '0' : class_num.charAt(class_num.length() - 1);
-            int order_number = 1;
-            do {
-                generated_id = school_code + year_ord + cl + String.format("%03d", dbCon.execSQL_login(myUI,
-                        yearId, myUI.getUser().getSchool().getId(), (Integer) classCB.getContainerProperty(
-                                classCB.getValue(), Settings.class_type_id).getValue(),
-                        order_number, (Integer) classCB.getContainerProperty(
-                                classCB.getValue(), Settings.min).getValue(),
-                        (Integer) classCB.getContainerProperty(
-                                classCB.getValue(), Settings.max).getValue(), school_level));
-                order_number++;
-                if (order_number == 100) {
-                    break;
-                }
-            } while (dbCon.isLoginExists(generated_id));
-            dbCon.close();
-        } catch (Exception ex) {
-            logger.error(ex);
-            logger.catching(ex);
-        }
-        return generated_id;
     }
 
     private void createBtnAction() {

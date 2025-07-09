@@ -516,8 +516,8 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     dbCon.getConnection().setAutoCommit(false);
                     ArrayList<StockMovement> delMovementIds = dbCon.execSQL(inv_id, cat_id, msr_id);
                     if (delMovementIds.size() > 0) {
-                        for (int i = 0; i < delMovementIds.size(); i++) {
-                            dbCon.exec_delete(delMovementIds.get(i));
+                        for (StockMovement delMovementId : delMovementIds) {
+                            dbCon.exec_delete(delMovementId);
                         }
                     }
                     if (movementsTable.getContainerDataSource().size() > 0) {
@@ -927,8 +927,8 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             int st = 0;
             ArrayList<StockMovement> delMovementIds = dbCon.execSQL((Integer) invoicesTable.getValue(), null, null);
             if (delMovementIds.size() > 0) {
-                for (int i = 0; i < delMovementIds.size(); i++) {
-                    st += dbCon.exec_delete(delMovementIds.get(i));
+                for (StockMovement delMovementId : delMovementIds) {
+                    st += dbCon.exec_delete(delMovementId);
                 }
             }
             if (st != 0) {
@@ -1165,8 +1165,8 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             dbCon.connect();
             ArrayList<StockMovement> delMovementIds = dbCon.execSQL(invoice_id, null, null);
             if (delMovementIds.size() > 0) {
-                for (int i = 0; i < delMovementIds.size(); i++) {
-                    dbCon.exec_delete(delMovementIds.get(i));
+                for (StockMovement delMovementId : delMovementIds) {
+                    dbCon.exec_delete(delMovementId);
                 }
             }
             if (movementsTable.getContainerDataSource().size() > 0) {

@@ -8,6 +8,7 @@ package kg.alex.ellipse.dao;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
@@ -149,7 +150,9 @@ public class DbStudentDiscount extends BaseDb {
                                 !currentUser.isPermitted(Settings.discountsTable + ":" + Settings.actModify)));
             }
             TextField tf = dw.createTextField(result.getString("sd.note"),
-                    myUI.getMessage(Messages.Note), id, true, false);
+                    myUI.getMessage(Messages.Note), id, new StringLengthValidator(
+                            myUI.getMessage(Messages.NotificationWrongValue),
+                            null, 150, true), false);
             item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(tf);
             if (!currentUser.isPermitted(Settings.discountsTable + ":" + Settings.actModify)) {
                 tf.setEnabled(false);

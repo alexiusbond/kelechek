@@ -9,6 +9,7 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.DateRangeValidator;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import kg.alex.ellipse.MyVaadinUI;
@@ -117,11 +118,14 @@ public class DbStudentPayment extends BaseDb {
             TextField tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), 4, myUI.getMessage(Messages.Rate), id);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(tf);
-            tf = dw.createTextField(result.getString("sp.who_paid"), myUI.getMessage(Messages.WhoPaid), id, false, false);
+            tf = dw.createTextField(result.getString("sp.who_paid"), myUI.getMessage(Messages.WhoPaid), id,
+                    new StringLengthValidator(
+                    myUI.getMessage(Messages.NotificationWrongValue),
+                    1, 120, false),  true);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(tf);
             DateField df = dw.createDateField(result.getTimestamp("sp.modification_date"),
-                    myUI.getMessage(Messages.Date), id, false, false);
+                    myUI.getMessage(Messages.Date), id, false, true, Settings.dateTimeMinPattern, Resolution.MINUTE);
             df.setId(myUI.getMessage(Messages.Payments));
             df.setEnabled(!isDisabled);
             if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
@@ -134,7 +138,10 @@ public class DbStudentPayment extends BaseDb {
                         df.getRangeStart(), df.getRangeEnd(), Resolution.MINUTE));
             }
             item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(df);
-            tf = dw.createTextFieldNote(result.getString("sp.note"), myUI.getMessage(Messages.Note), id);
+            tf = dw.createTextField(result.getString("sp.note"), myUI.getMessage(Messages.Note), id,
+                    new StringLengthValidator(
+                            myUI.getMessage(Messages.NotificationWrongValue),
+                            null, 150, true), false);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(tf);
             Button b = dw.createButton(myUI.getMessage(Messages.Print), id,

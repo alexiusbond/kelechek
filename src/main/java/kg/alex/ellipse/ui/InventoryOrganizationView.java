@@ -994,8 +994,8 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
             if (delInventoryIds.size() > 0) {
-                for (int i = 0; i < delInventoryIds.size(); i++) {
-                    dbd.exec_delete(delInventoryIds.get(i), Settings.dbInventoryOrganization);
+                for (String delInventoryId : delInventoryIds) {
+                    dbd.exec_delete(delInventoryId, Settings.dbInventoryOrganization);
                 }
             }
             if (inventoriesTable.getContainerDataSource().size() > 0) {

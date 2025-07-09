@@ -911,8 +911,8 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
             if (delPayoutsIds.size() > 0) {
-                for (int i = 0; i < delPayoutsIds.size(); i++) {
-                    dbd.exec_delete(delPayoutsIds.get(i), Settings.dbAcc_transactions);
+                for (String delPayoutsId : delPayoutsIds) {
+                    dbd.exec_delete(delPayoutsId, Settings.dbAcc_transactions);
                 }
             }
             if (payoutsTable.getContainerDataSource().size() > 0) {

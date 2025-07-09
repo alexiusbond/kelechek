@@ -103,7 +103,6 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {DivideButton, "Разделить"},
             {CancelButton, "Отменить"},
             {FinancialHistory, "Финансовая история"},
-            {ChangeId, "Изменить ID"},
             {RequiredField, "Поля выделенные красным обязательны!"},
             {Question, "Вопрос"},
             {Answer, "Ответ"},
@@ -353,7 +352,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {SelectContractTab, "Выберите вкладку контракт"},
             {SelectContract, "Задайте ученику контракт и сохраните"},
             {FillSchoolInfo, "Заполните полную информацию о школе"},
-            {FillSchoolInfo, "Не назначен президент"},
+            {NoDirectorAssigned, "Не назначен директор школы"},
             {FillRelativeInfo, "Заполните информацию о родителях"},
             {WhoPaid, "Кто оплатил"},
             {Invoice, "Квитанция"},
@@ -408,7 +407,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {FromAge, "Возраст с"},
             {To, "по"},
             {ToAge, "Возраст по"},
-            {President, "Президент"},
+            {Director, "Директор"},
             {EllipseExam, "Экзамен-Эллипс"},
             {AllClasses, "Все классы"},
             {All, "Все"},
@@ -599,10 +598,9 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {DetailedReport, "Подробный отчет"},
             {TransactionNumber, "Номер транзакции"},
             {TransactionsQuantity, "Количество трансакций"},
-            {StudentId, "Номер ученика"},
+            {StudentId, "ИНН ученика"},
             {StudentsPossessive, "ученика"},
             {Age, "Возраст"},
-            {NoDirectorAssigned, "Не назначен президент"},
     };
 
     @Override

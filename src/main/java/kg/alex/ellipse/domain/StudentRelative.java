@@ -6,6 +6,7 @@
 package kg.alex.ellipse.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class StudentRelative implements Serializable {
 
@@ -13,6 +14,7 @@ public class StudentRelative implements Serializable {
     private int student_id;
     private String fullName;
     private String givenBy;
+    private Date issueDate;
     private String phone;
     private String address;
     private String passport;
@@ -21,6 +23,14 @@ public class StudentRelative implements Serializable {
     private String relativeDeclarative;
     private String relativeTitle;
     private int gender_id;
+
+    public Date getIssueDate() {
+        return issueDate;
+    }
+
+    public void setIssueDate(Date issueDate) {
+        this.issueDate = issueDate;
+    }
 
     public int getGender_id() {
         return gender_id;

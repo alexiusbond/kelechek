@@ -118,7 +118,6 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String DivideButton = generateId();
     public static final String CancelButton = generateId();
     public static final String FinancialHistory = generateId();
-    public static final String ChangeId = generateId();
     public static final String CreateButton = generateId();
     public static final String RequiredField = generateId();
     public static final String Question = generateId();
@@ -400,7 +399,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String FromAge = generateId();
     public static final String To = generateId();
     public static final String ToAge = generateId();
-    public static final String President = generateId();
+    public static final String Director = generateId();
     public static final String EllipseExam = generateId();
     public static final String AllClasses = generateId();
     public static final String All = generateId();

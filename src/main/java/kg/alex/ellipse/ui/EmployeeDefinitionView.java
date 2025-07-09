@@ -3654,17 +3654,17 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbCon.exec_update(employee_id, Settings.columnCertificates, !noCertificatesCkb.getValue());
             dbCon.close();
             if (delCertificatesIds.size() > 0) {
-                for (int i = 0; i < delCertificatesIds.size(); i++) {
+                for (EmployeeCertificate delCertificatesId : delCertificatesIds) {
                     try {
-                        if (delCertificatesIds.get(i).getAttachmentUniqueName() != null) {
-                            File f = new File(Settings.PATH_TO_UPLOADS_HR + delCertificatesIds.get(i).getAttachmentUniqueName());
+                        if (delCertificatesId.getAttachmentUniqueName() != null) {
+                            File f = new File(Settings.PATH_TO_UPLOADS_HR + delCertificatesId.getAttachmentUniqueName());
                             f.delete();
                         }
                     } catch (Exception ex) {
                         logger.error(ex);
                         logger.catching(ex);
                     }
-                    dbd.exec_delete(delCertificatesIds.get(i).getIdStr(), Settings.dbEmployeeCertificate);
+                    dbd.exec_delete(delCertificatesId.getIdStr(), Settings.dbEmployeeCertificate);
                 }
             }
             if (certificatesTable.getContainerDataSource().size() > 0) {
@@ -3821,8 +3821,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbCon.exec_update(employee_id, Settings.columnBranches, !noBranchesCkb.getValue());
             dbCon.close();
             if (delBranchesIds.size() > 0) {
-                for (int i = 0; i < delBranchesIds.size(); i++) {
-                    dbd.exec_delete(delBranchesIds.get(i), Settings.dbEmployeeBranch);
+                for (String delBranchesId : delBranchesIds) {
+                    dbd.exec_delete(delBranchesId, Settings.dbEmployeeBranch);
                 }
             }
             if (branchesTable.getContainerDataSource().size() > 0) {

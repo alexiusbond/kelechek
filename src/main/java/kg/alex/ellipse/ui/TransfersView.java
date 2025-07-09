@@ -998,8 +998,8 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
             if (delTransferIds.size() > 0) {
-                for (int i = 0; i < delTransferIds.size(); i++) {
-                    dbd.exec_delete(delTransferIds.get(i), Settings.dbTransfers);
+                for (String delTransferId : delTransferIds) {
+                    dbd.exec_delete(delTransferId, Settings.dbTransfers);
                 }
             }
             if (transfersTable.getContainerDataSource().size() > 0) {

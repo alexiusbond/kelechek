@@ -60,7 +60,7 @@ public class DbStudent extends BaseDb {
         stat.setInt(3, myUi.getUser().getCurrent_year().getId());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.StudentId), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.FirstName), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.LastName), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Address), String.class, null);
@@ -85,7 +85,7 @@ public class DbStudent extends BaseDb {
         sdv.eduStatCont.getContainerProperty(6, Settings.count).setValue(0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
-            item.getItemProperty(myUi.getMessage(Messages.Id)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.StudentId)).setValue(
                     result.getString("s.login"));
             item.getItemProperty(myUi.getMessage(Messages.FirstName)).setValue(
                     result.getString("s.name"));

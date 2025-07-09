@@ -1139,8 +1139,8 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
             if (delMovementIds.size() > 0) {
-                for (int i = 0; i < delMovementIds.size(); i++) {
-                    dbd.exec_delete(delMovementIds.get(i), Settings.dbStockMovement);
+                for (String delMovementId : delMovementIds) {
+                    dbd.exec_delete(delMovementId, Settings.dbStockMovement);
                 }
             }
             if (movementsTable.getContainerDataSource().size() > 0) {

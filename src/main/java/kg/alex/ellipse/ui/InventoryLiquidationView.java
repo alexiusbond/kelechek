@@ -989,8 +989,8 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
             if (delInventoryIds.size() > 0) {
-                for (int i = 0; i < delInventoryIds.size(); i++) {
-                    dbd.exec_delete(delInventoryIds.get(i), Settings.dbInventoryLiquidation);
+                for (String delInventoryId : delInventoryIds) {
+                    dbd.exec_delete(delInventoryId, Settings.dbInventoryLiquidation);
                 }
             }
             if (inventoriesTable.getContainerDataSource().size() > 0) {

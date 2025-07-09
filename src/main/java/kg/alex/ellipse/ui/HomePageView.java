@@ -170,7 +170,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label directorLabCpt = new Label();
         directorLabCpt.setContentMode(ContentMode.HTML);
         directorLabCpt.setStyleName(ValoTheme.LABEL_SMALL);
-        directorLabCpt.setValue("<b>" + myUI.getMessage(Messages.President) + ":</b> ");
+        directorLabCpt.setValue("<b>" + myUI.getMessage(Messages.Director) + ":</b> ");
         layout.addComponent(directorLabCpt);
 
         Label directorLab = new Label();

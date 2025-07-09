@@ -8,6 +8,7 @@ package kg.alex.ellipse.dao;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.validator.StringLengthValidator;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.i18n.Messages;
@@ -60,8 +61,10 @@ public class DbStudentCalls extends BaseDb {
             item.getItemProperty(myUI.getMessage(Messages.WhoCalled)).setValue(
                     result.getString("fullname"));
             item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
-                    dw.createTextFieldNote(result.getString("sc.note"),
-                            myUI.getMessage(Messages.Note), id));
+                    dw.createTextField(result.getString("sc.note"),
+                            myUI.getMessage(Messages.Note), id, new StringLengthValidator(
+                                    myUI.getMessage(Messages.NotificationWrongValue),
+                                    null, 250, true), false));
             item.getItemProperty(Settings.crud_status)
                     .setValue(myUI.getMessage(Messages.Update));
         }
