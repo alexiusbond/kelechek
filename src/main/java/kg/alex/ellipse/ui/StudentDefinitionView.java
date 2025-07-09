@@ -2946,7 +2946,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                 createComboboxDisc(0, myUI.getMessage(Messages.Title), id));
         item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
-                createTextFieldDisc(null, null, myUI.getMessage(Messages.DiscountAmount), id, true));
+                createTextFieldDisc(null, null, myUI.getMessage(Messages.Amount), id, true));
         item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                 createTextField(null, myUI.getMessage(Messages.Note), id, new StringLengthValidator(
                         myUI.getMessage(Messages.NotificationWrongValue), null, 150, true), false));
@@ -2972,7 +2972,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                 createComboboxCorr(0, myUI.getMessage(Messages.Title), id));
         item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
-                createTextFieldDouble(null, 2, myUI.getMessage(Messages.CorrectionAmount), id));
+                createTextFieldDouble(null, 2, myUI.getMessage(Messages.Amount), id));
         item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                 createTextField(null, myUI.getMessage(Messages.Note), id, new StringLengthValidator(
                         myUI.getMessage(Messages.NotificationWrongValue), null, 250, false), false));

@@ -56,7 +56,7 @@ public class DbStudentCorrection extends BaseDb {
                     myUI.getMessage(Messages.Title), id);
             item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(cb);
             TextField discTf = dw.createTextFieldDouble(result.getDouble("t.amount"), 2,
-                    myUI.getMessage(Messages.CorrectionAmount), id);
+                    myUI.getMessage(Messages.Amount), id);
             item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(discTf);
             TextField tf = dw.createTextField(result.getString("t.note"),
                     myUI.getMessage(Messages.Note), id, new StringLengthValidator(

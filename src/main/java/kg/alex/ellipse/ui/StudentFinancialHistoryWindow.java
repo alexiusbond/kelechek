@@ -52,7 +52,7 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
         try {
             DbStudentContract dbCon = new DbStudentContract();
             dbCon.connect();
-            dbCon.execFinancialHistory(myUI, studentId, dataTable);
+            dbCon.execFinancialHistory(myUI, studentId, myUI.getUser().getSchool().getCurrency_id(), dataTable);
             dataTable.setColumnAlignment(myUI.getMessage(Messages.Debt), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(Messages.Repayment), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(Messages.Balance), Table.Align.RIGHT);

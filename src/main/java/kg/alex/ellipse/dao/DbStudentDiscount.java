@@ -139,14 +139,14 @@ public class DbStudentDiscount extends BaseDb {
                     || result.getString("d.discount_type_id").equals("2")) {
                 item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                         dw.createTextFieldDisc(result.getDouble("d.amount"), null,
-                                myUI.getMessage(Messages.DiscountAmount), id, true));
+                                myUI.getMessage(Messages.Amount), id, true));
             } else if (result.getString("d.discount_type_id").equals("3")
                     || result.getString("d.discount_type_id").equals("4")) {
                 item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                         dw.createTextFieldDisc(result.getDouble("sd.free_entry_amount"),
                                 (Double) cb.getContainerProperty(result.getInt("d.id"),
                                         myUI.getMessage(Messages.Amount)).getValue(),
-                                myUI.getMessage(Messages.DiscountAmount), id,
+                                myUI.getMessage(Messages.Amount), id,
                                 !currentUser.isPermitted(Settings.discountsTable + ":" + Settings.actModify)));
             }
             TextField tf = dw.createTextField(result.getString("sd.note"),
