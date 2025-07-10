@@ -528,8 +528,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         fieldsLay1.setSpacing(false);
 
         loginTF = new TextField(myUI.getMessage(Messages.StudentId));
+        loginTF.setRequired(true);
         loginTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
+        loginTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         loginTF.setWidth(Settings.PERCENTS100);
+        loginTF.addValidator(new StringLengthValidator(
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 20, false));
         fieldsLay1.addComponent(loginTF);
 
         nameTF = new TextField(myUI.getMessage(Messages.FirstName));
@@ -1258,6 +1262,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private void prepareModificationMode() {
         if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()
             || tabs.getSelectedTab() == tabs.getTab(studSearchLay).getComponent()) {
+            loginTF.setEnabled(true);
             nameTF.setEnabled(true);
             surnameTF.setEnabled(true);
             addressTF.setEnabled(true);
@@ -1348,6 +1353,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         studDataTable.setEnabled(true);
+        loginTF.setEnabled(false);
         nameTF.setEnabled(false);
         surnameTF.setEnabled(false);
         addressTF.setEnabled(false);

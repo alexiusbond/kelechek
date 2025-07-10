@@ -21,7 +21,7 @@ public class DbStudentInfoPdf extends BaseDb {
         StudentInfoPdf sti = new StudentInfoPdf();
         String sql = "SELECT s.id, s.login, s.photo, s.surname, s.name, s.middle_name, s.gender_id, "
                      + "s.date_of_birth, s.address, sr.fullname, "
-                     + "sr.phone, sr.passport, sr.given_by, sr.address, r.name_ru, r.name_ru_dec, r.gender_id, "
+                     + "sr.phone, sr.passport, sr.given_by, sr.issue_date, sr.address, r.name_ru, r.name_ru_dec, r.gender_id, "
                      + "y.period, y.end_date, y.name, sc.contract_number, sc.creation_date, "
                      + "vcs.class_name "
                      + "FROM student as s "
@@ -60,6 +60,7 @@ public class DbStudentInfoPdf extends BaseDb {
             sti.getRelative().setAddress(result.getString("sr.address"));
             sti.getRelative().setPassport(result.getString("sr.passport"));
             sti.getRelative().setGivenBy(result.getString("sr.given_by"));
+            sti.getRelative().setIssueDate(result.getDate("sr.issue_date"));
             sti.getRelative().setRelativeTitle(result.getString("r.name_ru"));
             sti.getRelative().setGender_id(result.getInt("r.gender_id"));
             sti.getRelative().setRelativeDeclarative(result.getString("r.name_ru_dec"));
