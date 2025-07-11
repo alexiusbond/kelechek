@@ -20,6 +20,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author alex
@@ -114,6 +116,24 @@ public class DbStudentRelative extends BaseDb {
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
         }
         return container;
+    }
+
+    public List<StudentRelative> allRelativesByStudentId(int stud_id) throws SQLException {
+
+
+        String sql = "select distinct(r.id) as id, r.name, sr.fullname, sr.phone, sr.is_main from student_relatives as sr left join relatives as r on sr.relatives_id = r.id where sr.student_id = ? order by sr.is_main desc";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, stud_id);
+        ResultSet result = stat.executeQuery();
+        List<StudentRelative> list = new ArrayList<>();
+        while (result.next()) {
+            StudentRelative studentRelative = new StudentRelative();
+            studentRelative.setFullName(result.getString("sr.fullname"));
+            studentRelative.setPhone(result.getString("sr.phone"));
+            studentRelative.setRelativeTitle(result.getString("r.name"));
+            list.add(studentRelative);
+        }
+        return list;
     }
 
     public int exec_insert(StudentRelative sr) throws SQLException {

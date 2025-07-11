@@ -6,16 +6,27 @@
 package kg.alex.ellipse.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentInfoPdf implements Serializable {
 
     private Year year;
     private Employee director;
     private Employee accountant;
-    private StudentRelative relative;
+    private StudentRelative mainRelative;
+    private List<StudentRelative> relatives;
     private School school;
     private Student student;
     private ContractInfo contractInfo;
+
+    public List<StudentRelative> getRelatives() {
+        return relatives;
+    }
+
+    public void setRelatives(List<StudentRelative> relatives) {
+        this.relatives = relatives;
+    }
 
     public Year getYear() {
         return year;
@@ -41,12 +52,12 @@ public class StudentInfoPdf implements Serializable {
         this.student = student;
     }
 
-    public StudentRelative getRelative() {
-        return relative;
+    public StudentRelative getMainRelative() {
+        return mainRelative;
     }
 
-    public void setRelative(StudentRelative relative) {
-        this.relative = relative;
+    public void setMainRelative(StudentRelative mainRelative) {
+        this.mainRelative = mainRelative;
     }
 
     public Employee getAccountant() {

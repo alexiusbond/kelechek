@@ -23,7 +23,7 @@ public class DbStudentInfoPdf extends BaseDb {
                      + "s.date_of_birth, s.address, sr.fullname, "
                      + "sr.phone, sr.passport, sr.given_by, sr.issue_date, sr.address, r.name_ru, r.name_ru_dec, r.gender_id, "
                      + "y.period, y.end_date, y.name, sc.contract_number, sc.creation_date, "
-                     + "vcs.class_name "
+                     + "vcs.class_number, vcs.class_type "
                      + "FROM student as s "
                      + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = s.id and vcs.year_id = ? "
                      + "left join student_relatives as sr on sr.student_id = s.id "
@@ -39,7 +39,7 @@ public class DbStudentInfoPdf extends BaseDb {
         while (result.next()) {
             sti.setStudent(new Student());
             sti.setContractInfo(new ContractInfo());
-            sti.setRelative(new StudentRelative());
+            sti.setMainRelative(new StudentRelative());
             sti.getStudent().setId(result.getInt("s.id"));
             sti.getStudent().setLogin(result.getString("s.login"));
             sti.getStudent().setPhoto(result.getString("s.photo"));
@@ -54,16 +54,16 @@ public class DbStudentInfoPdf extends BaseDb {
                 sti.getStudent().setMiddle_name(result.getString("s.middle_name"));
             }
             sti.getStudent().setGender_id(result.getInt("s.gender_id"));
-            sti.getStudent().setClass_name(result.getString("vcs.class_name"));
-            sti.getRelative().setFullName(result.getString("sr.fullname"));
-            sti.getRelative().setPhone(result.getString("sr.phone"));
-            sti.getRelative().setAddress(result.getString("sr.address"));
-            sti.getRelative().setPassport(result.getString("sr.passport"));
-            sti.getRelative().setGivenBy(result.getString("sr.given_by"));
-            sti.getRelative().setIssueDate(result.getDate("sr.issue_date"));
-            sti.getRelative().setRelativeTitle(result.getString("r.name_ru"));
-            sti.getRelative().setGender_id(result.getInt("r.gender_id"));
-            sti.getRelative().setRelativeDeclarative(result.getString("r.name_ru_dec"));
+            sti.getStudent().setClass_name(result.getString("vcs.class_type") + " " + result.getString("vcs.class_number"));
+            sti.getMainRelative().setFullName(result.getString("sr.fullname"));
+            sti.getMainRelative().setPhone(result.getString("sr.phone"));
+            sti.getMainRelative().setAddress(result.getString("sr.address"));
+            sti.getMainRelative().setPassport(result.getString("sr.passport"));
+            sti.getMainRelative().setGivenBy(result.getString("sr.given_by"));
+            sti.getMainRelative().setIssueDate(result.getDate("sr.issue_date"));
+            sti.getMainRelative().setRelativeTitle(result.getString("r.name_ru"));
+            sti.getMainRelative().setGender_id(result.getInt("r.gender_id"));
+            sti.getMainRelative().setRelativeDeclarative(result.getString("r.name_ru_dec"));
             sti.setYear(new Year(result.getString("y.period"),
                     result.getString("y.name"),
                     result.getDate("y.end_date")));

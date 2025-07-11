@@ -1042,6 +1042,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         dbSchool.connect();
                         studInfo.setSchool(dbSchool.execSchool(myUI.getUser().getSchool().getId()));
                         dbSchool.close();
+                        DbStudentRelative dbRel = new DbStudentRelative();
+                        dbRel.connect();
+                        studInfo.setRelatives(dbRel.allRelativesByStudentId(
+                                (Integer) studDataTable.getValue()));
+                        dbRel.close();
                     } catch (Exception e) {
                         logger.error(e);
                         logger.catching(e);
@@ -1049,6 +1054,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (contractCB.getValue() != null) {
                         studInfo.getContractInfo().setContract((Double) (contractCB.getContainerProperty(contractCB.getValue(),
                                 myUI.getMessage(Messages.Amount)).getValue()));
+                        studInfo.getContractInfo().setContractTitle(contractCB.getContainerProperty(contractCB.getValue(),
+                                myUI.getMessage(Messages.ShortTitle)).getValue().toString());
                     }
                     studInfo.getContractInfo().setDebt(debt);
                     if (discountsTable.size() > 0) {
@@ -1089,18 +1096,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     .getContainerProperty(((ComboBox) discountsTable
                                                     .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
                                             myUI.getMessage(Messages.DiscountType)).getValue() == 4)) {
-                                allDisc.append("(").append(Settings.dFormat2.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
+                                allDisc.append(" (").append(Settings.dFormat2.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
                                         .getPropertyDataSource().getValue())).append(" ").append(currency).append(")");
                                 count_amount -= (Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
                                         .getPropertyDataSource().getValue();
                             }
-
                             if (iter.hasNext()) {
                                 allDisc.append(", ");
                             }
                         }
                         studInfo.getContractInfo().setDiscountStr(allDisc.toString());
-                        studInfo.getContractInfo().setDiscountPercentage(discountsStr.toString());
                     }
                     if (correctionsTable.size() > 0) {
                         Iterator<?> iter = correctionsTable.getItemIds().iterator();
@@ -1122,8 +1127,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     }
                     studInfo.getContractInfo().setNet(toPay);
                     studInfo.getContractInfo().setLeft(ttl_left);
+                    studInfo.getContractInfo().setPaid(ttl_payment);
                     studInfo.getContractInfo().setCurrency(currency);
-                    if (studInfo.getRelative() != null && studInfo.getRelative().getFullName() != null) {
+                    if (studInfo.getMainRelative() != null && studInfo.getMainRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
                                 new ContractPdf(myUI, studInfo, instPlanCont);

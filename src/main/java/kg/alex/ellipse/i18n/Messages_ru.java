@@ -37,6 +37,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {SystemClosedNotification, "Извините! Система находится под техническим обслуживанием. "
                                        + "Пожалуйста, попробуйте позже!"},
             {Title, "Название"},
+            {ShortTitle, "Краткое название"},
             {ValidityMonths, "Валидность (месяцев)"},
             {Description, "Описание"},
             {Block, "Блок"},

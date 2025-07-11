@@ -11,18 +11,17 @@ import java.util.Date;
 public class ContractInfo implements Serializable {
 
     private Double contract;
+    private String contractTitle;
     private Double debt;
     private Double installmentPlanDebt;
     private Double discount;
     private String currency;
     private String discountStr;
-    private String discountPercentage;
     private Double correction;
     private String correctionStr;
     private Double paid;
     private String totalPayments;
     private String totalInstallments;
-    private Double initialPayment;
     private Double left;
     private Double net;
     private int students;
@@ -69,21 +68,6 @@ public class ContractInfo implements Serializable {
         this.discount = discount;
     }
 
-    public String getDiscountPercentage() {
-        return discountPercentage;
-    }
-
-    public void setDiscountPercentage(String discountPercentage) {
-        this.discountPercentage = discountPercentage;
-    }
-
-    public Double getInitialPayment() {
-        return initialPayment;
-    }
-
-    public void setInitialPayment(Double initialPayment) {
-        this.initialPayment = initialPayment;
-    }
 
     public String getCorrectionStr() {
         return correctionStr;
@@ -173,4 +157,11 @@ public class ContractInfo implements Serializable {
         this.left = left;
     }
 
+    public String getContractTitle() {
+        return contractTitle;
+    }
+
+    public void setContractTitle(String contractTitle) {
+        this.contractTitle = contractTitle;
+    }
 }

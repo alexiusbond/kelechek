@@ -4,15 +4,22 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.TextField;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.domain.StudentInfoPdf;
+import kg.alex.ellipse.domain.StudentRelative;
+import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.utils.Decliner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class ContractPdf {
 
@@ -24,6 +31,14 @@ public class ContractPdf {
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
+    public static final SimpleDateFormat dateRu = new SimpleDateFormat(
+            "MMMMM yyyyг.", new DateFormatSymbols() {
+        @Override
+        public String[] getMonths() {
+            return new String[]{"январь", "февраль", "март", "апрель", "май", "июнь",
+                    "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"};
+        }
+    });
 
     public ContractPdf(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
@@ -170,7 +185,7 @@ public class ContractPdf {
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase(studentInfo.getSchool().getName_ru().replace("ОсОО", "Общество с ограниченной ответственностью"), ordBoldItalicFont));
                 paragraph.add(new Phrase(", именуемая в дальнейшем «Школа», в лице директора " + fullName + ", действующего на основании  Устава, с одной стороны, и "
-                                         + studentInfo.getRelative().getFullName() + ", являющаяся(щийся) родителем или законным представителем «Учащегося» "
+                                         + studentInfo.getMainRelative().getFullName() + ", являющаяся(щийся) родителем или законным представителем «Учащегося» "
                                          + studentFullName + ", именуемый в дальнейшем «Родитель» с другой стороны, в интересах обучающегося, в соответствии с пунктом 1 статьи 14 Закона Кыргызской Республики «Об образовании», заключили настоящий Договор о нижеследующем: ", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
@@ -452,7 +467,7 @@ public class ContractPdf {
                 tableDetails.addCell(new Phrase(studentInfo.getSchool().getName_ru(), ordBoldFont));
                 p = new Paragraph();
                 p.add(new Phrase("ФИО родителя: ", ordBoldFont));
-                p.add(new Phrase(studentInfo.getRelative().getFullName(), ordFont));
+                p.add(new Phrase(studentInfo.getMainRelative().getFullName(), ordFont));
                 tableDetails.addCell(p);
 
                 p = new Paragraph();
@@ -461,7 +476,7 @@ public class ContractPdf {
                 tableDetails.addCell(p);
                 p = new Paragraph();
                 p.add(new Phrase("Адрес: ", ordBoldFont));
-                p.add(new Phrase(studentInfo.getRelative().getAddress(), ordFont));
+                p.add(new Phrase(studentInfo.getMainRelative().getAddress(), ordFont));
                 tableDetails.addCell(p);
 
                 p = new Paragraph();
@@ -472,7 +487,7 @@ public class ContractPdf {
                         if (i == 0) {
                             p.add(new Phrase(str[i], ordFont));
                         } else {
-                            p.add(new Phrase("       " + str[i], ordFont));
+                            p.add(new Phrase("        " + str[i], ordFont));
                         }
                         p.add(new Phrase(" \n\n", tinyFont));
                     }
@@ -481,11 +496,18 @@ public class ContractPdf {
                 }
                 tableDetails.addCell(p);
                 p = new Paragraph();
-                p.add(new Phrase("Тел: мамы: ", ordBoldFont));
-                p.add(new Phrase(studentInfo.getRelative().getPhone(), ordFont));
-                p.add(new Phrase(" \n\n", tinyFont));
-                p.add(new Phrase("Тел: папы: ", ordBoldFont));
-                p.add(new Phrase(studentInfo.getRelative().getPhone(), ordFont));
+                p.add(new Phrase("Тел:", ordBoldFont));
+                for (int i = 0; i < studentInfo.getRelatives().size(); i++) {
+                    if (i == 0) {
+                        p.add(new Phrase(studentInfo.getRelatives().get(i).getPhone() +
+                                         " (" + studentInfo.getRelatives().get(i).getRelativeTitle() + ")", ordFont));
+                    } else {
+                        p.add(new Phrase("         "
+                                         + studentInfo.getRelatives().get(i).getPhone() +
+                                         " (" + studentInfo.getRelatives().get(i).getRelativeTitle() + ")", ordFont));
+                    }
+                    p.add(new Phrase(" \n\n", tinyFont));
+                }
                 tableDetails.addCell(p);
 
                 p = new Paragraph();
@@ -501,13 +523,13 @@ public class ContractPdf {
                 tableDetails.addCell(p);
                 p = new Paragraph();
                 p.add(new Phrase("Паспорт: ", ordBoldFont));
-                p.add(new Phrase(studentInfo.getRelative().getPassport(), ordFont));
+                p.add(new Phrase(studentInfo.getMainRelative().getPassport(), ordFont));
                 p.add(new Phrase(" \n\n", tinyFont));
                 p.add(new Phrase("Выдан: ", ordBoldFont));
-                p.add(new Phrase(studentInfo.getRelative().getGivenBy(), ordFont));
+                p.add(new Phrase(studentInfo.getMainRelative().getGivenBy(), ordFont));
                 p.add(new Phrase(" \n\n", tinyFont));
                 p.add(new Phrase("Дата выдачи: ", ordBoldFont));
-                p.add(new Phrase(Settings.df.format(studentInfo.getRelative().getIssueDate()), ordFont));
+                p.add(new Phrase(Settings.df.format(studentInfo.getMainRelative().getIssueDate()), ordFont));
                 p.add(new Phrase(" \n\n", tinyFont));
                 p.add(new Phrase("(приложите ксерокопию паспорта)", ordBoldFont));
                 tableDetails.addCell(p);
@@ -522,7 +544,7 @@ public class ContractPdf {
                 p.add(Chunk.NEWLINE);
                 tableDetails.addCell(p);
                 p = new Paragraph();
-                p.add(new Phrase("Родитель: " + studentInfo.getRelative().getFullName(), ordBoldFont));
+                p.add(new Phrase("Родитель: " + studentInfo.getMainRelative().getFullName(), ordBoldFont));
                 p.add(Chunk.NEWLINE);
                 p.add(Chunk.NEWLINE);
                 p.add(new Phrase("Подпись: ____________________", ordBoldFont));
@@ -545,129 +567,138 @@ public class ContractPdf {
                 if (studentInfo.getDirector().getMiddle_name() != null && !studentInfo.getDirector().getMiddle_name().isEmpty()) {
                     fullName += studentInfo.getDirector().getMiddle_name().charAt(0) + ".";
                 }
-// TODO installment
-                for (int i = 0; i < 3; i++) {
-                    document.newPage();
-                    document.add(tableHeader);
-                    document.add(lineTable);
-                    document.add(new Paragraph(10, " "));
-
-                    spr = new Paragraph();
-                    spr.setAlignment(Element.ALIGN_CENTER);
-                    spr.add(new Phrase("График оплаты к договору", headerBoldFont));
-                    spr.add(Chunk.NEWLINE);
-                    spr.add(new Phrase("на " + studentInfo.getYear().getName() + " учебный год", ordBoldFont));
-                    document.add(spr);
-                    document.add(new Paragraph(10, " "));
-
-                    p = new Paragraph();
-                    p.setIndentationLeft(30);
-                    p.setIndentationRight(30);
-                    p.add(new Phrase("Родитель: _________________________________________________________________", ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Родитель: _________________________________________________________________", ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Ученик: ___________________________________________Русский/Кембридж___класс", ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Классы с русским языком обучения:", ordBoldUnderlineFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Базовая цена с 1-го по 6-й класс: 305 000 сом", ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Базовая цена с 7-го по 12-й класс: 360 000 сом.", ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Кембридж классы:", ordBoldUnderlineFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Базовая цена с 1-го по 12-й класс: 415 000 сом.", ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Особые условия:", ordBoldUnderlineFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("□ При обучении 2-х и более учеников из одной семьи, скидка каждому ученику - 10% если в ранее заключенном договоре не было предоставлено скидок. Указать Ф.И.О. родных___________________________________________________________________", ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("□ Скидка за полную оплату (от окончательной суммы договора) - 10% за год до 30 апреля 2025 года.", ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("□ _____________________________________________________________________", ordFont));
-
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Окончательная сумма на " + studentInfo.getYear().getName() + " учебный год: ____________________________", ordBoldFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Предоплата 30%: ________________________________________________________", ordBoldFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Остаток долга: __________________________________________________________", ordBoldFont));
-                    p.add(Chunk.NEWLINE);
-                    document.add(p);
-
-                    spr = new Paragraph();
-                    spr.setAlignment(Element.ALIGN_CENTER);
-                    spr.add(new Phrase("График погашения остатка долга", ordBoldUnderlineFont));
-                    document.add(spr);
-                    document.add(new Paragraph(10, " "));
-
-                    tableDetails = new PdfPTable(2);
-                    tableDetails.setWidthPercentage(90f);
-                    tableDetails.setWidths(tDetails_cols);
-                    tableDetails.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                    tableDetails.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    tableDetails.getDefaultCell().setPaddingLeft(5f);
-                    tableDetails.getDefaultCell().setPaddingBottom(3f);
-                    tableDetails.addCell(new Phrase("Сентябрь 2025г." , ordFont));
-                    tableDetails.addCell(new Phrase("Январь 2026г." , ordFont));
-                    tableDetails.addCell(new Phrase("Октябрь 2025г." , ordFont));
-                    tableDetails.addCell(new Phrase("Февраль 2026г." , ordFont));
-                    tableDetails.addCell(new Phrase("Ноябрь 2025г." , ordFont));
-                    tableDetails.addCell(new Phrase("Март 2026г." , ordFont));
-                    tableDetails.addCell(new Phrase("Декабрь 2025г." , ordFont));
-                    tableDetails.addCell(new Phrase(" " , ordFont));
-                    tableDetails.addCell(p);
-                    document.add(tableDetails);
-
-                    p = new Paragraph();
-                    p.setIndentationLeft(30);
-                    p.setIndentationRight(30);
-                    p.add(new Phrase("Внимание: ", headerBoldFont));
-                    p.add(new Phrase("Ежемесячная оплата производится до 10 числа текущего месяца.", headerUnderlineFont));
-                    p.add(new Phrase("Школа аннулирует в автоматическом режиме особые условия, указанные в настоящем графике если: 1) родитель нарушает график оплаты, 2) ученик уходит со школы, не отучившись до конца учебного года.", headerFont));
-                    document.add(p);
-                    document.add(new Paragraph(10, " "));
-
-                    tableDetails = new PdfPTable(2);
-                    tableDetails.setWidthPercentage(90f);
-                    tableDetails.setWidths(tDetails_cols);
-                    tableDetails.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                    tableDetails.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    tableDetails.getDefaultCell().setPadding(8f);
-                    p = new Paragraph();
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Директор: " + fullName, ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("_________________", ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(Chunk.NEWLINE);
-                    p.add(Chunk.NEWLINE);
-                    p.add(Chunk.NEWLINE);
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("           М.П.", ordFont));
-                    tableDetails.addCell(p);
-                    p = new Paragraph();
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("ФИО Родителя: " + studentInfo.getRelative().getFullName(), ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Подпись: _____________________", ordFont));
-                    p.add(Chunk.NEWLINE);
-                    p.add(Chunk.NEWLINE);
-                    p.add(new Phrase("Обязуюсь оплатить стоимость обучения в соответствии с настоящим графиком", ordFont));
-                    tableDetails.addCell(p);
-                    document.add(tableDetails);
-
-                    spr = new Paragraph();
-                    spr.setAlignment(Element.ALIGN_CENTER);
-                    spr.add(new Phrase("(Пункты, не вошедшие в договор вычеркнуты ручкой)", ordFont));
-                    document.add(spr);
+                studentFullName = studentInfo.getStudent().getSurname() + " " + studentInfo.getStudent().getName();
+                if (!studentInfo.getStudent().getMiddle_name().isEmpty()) {
+                    studentFullName = studentFullName + " " + studentInfo.getStudent().getMiddle_name();
                 }
+                document.newPage();
+                document.add(tableHeader);
+                document.add(lineTable);
+                document.add(new Paragraph(10, " "));
+
+                spr = new Paragraph();
+                spr.setAlignment(Element.ALIGN_CENTER);
+                spr.add(new Phrase("График оплаты к договору", headerBoldFont));
+                spr.add(Chunk.NEWLINE);
+                spr.add(new Phrase("на " + studentInfo.getYear().getName() + " учебный год", ordBoldFont));
+                document.add(spr);
+                document.add(new Paragraph(10, " "));
+
+                p = new Paragraph();
+                p.setIndentationLeft(30);
+                p.setIndentationRight(30);
+                for (StudentRelative studentRelative : studentInfo.getRelatives()) {
+                    p.add(new Phrase("Родитель: " + studentRelative.getFullName()
+                                     + " (" + studentRelative.getRelativeTitle() + ")", ordFont));
+                    p.add(Chunk.NEWLINE);
+                }
+                p.add(new Phrase("Ученик: " + studentFullName + " " + studentInfo.getStudent().getClass_name() + " класс.", ordFont));
+                p.add(Chunk.NEWLINE);
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase("Стоимость обучения:", ordBoldUnderlineFont));
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase(studentInfo.getContractInfo().getContractTitle()
+                                 + ": " + Settings.dFormat2.format(studentInfo.getContractInfo().getContract()) + " сом.", ordFont));
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase("Особые условия:", ordBoldUnderlineFont));
+                p.add(Chunk.NEWLINE);
+                if (studentInfo.getContractInfo().getDebt() >= 0) {
+                    p.add(new Phrase("Долг с предыдущего года: " + Settings.dFormat2.format(studentInfo.getContractInfo().getDebt()) + " сом.", ordFont));
+                } else {
+                    p.add(new Phrase("Переплата с предыдущего года: " + Settings.dFormat2.format(studentInfo.getContractInfo().getDebt()) + " сом.", ordFont));
+                }
+                p.add(Chunk.NEWLINE);
+                if (studentInfo.getContractInfo().getDiscountStr() != null) {
+                    p.add(new Phrase("Скидка: " + studentInfo.getContractInfo().getDiscountStr(), ordFont));
+                    p.add(Chunk.NEWLINE);
+                }
+                if (studentInfo.getContractInfo().getCorrectionStr() != null) {
+                    p.add(new Phrase("Корректировка: " + studentInfo.getContractInfo().getCorrectionStr(), ordFont));
+                    p.add(Chunk.NEWLINE);
+                }
+                p.add(new Phrase("Окончательная сумма на " + studentInfo.getYear().getName() + " учебный год: " +
+                                 Settings.dFormat2.format(studentInfo.getContractInfo().getNet()) + " сом.", ordBoldFont));
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase("Предоплата 30%: " + Settings.dFormat2.format(studentInfo.getContractInfo().getPaid() == null ?
+                        0 : studentInfo.getContractInfo().getPaid()) + " сом.", ordBoldFont));
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase("Остаток долга: " + Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()) + " сом.", ordBoldFont));
+                p.add(Chunk.NEWLINE);
+                document.add(p);
+
+                spr = new Paragraph();
+                spr.setAlignment(Element.ALIGN_CENTER);
+                spr.add(new Phrase("График погашения остатка долга", ordBoldUnderlineFont));
+                document.add(spr);
+                document.add(new Paragraph(10, " "));
+
+                tableDetails = new PdfPTable(2);
+                tableDetails.setWidthPercentage(90f);
+                tableDetails.setWidths(tDetails_cols);
+                tableDetails.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                tableDetails.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+                tableDetails.getDefaultCell().setPaddingLeft(5f);
+                tableDetails.getDefaultCell().setPaddingBottom(5f);
+                List<Integer> list = (List<Integer>) instPlanCont.getItemIds();
+                for (int i = 0; i < instPlanCont.getItemIds().size(); i++) {
+                    tableDetails.addCell(new Phrase(dateRu.format(((DateField) instPlanCont.getContainerProperty(list.get(i),
+                            myUI.getMessage(Messages.Date)).getValue()).getValue()) + " - " + ((TextField) instPlanCont.getContainerProperty(list.get(i),
+                            myUI.getMessage(Messages.Amount)).getValue()).getValue() + " сом.", ordFont));
+                }
+                if (list.size() % 2 != 0) {
+                    tableDetails.addCell(new Phrase(" ", ordFont));
+                }
+                tableDetails.addCell(p);
+                document.add(tableDetails);
+
+                p = new Paragraph();
+                p.setIndentationLeft(30);
+                p.setIndentationRight(30);
+                p.add(new Phrase("Внимание: ", headerBoldFont));
+                p.add(new Phrase("Ежемесячная оплата производится до 10 числа текущего месяца.", headerUnderlineFont));
+                p.add(new Phrase("Школа аннулирует в автоматическом режиме особые условия, указанные в настоящем графике если: 1) родитель нарушает график оплаты, 2) ученик уходит со школы, не отучившись до конца учебного года.", headerFont));
+                document.add(p);
+                document.add(new Paragraph(10, " "));
+
+                tableDetails = new PdfPTable(2);
+                tableDetails.setWidthPercentage(90f);
+                tableDetails.setWidths(tDetails_cols);
+                tableDetails.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                tableDetails.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+                tableDetails.getDefaultCell().setPadding(8f);
+                p = new Paragraph();
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase("Директор: " + fullName, ordFont));
+                p.add(Chunk.NEWLINE);
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase("_________________", ordFont));
+                p.add(Chunk.NEWLINE);
+                p.add(Chunk.NEWLINE);
+                p.add(Chunk.NEWLINE);
+                p.add(Chunk.NEWLINE);
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase("           М.П.", ordFont));
+                tableDetails.addCell(p);
+                p = new Paragraph();
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase("ФИО Родителя: " + studentInfo.getMainRelative().getFullName(), ordFont));
+                p.add(Chunk.NEWLINE);
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase("Подпись: _____________________", ordFont));
+                p.add(Chunk.NEWLINE);
+                p.add(Chunk.NEWLINE);
+                p.add(new Phrase("Обязуюсь оплатить стоимость обучения в соответствии с настоящим графиком", ordFont));
+                tableDetails.addCell(p);
+                document.add(tableDetails);
+
+                spr = new Paragraph();
+                spr.setAlignment(Element.ALIGN_CENTER);
+                spr.add(new Phrase("(Пункты, не вошедшие в договор вычеркнуты ручкой)", ordFont));
+                document.add(spr);
 
                 document.newPage();
+                document.add(tableHeader);
+                document.add(lineTable);
                 document.add(new Paragraph(10, " "));
 
                 headerBoldFont = new Font(baseFont, 12f);
@@ -926,7 +957,7 @@ public class ContractPdf {
                 tableHeader.getDefaultCell().setVerticalAlignment(Element.ALIGN_TOP);
                 tableHeader.getDefaultCell().setBorder(0);
 
-                tableHeader.addCell(new Phrase("ФИО: " + studentInfo.getRelative().getFullName() +
+                tableHeader.addCell(new Phrase("ФИО: " + studentInfo.getMainRelative().getFullName() +
                                                "\nЯ, ознакомился с правилами и условиями", ordBoldFont));
                 tableHeader.addCell(new Phrase("_____________________" +
                                                "\n          (подпись)", ordBoldFont));

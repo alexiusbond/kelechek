@@ -150,10 +150,13 @@ public class DbContract extends BaseDb {
         stat.setInt(3, contr_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(Messages.ShortTitle), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Amount), Double.class, 0.0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
+            item.getItemProperty(myUi.getMessage(Messages.ShortTitle)).setValue(
+                    result.getString("t.name"));
             item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name") + " " + Settings.dFormat2.format(result.getDouble("t.amount"))
                     + " " + result.getString("cur.name") + " (" + result.getString("y.name") + ")");

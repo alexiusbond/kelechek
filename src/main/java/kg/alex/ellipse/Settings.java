@@ -35,7 +35,6 @@ public class Settings implements Serializable {
     public static final String datePattern = "dd-MM-yyyy";
     public static final String yearMonthPattern = "MM-yyyy";
     public static final String yearPattern = "yyyy";
-    public static final SimpleDateFormat dateEn = new SimpleDateFormat("«dd» MMMMM yyyy");
     public static final SimpleDateFormat df = new SimpleDateFormat(datePattern);
     public static final SimpleDateFormat mysql_only_year = new SimpleDateFormat("yyyy-01-01");
     public static final String dateTimeMinPattern = "dd-MM-yyyy HH:mm";
