@@ -43,7 +43,7 @@ public class ContractPdf {
                 BaseFont baseFont = BaseFont.createFont(FONT_LOCATION, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
                 BaseFont baseFontBold = BaseFont.createFont(FONT_LOCATION2, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
                 Font ordFont = new Font(baseFont, 10.5f);
-                Font headerFont = new Font(baseFont, 8.5f);
+                Font headerBoldFont = new Font(baseFont, 8.5f);
                 Font tinyFont = new Font(baseFont, 5f);
                 Font captionBoldFont = new Font(baseFontBold, 11);
                 Font ordBoldFont = new Font(baseFontBold, 10.5f);
@@ -70,7 +70,7 @@ public class ContractPdf {
                 p.add(new Phrase("\n\nДареги: ш. Бишкек, к. Курулуш шаарчасы 9,\n" +
                                  "720016\n" +
                                  "Тел: +996 (558) 250 250, +996 (508) 250 250\n" +
-                                 "Эл. почтасы: ellipse.bishkek@gmail.com", headerFont));
+                                 "Эл. почтасы: ellipse.bishkek@gmail.com", headerBoldFont));
                 tableHeader.addCell(p);
 
                 try {
@@ -93,7 +93,7 @@ public class ContractPdf {
                 p.add(new Phrase("\n\nАдрес: г. Бишкек, ул. Городок Строителей 9,\n" +
                                  "720016\n" +
                                  "Тел: +996 (558) 250 250, +996 (508) 250 250\n" +
-                                 "Эл. почта: ellipse.bishkek@gmail.com", headerFont));
+                                 "Эл. почта: ellipse.bishkek@gmail.com", headerBoldFont));
                 tableHeader.addCell(p);
 
                 document.add(tableHeader);
@@ -533,6 +533,443 @@ public class ContractPdf {
 
                 document.add(tableDetails);
 
+
+                headerBoldFont = new Font(baseFontBold, 14f);
+                Font headerFont = new Font(baseFont, 14f);
+                Font headerUnderlineFont = new Font(baseFontBold, 14f, Font.UNDERLINE);
+                ordBoldFont = new Font(baseFontBold, 12f);
+                ordFont = new Font(baseFont, 12f);
+                ordBoldUnderlineFont = new Font(baseFontBold, 12f, Font.UNDERLINE);
+
+                fullName = studentInfo.getDirector().getSurname() + " " + studentInfo.getDirector().getName().charAt(0) + ".";
+                if (studentInfo.getDirector().getMiddle_name() != null && !studentInfo.getDirector().getMiddle_name().isEmpty()) {
+                    fullName += studentInfo.getDirector().getMiddle_name().charAt(0) + ".";
+                }
+// TODO installment
+                for (int i = 0; i < 3; i++) {
+                    document.newPage();
+                    document.add(tableHeader);
+                    document.add(lineTable);
+                    document.add(new Paragraph(10, " "));
+
+                    spr = new Paragraph();
+                    spr.setAlignment(Element.ALIGN_CENTER);
+                    spr.add(new Phrase("График оплаты к договору", headerBoldFont));
+                    spr.add(Chunk.NEWLINE);
+                    spr.add(new Phrase("на " + studentInfo.getYear().getName() + " учебный год", ordBoldFont));
+                    document.add(spr);
+                    document.add(new Paragraph(10, " "));
+
+                    p = new Paragraph();
+                    p.setIndentationLeft(30);
+                    p.setIndentationRight(30);
+                    p.add(new Phrase("Родитель: _________________________________________________________________", ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Родитель: _________________________________________________________________", ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Ученик: ___________________________________________Русский/Кембридж___класс", ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Классы с русским языком обучения:", ordBoldUnderlineFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Базовая цена с 1-го по 6-й класс: 305 000 сом", ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Базовая цена с 7-го по 12-й класс: 360 000 сом.", ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Кембридж классы:", ordBoldUnderlineFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Базовая цена с 1-го по 12-й класс: 415 000 сом.", ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Особые условия:", ordBoldUnderlineFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("□ При обучении 2-х и более учеников из одной семьи, скидка каждому ученику - 10% если в ранее заключенном договоре не было предоставлено скидок. Указать Ф.И.О. родных___________________________________________________________________", ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("□ Скидка за полную оплату (от окончательной суммы договора) - 10% за год до 30 апреля 2025 года.", ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("□ _____________________________________________________________________", ordFont));
+
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Окончательная сумма на " + studentInfo.getYear().getName() + " учебный год: ____________________________", ordBoldFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Предоплата 30%: ________________________________________________________", ordBoldFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Остаток долга: __________________________________________________________", ordBoldFont));
+                    p.add(Chunk.NEWLINE);
+                    document.add(p);
+
+                    spr = new Paragraph();
+                    spr.setAlignment(Element.ALIGN_CENTER);
+                    spr.add(new Phrase("График погашения остатка долга", ordBoldUnderlineFont));
+                    document.add(spr);
+                    document.add(new Paragraph(10, " "));
+
+                    tableDetails = new PdfPTable(2);
+                    tableDetails.setWidthPercentage(90f);
+                    tableDetails.setWidths(tDetails_cols);
+                    tableDetails.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                    tableDetails.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    tableDetails.getDefaultCell().setPaddingLeft(5f);
+                    tableDetails.getDefaultCell().setPaddingBottom(3f);
+                    tableDetails.addCell(new Phrase("Сентябрь 2025г." , ordFont));
+                    tableDetails.addCell(new Phrase("Январь 2026г." , ordFont));
+                    tableDetails.addCell(new Phrase("Октябрь 2025г." , ordFont));
+                    tableDetails.addCell(new Phrase("Февраль 2026г." , ordFont));
+                    tableDetails.addCell(new Phrase("Ноябрь 2025г." , ordFont));
+                    tableDetails.addCell(new Phrase("Март 2026г." , ordFont));
+                    tableDetails.addCell(new Phrase("Декабрь 2025г." , ordFont));
+                    tableDetails.addCell(new Phrase(" " , ordFont));
+                    tableDetails.addCell(p);
+                    document.add(tableDetails);
+
+                    p = new Paragraph();
+                    p.setIndentationLeft(30);
+                    p.setIndentationRight(30);
+                    p.add(new Phrase("Внимание: ", headerBoldFont));
+                    p.add(new Phrase("Ежемесячная оплата производится до 10 числа текущего месяца.", headerUnderlineFont));
+                    p.add(new Phrase("Школа аннулирует в автоматическом режиме особые условия, указанные в настоящем графике если: 1) родитель нарушает график оплаты, 2) ученик уходит со школы, не отучившись до конца учебного года.", headerFont));
+                    document.add(p);
+                    document.add(new Paragraph(10, " "));
+
+                    tableDetails = new PdfPTable(2);
+                    tableDetails.setWidthPercentage(90f);
+                    tableDetails.setWidths(tDetails_cols);
+                    tableDetails.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                    tableDetails.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    tableDetails.getDefaultCell().setPadding(8f);
+                    p = new Paragraph();
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Директор: " + fullName, ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("_________________", ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(Chunk.NEWLINE);
+                    p.add(Chunk.NEWLINE);
+                    p.add(Chunk.NEWLINE);
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("           М.П.", ordFont));
+                    tableDetails.addCell(p);
+                    p = new Paragraph();
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("ФИО Родителя: " + studentInfo.getRelative().getFullName(), ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Подпись: _____________________", ordFont));
+                    p.add(Chunk.NEWLINE);
+                    p.add(Chunk.NEWLINE);
+                    p.add(new Phrase("Обязуюсь оплатить стоимость обучения в соответствии с настоящим графиком", ordFont));
+                    tableDetails.addCell(p);
+                    document.add(tableDetails);
+
+                    spr = new Paragraph();
+                    spr.setAlignment(Element.ALIGN_CENTER);
+                    spr.add(new Phrase("(Пункты, не вошедшие в договор вычеркнуты ручкой)", ordFont));
+                    document.add(spr);
+                }
+
+                document.newPage();
+                document.add(new Paragraph(10, " "));
+
+                headerBoldFont = new Font(baseFont, 12f);
+                ordFont = new Font(baseFont, 11f);
+                captionBoldFont = new Font(baseFontBold, 14);
+                ordBoldFont = new Font(baseFontBold, 12f);
+
+                float[] tHeader_cols2 = {1.4f, 1f};
+                tableHeader = new PdfPTable(2);
+                tableHeader.setWidthPercentage(90f);
+                tableHeader.setWidths(tHeader_cols2);
+                tableHeader.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                tableHeader.getDefaultCell().setVerticalAlignment(Element.ALIGN_TOP);
+                tableHeader.getDefaultCell().setBorder(0);
+
+                tableHeader.addCell(new Phrase(" "));
+                p = new Paragraph();
+                p.add(new Phrase("Утверждаю директор\n" +
+                                 studentInfo.getSchool().getName_ru() + "\n" +
+                                 fullName + "  ______________", headerBoldFont));
+                tableHeader.addCell(p);
+                document.add(tableHeader);
+                document.add(new Paragraph(20, " "));
+
+                paragraph.setIndentationLeft(50);
+                paragraph.setFirstLineIndent(-20);
+                paragraph.clear();
+                paragraph.add(new Phrase("Правила внутреннего распорядка Школы", captionBoldFont));
+                paragraph.setAlignment(Element.ALIGN_CENTER);
+                document.add(paragraph);
+                document.add(new Paragraph(5, " "));
+
+                paragraph.clear();
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("1. Школьная линейка и физзарядка", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("1.1. Торжественная линейка в честь начала учебной недели с исполнением Государственного гимна проводится в понедельник в 8.40. Общешкольная линейка с исполнением государственного гимна проводится в пятницу в 16:20. Линейка проводится с целью подготовки учащихся к учебной неделе, подведения итогов учебно-воспитательного процесса, получения информации и объявлений, привития дисциплинарных норм поведения. В остальные дни, в 08.30, проводится физзарядка (15 мин) и чтение книг (15 мин).", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("1.2. Линейка и физзарядка проводятся на спортивной площадке, при неподходящих погодных условиях – в помещении школы.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("1.3. Линейку и физзарядку организуют классные руководители и ассистенты. Дежурные учителя контролируют организацию проведения линейки. Физзарядка проводится учителем физкультуры.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.add(new Phrase("2. Уроки", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("2.1. После звонка на урок ученик должен находиться в классе. Необходимые для данного урока учебные принадлежности (учебник, тетрадь, ручку и др.) ученик должен подготовить на перемене.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("2.2. Для приветствия входящих в класс учителей, родителей, гостей – ученики должны встать.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("2.3. Во время урока учащийся должен находиться на своем учебном месте, слушать учителя, не мешать одноклассникам.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("2.4. Если ученик нарушает дисциплину на уроке: срывает урок, не желает выполнять задания, громко разговаривает, грубо относится к учителю и ассистенту, оскорбляет одноклассников и др. – его поведение будет рассматриваться дисциплинарной комиссией.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("2.5. Запрещено выходить с урока без разрешения учителя и есть еду на уроках.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3. Режим школы", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.1. Учащиеся приходят в школу в 08:30, находятся в школе до 17:00.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2. На линейку, уроки, этюды, дополнительные занятия, кружки, мероприятия учащийся должен приходить без опоздания.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.3. При опоздании ученик может зайти на урок только с разрешения (специальный талон) заместителя директора по УВР, который ведет учет опозданий.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4. Разрешения", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.1. Все разрешения выдаются заместителем директора по УВР.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.2. Разрешения досрочно забрать ребёнка с уроков по каким-либо причинам выдаются только родителям.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.3. При ухудшении состояния здоровья учащегося, его могут забрать домой родители или близкие родственники. Родители обязаны предупредить учителя или ассистента о том, кто заберёт ребёнка.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.4. При самовольном уходе с уроков или из школы, поведение учащегося рассматривается на заседании дисциплинарной комиссии.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.add(new Phrase("5. Внешний вид учащегося", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("5.1. Учащийся обязан находиться в школе в школьной форме, на уроках физкультуры – в спортивной форме и обуви.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("5.2. Учащийся должен быть опрятен и аккуратен: приходить в чистой выглаженной школьной форме, волосы должны быть причесаны, у мальчиков волосы коротко острижены, ногти — чистые и коротко остриженные.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.add(new Phrase("6. Мероприятия ", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("6.1. Участие ребёнка в мероприятиях вне школы проводится только с разрешения родителей.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("6.2. Согласно воспитательным планам школы, после уроков могут проводиться субботники с участием учащихся.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.add(new Phrase("7. Система поощрений и дисциплинарных мер", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("7.1 В нашей школе, по рекомендации опытных педагогов, действует Система \"Зелёная карта\", направленная на активное участие учеников в учебном процессе. За хорошие поступки и активное участие в уроках ученики набирают баллы через платформу EduPage. В конце каждого четверти они обменивают набранные баллы на билеты для участия в лотерее \"Green Card\" и получают подарки. ", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("7.2 В то же время за нежелательное поведение во время уроков и внутри школы начисляются штрафные баллы. Если количество таких баллов превышает установленный лимит, родители уведомляются, и могут быть применены определённые дисциплинарные меры. ", ordFont));
+                document.add(paragraph);
+                paragraph.clear();
+
+                paragraph.add(new Phrase("7.3 Эта система направлена на развитие у учеников ответственности и поддержку их академической успеваемости. Мы просим родителей оказать содействие в адаптации учеников к данной системе.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.add(new Phrase("8. Этюды", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("8.1. Этюд – ежедневное выполнение домашних заданий. В течение 1 часа учащийся выполняет домашнюю работу.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("8.2. Во время этюдов в классе находится классный руководитель и ассистент учителя.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("8.3. Все дисциплинарные требования, предъявляемые к урокам, сохраняются на этюдах.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9. Общие правила", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.1. Для связи с родителями до или после уроков ученику разрешается пользоваться мобильным телефоном. Во время учебной деятельности (09:00–17:00) пользоваться мобильным телефоном запрещено. Утром телефон сдается классному руководителю или ассистенту, после уроков ассистенты отдают учащемуся телефон. Приносить умные часы запрещается.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.2. В случае утери телефона, не сданного классному руководителю или ассистенту, школа ответственности не несёт.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.3. Нельзя приносить в школу планшеты, игрушки, а также не относящиеся к учёбе книги, журналы, брошюры, сладости, напитки и т.д. Любой вид торговли между учащимися запрещён.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.4. В случае обнаружения у учащегося запрещённых вещей, они изымаются администрацией, и данный факт рассматривается на заседании дисциплинарной комиссии.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.5. Учащийся должен говорить правду, не искажать факты, не наговаривать на одноклассников.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.6. Учащийся должен относить родителям табель успеваемости за полугодие, документы, информационные письма и т.д.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.7. Учащийся должен бережно относиться к школьному имуществу: ученикам, книгам, партам, шкафам, интерактивной доске, компьютеру. В случае поломки учащимся школьного имущества, родители должны восстановить нанесённый ущерб, по отношению к ученику применяются дисциплинарные меры дисциплинарной комиссии.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.8. Учащийся должен соблюдать нормы санитарной гигиены и беречь окружающую среду, не бросать мусор в помещениях и вокруг школы.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.9. Учащиеся не должны брать чужие вещи, учебные принадлежности и др. В случае совершения кражи или оказания помощи в совершении кражи, учащийся может быть исключён из школы. Случаи кражи рассматриваются на дисциплинарной комиссии.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.10. Учащийся должен соблюдать нормы этики в общении с другими учащимися школы: не кричать, не оскорблять, не говорить бранные слова. Неоднократные случаи грубого отношения к другим учащимся рассматриваются на дисциплинарной комиссии.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("9.11. В случае нарушения правил внутреннего распорядка и снижения академической успеваемости, школа имеет право лишить учащегося предоставленной скидки.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.add(new Phrase("10. Родители", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("10.1. При посещении школы в учебное время (с 08:30 до 17:00) родители не должны подниматься на 2 этаж здания и вызывать учащихся во время уроков.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("10.2. При необходимости встречи с классным руководителем, предметным учителем, ассистентом учителя или представителем администрации, родители должны заранее назначить встречу.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("10.3. Посещать уроки можно только при согласовании с администрацией.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("10.4. Запрещается приносить на дни рождения детей кондитерские изделия, подарки и др.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("10.5. Запрещается дополнительно оплачивать учителям индивидуальные занятия.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("10.6. Самостоятельный отъезд детей после уроков (в 17:00) без сопровождения взрослых осуществляется при наличии заявления родителей с принятием ответственности за здоровье и жизнь ребёнка. Ученики должны покинуть школу не позднее 17:00.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(20, " "));
+
+                tableHeader = new PdfPTable(2);
+                tableHeader.setWidthPercentage(90f);
+                tableHeader.setWidths(tHeader_cols2);
+                tableHeader.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                tableHeader.getDefaultCell().setVerticalAlignment(Element.ALIGN_TOP);
+                tableHeader.getDefaultCell().setBorder(0);
+
+                tableHeader.addCell(new Phrase("ФИО: " + studentInfo.getRelative().getFullName() +
+                                               "\nЯ, ознакомился с правилами и условиями", ordBoldFont));
+                tableHeader.addCell(new Phrase("_____________________" +
+                                               "\n          (подпись)", ordBoldFont));
+                document.add(tableHeader);
+
+                captionBoldFont = new Font(baseFontBold, 16f);
+                ordBoldFont = new Font(baseFontBold, 14f);
+
+                document.newPage();
+                document.add(new Paragraph(20, " "));
+
+                p = new Paragraph();
+                p.setIndentationLeft(30);
+                p.setIndentationRight(30);
+                p.add(new Phrase("В НАЗНАЧЕНИИ  ПЛАТЕЖА ОБЯЗАТЕЛЬНО УКАЗЫВАТЬ № ДОГОВОРА, Ф.И. РЕБЕНКА", ordBoldFont));
+                document.add(p);
+                document.add(new Paragraph(20, " "));
+
+                p.clear();
+                p.add(new Phrase("ОАО \"Оптима Банк\"", ordBoldFont));
+                document.add(p);
+                document.add(new Paragraph(20, " "));
+
+                float[] tHeader_cols3 = {2f, 2f, 1f, 0.9f, 1.3f};
+                tableDetails = new PdfPTable(5);
+                tableDetails.setWidthPercentage(90f);
+                tableDetails.setWidths(tHeader_cols3);
+                tableDetails.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                tableDetails.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+                tableDetails.getDefaultCell().setPadding(5f);
+
+                tableDetails.addCell(new Phrase("ПОЛУЧАТЕЛЬ", ordBoldFont));
+                tableDetails.addCell(new Phrase("Банковский счет", ordBoldFont));
+                tableDetails.addCell(new Phrase("БИК\nфилиала", ordBoldFont));
+                tableDetails.addCell(new Phrase("Сумма", ordBoldFont));
+                tableDetails.addCell(new Phrase("Ежемесячно", ordBoldFont));
+                tableDetails.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                tableDetails.addCell(new Phrase(studentInfo.getSchool().getName_ru(), ordBoldFont));
+                tableDetails.addCell(new Phrase(studentInfo.getSchool().getBank_account(), captionBoldFont));
+                tableDetails.addCell(new Phrase(studentInfo.getSchool().getBik(), captionBoldFont));
+                tableDetails.addCell(new Phrase(" ", ordBoldFont));
+                tableDetails.addCell(new Phrase(" ", ordBoldFont));
+                document.add(tableDetails);
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
