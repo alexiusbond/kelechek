@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class StudentRelative implements Serializable {
 
-    private int id;
+    private String id;
     private int student_id;
     private String fullName;
     private String givenBy;
@@ -23,6 +23,24 @@ public class StudentRelative implements Serializable {
     private String relativeDeclarative;
     private String relativeTitle;
     private int gender_id;
+    private int attachment_id;
+    private String attachmentUniqueName;
+
+    public int getAttachment_id() {
+        return attachment_id;
+    }
+
+    public void setAttachment_id(int attachment_id) {
+        this.attachment_id = attachment_id;
+    }
+
+    public String getAttachmentUniqueName() {
+        return attachmentUniqueName;
+    }
+
+    public void setAttachmentUniqueName(String attachmentUniqueName) {
+        this.attachmentUniqueName = attachmentUniqueName;
+    }
 
     public Date getIssueDate() {
         return issueDate;
@@ -56,11 +74,11 @@ public class StudentRelative implements Serializable {
         this.relativeDeclarative = relativeDeclarative;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
