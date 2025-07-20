@@ -185,7 +185,6 @@ public class DbStudentRelative extends BaseDb {
         } else {
             stat.setNull(9, Types.DATE);
         }
-        System.out.println("sr.getAttachment_id() " + sr.getAttachment_id());
         if (sr.getAttachment_id() != 0) {
             stat.setInt(10, sr.getAttachment_id());
         } else {
@@ -208,7 +207,6 @@ public class DbStudentRelative extends BaseDb {
         stat.setString(6, sr.getPassport());
         stat.setInt(7, sr.getIs_main());
         stat.setInt(8, sr.getRelative_id());
-        System.out.println("sr.getAttachment_id() " + sr.getAttachment_id());
         if (sr.getIssueDate() != null) {
             stat.setDate(9, new java.sql.Date(sr.getIssueDate().getTime()));
         } else {
