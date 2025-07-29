@@ -67,7 +67,7 @@ public class DbStudentPayment extends BaseDb {
         IndexedContainer container = dw.preparePaymentsContainer();
         while (result.next()) {
             boolean isDisabled = false;
-            if (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
+            if (!currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.prmChangeOldTransactions)) {
                 isDisabled = result.getBoolean("isDisabled");
             }
             if (result.getInt("bank_transaction_id") != 0) {
@@ -128,7 +128,7 @@ public class DbStudentPayment extends BaseDb {
                     myUI.getMessage(Messages.Date), id, false, true, Settings.dateTimeMinPattern, Resolution.MINUTE);
             df.setId(myUI.getMessage(Messages.Payments));
             df.setEnabled(!isDisabled);
-            if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
+            if (currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.prmChangeOldTransactions)) {
                 df.setRangeStart(myUI.getUser().getTransactions_start_date());
             } else if (!isDisabled) {
                 Calendar calendar = Calendar.getInstance();

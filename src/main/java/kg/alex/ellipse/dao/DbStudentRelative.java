@@ -10,9 +10,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Upload;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
@@ -63,8 +61,10 @@ public class DbStudentRelative extends BaseDb {
                                     1, 250, false), true));
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
-            hl.addComponent(dw.createCheckBox(result.getBoolean("sr.is_main"),
-                    myUi.getMessage(Messages.Responsible), id));
+            CheckBox cb = dw.createCheckBox(result.getBoolean("sr.is_main"),
+                    myUi.getMessage(Messages.Responsible), id);
+            hl.addComponent(cb);
+            hl.setComponentAlignment(cb, Alignment.MIDDLE_LEFT);
             Button b = dw.createButton(myUi.getMessage(Messages.DownLoad), id,
                     Settings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName("unread");

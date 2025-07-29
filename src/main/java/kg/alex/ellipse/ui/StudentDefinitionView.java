@@ -1163,7 +1163,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         } else if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
             StudentRelative sr = new StudentRelative();
-            sr.setId( source.getData().toString()) ;
+            sr.setId(source.getData().toString());
             Button b = (Button) ((HorizontalLayout) relativesTable.getContainerProperty(sr.getId() + "",
                     myUI.getMessage(Messages.Responsible)).getValue()).getComponent(1);
             if (b.getData() != null) {
@@ -2351,8 +2351,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         Settings.dbStudentRelatives, FontAwesome.MINUS_SQUARE));
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
-
-        hl.addComponent(createCheckBox(false, myUI.getMessage(Messages.Responsible), id));
+        CheckBox cb = createCheckBox(false, myUI.getMessage(Messages.Responsible), id);
+        hl.addComponent(cb);
+        hl.setComponentAlignment(cb, Alignment.MIDDLE_LEFT);
         Button b = createButton(myUI.getMessage(Messages.DownLoad), null,
                 Settings.download_button, FontAwesome.DOWNLOAD);
         b.setStyleName("unread");
@@ -2916,10 +2917,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(
                 createTextField(wh_paid, myUI.getMessage(Messages.WhoPaid), id, new StringLengthValidator(
                         myUI.getMessage(Messages.NotificationWrongValue), 1, 120, false), true));
-        DateField df = createDateField(null, myUI.getMessage(Messages.Date), id, true, true,
+        DateField df = createDateField(null, myUI.getMessage(Messages.Date), id, false, true,
                 Settings.dateTimeMinPattern, Resolution.MINUTE);
         df.setId(myUI.getMessage(Messages.Payments));
-        if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
+        if (currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.prmChangeOldTransactions)) {
             df.setRangeStart(myUI.getUser().getTransactions_start_date());
         } else {
             Calendar calendar = Calendar.getInstance();
