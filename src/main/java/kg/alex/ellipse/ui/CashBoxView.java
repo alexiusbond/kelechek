@@ -26,10 +26,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
-import kg.alex.ellipse.dao.DbAccTransactions;
-import kg.alex.ellipse.dao.DbCurrencyRate;
-import kg.alex.ellipse.dao.DbDefinition;
-import kg.alex.ellipse.dao.DbEmployee;
+import kg.alex.ellipse.dao.*;
 import kg.alex.ellipse.domain.AccTransaction;
 import kg.alex.ellipse.domain.CurrencyRate;
 import kg.alex.ellipse.domain.SchoolAccounting;
@@ -76,8 +73,8 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     public CashBoxView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        setRows(3);
-        setColumns(5);
+        setRows(4);
+        setColumns(4);
         setSizeFull();
         setMargin(true);
         setSpacing(true);
@@ -96,8 +93,8 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         accordion.setSelectedTab(expensesGrid);
         accordion.addSelectedTabChangeListener((TabSheet.SelectedTabChangeListener)
                 event -> setGridData(Integer.parseInt(accordion.getSelectedTab().getId())));
-        addComponent(accordion, 0, 2, 4, 2);
-        setRowExpandRatio(2, 1);
+        addComponent(accordion, 0, 3, 3, 3);
+        setRowExpandRatio(3, 1);
         getTotals();
         recount();
     }
@@ -222,12 +219,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencySettingsHl.setExpandRatio(currencySettingsOG, 1);
 
         cashBoxesOG = new OptionGroup();
+        cashBoxesOG.setStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         cashBoxesOG.setWidth(Settings.PERCENTS100);
         cashBoxesOG.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         try {
-            DbDefinition dbd = new DbDefinition();
+            DbCashbox dbd = new DbCashbox();
             dbd.connect();
-            cashBoxesOG.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAccCashBox, false));
+            cashBoxesOG.setContainerDataSource(dbd.execSQL(myUI));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -242,24 +240,23 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             }
         });
 
-        addComponent(hl, 0, 0);
-        addComponent(addButton, 0, 1);
-        addComponent(cashBoxesOG, 1, 0, 1, 1);
-        addComponent(prev_balanceLab, 2, 0);
-        addComponent(incomeTtlLab, 2, 1);
-        addComponent(expenseTtlLab, 3, 1);
-        addComponent(ttlLab, 3, 0);
-        addComponent(currencyHl, 4, 0);
-        addComponent(currencySettingsHl, 4, 1);
+        addComponent(hl, 0, 1);
+        addComponent(addButton, 0, 2);
+        addComponent(cashBoxesOG, 1, 0, 2, 0);
+        addComponent(prev_balanceLab, 1, 1);
+        addComponent(incomeTtlLab, 1, 2);
+        addComponent(expenseTtlLab, 2, 2);
+        addComponent(ttlLab, 2, 1);
+        addComponent(currencyHl, 3, 1);
+        addComponent(currencySettingsHl, 3, 2);
         setComponentAlignment(cashBoxesOG, Alignment.MIDDLE_CENTER);
         setComponentAlignment(addButton, Alignment.BOTTOM_RIGHT);
         setComponentAlignment(ttlLab, Alignment.MIDDLE_RIGHT);
         setComponentAlignment(prev_balanceLab, Alignment.BOTTOM_LEFT);
         setColumnExpandRatio(0, 2.2f);
-        setColumnExpandRatio(1, 0.4f);
-        setColumnExpandRatio(2, 4);
-        setColumnExpandRatio(3, 3.8f);
-        setColumnExpandRatio(4, 2);
+        setColumnExpandRatio(1, 4);
+        setColumnExpandRatio(2, 3.8f);
+        setColumnExpandRatio(3, 2);
     }
 
     private void buildGrid(Grid grid) {
@@ -604,10 +601,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                 if (tr != null) {
                                     double limit = tr.getLimit();
                                     amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                                                   + " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue())
+                                                                                   + " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue()
                                                                                    + " (" + Settings.df.format(tr.getDate()) + ")", 0.01, Settings.round(limit, 2)));
                                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                      + " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue())
+                                                      + " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue()
                                                       + " (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                                 } else {
                                     refreshValidators(amountTf);
@@ -642,10 +639,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                     if (tr != null) {
                                         double limit = tr.getLimit();
                                         amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                                                       + " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()) +
+                                                                                       + " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue() +
                                                                                        " (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
                                         Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                          + " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()) +
+                                                          + " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue() +
                                                           " (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                                     } else {
                                         refreshValidators(amountTf);
@@ -882,7 +879,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                 myUI.getMessage(Messages.Date)).getValue(), amount, 0.0, 1);
                 if (tr != null) {
                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                      + " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()) +
+                                      + " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue() +
                                       " (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                 } else {
                     dbDef.exec_update_emp_id(Integer.parseInt(source.getId()),
@@ -947,19 +944,19 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     private void recount() {
         incomeTtlLab.setValue(myUI.getMessage(Messages.IncomesTotal) + ": "
                               + Settings.dFormat2.format(schoolAcc.getTotal_income()) +
-                              " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()));
+                              " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue());
         expenseTtlLab.setValue(myUI.getMessage(Messages.ExpensesTotal) + ": "
                                + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) +
-                               " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()));
+                               " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue());
         ttlLab.setValue("<b>" + myUI.getMessage(Messages.CashBox) + ": " + Settings.dFormat2.format(
                 (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) +
-                        " " + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()) + "</b>");
+                        " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue() + "</b>");
         Calendar c = Calendar.getInstance();
         c.setTime(fromDateDF.getValue());
         c.add(Calendar.DAY_OF_MONTH, -1);
         prev_balanceLab.setValue(myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + "): "
                                  + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + " "
-                                 + cashBoxesOG.getItemCaption(cashBoxesOG.getValue()));
+                                 + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue());
     }
 
     private void getTotals() {

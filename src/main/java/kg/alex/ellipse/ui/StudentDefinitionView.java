@@ -3999,6 +3999,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void insertPayments(int student_id) {
         try {
+            DbCashbox dbc = new DbCashbox();
+            dbc.connect();
             DbStudentPayment dbsp = new DbStudentPayment();
             DbAccTransactions dbat = new DbAccTransactions();
             dbsp.connect();
@@ -4021,7 +4023,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setAccTypeId((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(Messages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
                                 Settings.acc_type_id).getValue());
-                        tr.setCashbox_id(sp.getCurrency_id());
+                        tr.setCashbox_id(
+                                dbc.getCashboxByCurrencyAndType(sp.getCurrency_id(), sp.getPayment_type_id()));
                         tr.setCurrency_rate(sp.getRate());
                         tr.setNote(sp.getNoteForCashBox());
                         tr.setEmployee_id(sp.getEmployee_id());
@@ -4053,7 +4056,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setAccTypeId((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(Messages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
                                 Settings.acc_type_id).getValue());
-                        tr.setCashbox_id(sp.getCurrency_id());
+                        tr.setCashbox_id(
+                                dbc.getCashboxByCurrencyAndType(sp.getCurrency_id(), sp.getPayment_type_id()));
                         tr.setCurrency_rate(sp.getRate());
                         tr.setNote(sp.getNoteForCashBox());
                         tr.setEmployee_id(sp.getEmployee_id());
@@ -4068,6 +4072,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             delPayIds.clear();
             dbsp.close();
+            dbc.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -4077,6 +4082,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private AccTransaction insertTestPayments(Date date) {
         AccTransaction lowBalance = null;
         try {
+            DbCashbox dbc = new DbCashbox();
+            dbc.connect();
             DbAccTransactions dbat = new DbAccTransactions();
             dbat.connect();
             dbat.getConnection().setAutoCommit(false);
@@ -4086,7 +4093,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 for (Object next : paymentsTable.getItemIds()) {
                     StudentPayment sp = getPayment(0, 0, paymentsTable.getItem(next));
                     tr = new AccTransaction();
-                    tr.setCashbox_id(sp.getCurrency_id());
+                    tr.setCashbox_id(
+                            dbc.getCashboxByCurrencyAndType(sp.getCurrency_id(), sp.getPayment_type_id()));
                     tr.setAmount(sp.getAmount());
                     tr.setDate(sp.getModification_date());
                     tr.setCategory_id((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
@@ -4104,11 +4112,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         dbat.exec_insert(tr, dbat.getConnection());//insert transaction
                     }
                 }
-                lowBalance = dbat.exec_low_balance(dbat.getConnection(), myUI.getUser().getSchool().getId(),
-                        2, date, 0.0, 0.0, 2);
-                if (lowBalance == null) {
+                Iterator iter = dbc.execSQL(myUI).getItemIds().iterator();
+                while (iter.hasNext()) {
+                    Integer cashboxId = (Integer) iter.next();
                     lowBalance = dbat.exec_low_balance(dbat.getConnection(), myUI.getUser().getSchool().getId(),
-                            1, date, 0.0, 0.0, 2);
+                            cashboxId, date, 0.0, 0.0, 2);
+                    if (lowBalance != null) {
+                        break;
+                    }
                 }
                 dbat.getConnection().rollback();
             } catch (Exception e) {
@@ -4118,6 +4129,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             dbat.getConnection().setAutoCommit(true);
             dbat.close();
+            dbc.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);

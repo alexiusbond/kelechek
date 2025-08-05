@@ -684,9 +684,10 @@ public class DbAccTransactions extends BaseDb {
     public void exec_income_expense_account_statement(MyVaadinUI myUI, int acc_category_id, Date from,
                                                       Date till, Table t, int school_id) throws SQLException {
         String sql = "SELECT t.date_time AS creation_date, "
-                     + "IF(t.acc_currency_id != 1, t.amount * t.currency_rate, t.amount) AS amount, "
+                     + "IF(c.acc_currency_id != 1, t.amount * t.currency_rate, t.amount) AS amount, "
                      + "t.currency_rate as rate, t.note as note, if(t.acc_type_id = 1, ?, ?) as type "
                      + "FROM acc_transactions AS t "
+                     + "LEFT JOIN acc_cashbox as c on c.id = t.acc_cashbox_id "
                      + "WHERE t.acc_category_id = ? AND (date(t.date_time) BETWEEN ? AND ?) AND t.school_id = ? "
                      + "ORDER BY t.date_time";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -758,14 +759,16 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public void exec_incomes_expenses(MyVaadinUI myUI, FilterTreeTable categoriesTable, Date from, Date till,
-                                      FormattedTreeTable t,  int school_id) throws SQLException {
+                                      FormattedTreeTable t, int school_id) throws SQLException {
         Set<Integer> selectedCategoryIds = Settings.getChild_ids(
                 (HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
         String sql = "SELECT cat.id, IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code) AS code, cat.name AS name, " +
-                     "SUM(IF(t.acc_type_id = 1, IF(t.acc_currency_id != 1, t.amount * t.currency_rate, t.amount),0.0)) AS incomes, " +
-                     "SUM(IF(t.acc_type_id = 2, IF(t.acc_currency_id != 1, t.amount * t.currency_rate, t.amount),0.0)) AS expenses FROM acc_transactions AS t " +
+                     "SUM(IF(t.acc_type_id = 1, IF(c.acc_currency_id != 1, t.amount * t.currency_rate, t.amount),0.0)) AS incomes, " +
+                     "SUM(IF(t.acc_type_id = 2, IF(c.acc_currency_id != 1, t.amount * t.currency_rate, t.amount),0.0)) AS expenses " +
+                     "FROM acc_transactions AS t " +
                      "left join acc_category as cat on cat.id = t.acc_category_id " +
+                     "left join acc_cashbox as c on c.id = t.acc_cashbox_id " +
                      "WHERE t.school_id = ? AND t.acc_category_id IN (" + Settings.convertCollectionToStr(selectedCategoryIds) +
                      ") ";
         if (from != null && till != null) {
@@ -1024,10 +1027,11 @@ public class DbAccTransactions extends BaseDb {
             }
         }
         String sql = "SELECT t.id, date(t.date_time), ifnull(concat(ac.parent_code,'.',ac.code), ac.code) as code, ac.name as category, "
-                     + "acu.name, t.currency_rate, t.amount, t.note, concat(e.name, ' ', e.surname) as fullname "
+                     + "cur.name, t.currency_rate, t.amount, t.note, concat(e.name, ' ', e.surname) as fullname "
                      + "FROM acc_transactions as t "
                      + "left join acc_category as ac on ac.id = t.acc_category_id "
-                     + "left join acc_currency as acu on acu.id = t.acc_currency_id "
+                     + "left join acc_cashbox as c on c.id = t.acc_cashbox_id "
+                     + "left join acc_currency as cur on cur.id = c.acc_currency_id "
                      + "left join employee as e on e.id = t.employee_id "
                      + "where t.school_id = ? and date(t.date_time) >= ? and date(t.date_time) <= ? "
                      + "and t.acc_type_id = ? ";
@@ -1063,7 +1067,7 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(myUI.getMessage(Messages.Category)).setValue(
                     result.getString("category"));
             item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(
-                    result.getString("acu.name"));
+                    result.getString("cur.name"));
             item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(
                     result.getDouble("t.currency_rate"));
             item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(

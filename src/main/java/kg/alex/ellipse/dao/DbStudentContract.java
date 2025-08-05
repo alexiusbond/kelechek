@@ -1668,7 +1668,6 @@ public class DbStudentContract extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, year_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         ContractInfo ct = new ContractInfo();
         while (result.next()) {

@@ -69,7 +69,7 @@ public class DbDiscount extends BaseDb {
 
     public int exec_insert(Discount d) throws SQLException {
         String sql = "INSERT IGNORE INTO discount (name, amount, activity_status_id, discount_type_id, year_id) "
-                     + "VALUES(?,?,?,?,?,?)";
+                     + "VALUES(?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, d.getName());
         stat.setDouble(2, d.getAmount());
