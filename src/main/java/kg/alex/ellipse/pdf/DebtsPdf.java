@@ -40,7 +40,7 @@ public class DebtsPdf {
                     final double total_paid, final double total_debt) {
         this.fromDate = fDate;
         this.tillDate = tDate;
-        this.currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
+        this.currency = Settings.KGS;
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
             private static final long serialVersionUID = 1L;
@@ -83,7 +83,7 @@ public class DebtsPdf {
                     document.add(table_date);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(Messages.ClassInstallmentPlan) + ": "
-                            + year + " (" + Settings.df.format(fromDate) + " - " + Settings.df.format(tillDate) + ")", fontBold);
+                                                  + year + " (" + Settings.df.format(fromDate) + " - " + Settings.df.format(tillDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);
@@ -152,13 +152,13 @@ public class DebtsPdf {
                     T2.addCell(new Phrase(myUI.getMessage(Messages.Accountant), ordFontBold));
                     T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
                     T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
-                            + studentInfo.getAccountant().getName() + " " +
-                            (studentInfo.getAccountant().getMiddle_name() == null ?
-                                    "" : studentInfo.getAccountant().getMiddle_name()), ordFont));
+                                          + studentInfo.getAccountant().getName() + " " +
+                                          (studentInfo.getAccountant().getMiddle_name() == null ?
+                                                  "" : studentInfo.getAccountant().getMiddle_name()), ordFont));
                     T2.addCell(new Phrase(studentInfo.getDirector().getSurname() + " "
-                            + studentInfo.getDirector().getName() + " " +
-                            (studentInfo.getDirector().getMiddle_name() == null ?
-                                    "" : studentInfo.getDirector().getMiddle_name()), ordFont));
+                                          + studentInfo.getDirector().getName() + " " +
+                                          (studentInfo.getDirector().getMiddle_name() == null ?
+                                                  "" : studentInfo.getDirector().getMiddle_name()), ordFont));
                     document.add(T2);
 
                 } catch (Exception e) {
@@ -177,7 +177,7 @@ public class DebtsPdf {
         };
 
         StreamResource resource = new StreamResource(source1, "Debts"
-                + System.currentTimeMillis() + ".pdf");
+                                                              + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
         myUI.getPage().open(resource, "Debts", false);

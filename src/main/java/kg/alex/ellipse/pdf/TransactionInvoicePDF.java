@@ -118,7 +118,7 @@ public class TransactionInvoicePDF {
 
                 Paragraph sumPar = new Paragraph();
                 sumPar.add(new Chunk("Сумма цифрами: ", bold_font));
-                if (tr.getCurrency_id() == 2) {
+                if (tr.getCashbox_id() == 2) {
                     sumPar.add(new Chunk(Settings.dFormat2.format(tr.getAmount()) + " USD", underlined_font));
                 } else {
                     sumPar.add(new Chunk(Settings.dFormat2.format(tr.getAmount()) + " KGS", underlined_font));
@@ -132,7 +132,7 @@ public class TransactionInvoicePDF {
 
                 WritableSummRu convertToLetters;
 
-                if (tr.getCurrency_id() == 2) {
+                if (tr.getCashbox_id() == 2) {
                     convertToLetters = new WritableSummRuUSD();
                 } else {
                     convertToLetters = new WritableSummRuSOM();

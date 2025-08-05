@@ -932,7 +932,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
                     tr.setCategory_id((Integer) cb.getValue());
                     tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
-                    tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
+                    tr.setCashbox_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
                             myUI.getMessage(Messages.Currency)).getValue()).getValue());
                     tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
                     if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(Messages.Update))) {
@@ -995,7 +995,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                         myUI.getMessage(Messages.Amount)).getValue()).getValue());
                                 tr.setCategory_id((Integer) cb.getValue());
                                 tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
-                                tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
+                                tr.setCashbox_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
                                         myUI.getMessage(Messages.Currency)).getValue()).getValue());
                                 tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
                                 dbTr.exec_insert(tr, dbTr.getConnection());

@@ -150,7 +150,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     public StudentDefinitionView(final MyVaadinUI myUI) {
         this.myUI = myUI;
-        this.currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
+        this.currency = Settings.KGS;
 
         buildButtonsLayout();
         buildStudGridLayout();
@@ -969,7 +969,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                 AccTransaction tr = insertTestPayments(new Date());
                                                 if (tr != null) {
                                                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                                      + " " + (tr.getCurrency_id() == 1 ? Settings.KGS : Settings.USD)
+                                                                      + " " + (tr.getCashbox_id() == 1 ? Settings.KGS : Settings.USD)
                                                                       + " (" + Settings.df.format(tr.getDate()) + ")",
                                                             Notification.Type.ERROR_MESSAGE);
                                                 } else {
@@ -2095,7 +2095,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbDiscount dbd = new DbDiscount();
             dbd.connect();
             cb.setContainerDataSource(dbd.exec_for_select(
-                    myUI, myUI.getUser().getCurrent_year().getId(), myUI.getUser().getSchool().getCurrency_id(), value,
+                    myUI, myUI.getUser().getCurrent_year().getId(), value,
                     (Integer) studDataTable.getValue(),
                     studDataTable.getContainerProperty(studDataTable.getValue(),
                             myUI.getMessage(Messages.LastName)).getValue().toString().trim() + " "
@@ -2417,8 +2417,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     dbip.exec_insert(ip);
                 }
             }
-            diff = dbsp.exec_get_difference(student_id, myUI.getUser().getCurrent_year().getId(),
-                    myUI.getUser().getSchool().getCurrency_id());
+            diff = dbsp.exec_get_difference(student_id, myUI.getUser().getCurrent_year().getId());
             if (diff != 0) {
                 dbip.exec_insert_notVisible(student_id, myUI.getUser().getCurrent_year().getId(), diff);
             }
@@ -3397,7 +3396,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbStudentContract dbsc = new DbStudentContract();
             dbsc.connect();
             debt = dbsc.exec_get_debt((Integer) studDataTable.getValue(),
-                    myUI.getUser().getCurrent_year().getId(), myUI.getUser().getSchool().getCurrency_id());
+                    myUI.getUser().getCurrent_year().getId());
             dbsc.close();
         } catch (Exception e) {
             logger.error(e);
@@ -3513,9 +3512,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             discCont = dbsd.exec_disc_strCont(myUI, (Integer) studDataTable.getValue(),
                     myUI.getUser().getCurrent_year().getId());
             debt = dbsc.exec_get_debt((Integer) studDataTable.getValue(),
-                    myUI.getUser().getCurrent_year().getId(), myUI.getUser().getSchool().getCurrency_id());
+                    myUI.getUser().getCurrent_year().getId());
             sp = dbsp.exec_recount_payment((Integer) studDataTable.getValue(),
-                    myUI.getUser().getCurrent_year().getId(), myUI.getUser().getSchool().getCurrency_id());
+                    myUI.getUser().getCurrent_year().getId());
             ttl_payment = sp.getTtl_pay();
             contract_amount = studentContract.getAmount();
             toPay = studentContract.getContr_with_disc() + studentContract.getCorrection() + debt;
@@ -4022,7 +4021,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setAccTypeId((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(Messages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
                                 Settings.acc_type_id).getValue());
-                        tr.setCurrency_id(sp.getCurrency_id());
+                        tr.setCashbox_id(sp.getCurrency_id());
                         tr.setCurrency_rate(sp.getRate());
                         tr.setNote(sp.getNoteForCashBox());
                         tr.setEmployee_id(sp.getEmployee_id());
@@ -4054,7 +4053,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setAccTypeId((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(Messages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
                                 Settings.acc_type_id).getValue());
-                        tr.setCurrency_id(sp.getCurrency_id());
+                        tr.setCashbox_id(sp.getCurrency_id());
                         tr.setCurrency_rate(sp.getRate());
                         tr.setNote(sp.getNoteForCashBox());
                         tr.setEmployee_id(sp.getEmployee_id());
@@ -4087,7 +4086,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 for (Object next : paymentsTable.getItemIds()) {
                     StudentPayment sp = getPayment(0, 0, paymentsTable.getItem(next));
                     tr = new AccTransaction();
-                    tr.setCurrency_id(sp.getCurrency_id());
+                    tr.setCashbox_id(sp.getCurrency_id());
                     tr.setAmount(sp.getAmount());
                     tr.setDate(sp.getModification_date());
                     tr.setCategory_id((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,

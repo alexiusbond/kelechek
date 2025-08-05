@@ -177,7 +177,7 @@ public class IncomeExpenseAccountStatementReport implements Button.ClickListener
                     dbat.connect();
                     dbat.exec_income_expense_account_statement(myUI, (Integer) categoriesTable.getValue(),
                             fromDateDF.getValue(), tillDateDF.getValue(), dataTable,
-                            (Integer) currencySelect.getValue(), myUI.getUser().getSchool().getId());
+                            myUI.getUser().getSchool().getId());
 
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.Rate), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.Income), Table.Align.RIGHT);
@@ -220,9 +220,9 @@ public class IncomeExpenseAccountStatementReport implements Button.ClickListener
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(categoriesTable.getContainerProperty(categoriesTable.getValue(),
                             myUI.getMessage(Messages.Title)).getValue()
-                            + "( " + currencySelect.getItemCaption(currencySelect.getValue()) + ") "
-                            + myUI.getMessage(Messages.From) + " " + Settings.df.format(fromDateDF.getValue()) + " "
-                            + myUI.getMessage(Messages.To) + " " + Settings.df.format(tillDateDF.getValue()));
+                                               + "( " + currencySelect.getItemCaption(currencySelect.getValue()) + ") "
+                                               + myUI.getMessage(Messages.From) + " " + Settings.df.format(fromDateDF.getValue()) + " "
+                                               + myUI.getMessage(Messages.To) + " " + Settings.df.format(tillDateDF.getValue()));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);

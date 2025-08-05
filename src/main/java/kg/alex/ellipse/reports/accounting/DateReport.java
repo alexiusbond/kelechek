@@ -187,7 +187,7 @@ public class DateReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            cashBoxSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAcc_currency, true));
+            cashBoxSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAccCashBox, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -280,7 +280,7 @@ public class DateReport implements Button.ClickListener,
         if (source == generateBtn) {
             if (fromDateDF.isValid() && tillDateDF.isValid() && cashBoxSelect.isValid()) {
                 if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()
-                        || !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
+                    || !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     rightLayout.removeAllComponents();
                     Set<Integer> catIds = new HashSet<>();
                     if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
@@ -347,7 +347,7 @@ public class DateReport implements Button.ClickListener,
                         DbAccTransactions dbtr = new DbAccTransactions();
                         dbtr.connect();
                         schoolAcc = dbtr.exec_get_totals(myUI.getUser().getSchool().getId(),
-                                myUI.getUser().getSchool().getCurrency_id(), (Integer) cashBoxSelect.getValue(),
+                                (Integer) cashBoxSelect.getValue(),
                                 fromDateDF.getValue(), tillDateDF.getValue(), Settings.convertCollectionToStr(catIds));
 
                         incomeTtlLab.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal) + ": " + Settings.dFormat2.format(
@@ -398,7 +398,7 @@ public class DateReport implements Button.ClickListener,
                                         excelReport.setNextTable(t, sheet);
                                     }
                                     excelReport.setReportTitle(t.getCaption() + " (" + Settings.df.format(fromDateDF.getValue()) + " / "
-                                            + Settings.df.format(tillDateDF.getValue()) + ")");
+                                                               + Settings.df.format(tillDateDF.getValue()) + ")");
                                     excelReport.setDisplayTotals(true);
                                     excelReport.convertTable();
                                     CellStyle style = excelReport.getWorkbook().createCellStyle();
@@ -420,24 +420,24 @@ public class DateReport implements Button.ClickListener,
                                     cell.setCellStyle(style);
                                     row = excelReport.getWorkbook().getSheet(sheet).createRow(++rowNum);
                                     row.createCell(1).setCellValue(studentInfo.getAccountant().getSurname() + " "
-                                            + studentInfo.getAccountant().getName() + " " +
-                                            (studentInfo.getAccountant().getMiddle_name() == null ?
-                                                    "" : studentInfo.getAccountant().getMiddle_name()));
+                                                                   + studentInfo.getAccountant().getName() + " " +
+                                                                   (studentInfo.getAccountant().getMiddle_name() == null ?
+                                                                           "" : studentInfo.getAccountant().getMiddle_name()));
                                     row.createCell(5).setCellValue(studentInfo.getDirector().getSurname() + " "
-                                            + studentInfo.getDirector().getName() + " " +
-                                            (studentInfo.getDirector().getMiddle_name() == null ?
-                                                    "" : studentInfo.getDirector().getMiddle_name()));
+                                                                   + studentInfo.getDirector().getName() + " " +
+                                                                   (studentInfo.getDirector().getMiddle_name() == null ?
+                                                                           "" : studentInfo.getDirector().getMiddle_name()));
 
                                     excelReport.getWorkbook().getSheet(sheet).addMergedRegion(
                                             new CellRangeAddress(excelReport.getTotalsRow().getRowNum(), excelReport.getTotalsRow().getRowNum(),
                                                     excelReport.getTotalsRow().getFirstCellNum(), excelReport.getTotalsRow().getLastCellNum() - 1));
                                     excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getFirstCellNum()).setCellValue(
                                             myUI.getMessage(Messages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + getCurrency() + "\t "
-                                                    + myUI.getMessage(Messages.ExpensesTotal) + ": " + Settings.dFormat2.format(
+                                            + myUI.getMessage(Messages.ExpensesTotal) + ": " + Settings.dFormat2.format(
                                                     schoolAcc.getTotal_outcome()) + getCurrency() + "\t "
-                                                    + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime())
-                                                    + "): " + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + getCurrency() + "\t "
-                                                    + myUI.getMessage(Messages.CashBox) + ": " + Settings.dFormat2.format(
+                                            + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime())
+                                            + "): " + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + getCurrency() + "\t "
+                                            + myUI.getMessage(Messages.CashBox) + ": " + Settings.dFormat2.format(
                                                     (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + getCurrency() + "\t ");
                                 }
                             }
@@ -475,7 +475,7 @@ public class DateReport implements Button.ClickListener,
                         new AccountingByDatesPdf(myUI, studentInfo, (IndexedContainer) incomesDataTable.getContainerDataSource(),
                                 (IndexedContainer) outcomesDataTable.getContainerDataSource(),
                                 myUI.getMessage(Messages.From) + " " + Settings.df.format(fromDateDF.getValue())
-                                        + " " + myUI.getMessage(Messages.To) + " " + Settings.df.format(tillDateDF.getValue()));
+                                + " " + myUI.getMessage(Messages.To) + " " + Settings.df.format(tillDateDF.getValue()));
                     } else {
                         Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
                                 Notification.Type.WARNING_MESSAGE);
@@ -504,7 +504,7 @@ public class DateReport implements Button.ClickListener,
         Property property = event.getProperty();
         if (excelBtn.isEnabled()) {
             if (property == incomeCategoriesTable || property == outcomeCategoriesTable
-                    || property == tillDateDF || property == fromDateDF || property == cashBoxSelect) {
+                || property == tillDateDF || property == fromDateDF || property == cashBoxSelect) {
                 excelBtn.setEnabled(false);
                 pdfBtn.setEnabled(false);
                 rightLayout.removeAllComponents();
@@ -513,7 +513,7 @@ public class DateReport implements Button.ClickListener,
     }
 
     private String getCurrency() {
-        return " " + ((Integer) cashBoxSelect.getValue() != 0 ? cashBoxSelect.getItemCaption(cashBoxSelect.getValue()) :
-                myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD);
+        // TODO take currency from selected cashbox
+        return " KGS";
     }
 }

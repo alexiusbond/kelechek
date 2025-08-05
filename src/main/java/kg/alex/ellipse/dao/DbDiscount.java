@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package kg.alex.ellipse.dao;
 
 import com.vaadin.data.Item;
@@ -73,19 +68,14 @@ public class DbDiscount extends BaseDb {
     }
 
     public int exec_insert(Discount d) throws SQLException {
-        String sql = "INSERT IGNORE INTO discount (name, amount, activity_status_id, discount_type_id, year_id, acc_currency_id) "
-                + "VALUES(?,?,?,?,?,?)";
+        String sql = "INSERT IGNORE INTO discount (name, amount, activity_status_id, discount_type_id, year_id) "
+                     + "VALUES(?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, d.getName());
         stat.setDouble(2, d.getAmount());
         stat.setInt(3, d.getStatus_id());
         stat.setInt(4, d.getDisc_type_id());
         stat.setInt(5, d.getYear_id());
-        if (d.getCurrency_id() != 0) {
-            stat.setInt(6, d.getCurrency_id());
-        } else {
-            stat.setNull(6, Types.INTEGER);
-        }
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -96,18 +86,13 @@ public class DbDiscount extends BaseDb {
 
     public int exec_update(Discount d) throws SQLException {
         String sql = "UPDATE discount SET name = ?, amount = ?, activity_status_id = ?, "
-                + "discount_type_id = ?, acc_currency_id = ? WHERE id = ?";
+                     + "discount_type_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, d.getName());
         stat.setDouble(2, d.getAmount());
         stat.setInt(3, d.getStatus_id());
         stat.setInt(4, d.getDisc_type_id());
-        if (d.getCurrency_id() != 0) {
-            stat.setInt(5, d.getCurrency_id());
-        } else {
-            stat.setNull(5, Types.INTEGER);
-        }
-        stat.setInt(6, d.getId());
+        stat.setInt(5, d.getId());
         return stat.executeUpdate();
     }
 
@@ -128,30 +113,22 @@ public class DbDiscount extends BaseDb {
 
     public int exec_copy(int curr_year, int selected_year) throws SQLException {
         String sql = "insert ignore into discount (name, amount, "
-                + "discount_type_id, year_id, activity_status_id, acc_currency_id) select name, "
-                + "amount,discount_type_id, ? as year_id, activity_status_id, acc_currency_id "
-                + "from discount where year_id = ?";
+                     + "discount_type_id, year_id, activity_status_id) select name, "
+                     + "amount,discount_type_id, ? as year_id, activity_status_id "
+                     + "from discount where year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, curr_year);
         stat.setInt(2, selected_year);
         return stat.executeUpdate();
     }
 
-    public IndexedContainer exec_disc_select(MyVaadinUI myUi, int year_id, int currency_id) throws SQLException {
+    public IndexedContainer exec_disc_select(MyVaadinUI myUi, int year_id) throws SQLException {
 
-        String sql = "select t.id, t.name, t.amount, t.discount_type_id, cur.name " +
-                "from discount as t " +
-                "left join acc_currency as cur on cur.id = t.acc_currency_id " +
-                "where t.year_id = ? and t.activity_status_id = 2 ";
-        if (currency_id != 0) {
-            sql += "and (t.acc_currency_id = ? or t.acc_currency_id IS NULL) ";
-        }
-        sql += "order by t.name, t.amount";
+        String sql = "select t.id, t.name, t.amount, t.discount_type_id " +
+                     "from discount as t " +
+                     "where t.year_id = ? and t.activity_status_id = 2 order by t.name, t.amount";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
-        if (currency_id != 0) {
-            stat.setInt(2, currency_id);
-        }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
@@ -165,14 +142,14 @@ public class DbDiscount extends BaseDb {
             } else if (result.getInt("t.discount_type_id") == 4) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - (max " + result.getString("t.amount")
-                                + " " + result.getString("cur.name") + ")");
+                        + " " + Settings.KGS + ")");
             } else if (result.getInt("t.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount") + "%");
             } else if (result.getInt("t.discount_type_id") == 2) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount")
-                                + " " + result.getString("cur.name") + ")");
+                        + " " + Settings.KGS + ")");
             }
             item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(
                     result.getDouble("t.amount"));
@@ -182,7 +159,7 @@ public class DbDiscount extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUi, int year_id, int currency_id, int discount_id, int student_id,
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, int year_id, int discount_id, int student_id,
                                             String studentFullName) throws SQLException {
         double orderAmountDiscount = 0.0, orderPercentDiscount = 0.0;
         try {
@@ -197,13 +174,11 @@ public class DbDiscount extends BaseDb {
             logger.error(e);
             logger.catching(e);
         }
-        String sql = "SELECT d.id, d.name, cur.name, " +
-                "(CASE WHEN d.discount_unit_id = 2 AND ? IS NOT NULL THEN ? " +
-                "WHEN d.discount_unit_id = 1 AND ? IS NOT NULL THEN ? ELSE d.amount END) as amount, " +
-                "d.discount_type_id, d.discount_unit_id FROM discount as d " +
-                "left join acc_currency as cur on cur.id = d.acc_currency_id " +
-                "where d.year_id = ? and (d.activity_status_id = 2 or d.id = ?) " +
-                "and (d.acc_currency_id = ? or d.acc_currency_id IS NULL)";
+        String sql = "SELECT d.id, d.name, " +
+                     "(CASE WHEN d.discount_unit_id = 2 AND ? IS NOT NULL THEN ? " +
+                     "WHEN d.discount_unit_id = 1 AND ? IS NOT NULL THEN ? ELSE d.amount END) as amount, " +
+                     "d.discount_type_id, d.discount_unit_id FROM discount as d " +
+                     "where d.year_id = ? and (d.activity_status_id = 2 or d.id = ?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (orderAmountDiscount != 0.0) {
             stat.setDouble(1, orderAmountDiscount);
@@ -219,7 +194,6 @@ public class DbDiscount extends BaseDb {
         stat.setDouble(4, orderPercentDiscount);
         stat.setInt(5, year_id);
         stat.setInt(6, discount_id);
-        stat.setInt(7, currency_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
@@ -231,21 +205,21 @@ public class DbDiscount extends BaseDb {
             if (result.getInt("d.discount_type_id") == 3) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - (max "
-                                + Settings.dFormat2.format(result.getDouble("amount")) + "%)");
+                        + Settings.dFormat2.format(result.getDouble("amount")) + "%)");
             } else if (result.getInt("d.discount_type_id") == 4) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - (max "
-                                + Settings.dFormat2.format(result.getDouble("amount"))
-                                + " " + result.getString("cur.name") + ")");
+                        + Settings.dFormat2.format(result.getDouble("amount"))
+                        + " " + Settings.KGS + ")");
             } else if (result.getInt("d.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - "
-                                + Settings.dFormat2.format(result.getDouble("amount")) + "%");
+                        + Settings.dFormat2.format(result.getDouble("amount")) + "%");
             } else if (result.getInt("d.discount_type_id") == 2) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - "
-                                + Settings.dFormat2.format(result.getDouble("amount"))
-                                + " " + result.getString("cur.name"));
+                        + Settings.dFormat2.format(result.getDouble("amount"))
+                        + " " + Settings.KGS);
             }
             item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(Settings.round(
                     result.getDouble("amount"), 2));

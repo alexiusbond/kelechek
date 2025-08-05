@@ -46,7 +46,7 @@ public class Invoice2023PDF {
 
             try {
                 paymentCurrency = invoiceInfo.getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
-                contractCurrency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
+                contractCurrency = Settings.KGS;
                 SimpleDateFormat dateRu = new SimpleDateFormat(
                         "«dd» MMMMM yyyy г.", myDateFormatSymbols);
 
@@ -138,10 +138,10 @@ public class Invoice2023PDF {
                 }
                 if (invoiceInfo.getWhoPaidFullName() != null && !invoiceInfo.getWhoPaidFullName().isEmpty()) {
                     nameInvPar.add(new Chunk(invoiceInfo.getLogin() + ", " + invoiceInfo.getClass_name() + ", "
-                            + invoiceInfo.getStudentFullName() + " (" + invoiceInfo.getWhoPaidFullName() + ")", normal_font));
+                                             + invoiceInfo.getStudentFullName() + " (" + invoiceInfo.getWhoPaidFullName() + ")", normal_font));
                 } else {
                     nameInvPar.add(new Chunk(invoiceInfo.getLogin() + ", " + invoiceInfo.getClass_name() + ", "
-                            + invoiceInfo.getStudentFullName(), normal_font));
+                                             + invoiceInfo.getStudentFullName(), normal_font));
                 }
                 cell = new PdfPCell(nameInvPar);
                 cell.setBorder(Rectangle.NO_BORDER);
@@ -185,10 +185,10 @@ public class Invoice2023PDF {
                 if (rate != 0) {
                     if (invoiceInfo.getCurrency_id() == 1) {
                         sumPar.add(new Chunk(Settings.dFormat2.format(Math.round(invoiceInfo.getAmount()))
-                                + " сом (" + Settings.dFormat2.format(invoiceInfo.getAmount() / rate) + " USD)", underlined_font));
+                                             + " сом (" + Settings.dFormat2.format(invoiceInfo.getAmount() / rate) + " USD)", underlined_font));
                     } else {
                         sumPar.add(new Chunk(Settings.dFormat2.format(Math.round(invoiceInfo.getAmount() * rate))
-                                + " сом (" + Settings.dFormat2.format(invoiceInfo.getAmount()) + " USD)", underlined_font));
+                                             + " сом (" + Settings.dFormat2.format(invoiceInfo.getAmount()) + " USD)", underlined_font));
                     }
                 }
                 cell = new PdfPCell(sumPar);
@@ -333,7 +333,7 @@ public class Invoice2023PDF {
 
         String nameOf = "Invoice";
         StreamResource resource = new StreamResource(source1, nameOf
-                + System.currentTimeMillis() + ".pdf");
+                                                              + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
         myUI.getPage().
 

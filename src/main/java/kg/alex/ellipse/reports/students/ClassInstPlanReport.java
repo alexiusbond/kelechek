@@ -284,8 +284,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
         }
         dataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
         dataTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(total) + " " +
-                        (myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD));
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(total) + " " + Settings.KGS);
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);
