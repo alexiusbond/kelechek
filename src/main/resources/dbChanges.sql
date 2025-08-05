@@ -141,6 +141,16 @@ SELECT NULL,
        '-'
 FROM ellipse.students_2022 as t;
 
+insert into student_relatives
+SELECT NULL,
+       (SELECT id
+        FROM student as st
+        WHERE st.surname = t.surname
+          and st.name = t.name),
+       1,
+       '-', NOW(), '-', '-', 1, '-', '-', NULL
+FROM students_2022 AS t;
+
 update student
 set login = id
 where entering_year_id < 11;
@@ -350,6 +360,19 @@ SELECT NULL,
 FROM ellipse.students_2023 as t
 where concat(LOWER(TRIM(t.surname)), LOWER(TRIM(t.name))) not in
       (select concat(LOWER(TRIM(st22.surname)), LOWER(TRIM(st22.name))) from students_2022 as st22);
+
+insert into student_relatives
+SELECT NULL,
+       (SELECT id
+        FROM student as st
+        WHERE st.surname = t.surname
+          and st.name = t.name),
+       1,
+       '-', NOW(), '-', '-', 1, '-', '-', NULL
+FROM students_2023 AS t
+where concat(LOWER(TRIM(t.surname)), LOWER(TRIM(t.name))) not in
+      (select concat(LOWER(TRIM(st22.surname)), LOWER(TRIM(st22.name))) from students_2022 as st22);
+
 
 update student
 set login = id
@@ -694,6 +717,20 @@ SELECT NULL,
 FROM ellipse.students_2024 as t
 where concat(LOWER(TRIM(t.surname)), LOWER(TRIM(t.name))) not in
       (select concat(LOWER(TRIM(st23.surname)), LOWER(TRIM(st23.name))) from students_2023 as st23);
+
+
+insert into student_relatives
+SELECT NULL,
+       (SELECT id
+        FROM student as st
+        WHERE st.surname = t.surname
+          and st.name = t.name),
+       1,
+       '-', NOW(), '-', '-', 1, '-', '-', NULL
+FROM students_2024 AS t
+where concat(LOWER(TRIM(t.surname)), LOWER(TRIM(t.name))) not in
+      (select concat(LOWER(TRIM(st23.surname)), LOWER(TRIM(st23.name))) from students_2023 as st23);
+
 
 update student
 set login = id
