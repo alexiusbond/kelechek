@@ -932,7 +932,7 @@ public class DbStudentContract extends BaseDb {
                      + "FROM student_payments as pay "
                      + "LEFT JOIN student ON student.id = pay.student_id "
                      + "LEFT JOIN school AS sch ON sch.id = student.school_id "
-                     + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                     + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = student.id and vcs.year_id = ? "
                      + "WHERE pay.year_id = ? AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
                      + "GROUP BY sch.id, MONTH(pay.modification_date)) AS p_temp ON p_temp.mnth = months.id "
                      + "AND s_temp.id = p_temp.s_id WHERE s_temp.id IN (" + school_ids + ") ORDER BY "
