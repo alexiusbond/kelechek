@@ -80,7 +80,6 @@ public class DbAccCategory extends BaseDb {
                 + "left join acc_category as cp on cp.id = c.parent_id "
                 + "left join hr_salary_category as sc on sc.acc_category_id = cp.parent_id "
                 + "where c.acc_type_id = ? and (c.school_id is null or c.school_id = ?) ";
-        // + "and (c.activity_status_id = 2 or c.id = ?) ";
         if (!withParents) {
             sql += "and c.parent_id is not null ";
         }

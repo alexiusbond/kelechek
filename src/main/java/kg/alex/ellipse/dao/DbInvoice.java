@@ -30,7 +30,7 @@ public class DbInvoice extends BaseDb {
 
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
-                + "sum(if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount)) as amount, inv.note, inv.note2 "
+                + "sum(if(acr.acc_currency_id != 1, acr.amount*acr.currency_rate, acr.amount)) as amount, inv.note, inv.note2 "
                 + "FROM acc_invoice AS inv "
                 + "LEFT JOIN acc_transfers AS acr ON acr.invoice_id = inv.id "
                 + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? "
@@ -77,8 +77,8 @@ public class DbInvoice extends BaseDb {
 
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
-                + "sum(if(cat.acc_type_id = 3, if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount),"
-                + "-if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount))) as amount, inv.note, inv.note2 "
+                + "sum(if(cat.acc_type_id = 3, if(acr.acc_currency_id != 1, acr.amount*acr.currency_rate, acr.amount),"
+                + "-if(acr.acc_currency_id != 1, acr.amount*acr.currency_rate, acr.amount))) as amount, inv.note, inv.note2 "
                 + "FROM acc_invoice AS inv "
                 + "LEFT JOIN acc_transfers AS acr ON acr.invoice_id = inv.id "
                 + "LEFT JOIN acc_category AS cat ON acr.acc_category_id = cat.id "
@@ -137,9 +137,10 @@ public class DbInvoice extends BaseDb {
 
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
-                + "sum(if(tr.acc_currency_id != 2, tr.amount/tr.currency_rate, tr.amount)) as amount, inv.note "
+                + "sum(if(c.acc_currency_id != 1, tr.amount*tr.currency_rate, tr.amount)) as amount, inv.note "
                 + "FROM acc_invoice AS inv "
                 + "LEFT JOIN acc_transactions AS tr ON tr.acc_invoice_id = inv.id "
+                + "LEFT JOIN acc_cashbox AS c ON c.id = tr.acc_cashbox_id "
                 + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? group by inv.id ORDER BY inv.invoice_number DESC";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);

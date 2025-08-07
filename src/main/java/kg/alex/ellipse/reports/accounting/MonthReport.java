@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package kg.alex.ellipse.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
@@ -17,7 +12,7 @@ import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.dao.DbAccCategory;
 import kg.alex.ellipse.dao.DbAccTransactions;
-import kg.alex.ellipse.dao.DbDefinition;
+import kg.alex.ellipse.dao.DbCashbox;
 import kg.alex.ellipse.domain.SchoolAccounting;
 import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.tableexport.EnhancedFormatExcelExport;
@@ -174,9 +169,9 @@ public class MonthReport implements Button.ClickListener,
         cashBoxSelect.setFilteringMode(FilteringMode.CONTAINS);
         cashBoxSelect.addValueChangeListener(this);
         try {
-            DbDefinition dbd = new DbDefinition();
+            DbCashbox dbd = new DbCashbox();
             dbd.connect();
-            cashBoxSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAcc_currency, true));
+            cashBoxSelect.setContainerDataSource(dbd.execSQL(myUI));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -236,7 +231,7 @@ public class MonthReport implements Button.ClickListener,
         if (source == generateBtn) {
             if (fromDateDF.isValid() && tillDateDF.isValid() && cashBoxSelect.isValid()) {
                 if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()
-                    || !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
+                        || !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     rightLayout.removeAllComponents();
                     try {
                         DbAccTransactions dbTr = new DbAccTransactions();
@@ -275,9 +270,9 @@ public class MonthReport implements Button.ClickListener,
                                     tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                             incomesDataTable.setColumnFooter(
                                     Settings.ymdf.format(current.getTime()), myUI.getMessage(Messages.PreviousBalance) + " ("
-                                                                             + Settings.df.format(prev_date.getTime()) + "): " + Settings.dFormat2.format(scAcc.getPrevious_balance())
-                                                                             + getCurrency() + "; " + myUI.getMessage(Messages.Total)
-                                                                             + ": " + incomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())) + getCurrency());
+                                            + Settings.df.format(prev_date.getTime()) + "): " + Settings.dFormat2.format(scAcc.getPrevious_balance())
+                                            + getCurrency() + "; " + myUI.getMessage(Messages.Total)
+                                            + ": " + incomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())) + getCurrency());
                             outcomesDataTable.setColumnFooter(Settings.ymdf.format(current.getTime()),
                                     outcomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())) + getCurrency());
                             incomesDataTable.setColumnAlignment(Settings.ymdf.format(current.getTime()), Table.Align.RIGHT);
@@ -301,9 +296,9 @@ public class MonthReport implements Button.ClickListener,
             try {
                 EnhancedFormatExcelExport excelReport;
                 if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()
-                    && !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
+                        && !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     if (incomesDataTable.getContainerDataSource().size() != 0
-                        && outcomesDataTable.getContainerDataSource().size() != 0) {
+                            && outcomesDataTable.getContainerDataSource().size() != 0) {
                         excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(Messages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
@@ -334,7 +329,7 @@ public class MonthReport implements Button.ClickListener,
                         }
                         excelReport.sendConverted();
                     } else if (incomesDataTable.getContainerDataSource().size() != 0
-                               && outcomesDataTable.getContainerDataSource().size() == 0) {
+                            && outcomesDataTable.getContainerDataSource().size() == 0) {
                         excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(Messages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
@@ -351,7 +346,7 @@ public class MonthReport implements Button.ClickListener,
                         }
                         excelReport.sendConverted();
                     } else if (incomesDataTable.getContainerDataSource().size() == 0
-                               && outcomesDataTable.getContainerDataSource().size() != 0) {
+                            && outcomesDataTable.getContainerDataSource().size() != 0) {
                         excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(Messages.Expenses));
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
@@ -425,7 +420,7 @@ public class MonthReport implements Button.ClickListener,
         Property property = event.getProperty();
         if (excelBtn.isEnabled()) {
             if (property == incomeCategoriesTable || property == outcomeCategoriesTable
-                || property == fromDateDF || property == tillDateDF || property == cashBoxSelect) {
+                    || property == fromDateDF || property == tillDateDF || property == cashBoxSelect) {
                 excelBtn.setEnabled(false);
                 rightLayout.removeAllComponents();
             }
@@ -439,7 +434,8 @@ public class MonthReport implements Button.ClickListener,
     }
 
     private String getCurrency() {
-        // TODO take currency from selected cashbox
-        return " KGS";
+        Object currency = cashBoxSelect.getContainerProperty(cashBoxSelect.getValue(),
+                myUI.getMessage(Messages.Currency)).getValue();
+        return currency == null ? " " + Settings.KGS : " " + currency;
     }
 }

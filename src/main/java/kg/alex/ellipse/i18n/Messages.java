@@ -602,7 +602,6 @@ public class Messages extends ListResourceBundle implements Serializable {
 
     @Override
     protected Object[][] getContents() {
-        // TODO Auto-generated method stub
         return null;
     }
 }

@@ -681,7 +681,7 @@ public class ExcelExport extends TableExport {
                 }
             } else {
                 if (0 == col) {
-                    cell.setCellValue(createHelper.createRichTextString("Total"));
+                    cell.setCellValue(createHelper.createRichTextString("Итого"));
                 }
             }
         }

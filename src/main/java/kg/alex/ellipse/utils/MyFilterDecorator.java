@@ -86,19 +86,16 @@ public class MyFilterDecorator implements FilterDecorator, Serializable {
 
     @Override
     public boolean usePopupForNumericProperty(Object propertyId) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public String getDateFormatPattern(Object propertyId) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Locale getLocale() {
-        // TODO Auto-generated method stub
         return myUI.getLocale();
     }
 

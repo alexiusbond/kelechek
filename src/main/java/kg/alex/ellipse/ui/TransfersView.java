@@ -80,6 +80,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     private IndexedContainer transfersCont;
     private int r_table_counter = 1000;
     private int invID;
+    private int lastSelectedCurrencyId;
 
     public TransfersView(MyVaadinUI myUI, String caption, String viewName,
                          int acc_category_type_id, int acc_invoice_type_id) {
@@ -582,10 +583,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (event.getProperty() instanceof ComboBox && ((ComboBox) event.getProperty()).getId() != null) {
-            ComboBox catCb = (ComboBox) event.getProperty();
-            ((ComboBox) transfersTable.getContainerProperty(catCb.getId(), myUI.getMessage(Messages.Currency)).getValue()).setValue(
-                    catCb.getContainerProperty(catCb.getValue(), Settings.acc_currency_id).getValue());
+        } else if (event.getProperty() instanceof ComboBox) {
+            ComboBox cb = (ComboBox) event.getProperty();
+            lastSelectedCurrencyId = (Integer) cb.getValue();
             repaintTransfersFooter();
         } else if (event.getProperty().getType() != null) {
             repaintTransfersFooter();
@@ -906,10 +906,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             logger.catching(e);
         }
         cb.setItemCaptionPropertyId(myUI.getMessage(Messages.FullName));
-        cb.setId(id);
-        cb.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(Messages.Category)).setValue(cb);
-        cb = createCombobox(2, myUI.getMessage(Messages.Currency), Settings.dbAcc_currency, true, false);
+        cb = createCombobox(lastSelectedCurrencyId != 0 ? lastSelectedCurrencyId : 1,
+                myUI.getMessage(Messages.Currency), Settings.dbAcc_currency, true, false);
         cb.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(cb);
         TextField tf = createTextFieldWithProperty(null, myUI.getMessage(Messages.Amount),
@@ -985,9 +984,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 }
             }
         }
-        transfersTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                Settings.dFormat2.format(totalUsd) + " " + Settings.USD);
         transfersTable.setColumnFooter(myUI.getMessage(Messages.Rate),
+                Settings.dFormat2.format(totalUsd) + " " + Settings.USD);
+        transfersTable.setColumnFooter(myUI.getMessage(Messages.Amount),
                 Settings.dFormat2.format(totalKgs) + " " + Settings.KGS);
     }
 
@@ -1034,9 +1033,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     }
 
     public void setTransfersFooter(double amountUSD, double amountKGS) {
-        transfersTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                Settings.dFormat2.format(amountUSD) + " " + Settings.USD);
         transfersTable.setColumnFooter(myUI.getMessage(Messages.Rate),
+                Settings.dFormat2.format(amountUSD) + " " + Settings.USD);
+        transfersTable.setColumnFooter(myUI.getMessage(Messages.Amount),
                 Settings.dFormat2.format(amountKGS) + " " + Settings.KGS);
     }
 
