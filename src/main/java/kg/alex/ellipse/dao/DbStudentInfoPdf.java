@@ -35,7 +35,6 @@ public class DbStudentInfoPdf extends BaseDb {
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
         stat.setInt(3, student_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             sti.setStudent(new Student());

@@ -446,8 +446,6 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private void buildStudInfo() {
         if (studentsTable.getValue() != null) {
             Embedded photoEmb = new Embedded();
-            System.out.println(studInfo);
-            System.out.println(studInfo.getStudent());
             if (studInfo.getStudent().getPhoto() != null && !studInfo.getStudent().getPhoto().isEmpty()) {
                 photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + studInfo.getStudent().getPhoto())));
             } else {

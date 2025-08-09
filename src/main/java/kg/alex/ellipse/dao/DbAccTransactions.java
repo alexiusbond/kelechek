@@ -283,11 +283,17 @@ public class DbAccTransactions extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int exec_delete_by_st_id(int st_id, Connection conn) throws SQLException {
+    public int exec_delete_by_st_id(int st_id, int year_id, Connection conn) throws SQLException {
         String sql = "delete act from acc_transactions as act left join student_payments as sp " +
-                "on sp.id = act.student_payments_id where sp.student_id = ?";
+                "on sp.id = act.student_payments_id where sp.student_id = ? ";
+        if (year_id != 0) {
+            sql += "and sp.year_id = ? ";
+        }
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setInt(1, st_id);
+        if (year_id != 0) {
+            stat.setInt(2, year_id);
+        }
         return stat.executeUpdate();
     }
 

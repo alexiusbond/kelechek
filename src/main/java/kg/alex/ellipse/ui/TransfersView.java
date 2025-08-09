@@ -81,6 +81,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     private int r_table_counter = 1000;
     private int invID;
     private int lastSelectedCurrencyId;
+    private double totalAmount = 0.0;
 
     public TransfersView(MyVaadinUI myUI, String caption, String viewName,
                          int acc_category_type_id, int acc_invoice_type_id) {
@@ -684,13 +685,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     private void updateDataContainer() {
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Date)).setValue(
                 df.format(dateDF.getValue()));
-        try {
-            invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Amount)).setValue(
-                    Settings.dFormat2.parse(transfersTable.getColumnFooter(myUI.getMessage(Messages.Amount))).doubleValue());
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Amount)).setValue(totalAmount);
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Note)).setValue(
                 noteTF.getValue());
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Note) + " 2").setValue(
@@ -700,13 +695,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     private void addDataContainerItem(int id, String date) {
         Item item = ((IndexedContainer) invoicesTable.getContainerDataSource()).addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(date);
-        try {
-            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
-                    Settings.dFormat2.parse(transfersTable.getColumnFooter(myUI.getMessage(Messages.Amount))).doubleValue());
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
+        item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(totalAmount);
         item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(noteTF.getValue());
         item.getItemProperty(myUI.getMessage(Messages.Note) + " 2").setValue(note2TF.getValue());
         try {
@@ -956,7 +945,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     }
 
     private void repaintTransfersFooter() {
-        double totalUsd = 0.0, totalKgs = 0.0;
+        totalAmount = 0.0;
+        double amountUsd = 0.0;
+        double amountKgs = 0.0;
         if (transfersTable.getContainerDataSource().size() > 0) {
             for (Object next : transfersTable.getItemIds()) {
                 if (((TextField) transfersTable.getItem(next).getItemProperty(
@@ -967,27 +958,27 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                         myUI.getMessage(Messages.Currency)).getValue()).isValid()) {
                     if ((Integer) ((ComboBox) transfersTable.getItem(next).getItemProperty(
                             myUI.getMessage(Messages.Currency)).getValue()).getValue() == 2) {
-                        totalUsd += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
-                        totalKgs += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue() *
-                                (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
-                    } else {
-                        totalUsd += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                        totalAmount += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
-                                / (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                                * (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
-                        totalKgs += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                        amountUsd += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
+                    } else {
+                        totalAmount += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
+                        amountKgs += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                     }
                 }
             }
         }
-        transfersTable.setColumnFooter(myUI.getMessage(Messages.Rate),
-                Settings.dFormat2.format(totalUsd) + " " + Settings.USD);
         transfersTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                Settings.dFormat2.format(totalKgs) + " " + Settings.KGS);
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
+        transfersTable.setColumnFooter(myUI.getMessage(Messages.Rate),
+                Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
+        transfersTable.setColumnFooter(myUI.getMessage(Messages.Currency),
+                Settings.dFormat2.format(amountUsd) + " " + Settings.USD);
     }
 
     private void insertTransfers(int invoice_id) {
@@ -1032,20 +1023,20 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         }
     }
 
-    public void setTransfersFooter(double amountUSD, double amountKGS) {
-        transfersTable.setColumnFooter(myUI.getMessage(Messages.Rate),
-                Settings.dFormat2.format(amountUSD) + " " + Settings.USD);
+    public void setTransfersFooter(double amountUsd, double amountKgs, double total) {
+        totalAmount = total;
         transfersTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                Settings.dFormat2.format(amountKGS) + " " + Settings.KGS);
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
+        transfersTable.setColumnFooter(myUI.getMessage(Messages.Currency),
+                Settings.dFormat2.format(amountUsd) + " " + Settings.USD);
+        transfersTable.setColumnFooter(myUI.getMessage(Messages.Rate),
+                Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
     }
 
     public Component getNewObj() {
         return new TransfersView(myUI, caption, viewName, getAcc_category_type_id(), acc_invoice_type_id);
     }
 
-    /**
-     * @return the acc_category_id
-     */
     public int getAcc_category_type_id() {
         return acc_category_type_id;
     }
