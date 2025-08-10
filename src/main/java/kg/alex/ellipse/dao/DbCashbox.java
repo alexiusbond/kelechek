@@ -4,6 +4,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
+import kg.alex.ellipse.domain.CashBox;
 import kg.alex.ellipse.i18n.Messages;
 
 import java.sql.PreparedStatement;
@@ -20,7 +21,7 @@ public class DbCashbox extends BaseDb {
             throws SQLException {
 
         String sql = "SELECT c.id, c.name, c.acc_currency_id, cur.name FROM acc_cashbox as c " +
-                     "LEFT JOIN acc_currency as cur on cur.id = c.acc_currency_id";
+                "LEFT JOIN acc_currency as cur on cur.id = c.acc_currency_id";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
@@ -42,11 +43,10 @@ public class DbCashbox extends BaseDb {
     }
 
 
-    public int getCashboxByCurrencyAndType(int currencyId, int paymentTypeId)
+    public CashBox getCashboxByCurrencyAndType(int currencyId, int paymentTypeId)
             throws SQLException {
-        int id = 0;
-        String sql = "SELECT c.id FROM acc_cashbox as c " +
-                     "WHERE c.acc_currency_id = ? and payment_type_id = ?";
+        String sql = "SELECT c.id, c.acc_currency_id FROM acc_cashbox as c " +
+                "WHERE c.acc_currency_id = ? and payment_type_id = ?";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, currencyId);
@@ -54,8 +54,24 @@ public class DbCashbox extends BaseDb {
         ResultSet result = stat.executeQuery();
 
         if (result.next()) {
-            id = result.getInt("c.id");
+            return new CashBox(result.getInt("c.id"),
+                    result.getInt("c.acc_currency_id"));
         }
-        return id;
+        return null;
+    }
+
+    public CashBox getCashboxById(int id)
+            throws SQLException {
+        String sql = "SELECT c.id, c.acc_currency_id FROM acc_cashbox as c WHERE c.id = ?";
+
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, id);
+        ResultSet result = stat.executeQuery();
+
+        if (result.next()) {
+            return new CashBox(result.getInt("c.id"),
+                    result.getInt("c.acc_currency_id"));
+        }
+        return null;
     }
 }

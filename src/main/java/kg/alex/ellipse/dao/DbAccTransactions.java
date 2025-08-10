@@ -15,6 +15,7 @@ import com.vaadin.ui.*;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.domain.AccTransaction;
+import kg.alex.ellipse.domain.CashBox;
 import kg.alex.ellipse.domain.SchoolAccounting;
 import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.reports.accounting.SchoolsReport;
@@ -202,7 +203,7 @@ public class DbAccTransactions extends BaseDb {
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setTimestamp(1, new java.sql.Timestamp(t.getDate().getTime()));
         stat.setDouble(2, t.getAmount());
-        stat.setInt(3, t.getCashbox_id());
+        stat.setInt(3, t.getCashbox().getId());
         stat.setDouble(4, t.getCurrency_rate());
         stat.setString(5, t.getNote());
         stat.setInt(6, t.getCategory_id());
@@ -244,7 +245,7 @@ public class DbAccTransactions extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setTimestamp(1, new java.sql.Timestamp(t.getDate().getTime()));
         stat.setDouble(2, t.getAmount());
-        stat.setInt(3, t.getCashbox_id());
+        stat.setInt(3, t.getCashbox().getId());
         stat.setDouble(4, t.getCurrency_rate());
         stat.setString(5, t.getNote());
         stat.setInt(6, t.getCategory_id());
@@ -267,7 +268,7 @@ public class DbAccTransactions extends BaseDb {
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(t.getDate().getTime()));
         stat.setDouble(2, t.getAmount());
-        stat.setInt(3, t.getCashbox_id());
+        stat.setInt(3, t.getCashbox().getId());
         stat.setDouble(4, t.getCurrency_rate());
         stat.setString(5, t.getNote());
         stat.setInt(6, t.getCategory_id());
@@ -1213,7 +1214,6 @@ public class DbAccTransactions extends BaseDb {
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             AccTransaction tr = new AccTransaction();
-            tr.setCashbox_id(cashbox_id);
             tr.setDate(result.getDate("balances_table.date_time"));
             if (inOut == 1) {
                 tr.setLimit(old_amount - result.getDouble("balance"));
@@ -1221,6 +1221,15 @@ public class DbAccTransactions extends BaseDb {
             } else {
                 tr.setLimit(result.getDouble("balance") + old_amount);
                 tr.setOverLimit((result.getDouble("balance") + old_amount - new_amount) * -1);
+            }
+            try {
+                DbCashbox dbc = new DbCashbox();
+                dbc.connect();
+                tr.setCashbox(dbc.getCashboxById(cashbox_id));
+                dbc.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
             }
             return tr;
         }

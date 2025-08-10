@@ -13,7 +13,6 @@ import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
-import com.vaadin.server.Sizeable;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -165,7 +164,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
 
         horSplitPanel = new HorizontalSplitPanel();
-        horSplitPanel.setSplitPosition(76, Sizeable.Unit.PERCENTAGE);
+        horSplitPanel.setSplitPosition(76, Unit.PERCENTAGE);
         horSplitPanel.setSizeFull();
         horSplitPanel.setLocked(true);
         horSplitPanel.setFirstComponent(gridStudLay);
@@ -252,7 +251,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studSearchLay.setComponentAlignment(statusesOG, Alignment.MIDDLE_RIGHT);
         studSearchLay.setComponentAlignment(eduStatusLab, Alignment.MIDDLE_RIGHT);
 
-        this.setSplitPosition(40, Sizeable.Unit.PERCENTAGE);
+        this.setSplitPosition(40, Unit.PERCENTAGE);
         this.setSizeFull();
         this.setLocked(true);
         this.setFirstComponent(horSplitPanel);
@@ -969,8 +968,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                 AccTransaction tr = insertTestPayments(new Date());
                                                 if (tr != null) {
                                                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                                                    + " " + (tr.getCashbox_id() == 1 ? Settings.KGS : Settings.USD)
-                                                                    + " (" + Settings.df.format(tr.getDate()) + ")",
+                                                                    + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                                                             Notification.Type.ERROR_MESSAGE);
                                                 } else {
                                                     insertPayments((Integer) studDataTable.getValue());
@@ -1604,14 +1602,21 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbAccTransactions dbt = new DbAccTransactions();
             dbt.connect();
-            AccTransaction acTrUSD = dbt.exec_allow_delete_by_st_id((Integer) studDataTable.getValue(), myUI.getUser().getSchool().getId(), 2);
-            AccTransaction acTrKGS = dbt.exec_allow_delete_by_st_id((Integer) studDataTable.getValue(), myUI.getUser().getSchool().getId(), 1);
-            if (acTrUSD != null) {
-                Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(acTrUSD.getOverLimit())
-                        + " " + Settings.USD + " (" + Settings.df.format(acTrUSD.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-            } else if (acTrKGS != null) {
-                Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(acTrKGS.getOverLimit())
-                        + " " + Settings.KGS + " (" + Settings.df.format(acTrKGS.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+            DbCashbox dbc = new DbCashbox();
+            dbc.connect();
+            AccTransaction lowBalance = null;
+            Iterator iter = dbc.execSQL(myUI).getItemIds().iterator();
+            while (iter.hasNext()) {
+                Integer cashboxId = (Integer) iter.next();
+                lowBalance = dbt.exec_allow_delete_by_st_id((Integer) studDataTable.getValue(), myUI.getUser().getSchool().getId(), cashboxId);
+                if (lowBalance != null) {
+                    break;
+                }
+            }
+            dbc.close();
+            if (lowBalance != null) {
+                Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(lowBalance.getOverLimit())
+                        + " " + lowBalance.getCashbox().getCurrency() + " (" + Settings.df.format(lowBalance.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
             } else {
                 DbStudent dbst = new DbStudent();
                 DbDefinition dbdef = new DbDefinition();
@@ -1713,7 +1718,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     public Upload createUpload(String caption, boolean isPhoto) {
-        Upload upl = new Upload(null, new StudentDefinitionView.MyReceiver(isPhoto));
+        Upload upl = new Upload(null, new MyReceiver(isPhoto));
         upl.setImmediate(true);
         if (!isPhoto) {
             upl.setStyleName("with-icon");
@@ -4023,8 +4028,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setAccTypeId((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(Messages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
                                 Settings.acc_type_id).getValue());
-                        tr.setCashbox_id(
-                                dbc.getCashboxByCurrencyAndType(sp.getCurrency_id(), sp.getPayment_type_id()));
+                        tr.setCashbox(dbc.getCashboxByCurrencyAndType(sp.getCurrency_id(), sp.getPayment_type_id()));
                         tr.setCurrency_rate(sp.getRate());
                         tr.setNote(sp.getNoteForCashBox());
                         tr.setEmployee_id(sp.getEmployee_id());
@@ -4056,8 +4060,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setAccTypeId((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(Messages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
                                 Settings.acc_type_id).getValue());
-                        tr.setCashbox_id(
-                                dbc.getCashboxByCurrencyAndType(sp.getCurrency_id(), sp.getPayment_type_id()));
+                        tr.setCashbox(dbc.getCashboxByCurrencyAndType(sp.getCurrency_id(), sp.getPayment_type_id()));
                         tr.setCurrency_rate(sp.getRate());
                         tr.setNote(sp.getNoteForCashBox());
                         tr.setEmployee_id(sp.getEmployee_id());
@@ -4094,8 +4097,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 for (Object next : paymentsTable.getItemIds()) {
                     StudentPayment sp = getPayment(0, 0, paymentsTable.getItem(next));
                     tr = new AccTransaction();
-                    tr.setCashbox_id(
-                            dbc.getCashboxByCurrencyAndType(sp.getCurrency_id(), sp.getPayment_type_id()));
+                    tr.setCashbox(dbc.getCashboxByCurrencyAndType(sp.getCurrency_id(), sp.getPayment_type_id()));
                     tr.setAmount(sp.getAmount());
                     tr.setDate(sp.getModification_date());
                     tr.setCategory_id((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,

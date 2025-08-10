@@ -13,7 +13,7 @@ public class AccTransaction implements Serializable {
     private Date date;
     private int category_id;
     private int accTypeId;
-    private int cashbox_id;
+    private CashBox cashbox;
     private double currency_rate;
     private double amount;
     private double overLimit;
@@ -70,12 +70,13 @@ public class AccTransaction implements Serializable {
         this.category_id = category_id;
     }
 
-    public int getCashbox_id() {
-        return cashbox_id;
+
+    public CashBox getCashbox() {
+        return cashbox;
     }
 
-    public void setCashbox_id(int cashbox_id) {
-        this.cashbox_id = cashbox_id;
+    public void setCashbox(CashBox cashbox) {
+        this.cashbox = cashbox;
     }
 
     public double getCurrency_rate() {

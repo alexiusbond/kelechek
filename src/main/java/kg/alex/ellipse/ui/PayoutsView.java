@@ -19,6 +19,7 @@ import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.dao.*;
 import kg.alex.ellipse.domain.AccTransaction;
+import kg.alex.ellipse.domain.CashBox;
 import kg.alex.ellipse.domain.Invoice;
 import kg.alex.ellipse.domain.StudentPayment;
 import kg.alex.ellipse.i18n.Messages;
@@ -293,16 +294,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     dbCon.connect();
                     if (isNew) {
                         Invoice inv = getInvoice(0);
-                        AccTransaction trUsd = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
-                                2, inv.getCreation_date(), 0, amountUsd, 2);
-                        AccTransaction trKgs = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
-                                1, inv.getCreation_date(), 0, amountKgs, 2);
-                        if (trUsd != null) {
-                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(trUsd.getOverLimit())
-                                    + " USD (" + Settings.df.format(trUsd.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-                        } else if (trKgs != null) {
-                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(trKgs.getOverLimit())
-                                    + " KGS (" + Settings.df.format(trKgs.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                        AccTransaction tr = insertTestPayments(new Date());
+                        if (tr != null) {
+                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
+                                            + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
+                                    Notification.Type.ERROR_MESSAGE);
                         } else {
                             int id = dbCon.exec_insert(inv);
                             if (id != 0) {
@@ -319,16 +315,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     } else {
                         int status = 0;
                         Invoice inv = getInvoice(invID);
-                        AccTransaction trUsd = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
-                                2, inv.getCreation_date(), oldAmountUsd, amountUsd, 2);
-                        AccTransaction trKgs = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
-                                1, inv.getCreation_date(), oldAmountKgs, amountKgs, 2);
-                        if (trUsd != null) {
-                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(trUsd.getOverLimit())
-                                    + " USD (" + Settings.df.format(trUsd.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-                        } else if (trKgs != null) {
-                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(trKgs.getOverLimit())
-                                    + " KGS (" + Settings.df.format(trKgs.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                        AccTransaction tr = insertTestPayments(new Date());
+                        if (tr != null) {
+                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
+                                            + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
+                                    Notification.Type.ERROR_MESSAGE);
                         } else {
                             try {
                                 status = dbCon.exec_update(inv);
@@ -925,9 +916,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
                     tr.setCategory_id((Integer) cb.getValue());
                     tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
-                    tr.setCashbox_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(Messages.CashBox)).getValue()).getValue());
                     tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
+                    cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.CashBox)).getValue();
+                    tr.setCashbox(new CashBox((Integer) cb.getValue(),
+                            (Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_currency_id).getValue()));
                     if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(Messages.Update))) {
                         tr.setId(next.toString());
                         dbAt.exec_update(tr);
@@ -988,9 +981,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                         myUI.getMessage(Messages.Amount)).getValue()).getValue());
                                 tr.setCategory_id((Integer) cb.getValue());
                                 tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
-                                tr.setCashbox_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(Messages.CashBox)).getValue()).getValue());
                                 tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
+                                cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(
+                                        myUI.getMessage(Messages.CashBox)).getValue();
+                                tr.setCashbox(new CashBox((Integer) cb.getValue(),
+                                        (Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_currency_id).getValue()));
                                 dbTr.exec_insert(tr, dbTr.getConnection());
                             }
                         }
@@ -1032,7 +1027,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             dbat.connect();
             dbat.getConnection().setAutoCommit(false);
             try {
-                dbat.exec_delete(Settings.invoice_id, payoutsTable.getValue() + "", dbat.getConnection());
+                dbat.exec_delete(Settings.db_acc_invoice_id, payoutsTable.getValue() + "", dbat.getConnection());
                 AccTransaction tr;
                 if (payoutsTable.getContainerDataSource().size() > 0) {
                     for (Object next : payoutsTable.getItemIds()) {
@@ -1049,9 +1044,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
                         tr.setCategory_id((Integer) cb.getValue());
                         tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
-                        tr.setCashbox_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.CashBox)).getValue()).getValue());
                         tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
+                        cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.CashBox)).getValue();
+                        tr.setCashbox(new CashBox((Integer) cb.getValue(),
+                                (Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_currency_id).getValue()));
                         dbat.exec_insert(tr, dbat.getConnection());
                     }
                 }
