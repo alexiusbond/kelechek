@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package kg.alex.ellipse.dao;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
@@ -34,16 +29,14 @@ public class DbStudentPayment extends BaseDb {
         super();
     }
 
-    public StudentPayment exec_recount_payment(int stud_id, int year_id, int currency_id) throws SQLException {
+    public StudentPayment exec_recount_payment(int stud_id, int year_id) throws SQLException {
         String sql = "SELECT sum(if(sp.payment_category_id != 3, " +
-                "CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0.0)) - "
-                + "sum(if(sp.payment_category_id = 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0.0)) as ttl_payment "
+                "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0.0)) - "
+                + "sum(if(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0.0)) as ttl_payment "
                 + "FROM student_payments as sp where sp.student_id = ? and year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, currency_id);
-        stat.setInt(2, currency_id);
-        stat.setInt(3, stud_id);
-        stat.setInt(4, year_id);
+        stat.setInt(1, stud_id);
+        stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         StudentPayment sp = new StudentPayment();
         if (result.next()) {
@@ -271,10 +264,8 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(Settings.payment_category_id).setValue(
                     result.getInt("pc.id"));
             double amount;
-            if (myUI.getUser().getSchool().getCurrency_id() == result.getInt("acc_currency_id")) {
+            if (result.getInt("acc_currency_id") == 1) {
                 amount = result.getDouble("sp.amount");
-            } else if (result.getInt("acc_currency_id") == 1) {
-                amount = result.getDouble("sp.amount") / result.getDouble("sp.dollar_rate");
             } else {
                 amount = result.getDouble("sp.amount") * result.getDouble("sp.dollar_rate");
             }
@@ -342,10 +333,8 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
             double amount;
-            if (myUI.getUser().getSchool().getCurrency_id() == result.getInt("acc_currency_id")) {
+            if (result.getInt("acc_currency_id") == 1) {
                 amount = result.getDouble("sp.amount");
-            } else if (result.getInt("acc_currency_id") == 1) {
-                amount = result.getDouble("sp.amount") / result.getDouble("sp.dollar_rate");
             } else {
                 amount = result.getDouble("sp.amount") * result.getDouble("sp.dollar_rate");
             }
@@ -358,16 +347,14 @@ public class DbStudentPayment extends BaseDb {
         return container;
     }
 
-    public double exec_get_difference(int st_id, int year_id, int currency_id) throws SQLException {
+    public double exec_get_difference(int st_id, int year_id ) throws SQLException {
         double ip = 0;
-        String sql = "SELECT ifnull(SUM(IF(payment_category_id != 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) - "
-                + "SUM(IF(payment_category_id = 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)), 0.0)  as total "
+        String sql = "SELECT ifnull(SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - "
+                + "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)), 0.0)  as total "
                 + "FROM student_payments as sp where sp.student_id = ? and sp.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, currency_id);
-        stat.setInt(2, currency_id);
-        stat.setInt(3, st_id);
-        stat.setInt(4, year_id);
+        stat.setInt(1, st_id);
+        stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             ip = (result.getDouble("total"));

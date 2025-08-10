@@ -176,7 +176,7 @@ public class IncomesExpensesReport implements Button.ClickListener,
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
                     dbat.exec_incomes_expenses(myUI, employeeCategoriesTable, fromDateDF.getValue(), tillDateDF.getValue(),
-                            dataTable, (Integer) currencySelect.getValue(), myUI.getUser().getSchool().getId());
+                            dataTable, myUI.getUser().getSchool().getId());
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.Incomes), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.Expenses), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.Balance), Table.Align.RIGHT);
@@ -193,9 +193,9 @@ public class IncomesExpensesReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(Messages.IncomesExpensesReport) + " ("
-                        + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
+                                                                                                 + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
                 excelReport.setReportTitle(myUI.getMessage(Messages.IncomesExpensesReport) + " ("
-                        + currencySelect.getItemCaption(currencySelect.getValue()) + ") ");
+                                           + currencySelect.getItemCaption(currencySelect.getValue()) + ") ");
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getLastCellNum() - 1).setCellFormula(null);

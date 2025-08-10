@@ -205,7 +205,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
             logger.catching(e);
         }
         settingsLay.addComponent(statusSelect);
-
     }
 
     @Override
@@ -469,7 +468,6 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         d.setAmount((Double) valueTF.getPropertyDataSource().getValue());
         d.setYear_id(myUI.getUser().getCurrent_year().getId());
         d.setStatus_id((Integer) statusSelect.getValue());
-        d.setCurrency_id(1);
         d.setId(i);
         return d;
     }

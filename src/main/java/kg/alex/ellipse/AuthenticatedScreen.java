@@ -628,8 +628,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     }
                     myUI.getUser().getSchool().setSchool_type_id((Integer) schoolSelect.getContainerProperty(schoolSelect.getValue(),
                             Settings.dbSchoolType).getValue());
-                    myUI.getUser().getSchool().setCurrency_id((Integer) schoolSelect.getContainerProperty(schoolSelect.getValue(),
-                            Settings.dbAcc_currency).getValue());
                     insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
                             myUI.getUser().getId());
                     updatePage();

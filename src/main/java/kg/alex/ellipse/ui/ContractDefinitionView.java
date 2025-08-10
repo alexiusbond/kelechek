@@ -49,8 +49,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
 
     public ContractDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
-        amountTitle = myUI.getUser().getSchool().getCurrency_id() == 1 ?
-                myUI.getMessage(Messages.AmountKGS) : myUI.getMessage(Messages.AmountUSD);
+        amountTitle = myUI.getMessage(Messages.AmountKGS);
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Title),
                 amountTitle, myUI.getMessage(Messages.School),
@@ -305,11 +304,11 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
                 clearFields();
             }
         } else if (property == yearSelect && yearSelect.getValue() != null
-                && dataTable.getValue() != null) {
+                   && dataTable.getValue() != null) {
             try {
                 ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
                         myUI.getMessage(Messages.ConfirmContractCopy)
-                                + yearSelect.getContainerProperty(yearSelect.getValue(),
+                        + yearSelect.getContainerProperty(yearSelect.getValue(),
                                         myUI.getMessage(Messages.Title))
                                 .getValue().toString() + " года?",
                         myUI.getMessage(Messages.Yes),

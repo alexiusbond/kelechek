@@ -185,9 +185,9 @@ public class DateReport implements Button.ClickListener,
         cashBoxSelect.setFilteringMode(FilteringMode.CONTAINS);
         cashBoxSelect.addValueChangeListener(this);
         try {
-            DbDefinition dbd = new DbDefinition();
+            DbCashbox dbd = new DbCashbox();
             dbd.connect();
-            cashBoxSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAcc_currency, true));
+            cashBoxSelect.setContainerDataSource(dbd.execSQL(myUI));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -347,7 +347,7 @@ public class DateReport implements Button.ClickListener,
                         DbAccTransactions dbtr = new DbAccTransactions();
                         dbtr.connect();
                         schoolAcc = dbtr.exec_get_totals(myUI.getUser().getSchool().getId(),
-                                myUI.getUser().getSchool().getCurrency_id(), (Integer) cashBoxSelect.getValue(),
+                                (Integer) cashBoxSelect.getValue(),
                                 fromDateDF.getValue(), tillDateDF.getValue(), Settings.convertCollectionToStr(catIds));
 
                         incomeTtlLab.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal) + ": " + Settings.dFormat2.format(
@@ -513,7 +513,8 @@ public class DateReport implements Button.ClickListener,
     }
 
     private String getCurrency() {
-        return " " + ((Integer) cashBoxSelect.getValue() != 0 ? cashBoxSelect.getItemCaption(cashBoxSelect.getValue()) :
-                myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD);
+        Object currency = cashBoxSelect.getContainerProperty(cashBoxSelect.getValue(),
+                myUI.getMessage(Messages.Currency)).getValue();
+        return currency == null ? " " + Settings.KGS : " " + currency;
     }
 }

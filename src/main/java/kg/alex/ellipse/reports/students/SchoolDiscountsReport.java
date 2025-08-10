@@ -204,7 +204,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
         final Button source = event.getButton();
         if (source == generateBtn) {
             if (!((Set<?>) schoolTable.getValue()).isEmpty()
-                    && !((Set<?>) discountsTable.getValue()).isEmpty()) {
+                && !((Set<?>) discountsTable.getValue()).isEmpty()) {
                 try {
                     DbStudentDiscount dbsc = new DbStudentDiscount();
                     dbsc.connect();
@@ -215,30 +215,30 @@ public class SchoolDiscountsReport implements Button.ClickListener,
                     for (Object next : (Set<?>) schoolTable.getValue()) {
                         dataTable.setColumnAlignment(schoolTable.getContainerProperty(
                                 next, myUI.getMessage(Messages.Title)).getValue() + " "
-                                + myUI.getMessage(Messages.Students), Table.Align.RIGHT);
+                                                     + myUI.getMessage(Messages.Students), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(schoolTable.getContainerProperty(
                                 next, myUI.getMessage(Messages.Title)).getValue() + " "
-                                + myUI.getMessage(Messages.DiscountAmount), Table.Align.RIGHT);
+                                                     + myUI.getMessage(Messages.DiscountAmount), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(schoolTable.getContainerProperty(
                                 next, myUI.getMessage(Messages.Title)).getValue()
-                                + " " + myUI.getMessage(Messages.Average) + "%", Table.Align.RIGHT);
+                                                     + " " + myUI.getMessage(Messages.Average) + "%", Table.Align.RIGHT);
                         try {
                             dataTable.setColumnFooter(schoolTable.getContainerProperty(
                                             next, myUI.getMessage(Messages.Title)).getValue()
-                                            + " " + myUI.getMessage(Messages.Average) + "%",
+                                                      + " " + myUI.getMessage(Messages.Average) + "%",
                                     Settings.dFormat2.format(Double.parseDouble(dataTable.getColumnFooter(schoolTable.getContainerProperty(
                                             next, myUI.getMessage(Messages.Title)).getValue()
-                                            + " " + myUI.getMessage(Messages.Average) + "%"))
-                                            / dataTable.getContainerDataSource().size()));
+                                                                                                          + " " + myUI.getMessage(Messages.Average) + "%"))
+                                                             / dataTable.getContainerDataSource().size()));
                         } catch (Exception ignored) {
                         }
                     }
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.Total) + " "
-                            + myUI.getMessage(Messages.Students), Table.Align.RIGHT);
+                                                 + myUI.getMessage(Messages.Students), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.Total) + " "
-                            + myUI.getMessage(Messages.DiscountAmount), Table.Align.RIGHT);
+                                                 + myUI.getMessage(Messages.DiscountAmount), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.Total) + " "
-                            + myUI.getMessage(Messages.Average) + "%", Table.Align.RIGHT);
+                                                 + myUI.getMessage(Messages.Average) + "%", Table.Align.RIGHT);
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
                     }
@@ -262,13 +262,13 @@ public class SchoolDiscountsReport implements Button.ClickListener,
                         excelReport.getTotalsRow().getCell(i).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(i).setCellValue(
                                 dataTable.getColumnFooter(schoolTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()
-                                        + " " + myUI.getMessage(Messages.Average) + "%"));
+                                                          + " " + myUI.getMessage(Messages.Average) + "%"));
                         i += 3;
                     }
                     excelReport.getTotalsRow().getCell(i).setCellFormula(null);
                     excelReport.getTotalsRow().getCell(i).setCellValue(
                             dataTable.getColumnFooter(myUI.getMessage(Messages.Total) + " "
-                                    + myUI.getMessage(Messages.Average) + "%"));
+                                                      + myUI.getMessage(Messages.Average) + "%"));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {
@@ -299,7 +299,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
                 DbDiscount dbd = new DbDiscount();
                 dbd.connect();
                 discountsTable.setContainerDataSource(
-                        dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue(), 0));
+                        dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue()));
                 dbd.close();
                 discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
             } catch (Exception e) {

@@ -241,7 +241,7 @@ public class DbSchool extends BaseDb {
     }
 
     public IndexedContainer execSchoolSel(MyVaadinUI myUI, int school_id, int employee_id) throws SQLException {
-        String sql = "SELECT s.id, s.school_type_id, s.acc_currency_id, " +
+        String sql = "SELECT s.id, s.school_type_id, " +
                      "concat(s.code, ' - ', s.name_ru) as name, s.name_kg, " +
                      "s.photo, s.code, s.primary_code, s.secondary_code from school as s where s.is_visible = 1 ";
         if (school_id != 0) {
@@ -262,7 +262,6 @@ public class DbSchool extends BaseDb {
         container.addContainerProperty(myUI.getMessage(Messages.SecondaryCode), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Logo), String.class, null);
         container.addContainerProperty(Settings.dbSchoolType, Integer.class, 0);
-        container.addContainerProperty(Settings.dbAcc_currency, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
@@ -273,7 +272,6 @@ public class DbSchool extends BaseDb {
             item.getItemProperty(myUI.getMessage(Messages.SecondaryCode)).setValue(result.getString("s.secondary_code"));
             item.getItemProperty(myUI.getMessage(Messages.Logo)).setValue(result.getString("s.photo"));
             item.getItemProperty(Settings.dbSchoolType).setValue(result.getInt("s.school_type_id"));
-            item.getItemProperty(Settings.dbAcc_currency).setValue(result.getInt("s.acc_currency_id"));
         }
         return container;
     }

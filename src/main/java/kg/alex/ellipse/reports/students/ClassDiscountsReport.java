@@ -300,8 +300,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
             try {
                 DbDiscount dbd = new DbDiscount();
                 dbd.connect();
-                discountsTable.setContainerDataSource(dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue(),
-                        myUI.getUser().getSchool().getCurrency_id()));
+                discountsTable.setContainerDataSource(dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue()));
                 dbd.close();
                 discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
             } catch (Exception e) {

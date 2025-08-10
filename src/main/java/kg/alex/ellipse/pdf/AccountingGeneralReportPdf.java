@@ -132,12 +132,12 @@ public class AccountingGeneralReportPdf {
                 accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.CashBox) + ":", normal_font));
 
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_income()) + "$", normal_font));
-                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_outcome()) + "$", normal_font));
-                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance()) + "$", normal_font));
+                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_income()) + Settings.KGS, normal_font));
+                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_outcome()) + Settings.KGS, normal_font));
+                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance()) + Settings.KGS, normal_font));
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                 accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance() + sclAccInfo.getTotal_income()
-                        - sclAccInfo.getTotal_outcome()) + "$", normal_font));
+                                                                         - sclAccInfo.getTotal_outcome()) + Settings.KGS, normal_font));
 
                 document.add(accInfoTable);
 
@@ -306,7 +306,7 @@ public class AccountingGeneralReportPdf {
         };
 
         StreamResource resource = new StreamResource(source1, "AccountingGeneralReport"
-                + System.currentTimeMillis() + ".pdf");
+                                                              + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
         myUI.getPage().open(resource, "AccountingGeneralReport", false);

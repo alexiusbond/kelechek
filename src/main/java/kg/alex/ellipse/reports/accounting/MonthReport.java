@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package kg.alex.ellipse.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
@@ -17,7 +12,7 @@ import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.dao.DbAccCategory;
 import kg.alex.ellipse.dao.DbAccTransactions;
-import kg.alex.ellipse.dao.DbDefinition;
+import kg.alex.ellipse.dao.DbCashbox;
 import kg.alex.ellipse.domain.SchoolAccounting;
 import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.tableexport.EnhancedFormatExcelExport;
@@ -174,9 +169,9 @@ public class MonthReport implements Button.ClickListener,
         cashBoxSelect.setFilteringMode(FilteringMode.CONTAINS);
         cashBoxSelect.addValueChangeListener(this);
         try {
-            DbDefinition dbd = new DbDefinition();
+            DbCashbox dbd = new DbCashbox();
             dbd.connect();
-            cashBoxSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAcc_currency, true));
+            cashBoxSelect.setContainerDataSource(dbd.execSQL(myUI));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -245,7 +240,7 @@ public class MonthReport implements Button.ClickListener,
                             rightLayout.addComponent(incomesDataTable);
                             rightLayout.setExpandRatio(incomesDataTable, 1);
                             dbTr.execSQL_by_months(myUI, 1,
-                                    (Integer) cashBoxSelect.getValue(), myUI.getUser().getSchool().getCurrency_id(),
+                                    (Integer) cashBoxSelect.getValue(),
                                     myUI.getUser().getSchool().getId(),
                                     incomeCategoriesTable, fromDate, tillDate, incomesDataTable);
                             if (incomesDataTable.getContainerDataSource().size() != 0) {
@@ -256,7 +251,7 @@ public class MonthReport implements Button.ClickListener,
                             rightLayout.addComponent(outcomesDataTable);
                             rightLayout.setExpandRatio(outcomesDataTable, 1);
                             dbTr.execSQL_by_months(myUI, 2,
-                                    (Integer) cashBoxSelect.getValue(), myUI.getUser().getSchool().getCurrency_id(),
+                                    (Integer) cashBoxSelect.getValue(),
                                     myUI.getUser().getSchool().getId(),
                                     outcomeCategoriesTable, fromDate, tillDate, outcomesDataTable);
                             if (outcomesDataTable.getContainerDataSource().size() != 0) {
@@ -271,7 +266,7 @@ public class MonthReport implements Button.ClickListener,
                             prev_date.setTime(current.getTime());
                             prev_date.add(Calendar.DATE, -1);
                             SchoolAccounting scAcc = dbTr.exec_get_totals(myUI.getUser().getSchool().getId(),
-                                    myUI.getUser().getSchool().getCurrency_id(), (Integer) cashBoxSelect.getValue(), current.getTime(),
+                                    (Integer) cashBoxSelect.getValue(), current.getTime(),
                                     tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                             incomesDataTable.setColumnFooter(
                                     Settings.ymdf.format(current.getTime()), myUI.getMessage(Messages.PreviousBalance) + " ("
@@ -439,7 +434,8 @@ public class MonthReport implements Button.ClickListener,
     }
 
     private String getCurrency() {
-        return " " + ((Integer) cashBoxSelect.getValue() != 0 ? cashBoxSelect.getItemCaption(cashBoxSelect.getValue()) :
-                myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD);
+        Object currency = cashBoxSelect.getContainerProperty(cashBoxSelect.getValue(),
+                myUI.getMessage(Messages.Currency)).getValue();
+        return currency == null ? " " + Settings.KGS : " " + currency;
     }
 }

@@ -143,7 +143,9 @@ public class Settings implements Serializable {
     public static final String dbEduLevel = "hr_education_level";
     public static final String dbHealthStatus = "hr_health_status";
     public static final String dbAcc_currency = "acc_currency";
+    public static final String dbAccCashBox = "acc_cashbox";
     public static final String acc_currency_id = "acc_currency_id";
+    public static final String acc_cashbox_id = "acc_cashbox_id";
     public static final String dbAcc_transactions = "acc_transactions";
     public static final String dbPaymentType = "payment_type";
     public static final String dbWorking_status = "working_status";

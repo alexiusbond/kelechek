@@ -154,12 +154,12 @@ public class DbStudentContract extends BaseDb {
         return contr_id;
     }
 
-    public Double exec_get_debt(int st_id, int year_id, int school_currency_id) throws SQLException {
+    public Double exec_get_debt(int st_id, int year_id) throws SQLException {
         double debt = 0.0;
         String sql = "SELECT ROUND(IFNULL((SELECT SUM(sc.contr_with_disc) FROM student_contract AS sc "
                      + "WHERE sc.student_id = ? and sc.year_id < ?), 0.0), 2) + IFNULL((SELECT SUM(vc.amount) FROM view_corrections AS vc WHERE vc.student_id = ? and vc.year_id < ?), 0.0) "
-                     + "- ROUND(IFNULL((SELECT SUM(if(sp.payment_category_id != 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) - "
-                     + "sum(if(sp.payment_category_id = 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) "
+                     + "- ROUND(IFNULL((SELECT SUM(if(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - "
+                     + "sum(if(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) "
                      + "FROM student_payments AS sp "
                      + "WHERE sp.student_id = ? and sp.year_id < ?), 0.0), 2) AS debt";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -167,10 +167,8 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(2, year_id);
         stat.setInt(3, st_id);
         stat.setInt(4, year_id);
-        stat.setInt(5, school_currency_id);
-        stat.setInt(6, school_currency_id);
-        stat.setInt(7, st_id);
-        stat.setInt(8, year_id);
+        stat.setInt(5, st_id);
+        stat.setInt(6, year_id);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             if (!result.wasNull()) {
@@ -192,7 +190,7 @@ public class DbStudentContract extends BaseDb {
 
     public IndexedContainer execSQL_ClassList(MyVaadinUI myUI, String class_ids, int year_id, Date from_date, Date till_date,
                                               String edu_statuses_ids, ClassListReport clr) throws SQLException {
-        String currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
+        String currency = Settings.KGS;
         clr.activeStudents = 0;
         clr.discountedStudents = 0;
         clr.prevYearDebts = 0;
@@ -220,8 +218,8 @@ public class DbStudentContract extends BaseDb {
                "WHERE student_id = st.id AND year_id < ?), 0.0) + " +
                "IFNULL((SELECT SUM(amount) FROM view_corrections " +
                "WHERE student_id = st.id AND year_id < ?), 0.0) - " +
-               "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) - " +
-               "SUM(IF(payment_category_id = 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) FROM student_payments as sp " +
+               "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - " +
+               "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) FROM student_payments as sp " +
                "WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, vc.amount, vc.full_details, " +
                "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, sr.address, rel.name, ";
         if (from_date != null && till_date != null) {
@@ -279,13 +277,11 @@ public class DbStudentContract extends BaseDb {
                "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
                "LEFT JOIN " +
                "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
-               "scc.amount, ' ', cur.name ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
+               "scc.amount, ' " + Settings.KGS + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
                "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
                "FROM student_correction scc " +
                "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
                "LEFT JOIN student st ON st.id = scc.student_id " +
-               "LEFT JOIN school sc ON sc.id = st.school_id " +
-               "LEFT JOIN acc_currency cur ON cur.id = sc.acc_currency_id " +
                "WHERE year_id = ? ";
         if (from_date != null) {
             sql += "AND scc.creation_date >= ? ";
@@ -295,8 +291,8 @@ public class DbStudentContract extends BaseDb {
         }
         sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
                "LEFT JOIN " +
-               "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) " +
-               "- SUM(IF(sp.payment_category_id = 3, CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
+               "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
+               "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
                "FROM student_payments as sp WHERE sp.year_id = ? ";
         if (from_date != null) {
             sql += "AND DATE(sp.modification_date) >= ? ";
@@ -319,8 +315,6 @@ public class DbStudentContract extends BaseDb {
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
@@ -334,8 +328,6 @@ public class DbStudentContract extends BaseDb {
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
@@ -345,8 +337,6 @@ public class DbStudentContract extends BaseDb {
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
@@ -356,8 +346,6 @@ public class DbStudentContract extends BaseDb {
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setInt(++counter, year_id);
@@ -366,8 +354,6 @@ public class DbStudentContract extends BaseDb {
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
@@ -377,8 +363,6 @@ public class DbStudentContract extends BaseDb {
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
             stat.setInt(++counter, year_id);
@@ -386,14 +370,10 @@ public class DbStudentContract extends BaseDb {
         } else {
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
-            stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
@@ -499,7 +479,7 @@ public class DbStudentContract extends BaseDb {
     public IndexedContainer execSQL_Discounts(MyVaadinUI myUI, String class_ids,
                                               String discounts_ids, int year_id,
                                               String edu_statuses_ids, DiscountsReport dr) throws SQLException {
-        String currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
+        String currency = Settings.KGS;
         dr.activeStudents = 0;
         dr.discountedStudents = 0;
         dr.debts = 0;
@@ -646,8 +626,8 @@ public class DbStudentContract extends BaseDb {
                "WHERE student_id = st.id AND year_id < ?), 0.0) + " +
                "IFNULL((SELECT SUM(amount) FROM view_corrections " +
                "WHERE student_id = st.id AND year_id < ?), 0.0) - " +
-               "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) - " +
-               "SUM(IF(payment_category_id = 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) " +
+               "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - " +
+               "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
                "FROM student_payments as sp " +
                "left join student on student.id = sp.student_id " +
                "left join school as sch on sch.id = student.school_id " +
@@ -688,13 +668,11 @@ public class DbStudentContract extends BaseDb {
                "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
                "LEFT JOIN " +
                "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
-               "scc.amount, ' ', cur.name ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
+               "scc.amount, ' " + Settings.KGS + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
                "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
                "FROM student_correction scc " +
                "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
                "LEFT JOIN student st ON st.id = scc.student_id " +
-               "LEFT JOIN school sc ON sc.id = st.school_id " +
-               "LEFT JOIN acc_currency cur ON cur.id = sc.acc_currency_id " +
                "WHERE year_id = ? ";
         if (from_date != null) {
             sql += "AND scc.creation_date >= ? ";
@@ -704,8 +682,8 @@ public class DbStudentContract extends BaseDb {
         }
         sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
                "LEFT JOIN " +
-               "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) " +
-               "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
+               "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
+               "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
                "FROM student_payments as sp " +
                "left join student on student.id = sp.student_id " +
                "left join school as sch on sch.id = student.school_id " +
@@ -947,16 +925,14 @@ public class DbStudentContract extends BaseDb {
                      + "MONTH(inst.date_of_payment)) AS i_temp "
                      + "ON i_temp.mnth = months.id AND s_temp.id = i_temp.s_id "
                      + "LEFT JOIN (SELECT sch.id AS s_id, SUM(IF(pay.payment_category_id = 3, "
-                     + "-CASE WHEN sch.acc_currency_id = pay.acc_currency_id THEN pay.amount "
-                     + "WHEN pay.acc_currency_id = 1 THEN pay.amount / pay.dollar_rate "
+                     + "-CASE WHEN pay.acc_currency_id = 1 THEN pay.amount "
                      + "ELSE pay.amount * pay.dollar_rate END, "
-                     + "CASE WHEN sch.acc_currency_id = pay.acc_currency_id THEN pay.amount "
-                     + "WHEN pay.acc_currency_id = 1 THEN pay.amount / pay.dollar_rate ELSE pay.amount * pay.dollar_rate END)) AS amn, "
+                     + "CASE WHEN pay.acc_currency_id = 1 THEN pay.amount ELSE pay.amount * pay.dollar_rate END)) AS amn, "
                      + "MONTH(pay.modification_date) AS mnth "
                      + "FROM student_payments as pay "
                      + "LEFT JOIN student ON student.id = pay.student_id "
                      + "LEFT JOIN school AS sch ON sch.id = student.school_id "
-                     + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                     + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = student.id and vcs.year_id = ? "
                      + "WHERE pay.year_id = ? AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
                      + "GROUP BY sch.id, MONTH(pay.modification_date)) AS p_temp ON p_temp.mnth = months.id "
                      + "AND s_temp.id = p_temp.s_id WHERE s_temp.id IN (" + school_ids + ") ORDER BY "
@@ -1078,8 +1054,8 @@ public class DbStudentContract extends BaseDb {
                "WHERE student_id = st.id AND year_id < ?), 0.0) + " +
                "IFNULL((SELECT SUM(amount) FROM view_corrections " +
                "WHERE student_id = st.id AND year_id < ?), 0.0) - " +
-               "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) - " +
-               "SUM(IF(payment_category_id = 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) " +
+               "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - " +
+               "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
                "FROM student_payments as sp " +
                "left join student on student.id = sp.student_id " +
                "left join school as sch on sch.id = student.school_id " +
@@ -1120,13 +1096,11 @@ public class DbStudentContract extends BaseDb {
                "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
                "LEFT JOIN " +
                "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
-               "scc.amount, ' ', cur.name ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
+               "scc.amount, ' " + Settings.KGS + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
                "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
                "FROM student_correction scc " +
                "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
                "LEFT JOIN student st ON st.id = scc.student_id " +
-               "LEFT JOIN school sc ON sc.id = st.school_id " +
-               "LEFT JOIN acc_currency cur ON cur.id = sc.acc_currency_id " +
                "WHERE year_id = ? ";
         if (from_date != null) {
             sql += "AND scc.creation_date >= ? ";
@@ -1136,8 +1110,8 @@ public class DbStudentContract extends BaseDb {
         }
         sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
                "LEFT JOIN " +
-               "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) " +
-               "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
+               "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
+               "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
                "FROM student_payments as sp " +
                "left join student on student.id = sp.student_id " +
                "left join school as sch on sch.id = student.school_id " +
@@ -1345,8 +1319,8 @@ public class DbStudentContract extends BaseDb {
         sql += "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " +
                "WHERE student_id = st.id AND year_id < ?), 0.0) + IFNULL((SELECT SUM(amount) " +
                "FROM view_corrections WHERE student_id = st.id AND year_id < ?), 0.0) - " +
-               "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) - " +
-               "SUM(IF(payment_category_id = 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) " +
+               "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - " +
+               "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
                "FROM student_payments as sp " +
                "left join student on student.id = sp.student_id " +
                "left join school as sch on sch.id = student.school_id " +
@@ -1392,8 +1366,6 @@ public class DbStudentContract extends BaseDb {
                "FROM student_correction scc " +
                "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
                "LEFT JOIN student st ON st.id = scc.student_id " +
-               "LEFT JOIN school sc ON sc.id = st.school_id " +
-               "LEFT JOIN acc_currency cur ON cur.id = sc.acc_currency_id " +
                "WHERE year_id = ? ";
         if (from_date != null) {
             sql += "AND scc.creation_date >= ? ";
@@ -1403,8 +1375,8 @@ public class DbStudentContract extends BaseDb {
         }
         sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
                "LEFT JOIN " +
-               "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) " +
-               "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sch.acc_currency_id = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
+               "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
+               "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
                "FROM student_payments as sp " +
                "left join student on student.id = sp.student_id " +
                "left join school as sch on sch.id = student.school_id " +
@@ -1599,7 +1571,7 @@ public class DbStudentContract extends BaseDb {
                      + "AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
                      + "group by month(inst.date_of_payment)) as i_temp on i_temp.mnth = months.id "
                      + "left join ("
-                     + "select sum(if(pay.payment_category_id = 3, - CASE WHEN sch.acc_currency_id = pay.acc_currency_id THEN pay.amount WHEN pay.acc_currency_id = 1 THEN pay.amount / pay.dollar_rate ELSE pay.amount * pay.dollar_rate END, CASE WHEN sch.acc_currency_id = pay.acc_currency_id THEN pay.amount WHEN pay.acc_currency_id = 1 THEN pay.amount / pay.dollar_rate ELSE pay.amount * pay.dollar_rate END)) as amn, "
+                     + "select sum(if(pay.payment_category_id = 3, - CASE WHEN pay.acc_currency_id = 1 THEN pay.amount ELSE pay.amount * pay.dollar_rate END, CASE WHEN pay.acc_currency_id = 1 THEN pay.amount ELSE pay.amount * pay.dollar_rate END)) as amn, "
                      + "month(pay.modification_date) as mnth from student_payments as pay "
                      + "left join student on student.id = pay.student_id "
                      + "left join school as sch on sch.id = student.school_id "
@@ -1724,9 +1696,9 @@ public class DbStudentContract extends BaseDb {
                      + "LEFT JOIN "
                      + "(SELECT sp.student_id AS stud_id, "
                      + "(SUM(IF(sp.payment_category_id != 3, "
-                     + "CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0)) "
+                     + "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) "
                      + "-SUM(IF(sp.payment_category_id = 3, "
-                     + "CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END, 0))) AS amount "
+                     + "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount "
                      + "FROM student_payments AS sp WHERE DATE(sp.modification_date) >= ? "
                      + "AND DATE(sp.modification_date) <= ? AND sp.year_id = ? "
                      + "GROUP BY sp.student_id) AS sp_temp "
@@ -1739,13 +1711,11 @@ public class DbStudentContract extends BaseDb {
         stat.setDate(1, new java.sql.Date(from.getTime()));
         stat.setDate(2, new java.sql.Date(till.getTime()));
         stat.setInt(3, year_id);
-        stat.setInt(4, myUI.getUser().getSchool().getCurrency_id());
-        stat.setInt(5, myUI.getUser().getSchool().getCurrency_id());
-        stat.setDate(6, new java.sql.Date(from.getTime()));
-        stat.setDate(7, new java.sql.Date(till.getTime()));
+        stat.setDate(4, new java.sql.Date(from.getTime()));
+        stat.setDate(5, new java.sql.Date(till.getTime()));
+        stat.setInt(6, year_id);
+        stat.setInt(7, year_id);
         stat.setInt(8, year_id);
-        stat.setInt(9, year_id);
-        stat.setInt(10, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
@@ -1823,8 +1793,8 @@ public class DbStudentContract extends BaseDb {
         return 0;
     }
 
-    public void execFinancialHistory(MyVaadinUI myUI, int studentId, int currencyId, Table t) throws SQLException {
-        String currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
+    public void execFinancialHistory(MyVaadinUI myUI, int studentId, Table t) throws SQLException {
+        String currency = Settings.KGS;
         String sql = "SELECT * FROM (" +
                      "(SELECT concat('sc', sc.id) as  id, y.name AS academic_year, sc.creation_date AS creation_date, " +
                      "'Контракт' AS type, c.name AS note, c.amount AS amount FROM student_contract AS sc " +
@@ -1852,14 +1822,14 @@ public class DbStudentContract extends BaseDb {
                      "UNION " +
                      "(SELECT concat('sp', sp.id) as  id, y.name AS academic_year, DATE(sp.modification_date) AS creation_date, " +
                      "'Оплата' AS type, CONCAT(pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
-                     "CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END AS amount " +
+                     "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END AS amount " +
                      "FROM student_payments AS sp LEFT JOIN year AS y ON sp.year_id = y.id " +
                      "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
                      "WHERE sp.student_id = ? and sp.payment_category_id != 3 ORDER BY sp.year_id, DATE(sp.modification_date)) " +
                      "UNION " +
                      "(SELECT concat('sp', sp.id) as  id, y.name AS academic_year, DATE(sp.modification_date) AS creation_date, " +
                      "'Возврат' AS type, CONCAT(pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
-                     "CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END AS amount " +
+                     "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END AS amount " +
                      "FROM student_payments AS sp LEFT JOIN year AS y ON sp.year_id = y.id " +
                      "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
                      "WHERE sp.student_id = ? and sp.payment_category_id = 3 ORDER BY sp.year_id, DATE(sp.modification_date))) AS t " +
@@ -1868,10 +1838,8 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(1, studentId);
         stat.setInt(2, studentId);
         stat.setInt(3, studentId);
-        stat.setInt(4, currencyId);
+        stat.setInt(4, studentId);
         stat.setInt(5, studentId);
-        stat.setInt(6, currencyId);
-        stat.setInt(7, studentId);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.AcademicYear), String.class, null);
@@ -1926,7 +1894,7 @@ public class DbStudentContract extends BaseDb {
 
     public void execDebtsAndRepayments(MyVaadinUI myUI, int yearId, String classIds, String educationStatusIds,
                                        Date fromDate, Date tillDate, Table t) throws SQLException {
-        String currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
+        String currency = Settings.KGS;
         String sql = " SELECT * FROM (" +
                      "(SELECT concat('sc', sc.id) as  id, vcs.class_name AS class, " +
                      "vcs.education_status AS education_status, st.login AS login, " +
@@ -1964,7 +1932,7 @@ public class DbStudentContract extends BaseDb {
                      "CONCAT(st.name, ' ', st.surname) AS fullname, DATE(sp.modification_date) AS creation_date, " +
                      "IF(sp.payment_category_id = 3, 'Возврат', 'Оплата') AS type, " +
                      "CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
-                     "CASE WHEN ? = sp.acc_currency_id THEN sp.amount WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount * sp.dollar_rate END AS amount " +
+                     "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END AS amount " +
                      "FROM student_payments AS sp LEFT JOIN student AS st ON st.id = sp.student_id " +
                      "LEFT JOIN year AS y ON sp.year_id = y.id LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
                      "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id " +
@@ -1986,7 +1954,6 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(++counter, yearId);
         stat.setInt(++counter, yearId);
         stat.setInt(++counter, yearId);
-        stat.setInt(++counter, myUI.getUser().getSchool().getCurrency_id());
         stat.setInt(++counter, yearId);
         stat.setInt(++counter, yearId);
         if (fromDate != null) {

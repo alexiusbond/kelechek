@@ -43,7 +43,7 @@ public class InstallmentPlanPaymentsPdf {
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/ellipse/PT_Sans-Web-Regular.ttf";
             private final static String FONT_LOCATION2 = "/home/ellipse/PT_Sans-Web-Bold.ttf";
-            private final String currency = myUI.getUser().getSchool().getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
+            private final String currency = Settings.KGS;
 
             @Override
             public InputStream getStream() {
@@ -81,7 +81,7 @@ public class InstallmentPlanPaymentsPdf {
                     document.add(table_date);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(Messages.InstallmentPLanPaymentsReport)
-                            + " (" + studentInfo.getYear() + ")", fontBold);
+                                                  + " (" + studentInfo.getYear() + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(24, " "));
                     document.add(spr);
@@ -97,34 +97,34 @@ public class InstallmentPlanPaymentsPdf {
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.Contract), ordFontBold));
                     Thead.addCell(new Phrase(" ", ordFontBold));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.Id)
-                            + ": " + studentInfo.getStudent().getLogin(), ordFont));
+                                             + ": " + studentInfo.getStudent().getLogin(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.Contract)
-                            + ": " + studentInfo.getContractInfo().getContract() + " " + currency, ordFont));
+                                             + ": " + studentInfo.getContractInfo().getContract() + " " + currency, ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.Net)
-                            + ": " + studentInfo.getContractInfo().getNet() + " " + currency, ordFont));
+                                             + ": " + studentInfo.getContractInfo().getNet() + " " + currency, ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.FirstName)
-                            + ": " + studentInfo.getStudent().getName(), ordFont));
+                                             + ": " + studentInfo.getStudent().getName(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.Discount)
-                            + ": " + studentInfo.getContractInfo().getDiscountStr(), ordFont));
+                                             + ": " + studentInfo.getContractInfo().getDiscountStr(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.Paid)
-                            + ": " + studentInfo.getContractInfo().getPaid() + " " + currency, ordFont));
+                                             + ": " + studentInfo.getContractInfo().getPaid() + " " + currency, ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.LastName)
-                            + ": " + studentInfo.getStudent().getSurname(), ordFont));
+                                             + ": " + studentInfo.getStudent().getSurname(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.Correction)
-                            + ": " + studentInfo.getContractInfo().getCorrectionStr(), ordFont));
+                                             + ": " + studentInfo.getContractInfo().getCorrectionStr(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.Left)
-                            + ": " + Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()) + " " + currency, ordFont));
+                                             + ": " + Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()) + " " + currency, ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.ClassName)
-                            + ": " + studentInfo.getStudent().getClass_name(), ordFont));
+                                             + ": " + studentInfo.getStudent().getClass_name(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(Messages.PreviousYearDebt)
-                            + ": " + studentInfo.getContractInfo().getDebt() + " " + currency, ordFont));
+                                             + ": " + studentInfo.getContractInfo().getDebt() + " " + currency, ordFont));
                     if (studentInfo.getContractInfo().getInstallmentPlanDebt() > 0) {
                         Thead.addCell(new Phrase(myUI.getMessage(Messages.InstPlanDebt)
-                                + ": " + Settings.dFormat2.format(studentInfo.getContractInfo()
+                                                 + ": " + Settings.dFormat2.format(studentInfo.getContractInfo()
                                 .getInstallmentPlanDebt()) + " " + currency, ordFont));
                     } else {
                         Thead.addCell(new Phrase(myUI.getMessage(Messages.InstPlanDebt)
-                                + ": 0.00 " + currency, ordFont));
+                                                 + ": 0.00 " + currency, ordFont));
                     }
 
                     document.add(Thead);
@@ -323,13 +323,13 @@ public class InstallmentPlanPaymentsPdf {
                     T2.addCell(new Phrase(myUI.getMessage(Messages.Accountant), ordFontBold));
                     T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
                     T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
-                            + studentInfo.getAccountant().getName() + " " +
-                            (studentInfo.getAccountant().getMiddle_name() == null ?
-                                    "" : studentInfo.getAccountant().getMiddle_name()), ordFont));
+                                          + studentInfo.getAccountant().getName() + " " +
+                                          (studentInfo.getAccountant().getMiddle_name() == null ?
+                                                  "" : studentInfo.getAccountant().getMiddle_name()), ordFont));
                     T2.addCell(new Phrase(studentInfo.getDirector().getSurname() + " "
-                            + studentInfo.getDirector().getName() + " " +
-                            (studentInfo.getDirector().getMiddle_name() == null ?
-                                    "" : studentInfo.getDirector().getMiddle_name()), ordFont));
+                                          + studentInfo.getDirector().getName() + " " +
+                                          (studentInfo.getDirector().getMiddle_name() == null ?
+                                                  "" : studentInfo.getDirector().getMiddle_name()), ordFont));
                     document.add(T2);
 
                 } catch (Exception e) {
@@ -348,7 +348,7 @@ public class InstallmentPlanPaymentsPdf {
         };
 
         StreamResource resource = new StreamResource(source1, "InstallmentPlanPayments"
-                + System.currentTimeMillis() + ".pdf");
+                                                              + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
         myUI.getPage().open(resource, "InstallmentPlanPayments", false);

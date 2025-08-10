@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package kg.alex.ellipse.domain;
 
 import java.io.Serializable;
@@ -15,24 +10,6 @@ public class Discount implements Serializable {
     private double amount;
     private int year_id;
     private int status_id;
-    private int currency_id;
-    private int discount_unit_id;
-
-    public int getCurrency_id() {
-        return currency_id;
-    }
-
-    public void setCurrency_id(int currency_id) {
-        this.currency_id = currency_id;
-    }
-
-    public int getDiscount_unit_id() {
-        return discount_unit_id;
-    }
-
-    public void setDiscount_unit_id(int discount_unit_id) {
-        this.discount_unit_id = discount_unit_id;
-    }
 
     public int getId() {
         return id;

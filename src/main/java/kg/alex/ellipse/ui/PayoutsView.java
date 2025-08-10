@@ -17,12 +17,11 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
-import kg.alex.ellipse.dao.DbAccCategory;
-import kg.alex.ellipse.dao.DbAccTransactions;
-import kg.alex.ellipse.dao.DbDefinition;
-import kg.alex.ellipse.dao.DbInvoice;
+import kg.alex.ellipse.dao.*;
 import kg.alex.ellipse.domain.AccTransaction;
+import kg.alex.ellipse.domain.CashBox;
 import kg.alex.ellipse.domain.Invoice;
+import kg.alex.ellipse.domain.StudentPayment;
 import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ellipse.utils.ExistsValidator;
@@ -74,6 +73,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     private IndexedContainer payoutsCont;
     private int r_table_counter = 1000;
     private int invID;
+    private int lastSelectedCashboxId;
     private double totalAmount = 0.0;
     private double amountUsd = 0.0, oldAmountUsd = 0.0;
     private double amountKgs = 0.0, oldAmountKgs = 0.0;
@@ -294,16 +294,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     dbCon.connect();
                     if (isNew) {
                         Invoice inv = getInvoice(0);
-                        AccTransaction trUsd = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
-                                2, inv.getCreation_date(), 0, amountUsd, 2);
-                        AccTransaction trKgs = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
-                                1, inv.getCreation_date(), 0, amountKgs, 2);
-                        if (trUsd != null) {
-                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(trUsd.getOverLimit())
-                                    + " USD (" + Settings.df.format(trUsd.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-                        } else if (trKgs != null) {
-                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(trKgs.getOverLimit())
-                                    + " KGS (" + Settings.df.format(trKgs.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                        AccTransaction tr = insertTestPayments(new Date());
+                        if (tr != null) {
+                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
+                                            + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
+                                    Notification.Type.ERROR_MESSAGE);
                         } else {
                             int id = dbCon.exec_insert(inv);
                             if (id != 0) {
@@ -320,16 +315,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     } else {
                         int status = 0;
                         Invoice inv = getInvoice(invID);
-                        AccTransaction trUsd = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
-                                2, inv.getCreation_date(), oldAmountUsd, amountUsd, 2);
-                        AccTransaction trKgs = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(),
-                                1, inv.getCreation_date(), oldAmountKgs, amountKgs, 2);
-                        if (trUsd != null) {
-                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(trUsd.getOverLimit())
-                                    + " USD (" + Settings.df.format(trUsd.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-                        } else if (trKgs != null) {
-                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(trKgs.getOverLimit())
-                                    + " KGS (" + Settings.df.format(trKgs.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                        AccTransaction tr = insertTestPayments(new Date());
+                        if (tr != null) {
+                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
+                                            + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
+                                    Notification.Type.ERROR_MESSAGE);
                         } else {
                             try {
                                 status = dbCon.exec_update(inv);
@@ -513,10 +503,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (event.getProperty() instanceof ComboBox && ((ComboBox) event.getProperty()).getId() != null) {
-            ComboBox catCb = (ComboBox) event.getProperty();
-            ((ComboBox) payoutsTable.getContainerProperty(catCb.getId(), myUI.getMessage(Messages.Currency)).getValue()).setValue(
-                    catCb.getContainerProperty(catCb.getValue(), Settings.acc_currency_id).getValue());
+        } else if (event.getProperty() instanceof ComboBox) {
+            ComboBox cb = (ComboBox) event.getProperty();
+            lastSelectedCashboxId = (Integer) cb.getValue();
             repaintPayoutsFooter();
         } else if (event.getProperty().getType() != null) {
             repaintPayoutsFooter();
@@ -601,13 +590,8 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     private void updateDataContainer() {
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Date)).setValue(
                 Settings.dtmf.format(dateDF.getValue()));
-        try {
-            invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Amount)).setValue(
-                    Settings.dFormat2.parse(payoutsTable.getColumnFooter(myUI.getMessage(Messages.Amount))).doubleValue());
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Amount)).setValue(
+                totalAmount);
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Note)).setValue(
                 noteTF.getValue());
     }
@@ -616,13 +600,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         Item item = ((IndexedContainer) invoicesTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(date);
-        try {
-            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
-                    Settings.dFormat2.parse(payoutsTable.getColumnFooter(myUI.getMessage(Messages.Amount))).doubleValue());
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
+        item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(totalAmount);
         item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                 noteTF.getValue());
         try {
@@ -782,8 +760,8 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             payoutsCont.addContainerProperty(myUI.getMessage(Messages.Category), ComboBox.class, null);
             payoutsCont.addContainerProperty(myUI.getMessage(Messages.Note), TextField.class, null);
             payoutsCont.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
-            payoutsCont.addContainerProperty(myUI.getMessage(Messages.Currency), ComboBox.class, null);
-            payoutsCont.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
+            payoutsCont.addContainerProperty(myUI.getMessage(Messages.CashBox), ComboBox.class, null);
+            payoutsCont.addContainerProperty(Settings.acc_cashbox_id, Integer.class, 0);
             payoutsCont.addContainerProperty(myUI.getMessage(Messages.Rate), TextField.class, 0.0);
             payoutsCont.addContainerProperty(myUI.getMessage(Messages.Amount), TextField.class, 0.0);
             payoutsCont.addContainerProperty(Settings.crud_status, String.class, null);
@@ -797,7 +775,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         NATURAL_COL_ORDER_PAYOUTS = new String[]{Settings.button,
                 myUI.getMessage(Messages.Category),
                 myUI.getMessage(Messages.Note),
-                myUI.getMessage(Messages.Currency),
+                myUI.getMessage(Messages.CashBox),
                 myUI.getMessage(Messages.Rate),
                 myUI.getMessage(Messages.Amount)};
         String id = Settings.FreshItem + (--r_table_counter);
@@ -809,23 +787,27 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 payoutsTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
                 createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbAcc_transactions));
-        ComboBox cb = createCombobox(0, myUI.getMessage(Messages.Category), null, true, true);
+        ComboBox categoryCb = createCombobox(0, myUI.getMessage(Messages.Category), null, true, true);
+        ComboBox cashboxCb = createCombobox(0, myUI.getMessage(Messages.CashBox), null, true, false);
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            cb.setContainerDataSource(dbCon.exec_for_select(myUI, 2, myUI.getUser().getSchool().getId(), false));
+            categoryCb.setContainerDataSource(dbCon.exec_for_select(myUI, 2, myUI.getUser().getSchool().getId(), false));
+            dbCon.close();
+            DbCashbox dbc = new DbCashbox();
+            dbc.connect();
+            cashboxCb.setContainerDataSource(dbc.execSQL(myUI));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        cb.setItemCaptionPropertyId(myUI.getMessage(Messages.FullName));
-        cb.setId(id);
-        cb.addValueChangeListener(this);
-        item.getItemProperty(myUI.getMessage(Messages.Category)).setValue(cb);
-        cb = createCombobox(0, myUI.getMessage(Messages.Currency), Settings.dbAcc_currency, true, false);
-        cb.addValueChangeListener(this);
-        item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(cb);
+        categoryCb.setItemCaptionPropertyId(myUI.getMessage(Messages.FullName));
+        item.getItemProperty(myUI.getMessage(Messages.Category)).setValue(categoryCb);
+
+        cashboxCb.setValue(lastSelectedCashboxId);
+        cashboxCb.addValueChangeListener(this);
+        item.getItemProperty(myUI.getMessage(Messages.CashBox)).setValue(cashboxCb);
         TextField tf = createTextFieldWithProperty(null, myUI.getMessage(Messages.Amount),
                 new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), null, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), true);
@@ -852,7 +834,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             NATURAL_COL_ORDER_PAYOUTS = new String[]{Settings.button,
                     myUI.getMessage(Messages.Category),
                     myUI.getMessage(Messages.Note),
-                    myUI.getMessage(Messages.Currency),
+                    myUI.getMessage(Messages.CashBox),
                     myUI.getMessage(Messages.Rate),
                     myUI.getMessage(Messages.Amount)};
             DbAccTransactions dbCon = new DbAccTransactions();
@@ -880,18 +862,20 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         && ((TextField) payoutsTable.getItem(next).getItemProperty(
                         myUI.getMessage(Messages.Rate)).getValue()).isValid()
                         && ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                        myUI.getMessage(Messages.Currency)).getValue()).isValid()) {
-                    if ((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(Messages.Currency)).getValue()).getValue() == 2) {
+                        myUI.getMessage(Messages.CashBox)).getValue()).isValid()) {
+                    ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.CashBox)).getValue();
+                    if ((Integer) cb.getContainerProperty(cb.getValue(),
+                            Settings.acc_currency_id).getValue() == 2) {
                         totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
+                                * (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
                         amountUsd += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                     } else {
                         totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
-                                / (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                         amountKgs += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                     }
@@ -899,10 +883,10 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             }
         }
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.USD);
-        payoutsTable.setColumnFooter(myUI.getMessage(Messages.Currency),
-                Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Rate),
+                Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
+        payoutsTable.setColumnFooter(myUI.getMessage(Messages.CashBox),
                 Settings.dFormat2.format(amountUsd) + " " + Settings.USD);
     }
 
@@ -932,9 +916,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
                     tr.setCategory_id((Integer) cb.getValue());
                     tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
-                    tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(Messages.Currency)).getValue()).getValue());
                     tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
+                    cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.CashBox)).getValue();
+                    tr.setCashbox(new CashBox((Integer) cb.getValue(),
+                            (Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_currency_id).getValue()));
                     if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(Messages.Update))) {
                         tr.setId(next.toString());
                         dbAt.exec_update(tr);
@@ -995,9 +981,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                         myUI.getMessage(Messages.Amount)).getValue()).getValue());
                                 tr.setCategory_id((Integer) cb.getValue());
                                 tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
-                                tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(Messages.Currency)).getValue()).getValue());
                                 tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
+                                cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(
+                                        myUI.getMessage(Messages.CashBox)).getValue();
+                                tr.setCashbox(new CashBox((Integer) cb.getValue(),
+                                        (Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_currency_id).getValue()));
                                 dbTr.exec_insert(tr, dbTr.getConnection());
                             }
                         }
@@ -1019,15 +1007,74 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     }
 
     public void setPayoutsFooter(double amountUsd, double amountKgs, double total) {
-        totalAmount = amountUsd;
+        totalAmount = total;
         oldAmountUsd = amountUsd;
         oldAmountKgs = amountKgs;
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.USD);
-        payoutsTable.setColumnFooter(myUI.getMessage(Messages.Rate),
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
+        payoutsTable.setColumnFooter(myUI.getMessage(Messages.CashBox),
                 Settings.dFormat2.format(amountUsd) + " " + Settings.USD);
-        payoutsTable.setColumnFooter(myUI.getMessage(Messages.Currency),
+        payoutsTable.setColumnFooter(myUI.getMessage(Messages.Rate),
                 Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
+    }
+
+    private AccTransaction insertTestPayments(Date date) {
+        AccTransaction lowBalance = null;
+        try {
+            DbCashbox dbc = new DbCashbox();
+            dbc.connect();
+            DbAccTransactions dbat = new DbAccTransactions();
+            dbat.connect();
+            dbat.getConnection().setAutoCommit(false);
+            try {
+                dbat.exec_delete(Settings.db_acc_invoice_id, payoutsTable.getValue() + "", dbat.getConnection());
+                AccTransaction tr;
+                if (payoutsTable.getContainerDataSource().size() > 0) {
+                    for (Object next : payoutsTable.getItemIds()) {
+                        ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(Messages.Category)).getValue();
+                        tr = new AccTransaction();
+                        tr.setDate(dateDF.getValue());
+                        tr.setEmployee_id(myUI.getUser().getId());
+                        tr.setSchool_id(myUI.getUser().getSchool().getId());
+                        tr.setCurrency_rate((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue());
+                        tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.Note)).getValue()).getValue());
+                        tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
+                        tr.setCategory_id((Integer) cb.getValue());
+                        tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
+                        tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
+                        cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.CashBox)).getValue();
+                        tr.setCashbox(new CashBox((Integer) cb.getValue(),
+                                (Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_currency_id).getValue()));
+                        dbat.exec_insert(tr, dbat.getConnection());
+                    }
+                }
+                Iterator iter = dbc.execSQL(myUI).getItemIds().iterator();
+                while (iter.hasNext()) {
+                    Integer cashboxId = (Integer) iter.next();
+                    lowBalance = dbat.exec_low_balance(dbat.getConnection(), myUI.getUser().getSchool().getId(),
+                            cashboxId, date, 0.0, 0.0, 2);
+                    if (lowBalance != null) {
+                        break;
+                    }
+                }
+                dbat.getConnection().rollback();
+            } catch (Exception e) {
+                dbat.getConnection().rollback();
+                logger.error(e);
+                logger.catching(e);
+            }
+            dbat.getConnection().setAutoCommit(true);
+            dbat.close();
+            dbc.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        return lowBalance;
     }
 
     public Component getNewObj() {
