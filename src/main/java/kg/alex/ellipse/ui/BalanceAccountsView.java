@@ -71,7 +71,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
 
         buildRightLayout();
         buildSettingsLayout();
-        this.setSplitPosition(24, Unit.PERCENTAGE);
+        this.setSplitPosition(18, Unit.PERCENTAGE);
         this.setSizeFull();
         this.setLocked(true);
         this.setFirstComponent(settingsLay);
@@ -214,7 +214,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             rightLay.setColumnExpandRatio(3, 4f);
             rightLay.setColumnExpandRatio(4, 1f);
 
-            Label l = createLabel("DÖNEN VARLIKLAR (USD)", ValoTheme.LABEL_H2);
+            Label l = createLabel("ОБОРОТНЫЕ АКТИВЫ (USD)", ValoTheme.LABEL_H2);
             l.addStyleName("border");
             rightLay.addComponent(l, 0, 0);
             l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_H2);
@@ -222,7 +222,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             rightLay.addComponent(l, 1, 0);
             rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
 
-            l = createLabel("KISA VADELİ BORÇLAR (USD)", ValoTheme.LABEL_H2);
+            l = createLabel("КРАТКОСРОЧНЫЕ ОБЯЗАТЕЛЬСТВА (USD)", ValoTheme.LABEL_H2);
             l.addStyleName("border");
             rightLay.addComponent(l, 3, 0);
             l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_H2);
@@ -233,7 +233,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             int debtsRow = buildRows(debtsList, 3);
 
             int row = assetsRow > debtsRow ? assetsRow + 1 : debtsRow + 1;
-            l = createLabel("Gecmis Donem Kari", ValoTheme.LABEL_LARGE);
+            l = createLabel("Прибыль прошлых периодов", ValoTheme.LABEL_LARGE);
             l.addStyleName("border");
             rightLay.addComponent(l, 3, row);
             l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_LARGE);
@@ -241,7 +241,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             rightLay.addComponent(l, 4, row);
             rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
             row++;
-            l = createLabel("Donem Net Kari", ValoTheme.LABEL_LARGE);
+            l = createLabel("Прибыль за период", ValoTheme.LABEL_LARGE);
             l.addStyleName("border");
             rightLay.addComponent(l, 3, row);
             l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_LARGE);
@@ -273,7 +273,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 HorizontalLayout hl = new HorizontalLayout();
                 hl.setSpacing(true);
                 hl.setWidth(Settings.PERCENTS100);
-                hl.addComponent(createLabel(balanceSettings.getPrefix(), null));
+                hl.addComponent(createLabel(balanceSettings.getPrefix(), "lblBalance"));
                 TextField tf = createTextField(new StringLengthValidator(
                                 myUI.getMessage(Messages.NotificationWrongValue),
                                 null, 100, true), false, null,
@@ -281,11 +281,11 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 hl.addComponent(tf);
                 hl.setExpandRatio(tf, 1);
                 if (balanceSettings.getPostfix() != null) {
-                    hl.addComponent(createLabel(balanceSettings.getPostfix(), null));
+                    hl.addComponent(createLabel(balanceSettings.getPostfix(), "lblBalance"));
                 }
                 rightLay.addComponent(hl, column, row);
             } else {
-                rightLay.addComponent(createLabel(balanceSettings.getPrefix(), null), column, row);
+                rightLay.addComponent(createLabel(balanceSettings.getPrefix(), "lblBalance"), column, row);
             }
             balanceSettings.setRow(row);
             balanceSettings.setColumn(column);
@@ -799,10 +799,10 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             logger.error(e);
             logger.catching(e);
         }
-        if (noteTF.getValue() != null && !noteTF.getValue().isEmpty()) {
+        if (noteTF.getValue() != null && !noteTF.getValue().equals("")) {
             inv.setNote(noteTF.getValue());
         }
-        if (note2TF.getValue() != null && !note2TF.getValue().isEmpty()) {
+        if (note2TF.getValue() != null && !note2TF.getValue().equals("")) {
             inv.setNote2(note2TF.getValue());
         }
         inv.setAcc_invoice_type_id(5);
