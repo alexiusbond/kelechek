@@ -595,6 +595,10 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String StudentId = generateId();
     public static final String StudentsPossessive = generateId();
     public static final String Age = generateId();
+    public static final String ReturnableAssetsUSD = generateId();
+    public static final String ShortTermDebtsUSD = generateId();
+    public static final String ProfitOfPreviousPeriods = generateId();
+    public static final String ProfitForPeriod = generateId();
 
     private static String generateId() {
         return Integer.toString(ids++);

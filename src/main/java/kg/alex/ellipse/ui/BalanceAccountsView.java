@@ -38,6 +38,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.server.FileDownloader;
+import com.vaadin.ui.*;
+import org.apache.poi.hssf.usermodel.HSSFPalette;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.*;
+
 public class BalanceAccountsView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
@@ -52,6 +60,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
     private Button saveBtn;
     private Button cancelBtn;
     private Button confirmBtn;
+    private Button excelBtn;
     private PopupButton searchBtn;
     private TextField invoiceNumberTF;
     private TextArea noteTF, note2TF;
@@ -61,6 +70,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
     private GridLayout rightLay;
     private FormattedFilterTable invoicesTable;
     private int invID;
+    private FileDownloader fdText;
 
     public BalanceAccountsView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -71,7 +81,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
 
         buildRightLayout();
         buildSettingsLayout();
-        this.setSplitPosition(18, Unit.PERCENTAGE);
+        this.setSplitPosition(20, Unit.PERCENTAGE);
         this.setSizeFull();
         this.setLocked(true);
         this.setFirstComponent(settingsLay);
@@ -127,6 +137,13 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
+
+        excelBtn = new Button();
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
+        excelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
+        excelBtn.setEnabled(false);
+        buttonsLay.addComponent(excelBtn);
 
         confirmBtn = new Button();
         confirmBtn.setDescription(myUI.getMessage(Messages.Confirm));
@@ -214,18 +231,18 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             rightLay.setColumnExpandRatio(3, 4f);
             rightLay.setColumnExpandRatio(4, 1f);
 
-            Label l = createLabel("ОБОРОТНЫЕ АКТИВЫ (USD)", ValoTheme.LABEL_H2);
+            Label l = createLabel(myUI.getMessage(Messages.ReturnableAssetsUSD), ValoTheme.LABEL_H3);
             l.addStyleName("border");
             rightLay.addComponent(l, 0, 0);
-            l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_H2);
+            l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_H3);
             l.addStyleName("border");
             rightLay.addComponent(l, 1, 0);
             rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
 
-            l = createLabel("КРАТКОСРОЧНЫЕ ОБЯЗАТЕЛЬСТВА (USD)", ValoTheme.LABEL_H2);
+            l = createLabel(myUI.getMessage(Messages.ShortTermDebtsUSD), ValoTheme.LABEL_H3);
             l.addStyleName("border");
             rightLay.addComponent(l, 3, 0);
-            l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_H2);
+            l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_H3);
             l.addStyleName("border");
             rightLay.addComponent(l, 4, 0);
             rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
@@ -233,7 +250,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             int debtsRow = buildRows(debtsList, 3);
 
             int row = assetsRow > debtsRow ? assetsRow + 1 : debtsRow + 1;
-            l = createLabel("Прибыль прошлых периодов", ValoTheme.LABEL_LARGE);
+            l = createLabel(myUI.getMessage(Messages.ProfitOfPreviousPeriods), ValoTheme.LABEL_LARGE);
             l.addStyleName("border");
             rightLay.addComponent(l, 3, row);
             l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_LARGE);
@@ -241,7 +258,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             rightLay.addComponent(l, 4, row);
             rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
             row++;
-            l = createLabel("Прибыль за период", ValoTheme.LABEL_LARGE);
+            l = createLabel(myUI.getMessage(Messages.ProfitForPeriod), ValoTheme.LABEL_LARGE);
             l.addStyleName("border");
             rightLay.addComponent(l, 3, row);
             l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_LARGE);
@@ -580,6 +597,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         if (invoicesTable.getValue() != null && invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null) {
             confirmBtn.setEnabled(false);
         }
+        excelBtn.setEnabled(false);
         modifyBtn.setEnabled(false);
         createBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
@@ -603,6 +621,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         if (currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
+        excelBtn.setEnabled(true);
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         invoiceNumberTF.setEnabled(true);
@@ -678,6 +697,9 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 clearAll((AbstractComponentContainer) c);
             }
         }
+        if (excelBtn != null) {
+            excelBtn.setEnabled(false);
+        }
     }
 
     private void setTransfers() {
@@ -699,6 +721,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         }
         recalculateTotals(1);
         recalculateTotals(4);
+        prepareTextExcelDownload();
     }
 
     private void setTransfers(Map<Integer, Transfer> transfersMap, int i, int column) {
@@ -799,10 +822,10 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             logger.error(e);
             logger.catching(e);
         }
-        if (noteTF.getValue() != null && !noteTF.getValue().equals("")) {
+        if (noteTF.getValue() != null && !noteTF.getValue().isEmpty()) {
             inv.setNote(noteTF.getValue());
         }
-        if (note2TF.getValue() != null && !note2TF.getValue().equals("")) {
+        if (note2TF.getValue() != null && !note2TF.getValue().isEmpty()) {
             inv.setNote2(note2TF.getValue());
         }
         inv.setAcc_invoice_type_id(5);
@@ -864,16 +887,16 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                         if (component instanceof Label) {
                             tr.setNote(((Label) component).getValue());
                         } else if (component instanceof HorizontalLayout) {
-                            String value = "";
+                            StringBuilder value = new StringBuilder();
                             for (int j = 0; j < ((HorizontalLayout) component).getComponentCount(); j++) {
                                 Component c = ((HorizontalLayout) component).getComponent(j);
                                 if (c instanceof Label) {
-                                    value += " " + ((Label) c).getValue();
+                                    value.append(" ").append(((Label) c).getValue());
                                 } else if (c instanceof TextField) {
-                                    value += " " + ((TextField) c).getValue();
+                                    value.append(" ").append(((TextField) c).getValue());
                                 }
                             }
-                            tr.setNote(value.trim());
+                            tr.setNote(value.toString().trim());
                         }
                         if (tf.getId() != null) {
                             tr.setId(Integer.parseInt(tf.getId()));
@@ -922,5 +945,335 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
 
     public Component getNewObj() {
         return new BalanceAccountsView(myUI);
+    }
+
+    // Генерим XLS в памяти и «вешаем» FileDownloader на кнопку
+    private void prepareTextExcelDownload() {
+        try (HSSFWorkbook wb = buildTextWorkbook()) {
+            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+            wb.write(baos);
+
+            // снять старый даунлоадер, если он уже висит
+            if (fdText != null && excelBtn.getExtensions().contains(fdText)) {
+                excelBtn.removeExtension(fdText);
+            }
+
+            com.vaadin.server.StreamResource res = new com.vaadin.server.StreamResource(
+                    () -> new java.io.ByteArrayInputStream(baos.toByteArray()),
+                    "balance_text_" + System.currentTimeMillis() + ".xls"
+            );
+            res.setCacheTime(0);
+            res.setMIMEType("application/vnd.ms-excel");
+
+            fdText = new com.vaadin.server.FileDownloader(res);
+            fdText.extend(excelBtn);
+            excelBtn.setEnabled(true);
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved), Notification.Type.ERROR_MESSAGE);
+            if (excelBtn != null) {
+                excelBtn.setEnabled(false);
+            }
+        }
+    }
+
+    private HSSFWorkbook buildTextWorkbook() {
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sh = wb.createSheet(myUI.getMessage(Messages.BalanceAccounts));
+
+        DataFormat dfmt = wb.createDataFormat();
+
+        // базовые текстовые стили
+        CellStyle textLeft = baseTextStyle(wb, dfmt, HorizontalAlignment.LEFT, false, IndexedColors.WHITE.getIndex());
+        CellStyle textRight = baseTextStyle(wb, dfmt, HorizontalAlignment.RIGHT, false, IndexedColors.WHITE.getIndex());
+
+        // основной тёмный зелёный для шапок блоков и «прибыль»-блока (#003300)
+        short MAIN_BG = ensureCustomColor(wb, "#003300",
+                HSSFColor.HSSFColorPredefined.DARK_GREEN.getIndex());
+        CellStyle titleLeft = baseTextStyle(wb, dfmt, HorizontalAlignment.LEFT, true, MAIN_BG);
+        CellStyle titleRight = baseTextStyle(wb, dfmt, HorizontalAlignment.RIGHT, true, MAIN_BG);
+        setWhiteBoldFont(wb, titleLeft);
+        setWhiteBoldFont(wb, titleRight);
+
+        // ЗАГОЛОВКИ КОЛОНОК: #339966 + белый жирный
+        short COLHEAD_BG = ensureCustomColor(wb, "#339966",
+                HSSFColor.HSSFColorPredefined.SEA_GREEN.getIndex());
+        CellStyle colHeadLeft = baseTextStyle(wb, dfmt, HorizontalAlignment.LEFT, true, COLHEAD_BG);
+        CellStyle colHeadRight = baseTextStyle(wb, dfmt, HorizontalAlignment.RIGHT, true, COLHEAD_BG);
+        setWhiteBoldFont(wb, colHeadLeft);
+        setWhiteBoldFont(wb, colHeadRight);
+
+        // КАТЕГОРИИ (то, что было «голубым»): #CCFFCC
+        short CAT_BG = ensureCustomColor(wb, "#CCFFCC",
+                HSSFColor.HSSFColorPredefined.LIGHT_GREEN.getIndex());
+        CellStyle catLeft = baseTextStyle(wb, dfmt, HorizontalAlignment.LEFT, true, CAT_BG);
+        CellStyle catRight = baseTextStyle(wb, dfmt, HorizontalAlignment.RIGHT, true, CAT_BG);
+        // тут оставляем чёрный шрифт (читабельно на светло-зелёном)
+
+        int r = 0;
+
+        // верхняя шапка
+        r = writeRow(sh, r, textLeft, "Дата", formatDate(dateDF.getValue()));
+        r = writeRow(sh, r, textLeft,
+                myUI.getMessage(Messages.InvoiceNumber),
+                safeStr(invoicesTable != null && invoicesTable.getValue() != null
+                        ? invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                        myUI.getMessage(Messages.InvoiceNumber)).getValue()
+                        : ""));
+        r = writeRow(sh, r, textLeft, myUI.getMessage(Messages.Note), safeStr(noteTF.getValue()));
+        r = writeRow(sh, r, textLeft, myUI.getMessage(Messages.Note) + " 2", safeStr(note2TF.getValue()));
+        r++;
+
+        // плашки блоков
+        String assetsHdr = myUI.getMessage(Messages.ReturnableAssetsUSD);
+        String debtsHdr = myUI.getMessage(Messages.ShortTermDebtsUSD);
+        String assetsSum = getValueText(rightLay.getComponent(1, 0));
+        String debtsSum = getValueText(rightLay.getComponent(4, 0));
+
+        Row row = sh.createRow(r++);
+        row.setHeightInPoints(18f);
+        put(row, 0, assetsHdr, titleLeft);
+        put(row, 1, assetsSum, titleRight);
+        put(row, 2, "", textLeft);
+        put(row, 3, debtsHdr, titleLeft);
+        put(row, 4, debtsSum, titleRight);
+
+        // заголовки колонок (теперь зелёные)
+        row = sh.createRow(r++);
+        put(row, 0, myUI.getMessage(Messages.Category), colHeadLeft);
+        put(row, 1, myUI.getMessage(Messages.Amount), colHeadRight);
+        put(row, 2, "", textLeft);
+        put(row, 3, myUI.getMessage(Messages.Category), colHeadLeft);
+        put(row, 4, myUI.getMessage(Messages.Amount), colHeadRight);
+
+        final int freezeAt = r;
+
+        // подготовим «прибыль» — вытащим отдельно
+        String profitPrevTxt = myUI.getMessage(Messages.ProfitOfPreviousPeriods);
+        String profitPeriodTxt = myUI.getMessage(Messages.ProfitForPeriod);
+        String profitPrevAmt = null, profitPeriodAmt = null;
+
+        // данные
+        for (int i = 0; i < rightLay.getRows(); i++) {
+            String aTitle = getText(rightLay.getComponent(0, i));
+            String aAmt = getValueText(rightLay.getComponent(1, i));
+            String dTitle = getText(rightLay.getComponent(3, i));
+            String dAmt = getValueText(rightLay.getComponent(4, i));
+            if (isBlank(aTitle) && isBlank(aAmt) && isBlank(dTitle) && isBlank(dAmt)) continue;
+
+            if (profitPrevTxt.equals(dTitle)) {
+                profitPrevAmt = dAmt;
+                continue;
+            }
+            if (profitPeriodTxt.equals(dTitle)) {
+                profitPeriodAmt = dAmt;
+                continue;
+            }
+
+            boolean aIsCat = isParentRow(1, i);
+            boolean dIsCat = isParentRow(4, i);
+
+            row = sh.createRow(r++);
+            put(row, 0, aTitle, aIsCat ? catLeft : textLeft);
+            put(row, 1, aAmt, aIsCat ? catRight : textRight);
+            put(row, 2, "", textLeft);
+            put(row, 3, dTitle, dIsCat ? catLeft : textLeft);
+            put(row, 4, dAmt, dIsCat ? catRight : textRight);
+        }
+
+        // отступ
+        r++;
+
+        // блок «прибыль» — тем же #003300
+        if (profitPrevAmt != null || profitPeriodAmt != null) {
+            row = sh.createRow(r++);
+            row.setHeightInPoints(18f);
+            put(row, 0, "", textLeft);
+            put(row, 1, "", textLeft);
+            put(row, 2, "", textLeft);
+            put(row, 3, profitPrevTxt, titleLeft);
+            put(row, 4, safeStr(profitPrevAmt), titleRight);
+
+            row = sh.createRow(r++);
+            row.setHeightInPoints(18f);
+            put(row, 0, "", textLeft);
+            put(row, 1, "", textLeft);
+            put(row, 2, "", textLeft);
+            put(row, 3, profitPeriodTxt, titleLeft);
+            put(row, 4, safeStr(profitPeriodAmt), titleRight);
+        }
+
+        for (int c = 0; c <= 4; c++) sh.autoSizeColumn(c);
+        sh.createFreezePane(2, freezeAt);
+
+        return wb;
+    }
+
+    // Базовый текстовый стиль c заданным фоном, выравниванием и рамками
+    private CellStyle baseTextStyle(HSSFWorkbook wb, DataFormat dfmt,
+                                    HorizontalAlignment align, boolean bold, short bgIndex) {
+        CellStyle s = wb.createCellStyle();
+        s.setDataFormat(dfmt.getFormat("@"));              // всё текстом
+        s.setAlignment(align);
+        s.setVerticalAlignment(VerticalAlignment.CENTER);
+        s.setWrapText(false);
+        if (bgIndex != IndexedColors.WHITE.getIndex()) {
+            s.setFillForegroundColor(bgIndex);
+            s.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        }
+        Font f = wb.createFont();
+        f.setBold(bold);
+        s.setFont(f);
+        s.setBorderTop(BorderStyle.THIN);
+        s.setBorderBottom(BorderStyle.THIN);
+        s.setBorderLeft(BorderStyle.THIN);
+        s.setBorderRight(BorderStyle.THIN);
+        return s;
+    }
+
+    // Перекрасить палитру HSSF под наш HEX и вернуть индекс
+    private short ensureCustomColor(HSSFWorkbook wb, String hex, short reuseIndex) {
+        int[] rgb = hexToRgb(hex);
+        HSSFPalette pal = wb.getCustomPalette();
+        HSSFColor c = pal.findColor((byte) rgb[0], (byte) rgb[1], (byte) rgb[2]);
+        if (c == null) {
+            pal.setColorAtIndex(reuseIndex, (byte) rgb[0], (byte) rgb[1], (byte) rgb[2]);
+            return reuseIndex;
+        }
+        return c.getIndex();
+    }
+
+    private void setWhiteBoldFont(HSSFWorkbook wb, CellStyle s) {
+        Font f = wb.createFont();
+        f.setBold(true);
+        f.setColor(IndexedColors.WHITE.getIndex());
+        s.setFont(f);
+    }
+
+    private int[] hexToRgb(String hex) {
+        String h = hex.startsWith("#") ? hex.substring(1) : hex;
+        int r = Integer.parseInt(h.substring(0, 2), 16);
+        int g = Integer.parseInt(h.substring(2, 4), 16);
+        int b = Integer.parseInt(h.substring(4, 6), 16);
+        return new int[]{r, g, b};
+    }
+
+    private CellStyle baseTextStyle(HSSFWorkbook wb, DataFormat dfmt,
+                                    HorizontalAlignment align, boolean bold, IndexedColors bg) {
+        CellStyle s = wb.createCellStyle();
+        s.setDataFormat(dfmt.getFormat("@"));
+        s.setAlignment(align);
+        s.setVerticalAlignment(VerticalAlignment.CENTER);
+        s.setWrapText(false);
+        if (bg != null && bg != IndexedColors.WHITE) {
+            s.setFillForegroundColor(bg.getIndex());
+            s.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        }
+        Font f = wb.createFont();
+        f.setBold(bold);
+        s.setFont(f);
+        addThinBorders(s);
+        return s;
+    }
+
+    private void setWhiteFont(CellStyle s, HSSFWorkbook wb) {
+        Font f = wb.createFont();
+        f.setBold(true);
+        f.setColor(IndexedColors.WHITE.getIndex());
+        s.setFont(f);
+    }
+
+    private void addThinBorders(CellStyle s) {
+        s.setBorderTop(BorderStyle.THIN);
+        s.setBorderBottom(BorderStyle.THIN);
+        s.setBorderLeft(BorderStyle.THIN);
+        s.setBorderRight(BorderStyle.THIN);
+    }
+
+    private boolean isParentRow(int amountCol, int row) {
+        Component comp = rightLay.getComponent(amountCol, row);
+        return comp instanceof Label
+                && myUI.getMessage(Messages.Parent).equals(comp.getId());
+    }
+
+    private int writeRow(HSSFSheet sh, int r, CellStyle style, String... vals) {
+        Row row = sh.createRow(r++);
+        for (int i = 0; i < vals.length; i++) put(row, i, vals[i], style);
+        return r;
+    }
+
+    private void put(Row row, int col, String val, CellStyle style) {
+        Cell c = row.createCell(col);
+        c.setCellStyle(style);
+        c.setCellValue(val == null ? "" : val);
+    }
+
+    private String safeStr(Object o) {
+        return o == null ? "" : String.valueOf(o);
+    }
+
+    private String formatDate(Date d) {
+        try {
+            return d == null ? "" : Settings.ymdf.format(d);
+        } catch (Exception e) {
+            return d.toString();
+        }
+    }
+
+    private boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
+    }
+
+    private String getText(Component comp) {
+        if (comp == null) return "";
+        if (comp instanceof Label) {
+            return ((Label) comp).getValue();
+        }
+        if (comp instanceof HorizontalLayout) {
+            StringBuilder sb = new StringBuilder();
+            HorizontalLayout hl = (HorizontalLayout) comp;
+            for (int i = 0; i < hl.getComponentCount(); i++) {
+                Component c = hl.getComponent(i);
+                if (c instanceof Label) {
+                    String v = ((Label) c).getValue();
+                    if (!isBlank(v)) {
+                        if (sb.length() > 0) sb.append(' ');
+                        sb.append(v);
+                    }
+                } else if (c instanceof TextField) {
+                    String v = ((TextField) c).getValue();
+                    if (!isBlank(v)) {
+                        if (sb.length() > 0) sb.append(' ');
+                        sb.append(v);
+                    }
+                }
+            }
+            return sb.toString().trim();
+        }
+        return "";
+    }
+
+    /**
+     * Значение суммы (Label с итого, либо TextField с конвертированным Double). Всегда строкой.
+     */
+    private String getValueText(Component comp) {
+        if (comp == null) return "";
+        try {
+            if (comp instanceof Label) {
+                return ((Label) comp).getValue();
+            }
+            if (comp instanceof TextField) {
+                TextField tf = (TextField) comp;
+                Object cv = tf.getConvertedValue();
+                if (cv instanceof Number) {
+                    return Settings.dFormat2.format(cv); // формат как в UI
+                }
+                String v = tf.getValue();
+                return v == null ? "" : v;
+            }
+        } catch (Exception ignore) {
+        }
+        return "";
     }
 }

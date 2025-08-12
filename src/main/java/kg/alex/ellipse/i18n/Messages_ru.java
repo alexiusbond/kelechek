@@ -602,6 +602,10 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {StudentId, "ИНН ученика"},
             {StudentsPossessive, "ученика"},
             {Age, "Возраст"},
+            {ReturnableAssetsUSD, "ВОЗВРАЩАЕМЫЕ АКТИВЫ (USD)"},
+            {ShortTermDebtsUSD, "КРАТКОСРОЧНЫЕ ЗАДОЛЖЕННОСТИ (USD)"},
+            {ProfitOfPreviousPeriods, "Прибыль прошлых периодов"},
+            {ProfitForPeriod, "Прибыль за период"},
     };
 
     @Override
