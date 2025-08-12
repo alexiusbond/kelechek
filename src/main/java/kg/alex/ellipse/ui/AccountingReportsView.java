@@ -59,9 +59,9 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmByDateReport)) {
             repTypeSelect.addItem(myUI.getMessage(Messages.ByDateReport));
         }
-        if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmSchoolAccountingReport)) {
+        /*if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmSchoolAccountingReport)) {
             repTypeSelect.addItem(myUI.getMessage(Messages.SchoolAccountingReport));
-        }
+        }*/
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmGeneralReport)) {
             repTypeSelect.addItem(myUI.getMessage(Messages.GeneralAccountingReport));
         }

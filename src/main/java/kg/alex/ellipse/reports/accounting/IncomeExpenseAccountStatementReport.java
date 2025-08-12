@@ -176,7 +176,7 @@ public class IncomeExpenseAccountStatementReport implements Button.ClickListener
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
                     dbat.exec_income_expense_account_statement(myUI, (Integer) categoriesTable.getValue(),
-                            fromDateDF.getValue(), tillDateDF.getValue(), dataTable,
+                            fromDateDF.getValue(), tillDateDF.getValue(), dataTable, (Integer) currencySelect.getValue(),
                             myUI.getUser().getSchool().getId());
 
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.Rate), Table.Align.RIGHT);

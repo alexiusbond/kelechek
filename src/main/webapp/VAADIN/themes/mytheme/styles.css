@@ -16223,6 +16223,10 @@ div.v-layout.v-horizontal.v-widget {
 	color: #455f2a;
 }
 
+.mytheme .v-label-lblBalance {
+	font-size: 13px;
+}
+
 .mytheme .v-label-lblSmall {
 	font-size: 11px;
 	padding: 3px 16px 3px 32px;

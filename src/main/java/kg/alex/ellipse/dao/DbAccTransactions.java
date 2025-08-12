@@ -549,12 +549,15 @@ public class DbAccTransactions extends BaseDb {
                 Settings.dFormat2.format(ttlInc - ttlExp));
     }
 
-    public double exec_income_expense_balance(int school_id, int acc_category_id, Date till) throws SQLException {
+    public double exec_income_expense_balance(int school_id, int acc_category_id, int currency_id, Date till) throws SQLException {
 
-        String sql = "SELECT " +
-                "IFNULL(SUM(IF(tr.acc_type_id = 1, IF(c.acc_currency_id != 1, tr.amount * tr.currency_rate, tr.amount), " +
-                "-IF(c.acc_currency_id != 1, tr.amount * tr.currency_rate, tr.amount))), 0.0) AS balance " +
-                "FROM acc_transactions AS tr " +
+        String sql = "SELECT ";
+        if (currency_id == 2) {
+            sql += "IFNULL(SUM(IF(tr.acc_type_id = 1, IF(c.acc_currency_id != 2, tr.amount / tr.currency_rate, tr.amount), -IF(c.acc_currency_id != 2, tr.amount / tr.currency_rate, tr.amount))), 0.0) AS balance ";
+        } else {
+            sql += "IFNULL(SUM(IF(tr.acc_type_id = 1, IF(c.acc_currency_id != 1, tr.amount * tr.currency_rate, tr.amount), -IF(c.acc_currency_id != 1, tr.amount * tr.currency_rate, tr.amount))), 0.0) AS balance ";
+        }
+        sql += "FROM acc_transactions AS tr " +
                 "LEFT JOIN acc_cashbox AS c ON c.id = tr.acc_cashbox_id " +
                 "WHERE tr.acc_category_id = ? AND date(tr.date_time) < ? and tr.school_id = ?";
 
@@ -564,7 +567,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(3, school_id);
         ResultSet result = stat.executeQuery();
 
-        while (result.next()) {
+        if (result.next()) {
             return result.getDouble("balance");
         }
         return 0.0;
@@ -583,12 +586,13 @@ public class DbAccTransactions extends BaseDb {
                 + "WHERE acr.acc_category_id = ? AND date(inv.creation_date) < ? AND inv.acc_invoice_type_id = 1 "
                 + "and inv.school_id = ?) - (SELECT ";
         if (currency_id == 2) {
-            sql += "IFNULL(SUM(IF(tr.acc_currency_id != 2, tr.amount / tr.currency_rate, tr.amount)), 0.0) AS amount ";
+            sql += "IFNULL(SUM(IF(c.acc_currency_id != 2, tr.amount / tr.currency_rate, tr.amount)), 0.0) AS amount ";
         } else {
-            sql += "IFNULL(SUM(IF(tr.acc_currency_id != 1, tr.amount * tr.currency_rate, tr.amount)), 0.0) AS amount ";
+            sql += "IFNULL(SUM(IF(c.acc_currency_id != 1, tr.amount * tr.currency_rate, tr.amount)), 0.0) AS amount ";
         }
-        sql += "FROM acc_transactions AS tr WHERE tr.acc_category_id = ? AND date(tr.date_time) < ? and tr.school_id = ?) "
-                + "as balance";
+        sql += "FROM acc_transactions AS tr " +
+                "LEFT JOIN acc_cashbox AS c ON c.id = tr.acc_cashbox_id " +
+                "WHERE tr.acc_category_id = ? AND date(tr.date_time) < ? and tr.school_id = ?) as balance";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acc_category_id);
@@ -620,8 +624,9 @@ public class DbAccTransactions extends BaseDb {
                 + "AND inv.school_id = ? AND inv.acc_invoice_type_id = 1 "
                 + "UNION ALL "
                 + "SELECT tr.date_time AS creation_date, "
-                + "IF(tr.acc_currency_id != ?, tr.amount " + sign + " tr.currency_rate, tr.amount) AS amount, "
+                + "IF(c.acc_currency_id != ?, tr.amount " + sign + " tr.currency_rate, tr.amount) AS amount, "
                 + "tr.currency_rate as rate, tr.note as note, ? as type FROM acc_transactions AS tr "
+                + "LEFT JOIN acc_cashbox AS c ON tr.acc_cashbox_id = c.id "
                 + "WHERE tr.acc_category_id = ? AND (date(tr.date_time) BETWEEN ? AND ?) AND tr.school_id = ? ) t "
                 + "ORDER BY creation_date";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -699,21 +704,26 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public void exec_income_expense_account_statement(MyVaadinUI myUI, int acc_category_id, Date from,
-                                                      Date till, Table t, int school_id) throws SQLException {
-        String sql = "SELECT t.date_time AS creation_date, "
-                + "IF(c.acc_currency_id != 1, t.amount * t.currency_rate, t.amount) AS amount, "
-                + "t.currency_rate as rate, t.note as note, if(t.acc_type_id = 1, ?, ?) as type "
-                + "FROM acc_transactions AS t "
-                + "LEFT JOIN acc_cashbox as c on c.id = t.acc_cashbox_id "
-                + "WHERE t.acc_category_id = ? AND (date(t.date_time) BETWEEN ? AND ?) AND t.school_id = ? "
-                + "ORDER BY t.date_time";
+                                                      Date till, Table t, int currency_id, int school_id) throws SQLException {
+        String sign = "/";
+        if (currency_id == 1) {
+            sign = "*";
+        }
+        String sql = "SELECT tr.date_time AS creation_date, "
+                + "IF(c.acc_currency_id != ?, tr.amount " + sign + " tr.currency_rate, tr.amount) AS amount, "
+                + "tr.currency_rate as rate, tr.note as note, if(tr.acc_type_id = 1, ?, ?) as type "
+                + "FROM acc_transactions AS tr "
+                + "LEFT JOIN acc_cashbox as c on c.id = tr.acc_cashbox_id "
+                + "WHERE tr.acc_category_id = ? AND (date(tr.date_time) BETWEEN ? AND ?) AND tr.school_id = ? "
+                + "ORDER BY tr.date_time";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, myUI.getMessage(Messages.Income));
-        stat.setString(2, myUI.getMessage(Messages.Expense));
-        stat.setInt(3, acc_category_id);
-        stat.setDate(4, new java.sql.Date(from.getTime()));
-        stat.setDate(5, new java.sql.Date(till.getTime()));
-        stat.setInt(6, school_id);
+        stat.setInt(1, currency_id);
+        stat.setString(2, myUI.getMessage(Messages.Income));
+        stat.setString(3, myUI.getMessage(Messages.Expense));
+        stat.setInt(4, acc_category_id);
+        stat.setDate(5, new java.sql.Date(from.getTime()));
+        stat.setDate(6, new java.sql.Date(till.getTime()));
+        stat.setInt(7, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
@@ -724,7 +734,7 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(Messages.Expense), Double.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Balance), String.class, "0.00");
         int i = 0;
-        double currentBalance = exec_income_expense_balance(school_id, acc_category_id, from), totalIncomes = 0.0;
+        double currentBalance = exec_income_expense_balance(school_id, acc_category_id, currency_id, from), totalIncomes = 0.0;
         double prevBalance = currentBalance;
         Item item;
 
@@ -776,28 +786,34 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public void exec_incomes_expenses(MyVaadinUI myUI, FilterTreeTable categoriesTable, Date from, Date till,
-                                      FormattedTreeTable t, int school_id) throws SQLException {
+                                      FormattedTreeTable t, int currency_id, int school_id) throws SQLException {
+        String sign = "/";
+        if (currency_id == 1) {
+            sign = "*";
+        }
         Set<Integer> selectedCategoryIds = Settings.getChild_ids(
                 (HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
         String sql = "SELECT cat.id, IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code) AS code, cat.name AS name, " +
-                "SUM(IF(t.acc_type_id = 1, IF(c.acc_currency_id != 1, t.amount * t.currency_rate, t.amount),0.0)) AS incomes, " +
-                "SUM(IF(t.acc_type_id = 2, IF(c.acc_currency_id != 1, t.amount * t.currency_rate, t.amount),0.0)) AS expenses " +
-                "FROM acc_transactions AS t " +
-                "left join acc_category as cat on cat.id = t.acc_category_id " +
-                "left join acc_cashbox as c on c.id = t.acc_cashbox_id " +
-                "WHERE t.school_id = ? AND t.acc_category_id IN (" + Settings.convertCollectionToStr(selectedCategoryIds) +
+                "SUM(IF(tr.acc_type_id = 1, IF(c.acc_currency_id != ?, tr.amount " + sign + " tr.currency_rate, tr.amount),0.0)) AS incomes, " +
+                "SUM(IF(tr.acc_type_id = 2, IF(c.acc_currency_id != ?, tr.amount " + sign + " tr.currency_rate, tr.amount),0.0)) AS expenses " +
+                "FROM acc_transactions AS tr " +
+                "left join acc_category as cat on cat.id = tr.acc_category_id " +
+                "left join acc_cashbox as c on c.id = tr.acc_cashbox_id " +
+                "WHERE tr.school_id = ? AND tr.acc_category_id IN (" + Settings.convertCollectionToStr(selectedCategoryIds) +
                 ") ";
         if (from != null && till != null) {
-            sql += "AND date(t.date_time) >= ? AND date(t.date_time) <= ? ";
+            sql += "AND date(tr.date_time) >= ? AND date(tr.date_time) <= ? ";
         } else if (from != null) {
-            sql += "AND date(t.date_time) >= ? ";
+            sql += "AND date(tr.date_time) >= ? ";
         } else if (till != null) {
-            sql += "AND date(t.date_time) <= ? ";
+            sql += "AND date(tr.date_time) <= ? ";
         }
         sql += " GROUP BY cat.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         int counter = 0;
+        stat.setInt(++counter, currency_id);
+        stat.setInt(++counter, currency_id);
         stat.setInt(++counter, school_id);
         if (from != null && till != null) {
             stat.setDate(++counter, new java.sql.Date(from.getTime()));
@@ -885,13 +901,13 @@ public class DbAccTransactions extends BaseDb {
         String sql = "SELECT cat.id, IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code) AS code, cat.name AS name, " +
                 "IFNULL(acr.amount_som, 0.0) - IFNULL(tr.amount_som, 0.0) AS remain_som, " +
                 "IFNULL(acr.amount_usd, 0.0) - IFNULL(tr.amount_usd, 0.0) AS remain_usd, " +
-                "IFNULL(IF((aacr.acc_currency_id <> 2), (aacr.amount / aacr.currency_rate), aacr.amount), 0.0) AS salary_usd, " +
-                "IFNULL(IF((aacr.acc_currency_id <> 1), (aacr.amount * aacr.currency_rate), aacr.amount), 0.0) AS salary_som " +
+                "IFNULL(IF((aacr.acc_currency_id != 2), (aacr.amount / aacr.currency_rate), aacr.amount), 0.0) AS salary_usd, " +
+                "IFNULL(IF((aacr.acc_currency_id != 1), (aacr.amount * aacr.currency_rate), aacr.amount), 0.0) AS salary_som " +
                 "FROM acc_category AS cat " +
                 "LEFT JOIN " +
                 "(SELECT inv.school_id AS school_id, acr.acc_category_id AS acc_category_id, " +
-                "IFNULL(SUM(IF((acr.acc_currency_id <> 2), (acr.amount / acr.currency_rate), acr.amount)), 0.0) AS amount_usd, " +
-                "IFNULL(SUM(IF((acr.acc_currency_id <> 1), (acr.amount * acr.currency_rate), acr.amount)), 0.0) AS amount_som, " +
+                "IFNULL(SUM(IF((acr.acc_currency_id != 2), (acr.amount / acr.currency_rate), acr.amount)), 0.0) AS amount_usd, " +
+                "IFNULL(SUM(IF((acr.acc_currency_id != 1), (acr.amount * acr.currency_rate), acr.amount)), 0.0) AS amount_som, " +
                 "MAX(inv.id) AS invoice_id FROM acc_transfers acr " +
                 "LEFT JOIN acc_invoice inv ON inv.id = acr.invoice_id AND inv.acc_invoice_type_id = 1 AND " +
                 "inv.school_id = ? ";
@@ -904,9 +920,10 @@ public class DbAccTransactions extends BaseDb {
         }
         sql += "GROUP BY acr.acc_category_id) AS acr ON acr.acc_category_id = cat.id " +
                 "LEFT JOIN " +
-                "(SELECT tr.school_id AS school_id, tr.acc_category_id AS acc_category_id, IFNULL(SUM(IF((tr.acc_currency_id <> 2), " +
-                "(tr.amount / tr.currency_rate), tr.amount)), 0.0) AS amount_usd, IFNULL(SUM(IF((tr.acc_currency_id <> 1), " +
+                "(SELECT tr.school_id AS school_id, tr.acc_category_id AS acc_category_id, IFNULL(SUM(IF((c.acc_currency_id != 2), " +
+                "(tr.amount / tr.currency_rate), tr.amount)), 0.0) AS amount_usd, IFNULL(SUM(IF((c.acc_currency_id != 1), " +
                 "(tr.amount * tr.currency_rate), tr.amount)), 0.0) AS amount_som FROM acc_transactions tr " +
+                "LEFT JOIN acc_cashbox as c ON c.id = tr.acc_cashbox_id " +
                 "WHERE tr.school_id = ? ";
         if (from != null && till != null) {
             sql += "AND tr.date_time >= ? AND tr.date_time <= ? ";
