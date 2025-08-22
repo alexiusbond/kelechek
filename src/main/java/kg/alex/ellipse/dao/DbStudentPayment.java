@@ -14,6 +14,8 @@ import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.reports.students.ClassPaymentsReport;
 import kg.alex.ellipse.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.ellipse.ui.StudentDefinitionView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -25,6 +27,8 @@ import java.util.Date;
 
 public class DbStudentPayment extends BaseDb {
 
+    static final Logger logger = LogManager.getLogger(DbStudentPayment.class);
+
     public DbStudentPayment() throws Exception {
         super();
     }
@@ -32,7 +36,8 @@ public class DbStudentPayment extends BaseDb {
     public StudentPayment exec_recount_payment(int stud_id, int year_id) throws SQLException {
         String sql = "SELECT sum(if(sp.payment_category_id != 3, " +
                 "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0.0)) - "
-                + "sum(if(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0.0)) as ttl_payment "
+                + "sum(if(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0.0)) as ttl_payment, "
+                + "sum(if(sp.payment_category_id = 1, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0.0)) as init_payment "
                 + "FROM student_payments as sp where sp.student_id = ? and year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
@@ -41,6 +46,7 @@ public class DbStudentPayment extends BaseDb {
         StudentPayment sp = new StudentPayment();
         if (result.next()) {
             sp.setTtl_pay(result.getDouble("ttl_payment"));
+            sp.setInit_pay(result.getDouble("init_payment"));
         }
         return sp;
     }
@@ -50,9 +56,11 @@ public class DbStudentPayment extends BaseDb {
 
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT sp.id, sp.amount, sp.dollar_rate, sp.payment_type_id, sp.payment_category_id, "
-                + "sp.who_paid, sp.note, sp.modification_date, bank_transaction_id, sp.acc_currency_id, "
-                + "if(sp.modification_date <= concat(date(now()), ' 19:00:00') or bank_transaction_id is not null,true, false) as isDisabled "
-                + "FROM student_payments as sp where sp.student_id = ? and sp.year_id = ?";
+                + "sp.who_paid, sp.note, sp.modification_date, bank_transaction_id, sp.acc_currency_id, c.id, "
+                + "if(sp.modification_date <= concat(date(now()), ' 19:00:00') or bank_transaction_id is not null, true, false) as isDisabled "
+                + "FROM student_payments as sp "
+                + "LEFT JOIN acc_cashbox as c on c.acc_currency_id = sp.acc_currency_id and c.payment_type_id = sp.payment_type_id "
+                + "where sp.student_id = ? and sp.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -79,42 +87,42 @@ public class DbStudentPayment extends BaseDb {
             if (!currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actModify)) {
                 isDisabled = true;
             }
-            ComboBox cb = dw.createComboboxPayment(result.getInt("sp.payment_category_id"),
-                    myUI.getMessage(Messages.PaymentCategoryType), id);
-            cb.setId(myUI.getMessage(Messages.Payments));
-            cb.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(cb);
-            item.getItemProperty(myUI.getMessage(Messages.PaymentType)).setValue(
-                    dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(Messages.PaymentType), id,
-                            Settings.dbPaymentType, false, false, false, isDisabled));
-            TextField amountUSDTf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(Messages.AmountUSD), id);
-            amountUSDTf.setId(myUI.getMessage(Messages.Payments));
-            amountUSDTf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(Messages.AmountUSD)).setValue(amountUSDTf);
-            TextField amountKGSTf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(Messages.AmountKGS), id);
-            amountKGSTf.setId(myUI.getMessage(Messages.Payments));
-            amountKGSTf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(Messages.AmountKGS)).setValue(amountKGSTf);
-            if (result.getInt("sp.acc_currency_id") == 1) {
-                amountKGSTf.setRequired(true);
-                amountUSDTf.removeValueChangeListener(dw);
-                amountUSDTf.setValue(null);
-                amountUSDTf.setRequired(false);
-                amountUSDTf.addValueChangeListener(dw);
-            } else {
-                amountUSDTf.setRequired(true);
-                amountKGSTf.removeValueChangeListener(dw);
-                amountKGSTf.setValue(null);
-                amountKGSTf.setRequired(false);
-                amountKGSTf.addValueChangeListener(dw);
+            ComboBox cb = dw.createCombobox(0, myUI.getMessage(Messages.PaymentCategoryType), null, null, isDisabled);
+            try {
+                DbPaymentCategory dbp = new DbPaymentCategory();
+                dbp.connect();
+                cb.setContainerDataSource(dbp.exec_for_select(myUI, true));
+                dbp.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
             }
+            cb.setValue(result.getInt("sp.payment_category_id"));
+            cb.setId(myUI.getMessage(Messages.Payments));
+            item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(cb);
+            cb = dw.createCombobox(0, myUI.getMessage(Messages.CashBox), id, null, isDisabled);
+            try {
+                DbCashbox dbc = new DbCashbox();
+                dbc.connect();
+                cb.setContainerDataSource(dbc.execSQLForStudentPayments(myUI));
+                dbc.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+            cb.setValue(result.getInt("c.id"));
+            item.getItemProperty(myUI.getMessage(Messages.CashBox)).setValue(cb);
+            TextField amountTf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(Messages.AmountUSD), id);
+            amountTf.setId(myUI.getMessage(Messages.Payments));
+            amountTf.setEnabled(!isDisabled);
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(amountTf);
             TextField tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), 4, myUI.getMessage(Messages.Rate), id);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(tf);
             tf = dw.createTextField(result.getString("sp.who_paid"), myUI.getMessage(Messages.WhoPaid), id,
                     new StringLengthValidator(
-                    myUI.getMessage(Messages.NotificationWrongValue),
-                    1, 120, false),  true);
+                            myUI.getMessage(Messages.NotificationWrongValue),
+                            1, 120, false), true);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(tf);
             DateField df = dw.createDateField(result.getTimestamp("sp.modification_date"),
@@ -141,10 +149,6 @@ public class DbStudentPayment extends BaseDb {
                     myUI.getMessage(Messages.Invoice), FontAwesome.PRINT);
             b.setEnabled(currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actPrint));
             item.getItemProperty(myUI.getMessage(Messages.Print)).setValue(b);
-            item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("sp.acc_currency_id"));
-            item.getItemProperty(Settings.old_amount).setValue(result.getDouble("sp.amount"));
-            item.getItemProperty(Settings.old_date).setValue(result.getDate("sp.modification_date"));
-            item.getItemProperty(Settings.old_category).setValue(result.getInt("sp.payment_category_id"));
         }
         return container;
     }
@@ -347,7 +351,7 @@ public class DbStudentPayment extends BaseDb {
         return container;
     }
 
-    public double exec_get_difference(int st_id, int year_id ) throws SQLException {
+    public double exec_get_difference(int st_id, int year_id) throws SQLException {
         double ip = 0;
         String sql = "SELECT ifnull(SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - "
                 + "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)), 0.0)  as total "
@@ -487,5 +491,31 @@ public class DbStudentPayment extends BaseDb {
         t.setColumnFooter(myUI.getMessage(Messages.Amount), Settings.dFormat2.format(totalAmount));
         t.setColumnFooter(myUI.getMessage(Messages.TransactionsQuantity), totalQuantity + "");
         return container;
+    }
+
+    public StudentPayment exec_get_init_payment(int st_id, int year_id) throws SQLException {
+        StudentPayment sp = null;
+        String sql = "SELECT sp.id, sp.amount, sp.modification_date, sp.dollar_rate, "
+                + "sp.student_id, sp.year_id, sp.payment_type_id,"
+                + "sp.payment_category_id, sp.who_paid, sp.note FROM student_payments as sp "
+                + "where sp.student_id = ? and sp.year_id = ? and sp.payment_category_id = 1";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, st_id);
+        stat.setInt(2, year_id);
+        ResultSet result = stat.executeQuery();
+        if (result.next()) {
+            sp = new StudentPayment();
+            sp.setId(result.getInt("sp.id"));
+            sp.setAmount(result.getDouble("sp.amount"));
+            sp.setModification_date(result.getTimestamp("sp.modification_date"));
+            sp.setRate(result.getDouble("sp.dollar_rate"));
+            sp.setStudent_id(result.getInt("sp.student_id"));
+            sp.setYear_id(result.getInt("sp.year_id"));
+            sp.setPayment_type_id(result.getInt("sp.payment_type_id"));
+            sp.setPayment_cat_type_id(result.getInt("sp.payment_category_id"));
+            sp.setWho_paid(result.getString("sp.who_paid"));
+            sp.setNote(result.getString("sp.note"));
+        }
+        return sp;
     }
 }

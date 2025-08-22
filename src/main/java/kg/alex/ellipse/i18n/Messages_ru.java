@@ -299,6 +299,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {NotificationUploadDocument, "Загрузите справку для подтверждения скидки"},
             {Main, "Основной"},
             {AddRecord, "Добавить запись"},
+            {AutoInstallment, "Авто разделение"},
             {FamilyInfo, "Информация о семье"},
             {Id, "Id"},
             {Amount, "Сумма"},

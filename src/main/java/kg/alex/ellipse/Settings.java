@@ -97,7 +97,6 @@ public class Settings implements Serializable {
     public static final String columnSpouseWork_places = "spouse_work_places";
     public static final String columnWork_places = "work_places";
     public static final String order_id = "order_id";
-    public static final String order_number = "order_number";
     public static final String max = "max";
     public static final String min = "min";
     public static final String class_order_number = "class_order_number";
@@ -129,7 +128,6 @@ public class Settings implements Serializable {
     public static final String dbEmployeeWorkExtraPosition = "hr_employee_work_extra_positions";
     public static final String dbEmployeeSpouse = "hr_employee_spouse";
     public static final String dbCertificateTable = "hr_certificate";
-    public static final String dbAttachmentsTable = "attachments";
     public static final String dbEmployeeMessageTable = "employee_message";
     public static final String dbQuestion = "hr_question";
     public static final String dbActivity_status = "activity_status";
@@ -143,11 +141,11 @@ public class Settings implements Serializable {
     public static final String dbEduLevel = "hr_education_level";
     public static final String dbHealthStatus = "hr_health_status";
     public static final String dbAcc_currency = "acc_currency";
-    public static final String dbAccCashBox = "acc_cashbox";
     public static final String acc_currency_id = "acc_currency_id";
     public static final String acc_cashbox_id = "acc_cashbox_id";
     public static final String dbAcc_transactions = "acc_transactions";
     public static final String dbPaymentType = "payment_type";
+    public static final String payment_type_id = "payment_type_id";
     public static final String dbWorking_status = "working_status";
     public static final String dbClass_name = "class_name";
     public static final String dbColumnName = "name";
@@ -347,9 +345,6 @@ public class Settings implements Serializable {
     public static final String entering_year_id = "entering_year_id";
     public static final String hr_position_category_id = "hr_position_category_id";
     public static final String dbColumnStudent_payments_id = "student_payments_id";
-    public static final String old_amount = "old_amount";
-    public static final String old_date = "old_date";
-    public static final String old_category = "old_category";
     public static final String download_button = "download_button";
     public static final String cancel_upload_button = "cancel_upload_button";
     public static final String KGS = "KGS";

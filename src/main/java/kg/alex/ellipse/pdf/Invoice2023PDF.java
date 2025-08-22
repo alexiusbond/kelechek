@@ -138,10 +138,10 @@ public class Invoice2023PDF {
                 }
                 if (invoiceInfo.getWhoPaidFullName() != null && !invoiceInfo.getWhoPaidFullName().isEmpty()) {
                     nameInvPar.add(new Chunk(invoiceInfo.getLogin() + ", " + invoiceInfo.getClass_name() + ", "
-                                             + invoiceInfo.getStudentFullName() + " (" + invoiceInfo.getWhoPaidFullName() + ")", normal_font));
+                            + invoiceInfo.getStudentFullName() + " (" + invoiceInfo.getWhoPaidFullName() + ")", normal_font));
                 } else {
                     nameInvPar.add(new Chunk(invoiceInfo.getLogin() + ", " + invoiceInfo.getClass_name() + ", "
-                                             + invoiceInfo.getStudentFullName(), normal_font));
+                            + invoiceInfo.getStudentFullName(), normal_font));
                 }
                 cell = new PdfPCell(nameInvPar);
                 cell.setBorder(Rectangle.NO_BORDER);
@@ -183,13 +183,8 @@ public class Invoice2023PDF {
                 double rate = invoiceInfo.getKurs();
                 sumPar.add(new Chunk("Сумма цифрами: ", bold_font));
                 if (rate != 0) {
-                    if (invoiceInfo.getCurrency_id() == 1) {
-                        sumPar.add(new Chunk(Settings.dFormat2.format(Math.round(invoiceInfo.getAmount()))
-                                             + " сом (" + Settings.dFormat2.format(invoiceInfo.getAmount() / rate) + " USD)", underlined_font));
-                    } else {
-                        sumPar.add(new Chunk(Settings.dFormat2.format(Math.round(invoiceInfo.getAmount() * rate))
-                                             + " сом (" + Settings.dFormat2.format(invoiceInfo.getAmount()) + " USD)", underlined_font));
-                    }
+                    sumPar.add(new Chunk(Settings.dFormat2.format(Math.round(invoiceInfo.getAmount()))
+                            + " " + paymentCurrency, underlined_font));
                 }
                 cell = new PdfPCell(sumPar);
                 cell.setBorder(Rectangle.NO_BORDER);
@@ -202,13 +197,8 @@ public class Invoice2023PDF {
                 WritableSummRu convertToLetters = new WritableSummRuSOM();
                 Paragraph sumLetterPar = new Paragraph();
                 sumLetterPar.add(new Chunk("Сумма прописью: ", bold_font));
-                if (invoiceInfo.getCurrency_id() == 1) {
-                    sumLetterPar.add(new Chunk(convertToLetters.numberToString(
-                            Math.round(invoiceInfo.getAmount())), normal_font));
-                } else {
-                    sumLetterPar.add(new Chunk(convertToLetters.numberToString(
-                            Math.round(invoiceInfo.getAmount() * rate)), normal_font));
-                }
+                sumLetterPar.add(new Chunk(convertToLetters.numberToString(
+                        Math.round(invoiceInfo.getAmount())), normal_font));
                 cell = new PdfPCell(sumLetterPar);
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setPaddingTop(3);
@@ -333,7 +323,7 @@ public class Invoice2023PDF {
 
         String nameOf = "Invoice";
         StreamResource resource = new StreamResource(source1, nameOf
-                                                              + System.currentTimeMillis() + ".pdf");
+                + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
         myUI.getPage().
 

@@ -1575,7 +1575,7 @@ public class DbStudentContract extends BaseDb {
                      + "month(pay.modification_date) as mnth from student_payments as pay "
                      + "left join student on student.id = pay.student_id "
                      + "left join school as sch on sch.id = student.school_id "
-                     + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                     + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = student.id and vcs.year_id = ? "
                      + "where pay.year_id = ? and sch.id in (" + school_ids + ") "
                      + "AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
                      + "group by month(pay.modification_date)) as p_temp on p_temp.mnth = months.id "

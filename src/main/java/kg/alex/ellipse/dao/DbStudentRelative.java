@@ -39,11 +39,11 @@ public class DbStudentRelative extends BaseDb {
                                            StudentDefinitionView dw) throws SQLException {
 
         String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.given_by, sr.issue_date, "
-                     + "sr.phone, sr.address, sr.passport, sr.is_main, sr.relatives_id, "
-                     + "a.id, a.name, a.extension, a.unique_name "
-                     + "FROM student_relatives as sr "
-                     + "left join attachments as a on a.id = sr.attachment_id "
-                     + "where sr.student_id = ?";
+                + "sr.phone, sr.address, sr.passport, sr.is_main, sr.relatives_id, "
+                + "a.id, a.name, a.extension, a.unique_name "
+                + "FROM student_relatives as sr "
+                + "left join attachments as a on a.id = sr.attachment_id "
+                + "where sr.student_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         ResultSet result = stat.executeQuery();
@@ -143,7 +143,7 @@ public class DbStudentRelative extends BaseDb {
             item.getItemProperty(myUi.getMessage(Messages.RelativeType)).setValue(
                     dw.createCombobox(result.getInt("sr.relatives_id"),
                             myUi.getMessage(Messages.RelativeType),
-                            id, Settings.dbRelatives, false, false, false, false));
+                            id, Settings.dbRelatives,  false));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
         }
         return container;
@@ -168,9 +168,9 @@ public class DbStudentRelative extends BaseDb {
 
     public int exec_insert(StudentRelative sr) throws SQLException {
         String sql = "INSERT INTO student_relatives (student_id, fullname, "
-                     + "given_by, phone, address, passport, is_main, "
-                     + "relatives_id, issue_date, attachment_id) "
-                     + "VALUES(?,?,?,?,?,?,?,?,?,?)";
+                + "given_by, phone, address, passport, is_main, "
+                + "relatives_id, issue_date, attachment_id) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sr.getStudent_id());
         stat.setString(2, sr.getFullName());
@@ -195,9 +195,9 @@ public class DbStudentRelative extends BaseDb {
 
     public int exec_update(StudentRelative sr) throws SQLException {
         String sql = "update student_relatives set student_id = ?, "
-                     + "fullname = ?, given_by = ?, phone = ?, address = ?, "
-                     + "passport = ?, is_main = ?, relatives_id = ?, issue_date = ?, "
-                     + "attachment_id = ? WHERE id = ?";
+                + "fullname = ?, given_by = ?, phone = ?, address = ?, "
+                + "passport = ?, is_main = ?, relatives_id = ?, issue_date = ?, "
+                + "attachment_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sr.getStudent_id());
         stat.setString(2, sr.getFullName());

@@ -94,8 +94,7 @@ public class DbStudentAccessories extends BaseDb {
                             Settings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUi.getMessage(Messages.Year)).setValue(
                     dw.createCombobox(result.getInt("sa.year_id"),
-                            myUi.getMessage(Messages.Year), id, Settings.dbYear,
-                            false, false, false, false));
+                            myUi.getMessage(Messages.Year), id, Settings.dbYear, false));
             item.getItemProperty(myUi.getMessage(Messages.Materials)).setValue(
                     dw.createComboboxMultiAcs(result.getString("accessories"), cat_id));
         }

@@ -18,10 +18,19 @@ public class ContractInfo implements Serializable {
     private String totalPayments;
     private String totalInstallments;
     private Double left;
+    private Double initialPayment;
     private Double net;
     private int students;
     private int contractNumber;
     private Date creationDate;
+
+    public Double getInitialPayment() {
+        return initialPayment;
+    }
+
+    public void setInitialPayment(Double initialPayment) {
+        this.initialPayment = initialPayment;
+    }
 
     public String getCurrency() {
         return currency;

@@ -19,6 +19,7 @@ public class StudentPayment implements Serializable {
     private double rate;
     private int payment_type_id;
     private int currency_id;
+    private int cashBox_id;
     private int payment_cat_type_id;
     private int employee_id;
     private int school_id;
@@ -26,6 +27,14 @@ public class StudentPayment implements Serializable {
     private String note;
     private String noteForCashBox;
     private Date modification_date;
+
+    public int getCashBox_id() {
+        return cashBox_id;
+    }
+
+    public void setCashBox_id(int cashBox_id) {
+        this.cashBox_id = cashBox_id;
+    }
 
     public int getCurrency_id() {
         return currency_id;

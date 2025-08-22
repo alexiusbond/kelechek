@@ -303,6 +303,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String NotificationUploadDocument = generateId();
     public static final String Main = generateId();
     public static final String AddRecord = generateId();
+    public static final String AutoInstallment = generateId();
     public static final String FamilyInfo = generateId();
     public static final String Search = generateId();
     public static final String ContactInfo = generateId();

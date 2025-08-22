@@ -42,6 +42,34 @@ public class DbCashbox extends BaseDb {
         return container;
     }
 
+    public IndexedContainer execSQLForStudentPayments(MyVaadinUI myUi)
+            throws SQLException {
+
+        String sql = "SELECT c.id, c.name, c.acc_currency_id, c.payment_type_id, cur.name, p.name FROM acc_cashbox as c " +
+                "LEFT JOIN acc_currency as cur on cur.id = c.acc_currency_id " +
+                "LEFT JOIN payment_type as p on p.id = c.payment_type_id " +
+                "where c.payment_type_id is not null";
+
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        System.out.println(stat);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Currency), String.class, null);
+        container.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
+        container.addContainerProperty(Settings.payment_type_id, Integer.class, 0);
+        container.addContainerProperty(myUi.getMessage(Messages.PaymentType), String.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("c.id"));
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUi.getMessage(Messages.Currency)).setValue(result.getString("cur.name"));
+            item.getItemProperty(myUi.getMessage(Messages.PaymentType)).setValue(result.getString("p.name"));
+            item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("c.acc_currency_id"));
+            item.getItemProperty(Settings.payment_type_id).setValue(result.getInt("c.payment_type_id"));
+        }
+        return container;
+    }
 
     public CashBox getCashboxByCurrencyAndType(int currencyId, int paymentTypeId)
             throws SQLException {

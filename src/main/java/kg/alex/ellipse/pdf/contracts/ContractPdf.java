@@ -83,9 +83,9 @@ public class ContractPdf {
                 Paragraph p = new Paragraph();
                 p.add(new Phrase(studentInfo.getSchool().getName_kg(), captionBoldFont));
                 p.add(new Phrase("\n\nДареги: ш. Бишкек, к. Курулуш шаарчасы 9,\n" +
-                                 "720016\n" +
-                                 "Тел: +996 (558) 250 250, +996 (508) 250 250\n" +
-                                 "Эл. почтасы: ellipse.bishkek@gmail.com", headerBoldFont));
+                        "720016\n" +
+                        "Тел: +996 (558) 250 250, +996 (508) 250 250\n" +
+                        "Эл. почтасы: ellipse.bishkek@gmail.com", headerBoldFont));
                 tableHeader.addCell(p);
 
                 try {
@@ -106,9 +106,9 @@ public class ContractPdf {
                 p = new Paragraph();
                 p.add(new Phrase(studentInfo.getSchool().getName_ru(), captionBoldFont));
                 p.add(new Phrase("\n\nАдрес: г. Бишкек, ул. Городок Строителей 9,\n" +
-                                 "720016\n" +
-                                 "Тел: +996 (558) 250 250, +996 (508) 250 250\n" +
-                                 "Эл. почта: ellipse.bishkek@gmail.com", headerBoldFont));
+                        "720016\n" +
+                        "Тел: +996 (558) 250 250, +996 (508) 250 250\n" +
+                        "Эл. почта: ellipse.bishkek@gmail.com", headerBoldFont));
                 tableHeader.addCell(p);
 
                 document.add(tableHeader);
@@ -139,8 +139,8 @@ public class ContractPdf {
 
                 Paragraph spr = new Paragraph();
                 spr.add(new Phrase("ДОГОВОР № "
-                                   + String.format("%07d", studentInfo.getContractInfo().getContractNumber()) + " на " + studentInfo.getYear().getName()
-                                   + " учебный год \nоб оказании платных образовательных услуг", captionBoldFont));
+                        + String.format("%07d", studentInfo.getContractInfo().getContractNumber()) + " на " + studentInfo.getYear().getName()
+                        + " учебный год \nоб оказании платных образовательных услуг", captionBoldFont));
                 spr.add(Chunk.NEWLINE);
 
                 spr.setAlignment(Element.ALIGN_CENTER);
@@ -152,7 +152,7 @@ public class ContractPdf {
                 try {
                     boolean isFeminine = studentInfo.getDirector().getGender_id() == 2;
                     fullName = dcl.DeclineSurnameGenitive(studentInfo.getDirector().getSurname(), isFeminine)
-                               + " " + dcl.DeclineNameGenitive(studentInfo.getDirector().getName(), isFeminine, false);
+                            + " " + dcl.DeclineNameGenitive(studentInfo.getDirector().getName(), isFeminine, false);
                     if (studentInfo.getDirector().getMiddle_name() != null && !studentInfo.getDirector().getMiddle_name().isEmpty()) {
                         fullName += " " + dcl.DeclinePatronymicGenitive(studentInfo.getDirector().getMiddle_name(),
                                 null, isFeminine, false);
@@ -166,10 +166,10 @@ public class ContractPdf {
                 try {
                     boolean isFeminine = studentInfo.getStudent().getGender_id() == 2;
                     studentFullName = dcl.DeclineSurnameGenitive(studentInfo.getStudent().getSurname(), isFeminine) + " "
-                                      + dcl.DeclineNameGenitive(studentInfo.getStudent().getName(), isFeminine, false);
+                            + dcl.DeclineNameGenitive(studentInfo.getStudent().getName(), isFeminine, false);
                     if (!studentInfo.getStudent().getMiddle_name().isEmpty()) {
                         studentFullName = studentFullName + " "
-                                          + dcl.DeclinePatronymicGenitive(studentInfo.getStudent().getMiddle_name(),
+                                + dcl.DeclinePatronymicGenitive(studentInfo.getStudent().getMiddle_name(),
                                 null, isFeminine, false);
                     }
                 } catch (Exception e) {
@@ -185,8 +185,8 @@ public class ContractPdf {
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase(studentInfo.getSchool().getName_ru().replace("ОсОО", "Общество с ограниченной ответственностью"), ordBoldItalicFont));
                 paragraph.add(new Phrase(", именуемая в дальнейшем «Школа», в лице директора " + fullName + ", действующего на основании  Устава, с одной стороны, и "
-                                         + studentInfo.getMainRelative().getFullName() + ", являющаяся(щийся) родителем или законным представителем «Учащегося» "
-                                         + studentFullName + ", именуемый в дальнейшем «Родитель» с другой стороны, в интересах обучающегося, в соответствии с пунктом 1 статьи 14 Закона Кыргызской Республики «Об образовании», заключили настоящий Договор о нижеследующем: ", ordFont));
+                        + studentInfo.getMainRelative().getFullName() + ", являющаяся(щийся) родителем или законным представителем «Учащегося» "
+                        + studentFullName + ", именуемый в дальнейшем «Родитель» с другой стороны, в интересах обучающегося, в соответствии с пунктом 1 статьи 14 Закона Кыргызской Республики «Об образовании», заключили настоящий Договор о нижеследующем: ", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -429,7 +429,7 @@ public class ContractPdf {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("5. СРОК ДЕЙСТВИЯ ДОГОВОРА, ПОРЯДОК ИЗМЕНЕНИЯ,\n" +
-                                         "ДОПОЛНЕНИЯ И РАСТОРЖЕНИЯ", ordBoldFont));
+                        "ДОПОЛНЕНИЯ И РАСТОРЖЕНИЯ", ordBoldFont));
                 paragraph.setAlignment(Element.ALIGN_CENTER);
                 document.add(paragraph);
 
@@ -500,11 +500,11 @@ public class ContractPdf {
                 for (int i = 0; i < studentInfo.getRelatives().size(); i++) {
                     if (i == 0) {
                         p.add(new Phrase(studentInfo.getRelatives().get(i).getPhone() +
-                                         " (" + studentInfo.getRelatives().get(i).getRelativeTitle() + ")", ordFont));
+                                " (" + studentInfo.getRelatives().get(i).getRelativeTitle() + ")", ordFont));
                     } else {
                         p.add(new Phrase("         "
-                                         + studentInfo.getRelatives().get(i).getPhone() +
-                                         " (" + studentInfo.getRelatives().get(i).getRelativeTitle() + ")", ordFont));
+                                + studentInfo.getRelatives().get(i).getPhone() +
+                                " (" + studentInfo.getRelatives().get(i).getRelativeTitle() + ")", ordFont));
                     }
                     p.add(new Phrase(" \n\n", tinyFont));
                 }
@@ -589,7 +589,7 @@ public class ContractPdf {
                 p.setIndentationRight(30);
                 for (StudentRelative studentRelative : studentInfo.getRelatives()) {
                     p.add(new Phrase("Родитель: " + studentRelative.getFullName()
-                                     + " (" + studentRelative.getRelativeTitle() + ")", ordFont));
+                            + " (" + studentRelative.getRelativeTitle() + ")", ordFont));
                     p.add(Chunk.NEWLINE);
                 }
                 p.add(new Phrase("Ученик: " + studentFullName + " " + studentInfo.getStudent().getClass_name() + " класс.", ordFont));
@@ -598,7 +598,7 @@ public class ContractPdf {
                 p.add(new Phrase("Стоимость обучения:", ordBoldUnderlineFont));
                 p.add(Chunk.NEWLINE);
                 p.add(new Phrase(studentInfo.getContractInfo().getContractTitle()
-                                 + ": " + Settings.dFormat2.format(studentInfo.getContractInfo().getContract()) + " сом.", ordFont));
+                        + ": " + Settings.dFormat2.format(studentInfo.getContractInfo().getContract()) + " сом.", ordFont));
                 p.add(Chunk.NEWLINE);
                 p.add(new Phrase("Особые условия:", ordBoldUnderlineFont));
                 p.add(Chunk.NEWLINE);
@@ -617,7 +617,7 @@ public class ContractPdf {
                     p.add(Chunk.NEWLINE);
                 }
                 p.add(new Phrase("Окончательная сумма на " + studentInfo.getYear().getName() + " учебный год: " +
-                                 Settings.dFormat2.format(studentInfo.getContractInfo().getNet()) + " сом.", ordBoldFont));
+                        Settings.dFormat2.format(studentInfo.getContractInfo().getNet()) + " сом.", ordBoldFont));
                 p.add(Chunk.NEWLINE);
                 p.add(new Phrase("Предоплата 30%: " + Settings.dFormat2.format(studentInfo.getContractInfo().getPaid() == null ?
                         0 : studentInfo.getContractInfo().getPaid()) + " сом.", ordBoldFont));
@@ -640,12 +640,16 @@ public class ContractPdf {
                 tableDetails.getDefaultCell().setPaddingLeft(5f);
                 tableDetails.getDefaultCell().setPaddingBottom(5f);
                 List<Integer> list = (List<Integer>) instPlanCont.getItemIds();
+                int counter = 0;
                 for (int i = 0; i < instPlanCont.getItemIds().size(); i++) {
-                    tableDetails.addCell(new Phrase(dateRu.format(((DateField) instPlanCont.getContainerProperty(list.get(i),
-                            myUI.getMessage(Messages.Date)).getValue()).getValue()) + " - " + ((TextField) instPlanCont.getContainerProperty(list.get(i),
-                            myUI.getMessage(Messages.Amount)).getValue()).getValue() + " сом.", ordFont));
+                    if ((Integer) instPlanCont.getContainerProperty(list.get(i), Settings.status_id).getValue() == 1) {
+                        tableDetails.addCell(new Phrase(dateRu.format(((DateField) instPlanCont.getContainerProperty(list.get(i),
+                                myUI.getMessage(Messages.Date)).getValue()).getValue()) + " - " + ((TextField) instPlanCont.getContainerProperty(list.get(i),
+                                myUI.getMessage(Messages.Amount)).getValue()).getValue() + " сом.", ordFont));
+                        counter++;
+                    }
                 }
-                if (list.size() % 2 != 0) {
+                if (counter % 2 != 0) {
                     tableDetails.addCell(new Phrase(" ", ordFont));
                 }
                 tableDetails.addCell(p);
@@ -717,8 +721,8 @@ public class ContractPdf {
                 tableHeader.addCell(new Phrase(" "));
                 p = new Paragraph();
                 p.add(new Phrase("Утверждаю директор\n" +
-                                 studentInfo.getSchool().getName_ru() + "\n" +
-                                 fullName + "  ______________", headerBoldFont));
+                        studentInfo.getSchool().getName_ru() + "\n" +
+                        fullName + "  ______________", headerBoldFont));
                 tableHeader.addCell(p);
                 document.add(tableHeader);
                 document.add(new Paragraph(20, " "));
@@ -958,9 +962,9 @@ public class ContractPdf {
                 tableHeader.getDefaultCell().setBorder(0);
 
                 tableHeader.addCell(new Phrase("ФИО: " + studentInfo.getMainRelative().getFullName() +
-                                               "\nЯ, ознакомился с правилами и условиями", ordBoldFont));
+                        "\nЯ, ознакомился с правилами и условиями", ordBoldFont));
                 tableHeader.addCell(new Phrase("_____________________" +
-                                               "\n          (подпись)", ordBoldFont));
+                        "\n          (подпись)", ordBoldFont));
                 document.add(tableHeader);
 
                 captionBoldFont = new Font(baseFontBold, 16f);
@@ -1017,7 +1021,7 @@ public class ContractPdf {
 
         String nameOf = "Contract";
         StreamResource resource = new StreamResource(source1, nameOf
-                                                              + System.currentTimeMillis() + ".pdf");
+                + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
         myUI.getPage().open(resource, nameOf, false);
