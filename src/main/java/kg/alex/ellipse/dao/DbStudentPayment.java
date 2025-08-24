@@ -129,9 +129,7 @@ public class DbStudentPayment extends BaseDb {
                     myUI.getMessage(Messages.Date), id, false, true, Settings.dateTimeMinPattern, Resolution.MINUTE);
             df.setId(myUI.getMessage(Messages.Payments));
             df.setEnabled(!isDisabled);
-            if (currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.prmChangeOldTransactions)) {
-                df.setRangeStart(myUI.getUser().getTransactions_start_date());
-            } else if (!isDisabled) {
+            if (!currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.prmChangeOldTransactions)) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.MINUTE, -1441);
                 df.setRangeStart(calendar.getTime());
@@ -495,10 +493,12 @@ public class DbStudentPayment extends BaseDb {
 
     public StudentPayment exec_get_init_payment(int st_id, int year_id) throws SQLException {
         StudentPayment sp = null;
-        String sql = "SELECT sp.id, sp.amount, sp.modification_date, sp.dollar_rate, "
-                + "sp.student_id, sp.year_id, sp.payment_type_id,"
+        String sql = "SELECT sp.id, c.id, sp.amount, sp.modification_date, sp.dollar_rate, "
+                + "sp.student_id, sp.year_id, "
                 + "sp.payment_category_id, sp.who_paid, sp.note FROM student_payments as sp "
-                + "where sp.student_id = ? and sp.year_id = ? and sp.payment_category_id = 1";
+                + "LEFT JOIN acc_cashbox as c ON c.acc_currency_id = sp.acc_currency_id "
+                + "and c.payment_type_id = sp.payment_type_id " +
+                "where sp.student_id = ? and sp.year_id = ? and sp.payment_category_id = 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         stat.setInt(2, year_id);
@@ -511,7 +511,7 @@ public class DbStudentPayment extends BaseDb {
             sp.setRate(result.getDouble("sp.dollar_rate"));
             sp.setStudent_id(result.getInt("sp.student_id"));
             sp.setYear_id(result.getInt("sp.year_id"));
-            sp.setPayment_type_id(result.getInt("sp.payment_type_id"));
+            sp.setCashBox_id(result.getInt("c.id"));
             sp.setPayment_cat_type_id(result.getInt("sp.payment_category_id"));
             sp.setWho_paid(result.getString("sp.who_paid"));
             sp.setNote(result.getString("sp.note"));

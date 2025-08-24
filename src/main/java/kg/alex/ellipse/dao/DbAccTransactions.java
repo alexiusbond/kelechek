@@ -230,6 +230,7 @@ public class DbAccTransactions extends BaseDb {
             stat.setNull(12, Types.INTEGER);
         }
         stat.setInt(13, t.getAccTypeId());
+        System.out.println(stat);
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId(conn);
@@ -261,7 +262,7 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public int exec_update(AccTransaction t, String by_column_name, int by_column_value, Connection conn) throws SQLException {
-
+        System.out.println("exec_update: " + by_column_name + " = " + by_column_value);
         String sql = "update acc_transactions set date_time = ?, amount = ?, acc_cashbox_id = ?, currency_rate = ?, " +
                 "note = ?, acc_category_id = ?, acc_type_id = ?, modification_date = NOW() " +
                 "WHERE " + by_column_name + " = ?";
@@ -274,6 +275,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(6, t.getCategory_id());
         stat.setInt(7, t.getAccTypeId());
         stat.setInt(8, by_column_value);
+        System.out.println(stat);
         return stat.executeUpdate();
     }
 

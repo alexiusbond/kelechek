@@ -102,6 +102,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {Manual, "Мануально"},
             {NbkrCurrency, "НБКР"},
             {DivideButton, "Разделить"},
+            {CalculateInitialPaymentButton, "Рассчитать первичный взнос"},
             {CancelButton, "Отменить"},
             {FinancialHistory, "Финансовая история"},
             {RequiredField, "Поля выделенные красным обязательны!"},

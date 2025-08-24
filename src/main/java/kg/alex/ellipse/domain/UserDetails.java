@@ -20,7 +20,6 @@ public class UserDetails implements Serializable {
     private String fullName;
     private int branch_id;
     private Year current_year;
-    private Date transactions_start_date;
     private boolean isUnreadMessages;
     private School school;
 
@@ -38,14 +37,6 @@ public class UserDetails implements Serializable {
 
     public void setBranch_id(int branch_id) {
         this.branch_id = branch_id;
-    }
-
-    public Date getTransactions_start_date() {
-        return transactions_start_date;
-    }
-
-    public void setTransactions_start_date(Date transactions_start_date) {
-        this.transactions_start_date = transactions_start_date;
     }
 
     public boolean isUnreadMessages() {

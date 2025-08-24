@@ -117,6 +117,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String Manual = generateId();
     public static final String NbkrCurrency = generateId();
     public static final String DivideButton = generateId();
+    public static final String CalculateInitialPaymentButton = generateId();
     public static final String CancelButton = generateId();
     public static final String FinancialHistory = generateId();
     public static final String CreateButton = generateId();

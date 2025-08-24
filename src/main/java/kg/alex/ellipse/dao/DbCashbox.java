@@ -51,7 +51,6 @@ public class DbCashbox extends BaseDb {
                 "where c.payment_type_id is not null";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);

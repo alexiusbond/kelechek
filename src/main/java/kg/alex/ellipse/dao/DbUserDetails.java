@@ -25,7 +25,7 @@ public class DbUserDetails extends BaseDb {
     public UserDetails execSQLUserInfo(String login) throws SQLException {
         String sql = "select e.id, ord.working_status_id, eb.hr_branch_id, e.login, concat(e.surname, ' ', e.name) as fullname, "
                 + "eo.school_id, sch.name_ru, sch.school_type_id, sch.photo, sch.code, pos.id, "
-                + "y.id, y.name, y.is_last, y.installment_date_limit, sch.transactions_start_date "
+                + "y.id, y.name, y.is_last, y.installment_date_limit "
                 + "from employee as e "
                 + "left join hr_employee_branch as eb on eb.employee_id = e.id and eb.hr_importance_id = 1 "
                 + "left join hr_employee_order as eo on eo.employee_id = e.id and eo.to_date IS NULL "
@@ -54,7 +54,6 @@ public class DbUserDetails extends BaseDb {
             user.setPosition_id(result.getInt("pos.id"));
             user.setCurrent_year(new Year(result.getInt("y.id"), result.getString("y.name"),
                     result.getLong("y.installment_date_limit"), result.getBoolean("y.is_last")));
-            user.setTransactions_start_date(result.getDate("sch.transactions_start_date"));
         }
         return user;
     }

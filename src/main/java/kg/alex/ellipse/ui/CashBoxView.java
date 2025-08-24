@@ -748,7 +748,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         df.setWidth(Settings.PERCENTS100);
         df.setDateFormat(Settings.dateTimeMinPattern);
         df.setResolution(Resolution.MINUTE);
-        df.setRangeStart(myUI.getUser().getTransactions_start_date());
         if (valueChangeListener != null) {
             df.addValueChangeListener(valueChangeListener);
         }
