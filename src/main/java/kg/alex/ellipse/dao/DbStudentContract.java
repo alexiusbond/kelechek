@@ -33,7 +33,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public int exec_insert_st_contract(MyVaadinUI myUi, StudentContract c) throws SQLException {
-        String sql = "INSERT INTO student_contract (student_id, year_id, contract_id, debt, employee_id, " +
+        String sql = "INSERT IGNORE INTO student_contract (student_id, year_id, contract_id, debt, employee_id, " +
                      "modification_date, activity_status_id, contr_with_disc, contract_number, creation_date) "
                      + "VALUES(?,?,?,?,?,NOW(),?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
