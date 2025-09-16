@@ -26,6 +26,7 @@ import kg.alex.ellipse.domain.*;
 import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.pdf.Invoice2023PDF;
 import kg.alex.ellipse.pdf.contracts.ContractPdf;
+import kg.alex.ellipse.tableexport.ExcelExport;
 import kg.alex.ellipse.utils.ExistsValidator;
 import kg.alex.ellipse.utils.FormattedTable;
 import kg.alex.ellipse.utils.MyFilterDecorator;
@@ -114,6 +115,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private FormattedTable discountsTable;
     private FormattedTable correctionsTable;
     private Button printButton;
+    private Button excelButton;
     private Button financialHistoryButton;
     private IndexedContainer productsContainer = null,
             acsGivContainer = null, acsRecContainer = null, instPlanCont = null,
@@ -500,7 +502,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         printButton.addClickListener(this);
         printButton.setEnabled(false);
         buttonsLay.addComponent(printButton);
-        buttonsLay.setExpandRatio(printButton, 1);
+
+        excelButton = new Button(myUI.getMessage(Messages.ExportToExcel));
+        excelButton.setDescription(myUI.getMessage(Messages.ExportToExcel));
+        excelButton.setIcon(FontAwesome.FILE_EXCEL_O);
+        excelButton.addClickListener(this);
+        excelButton.setEnabled(true);
+        buttonsLay.addComponent(excelButton);
+        buttonsLay.setExpandRatio(excelButton, 1);
     }
 
     private void buildStudGridLayout() {
@@ -1036,6 +1045,26 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 recountInstPlanLabel();
             }
             fileName = null;
+        } else if (source == excelButton) {
+            try {
+                if (studDataTable.getContainerDataSource().size() != 0) {
+                    Table t = new Table();
+                    t.setContainerDataSource(studDataTable.getContainerDataSource());
+                    t.setVisibleColumns(NATURAL_COL_ORDER);
+                    t.setWidth("1px");
+                    t.setHeight("1px");
+                    t.setVisible(false);
+                    buttonsLay.addComponent(t);
+                    ExcelExport excelReport = new ExcelExport(t, "sheet1");
+                    excelReport.excludeCollapsedColumns();
+                    excelReport.setReportTitle(myUI.getMessage(Messages.Students));
+                    excelReport.setDisplayTotals(true);
+                    excelReport.export();
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
         } else if (source == printButton) {
             tabs.setSelectedTab(contractTabLay);
             if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
