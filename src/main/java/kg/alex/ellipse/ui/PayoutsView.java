@@ -21,7 +21,6 @@ import kg.alex.ellipse.dao.*;
 import kg.alex.ellipse.domain.AccTransaction;
 import kg.alex.ellipse.domain.CashBox;
 import kg.alex.ellipse.domain.Invoice;
-import kg.alex.ellipse.domain.StudentPayment;
 import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ellipse.utils.ExistsValidator;
@@ -75,8 +74,6 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     private int invID;
     private int lastSelectedCashboxId;
     private double totalAmount = 0.0;
-    private double amountUsd = 0.0, oldAmountUsd = 0.0;
-    private double amountKgs = 0.0, oldAmountKgs = 0.0;
 
     public PayoutsView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -797,7 +794,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             DbCashbox dbc = new DbCashbox();
             dbc.connect();
             cashboxCb.setContainerDataSource(dbc.execSQL(myUI));
-            dbCon.close();
+            dbc.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -853,8 +850,8 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
     private void repaintPayoutsFooter() {
         totalAmount = 0.0;
-        amountUsd = 0.0;
-        amountKgs = 0.0;
+        double amountUsd = 0.0;
+        double amountKgs = 0.0;
         if (payoutsTable.getContainerDataSource().size() > 0) {
             for (Object next : payoutsTable.getItemIds()) {
                 if (((TextField) payoutsTable.getItem(next).getItemProperty(
@@ -1008,8 +1005,6 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
     public void setPayoutsFooter(double amountUsd, double amountKgs, double total) {
         totalAmount = total;
-        oldAmountUsd = amountUsd;
-        oldAmountKgs = amountKgs;
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Amount),
                 myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.CashBox),
@@ -1052,9 +1047,8 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         dbat.exec_insert(tr, dbat.getConnection());
                     }
                 }
-                Iterator iter = dbc.execSQL(myUI).getItemIds().iterator();
-                while (iter.hasNext()) {
-                    Integer cashboxId = (Integer) iter.next();
+                for (Object o : dbc.execSQL(myUI).getItemIds()) {
+                    Integer cashboxId = (Integer) o;
                     lowBalance = dbat.exec_low_balance(dbat.getConnection(), myUI.getUser().getSchool().getId(),
                             cashboxId, date, 0.0, 0.0, 2);
                     if (lowBalance != null) {

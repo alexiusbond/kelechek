@@ -15,7 +15,6 @@ import com.vaadin.ui.*;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.domain.AccTransaction;
-import kg.alex.ellipse.domain.CashBox;
 import kg.alex.ellipse.domain.SchoolAccounting;
 import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.reports.accounting.SchoolsReport;

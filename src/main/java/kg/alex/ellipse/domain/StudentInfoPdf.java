@@ -6,7 +6,6 @@
 package kg.alex.ellipse.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StudentInfoPdf implements Serializable {
