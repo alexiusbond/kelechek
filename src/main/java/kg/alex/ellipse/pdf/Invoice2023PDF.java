@@ -278,7 +278,11 @@ public class Invoice2023PDF {
                 invoiceTable.addCell(cell);
 
                 par = new Paragraph();
-                par.add(new Chunk("Выдал: __________________", bold_font));
+                if (invoiceInfo.getPaymentCategoryId() == 3) {
+                    par.add(new Chunk("Выдал: ", bold_font));
+                } else {
+                    par.add(new Chunk("Принял: ", bold_font));
+                }
                 cell = new PdfPCell(par);
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setPaddingTop(3);
