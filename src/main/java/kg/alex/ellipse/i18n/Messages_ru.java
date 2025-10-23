@@ -35,7 +35,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {Welcome, "Добро Пожаловать!"},
             {ChangePasswordButton, "Сменить пароль"},
             {SystemClosedNotification, "Извините! Система находится под техническим обслуживанием. "
-                                       + "Пожалуйста, попробуйте позже!"},
+                    + "Пожалуйста, попробуйте позже!"},
             {Title, "Название"},
             {ShortTitle, "Краткое название"},
             {ValidityMonths, "Валидность (месяцев)"},
@@ -155,7 +155,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {ProductCategory, "Категория товаров"},
             {Logo, "Логотип"},
             {ConfirmChangeYear, "При смене текущего года, год изменится у всех "
-                                + "пользователей вашей школы. Продолжить?"},
+                    + "пользователей вашей школы. Продолжить?"},
             {AccessoriesDefinition, "Определение принадлежностей"},
             {FullName, "ФИО"},
             {Hobbies, "Хобби"},
@@ -278,7 +278,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {Content, "Содержание"},
             {Headline, "Заголовок"},
             {TransferInstruction, "Выделите сотрудника из одной школы (таблицы) и перетащите в другую или наоборот. "
-                                  + "Чтобы увидеть детальную информацию о сотруднике просто выделите его."},
+                    + "Чтобы увидеть детальную информацию о сотруднике просто выделите его."},
             {ModificationDate, "Дата изменения"},
             {Materials, "Материалы"},
             {Contract, "Контракт"},
@@ -370,7 +370,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {FormCaptionUser, "Пользователь"},
             {FormDescription,
                     "Установите сложный пароль длиной 6-20 символов - "
-                    + "номера, латинские буквы и специальные символы."},
+                            + "номера, латинские буквы и специальные символы."},
             {FormFiledCurPassword, "Текущий Пароль"},
             {NewPassword, "Новый пароль"},
             {FormFiledConfPassword, "Подтвердите Пароль"},
@@ -379,7 +379,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {RequiredErrorConfPassword, "Пожалуйста, подтвердите свой новый пароль!"},
             {NotificationDontMatch,
                     "Новый пароль и пароль подтверждения не совпадают,"
-                    + " пожалуйста, подтвердите их!"},
+                            + " пожалуйста, подтвердите их!"},
             {NotificationWrongCurrPassword,
                     "Пожалуйста, введите свой текущий пароль правильно!"},
             {NotificationSuccessfulChange, "Пароль изменен успешно!"},
@@ -474,7 +474,6 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {WhoCalled, "Кто звонил"},
             {Rate, "Курс"},
             {RateUSD, "Курс доллара"},
-            {Summary, "Сводный"},
             {Report, "Отчет"},
             {ToPlan, "К плану"},
             {CallsReport, "Отчет о вызовах"},

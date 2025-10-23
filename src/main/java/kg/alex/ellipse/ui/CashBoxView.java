@@ -27,10 +27,7 @@ import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.dao.*;
-import kg.alex.ellipse.domain.AccTransaction;
-import kg.alex.ellipse.domain.CashBox;
-import kg.alex.ellipse.domain.CurrencyRate;
-import kg.alex.ellipse.domain.SchoolAccounting;
+import kg.alex.ellipse.domain.*;
 import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.pdf.TransactionInvoicePDF;
 import kg.alex.ellipse.utils.ValueFromContainerConverter;
@@ -551,6 +548,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     dbTr.connect();
                     tr.setOrder_number(dbTr.exec_update_order_number(tr.getId(), tr.getSchool_id(), acc_type_id));
                     dbTr.close();
+                    DbEmployee dbEmployee = new DbEmployee();
+                    dbEmployee.connect();
+                    Employee accountant = dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId());
+                    if (accountant != null) {
+                        tr.setEmployee(accountant.getSurname() + " " + accountant.getName());
+                    }
+                    dbEmployee.close();
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);

@@ -292,7 +292,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String Paid = generateId();
     public static final String Left = generateId();
     public static final String TotalHours = generateId();
-    public static final String WorkPlace = generateId(); 
+    public static final String WorkPlace = generateId();
     public static final String Ellipse = generateId();
     public static final String Passport = generateId();
     public static final String PassportGiven = generateId();
@@ -467,7 +467,6 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String Rate = generateId();
     public static final String AverageRate = generateId();
     public static final String RateUSD = generateId();
-    public static final String Summary = generateId();
     public static final String Report = generateId();
     public static final String ToPlan = generateId();
     public static final String CallsReport = generateId();

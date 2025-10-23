@@ -11,6 +11,7 @@ import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.domain.AccBalanceSettings;
 import kg.alex.ellipse.domain.Definition;
+import kg.alex.ellipse.domain.Month;
 import kg.alex.ellipse.i18n.Messages;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
@@ -91,7 +92,7 @@ public class DbDefinition extends BaseDb {
     public IndexedContainer exec_for_select(MyVaadinUI myUi, String dbTableName,
                                             int school_id, boolean isDesc) throws SQLException {
         String sql = "select t.id, t.name from " + dbTableName + " as t where t.school_id = ? "
-                     + "and t.activity_status_id = 2 order by t.id";
+                + "and t.activity_status_id = 2 order by t.id";
         if (isDesc) {
             sql += " desc";
         }
@@ -159,8 +160,8 @@ public class DbDefinition extends BaseDb {
     public IndexedContainer exec_order_for_sel(MyVaadinUI myUi) throws SQLException {
 
         String sql = "select o.id, o.name, o.education_status_id, es.name from orders as o "
-                     + "left join education_status as es on o.education_status_id = es.id "
-                     + "where o.id < 4";
+                + "left join education_status as es on o.education_status_id = es.id "
+                + "where o.id < 4";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -183,8 +184,8 @@ public class DbDefinition extends BaseDb {
             MyVaadinUI myUi, boolean withAdmin, boolean withHR) throws SQLException {
 
         String sql = "select t.id, t.name, t.default_permissions, p.id from hr_position as t "
-                     + "left join position as p on p.hr_position_id = t.id "
-                     + "where t.activity_status_id = 2 ";
+                + "left join position as p on p.hr_position_id = t.id "
+                + "where t.activity_status_id = 2 ";
         if (!withAdmin) {
             sql += "and t.id != 5 ";
         }
@@ -232,7 +233,7 @@ public class DbDefinition extends BaseDb {
 
     public IndexedContainer exec_years_for_select(MyVaadinUI myUi, int current_year_id) throws SQLException {
         String sql = "select t.id, t.name, t.start_date, t.end_date, t.is_last, t.installment_date_limit from year as t " +
-                     "where t.id between ? and ? order by t.id desc";
+                "where t.id between ? and ? order by t.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, current_year_id - 1);
         stat.setInt(2, current_year_id + 1);
@@ -245,8 +246,8 @@ public class DbDefinition extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(result.getString("t.name") + " (" +
-                                                                           myUi.getMessage(Messages.From) + " " + Settings.df.format(result.getDate("t.start_date")) + " " +
-                                                                           myUi.getMessage(Messages.To) + " " + Settings.df.format(result.getDate("t.end_date")) + ")");
+                    myUi.getMessage(Messages.From) + " " + Settings.df.format(result.getDate("t.start_date")) + " " +
+                    myUi.getMessage(Messages.To) + " " + Settings.df.format(result.getDate("t.end_date")) + ")");
             item.getItemProperty(Settings.titleShort).setValue(result.getString("t.name"));
             item.getItemProperty(Settings.installmentDateLimit).setValue(result.getLong("t.installment_date_limit"));
             item.getItemProperty(Settings.is_last).setValue(result.getBoolean("t.is_last"));
@@ -306,7 +307,7 @@ public class DbDefinition extends BaseDb {
 
     public int exec_update_emp_id(int id, int emp_id, String dbTableName) throws SQLException {
         String sql = "UPDATE " + dbTableName + " SET employee_id = ? "
-                     + "WHERE id = ?";
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, emp_id);
         stat.setInt(2, id);
@@ -342,7 +343,7 @@ public class DbDefinition extends BaseDb {
 
     public IndexedContainer execPermissionSQL(MyVaadinUI myUi) throws SQLException {
         String sql = "SELECT p.java_class_name, p.caption, p.permissions FROM permissions as p " +
-                     "order by p.caption";
+                "order by p.caption";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -406,7 +407,7 @@ public class DbDefinition extends BaseDb {
 
     public int execSQL_login() throws SQLException {
         String sql = "SELECT l.login FROM logins AS l LEFT JOIN employee AS e ON l.login = e.login " +
-                     "WHERE e.login IS NULL LIMIT 1";
+                "WHERE e.login IS NULL LIMIT 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
@@ -417,7 +418,7 @@ public class DbDefinition extends BaseDb {
 
     public IndexedContainer exec_correction_types(MyVaadinUI myUi) throws SQLException {
         String sql = "select t.id, concat('(', t.type, ') ', t.name) as name, t.type " +
-                     "from correction_type as t order by t.type, t.name";
+                "from correction_type as t order by t.type, t.name";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
@@ -437,14 +438,14 @@ public class DbDefinition extends BaseDb {
 
     public List<AccBalanceSettings> exec_balance_settings(int acc_type_id) throws SQLException {
         String sql = "SELECT bs.id, cat.id, cat.name, CASE WHEN bs.year_preferences = 1 THEN " +
-                     "CONCAT((SELECT t.name FROM year AS t WHERE t.is_last = 1), ' ', bs.prefix) " +
-                     "WHEN bs.year_preferences = - 1 THEN " +
-                     "CONCAT((SELECT t.name FROM year AS t WHERE t.id = " +
-                     "(SELECT t.id - 1 FROM year AS t WHERE t.is_last = 1)), ' ', bs.prefix) " +
-                     "ELSE bs.prefix END AS prefix, bs.postfix, bs.text_field_preferences " +
-                     "FROM acc_balance_settings AS bs " +
-                     "LEFT JOIN acc_category AS cat ON cat.id = bs.acc_cactegory_id " +
-                     "WHERE cat.acc_type_id = ? AND bs.activity_status_id = 2";
+                "CONCAT((SELECT t.name FROM year AS t WHERE t.is_last = 1), ' ', bs.prefix) " +
+                "WHEN bs.year_preferences = - 1 THEN " +
+                "CONCAT((SELECT t.name FROM year AS t WHERE t.id = " +
+                "(SELECT t.id - 1 FROM year AS t WHERE t.is_last = 1)), ' ', bs.prefix) " +
+                "ELSE bs.prefix END AS prefix, bs.postfix, bs.text_field_preferences " +
+                "FROM acc_balance_settings AS bs " +
+                "LEFT JOIN acc_category AS cat ON cat.id = bs.acc_cactegory_id " +
+                "WHERE cat.acc_type_id = ? AND bs.activity_status_id = 2";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acc_type_id);
@@ -459,6 +460,19 @@ public class DbDefinition extends BaseDb {
             balanceSettings.setPostfix(result.getString("bs.postfix"));
             balanceSettings.setWithTextField(result.getBoolean("bs.text_field_preferences"));
             list.add(balanceSettings);
+        }
+        return list;
+    }
+
+
+    public List<Month> exec_months() throws SQLException {
+        String sql = "SELECT t.id, t.name FROM MONTHS as t order by t.order_num";
+
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        ResultSet result = stat.executeQuery();
+        List<Month> list = new ArrayList<>();
+        while (result.next()) {
+            list.add(new Month(result.getInt("t.id"), result.getString("t.name")));
         }
         return list;
     }

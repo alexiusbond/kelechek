@@ -8,9 +8,7 @@ package kg.alex.ellipse.reports.students;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ellipse.MyVaadinUI;
@@ -19,6 +17,7 @@ import kg.alex.ellipse.dao.DbDefinition;
 import kg.alex.ellipse.dao.DbEmployee;
 import kg.alex.ellipse.dao.DbSchool;
 import kg.alex.ellipse.dao.DbStudentContract;
+import kg.alex.ellipse.domain.Month;
 import kg.alex.ellipse.domain.StudentInfoPdf;
 import kg.alex.ellipse.i18n.Messages;
 import kg.alex.ellipse.pdf.MonthsReportPdf;
@@ -26,14 +25,13 @@ import kg.alex.ellipse.pdf.SummaryReportPdf;
 import kg.alex.ellipse.pdf.YearReportPdf;
 import kg.alex.ellipse.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ellipse.utils.FormattedTable;
-import kg.alex.ellipse.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 public class YearMonthReport implements Button.ClickListener,
@@ -41,55 +39,50 @@ public class YearMonthReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(YearMonthReport.class);
     private final MyVaadinUI myUI;
-    private final Subject currentUser = SecurityUtils.getSubject();
     private final HorizontalSplitPanel splitPanel;
-    private final String[] NATURAL_COL_ORDER_YEAR;
     private final String[] NATURAL_COL_ORDER_MONTH;
-    private final String[] NATURAL_COL_ORDER_SUMMARY;
+    private List<String> year_reports_props = new ArrayList<>();
     public VerticalLayout rightLay;
     public int totalStudents = 0, totalActive = 0;
     public double contracts = 0.0, discounts = 0.0, prevYearDebts = 0.0, prevYearOverpays = 0.0, corrections = 0.0, nets = 0.0,
             paid_amounts = 0.0, debts = 0.0, overpays = 0.0, inst_plans = 0.0;
-    private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
-    private FilterTable schoolTable;
+    private Button generateBtn, makePdfBtn, excelBtn;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private EnhancedFormatExcelExport excelReport;
-    private PopupDateField fromDateDF, tillDateDF;
     private OptionGroup type;
+    private List<Month> months;
 
     public YearMonthReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
         this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
-        NATURAL_COL_ORDER_YEAR = new String[]{myUI.getMessage(Messages.ClassName),
-                myUI.getMessage(Messages.Total_Active),
-                myUI.getMessage(Messages.Contract),
-                myUI.getMessage(Messages.Discount),
-                myUI.getMessage(Messages.DiscountPercentage),
-                myUI.getMessage(Messages.Correction),
-                myUI.getMessage(Messages.PreviousYearDebt),
-                myUI.getMessage(Messages.PreviousYearOverpay),
-                myUI.getMessage(Messages.Net),
-                myUI.getMessage(Messages.Paid),
-                Settings.percentage,
-                myUI.getMessage(Messages.Debt),
-                myUI.getMessage(Messages.OverPay)};
-
-        NATURAL_COL_ORDER_SUMMARY = new String[]{myUI.getMessage(Messages.School),
-                myUI.getMessage(Messages.Total_Active),
-                myUI.getMessage(Messages.Contract),
-                myUI.getMessage(Messages.Discount),
-                myUI.getMessage(Messages.DiscountPercentage),
-                myUI.getMessage(Messages.Correction),
-                myUI.getMessage(Messages.PreviousYearDebt),
-                myUI.getMessage(Messages.PreviousYearOverpay),
-                myUI.getMessage(Messages.Net),
-                myUI.getMessage(Messages.Paid),
-                Settings.percentage,
-                myUI.getMessage(Messages.Debt),
-                myUI.getMessage(Messages.OverPay)};
+        year_reports_props.add(myUI.getMessage(Messages.ClassName));
+        year_reports_props.add(myUI.getMessage(Messages.Total_Active));
+        year_reports_props.add(myUI.getMessage(Messages.Contract));
+        year_reports_props.add(myUI.getMessage(Messages.Discount));
+        year_reports_props.add(myUI.getMessage(Messages.DiscountPercentage));
+        year_reports_props.add(myUI.getMessage(Messages.Correction));
+        year_reports_props.add(myUI.getMessage(Messages.PreviousYearDebt));
+        year_reports_props.add(myUI.getMessage(Messages.PreviousYearOverpay));
+        year_reports_props.add(myUI.getMessage(Messages.Net));
+        year_reports_props.add(myUI.getMessage(Messages.Paid));
+        year_reports_props.add(Settings.percentage);
+        year_reports_props.add(myUI.getMessage(Messages.Debt));
+        year_reports_props.add(myUI.getMessage(Messages.OverPay));
+        try {
+            DbDefinition dbCon = new DbDefinition();
+            dbCon.connect();
+            months = dbCon.exec_months();
+            dbCon.close();
+            for (Month month : months) {
+                year_reports_props.add(myUI.getMessage(Messages.Payments) + " " + month.getName());
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
 
         NATURAL_COL_ORDER_MONTH = new String[]{myUI.getMessage(Messages.Month),
                 myUI.getMessage(Messages.InstPlanDebt),
@@ -100,7 +93,7 @@ public class YearMonthReport implements Button.ClickListener,
     }
 
     private void buildLeftPanel() {
-        GridLayout leftGrid = new GridLayout(4, 7);
+        GridLayout leftGrid = new GridLayout(4, 4);
         leftGrid.setSpacing(true);
         leftGrid.setWidth(Settings.PERCENTS100);
 
@@ -140,70 +133,13 @@ public class YearMonthReport implements Button.ClickListener,
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
         yearSelect.addValueChangeListener(this);
 
-        fromDateDF = new PopupDateField(myUI.getMessage(Messages.FromDate));
-        fromDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
-        fromDateDF.setWidth(Settings.PERCENTS100);
-        fromDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
-        fromDateDF.setDateFormat(Settings.datePattern);
-        fromDateDF.setResolution(Resolution.DAY);
-        fromDateDF.setVisible(false);
-        fromDateDF.addValueChangeListener(this);
-
-        tillDateDF = new PopupDateField(myUI.getMessage(Messages.TillDate));
-        tillDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
-        tillDateDF.setWidth(Settings.PERCENTS100);
-        tillDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
-        tillDateDF.setDateFormat(Settings.datePattern);
-        tillDateDF.setResolution(Resolution.DAY);
-        tillDateDF.setVisible(false);
-        tillDateDF.addValueChangeListener(this);
-
-        selectAllBtn = new Button(myUI.getMessage(Messages.AllSchools));
-        selectAllBtn.setWidth(Settings.PERCENTS100);
-        selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
-        selectAllBtn.addClickListener(this);
-
-        deselectAllBtn = new Button(myUI.getMessage(Messages.Clear));
-        deselectAllBtn.setWidth(Settings.PERCENTS100);
-        deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
-        deselectAllBtn.addClickListener(this);
-
-        schoolTable = new FilterTable();
-        schoolTable.setFilterDecorator(new MyFilterDecorator(myUI));
-        schoolTable.setStyleName(ValoTheme.TABLE_SMALL);
-        schoolTable.setSizeFull();
-        schoolTable.setNullSelectionAllowed(false);
-        schoolTable.setMultiSelect(true);
-        schoolTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
-        schoolTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
-        schoolTable.setFilterBarVisible(true);
-        schoolTable.setFooterVisible(false);
-        schoolTable.setSelectable(true);
-
-        schoolTable.addValueChangeListener(this);
-        try {
-            DbSchool dbs = new DbSchool();
-            dbs.connect();
-            schoolTable.setContainerDataSource(dbs.execSchoolSel(myUI, 0));
-            schoolTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
-            dbs.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-
         type = new OptionGroup();
-        type.setWidth(Settings.PERCENTS100);
         type.addItem(myUI.getMessage(Messages.Monthly));
         type.addItem(myUI.getMessage(Messages.Yearly));
-        if (currentUser.hasRole(Settings.rnAdmin)) {
-            type.addItem(myUI.getMessage(Messages.Summary));
-        }
         type.setValue(myUI.getMessage(Messages.Monthly));
         type.setStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         type.addValueChangeListener(this);
+        type.setSizeFull();
 
         generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -231,20 +167,12 @@ public class YearMonthReport implements Button.ClickListener,
         excelBtn.addClickListener(this);
 
         leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
-        leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
-        leftGrid.addComponent(tillDateDF, 2, 1, 3, 1);
-        leftGrid.addComponent(educationStatusMCB, 0, 2, 3, 2);
-        leftGrid.addComponent(selectAllBtn, 0, 3, 1, 3);
-        leftGrid.addComponent(deselectAllBtn, 2, 3, 3, 3);
-        if (currentUser.hasRole(Settings.rnAdmin)) {
-            leftGrid.setSizeFull();
-            leftGrid.addComponent(schoolTable, 0, 4, 3, 4);
-            leftGrid.setRowExpandRatio(4, 1);
-        }
-        leftGrid.addComponent(type, 0, 5, 3, 5);
-        leftGrid.addComponent(generateBtn, 0, 6, 1, 6);
-        leftGrid.addComponent(makePdfBtn, 2, 6);
-        leftGrid.addComponent(excelBtn, 3, 6);
+        leftGrid.addComponent(educationStatusMCB, 0, 1, 3, 1);
+        leftGrid.addComponent(type, 0, 2, 3, 2);
+        leftGrid.addComponent(generateBtn, 0, 3, 1, 3);
+        leftGrid.addComponent(makePdfBtn, 2, 3);
+        leftGrid.addComponent(excelBtn, 3, 3);
+        leftGrid.setRowExpandRatio(2, 1);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
@@ -270,16 +198,6 @@ public class YearMonthReport implements Button.ClickListener,
             container.addContainerProperty(myUI.getMessage(Messages.PreviousYearDebt), Double.class, null);
             container.addContainerProperty(myUI.getMessage(Messages.PreviousYearOverpay), Double.class, null);
             container.addContainerProperty(myUI.getMessage(Messages.Net), Double.class, null);
-        } else if (type.getValue().toString().equals(myUI.getMessage(Messages.Summary))) {
-            container.addContainerProperty(myUI.getMessage(Messages.School), String.class, null);
-            container.addContainerProperty(myUI.getMessage(Messages.Total_Active), String.class, null);
-            container.addContainerProperty(myUI.getMessage(Messages.Contract), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(Messages.Discount), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(Messages.DiscountPercentage), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(Messages.Correction), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(Messages.PreviousYearDebt), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(Messages.PreviousYearOverpay), Double.class, null);
-            container.addContainerProperty(myUI.getMessage(Messages.Net), Double.class, null);
         } else {
             container.addContainerProperty(myUI.getMessage(Messages.Month), String.class, null);
             container.addContainerProperty(myUI.getMessage(Messages.InstPlanDebt), Double.class, null);
@@ -288,6 +206,9 @@ public class YearMonthReport implements Button.ClickListener,
         container.addContainerProperty(myUI.getMessage(Messages.OverPay), Double.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Paid), Double.class, null);
         container.addContainerProperty(Settings.percentage, Double.class, 0.0);
+        for (Month month : months) {
+            container.addContainerProperty(myUI.getMessage(Messages.Payments) + " " + month.getName(), Double.class, null);
+        }
 
         FormattedTable dataTable = new FormattedTable(myUI);
         dataTable.setCaption(caption);
@@ -299,13 +220,8 @@ public class YearMonthReport implements Button.ClickListener,
         dataTable.addStyleName("noWrap");
         dataTable.addStyleName("noWrapHeader");
         dataTable.setContainerDataSource(container);
-        if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))
-                || type.getValue().toString().equals(myUI.getMessage(Messages.Summary))) {
-            if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))) {
-                dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_YEAR);
-            } else {
-                dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_SUMMARY);
-            }
+        if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))) {
+            dataTable.setVisibleColumns(year_reports_props.toArray());
             dataTable.setColumnAlignment(myUI.getMessage(Messages.Total_Active), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(Messages.Contract), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(Messages.Discount), Table.Align.RIGHT);
@@ -317,6 +233,9 @@ public class YearMonthReport implements Button.ClickListener,
             dataTable.setColumnWidth(myUI.getMessage(Messages.ClassName), 100);
             dataTable.setColumnWidth(myUI.getMessage(Messages.Total_Active), 80);
             dataTable.setColumnWidth(myUI.getMessage(Messages.PreviousYearOverpay), 80);
+            for (Month month : months) {
+                dataTable.setColumnAlignment(myUI.getMessage(Messages.Payments) + " " + month.getName(), Table.Align.RIGHT);
+            }
         } else {
             dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_MONTH);
             dataTable.setColumnAlignment(myUI.getMessage(Messages.InstPlanDebt), Table.Align.RIGHT);
@@ -341,47 +260,33 @@ public class YearMonthReport implements Button.ClickListener,
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == generateBtn) {
-            if (schoolTable.getValue() != null) {
-                try {
-                    DbStudentContract dbsc = new DbStudentContract();
-                    dbsc.connect();
-                    String school_ids;
-                    if (currentUser.hasRole(Settings.rnAdmin)) {
-                        school_ids = Settings.convertCollectionToStr((Set<?>) schoolTable.getValue());
-                    } else {
-                        school_ids = myUI.getUser().getSchool().getId() + "";
-                    }
-                    if (school_ids != null) {
-                        if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))) {
-                            rightLay.setHeightUndefined();
-                            dbsc.execSQL_Yearly_by_classes(myUI, school_ids,
-                                    Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
-                                    (Integer) yearSelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(), this);
-                        } else if (type.getValue().toString().equals(myUI.getMessage(Messages.Summary))) {
-                            dbsc.execSQL_Summary_report(myUI, school_ids,
-                                    Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
-                                    (Integer) yearSelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(), this);
-                            rightLay.setHeight("100%");
-                            rightLay.getComponent(0).setHeight("100%");
-                        } else {
-                            rightLay.setHeightUndefined();
-                            dbsc.execSQL_Monthly_by_classes(myUI, school_ids,
-                                    Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
-                                    (Integer) yearSelect.getValue(), this);
-                        }
-                    } else {
-                        Notification.show(myUI.getMessage(Messages.NotificationNothingIsSelected),
-                                Notification.Type.WARNING_MESSAGE);
-                    }
-                    dbsc.close();
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
+            try {
+                for (Month month : months) {
+                    month.setTotal(0);
                 }
-                if (rightLay.getComponentCount() != 0) {
-                    makePdfBtn.setEnabled(true);
-                    excelBtn.setEnabled(true);
+                DbStudentContract dbsc = new DbStudentContract();
+                dbsc.connect();
+                String school_ids;
+                school_ids = myUI.getUser().getSchool().getId() + "";
+                if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))) {
+                    rightLay.setHeightUndefined();
+                    dbsc.execSQL_Yearly_by_classes(myUI, school_ids,
+                            Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                            (Integer) yearSelect.getValue(), this);
+                } else {
+                    rightLay.setHeightUndefined();
+                    dbsc.execSQL_Monthly_by_classes(myUI, school_ids,
+                            Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                            (Integer) yearSelect.getValue(), this);
                 }
+                dbsc.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+            if (rightLay.getComponentCount() != 0) {
+                makePdfBtn.setEnabled(true);
+                excelBtn.setEnabled(true);
             }
         } else if (source == makePdfBtn) {
             StudentInfoPdf studentInfo = new StudentInfoPdf();
@@ -416,10 +321,6 @@ public class YearMonthReport implements Button.ClickListener,
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (source == selectAllBtn) {
-            schoolTable.setValue(schoolTable.getContainerDataSource().getItemIds());
-        } else if (source == deselectAllBtn) {
-            schoolTable.setValue(null);
         } else if (source == excelBtn) {
             try {
                 if (rightLay.getComponentCount() != 0) {
@@ -463,14 +364,14 @@ public class YearMonthReport implements Button.ClickListener,
         }
     }
 
+    public List<Month> getMonths() {
+        return months;
+    }
+
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
-        if (property == schoolTable && schoolTable.getValue() != null) {
-            makePdfBtn.setEnabled(false);
-            excelBtn.setEnabled(false);
-            rightLay.removeAllComponents();
-        } else if (property == yearSelect || property == fromDateDF || property == tillDateDF) {
+        if (property == yearSelect) {
             makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
             rightLay.removeAllComponents();
@@ -478,13 +379,6 @@ public class YearMonthReport implements Button.ClickListener,
             makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
             rightLay.removeAllComponents();
-            if (type.getValue().toString().equals(myUI.getMessage(Messages.Monthly))) {
-                fromDateDF.setVisible(false);
-                tillDateDF.setVisible(false);
-            } else {
-                fromDateDF.setVisible(true);
-                tillDateDF.setVisible(true);
-            }
         }
     }
 }

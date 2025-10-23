@@ -112,7 +112,7 @@ public class Invoice2023PDF {
                 cell.setPaddingRight(10);
                 invoiceTable.addCell(cell);
 
-                Phrase numberPhr = new Phrase("№: ________________", normal_font);
+                Phrase numberPhr = new Phrase("№: " + invoiceInfo.getOrder_number(), normal_font);
                 cell = new PdfPCell(numberPhr);
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setPaddingTop(3);
