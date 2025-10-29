@@ -614,7 +614,8 @@ public class DbStudentContract extends BaseDb {
                 "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
                 "IFNULL(t.net_payments, 0.0), 0.0)) AS overpay ";
         for (Month month : ymr.getMonths()) {
-            sql += ", m_payments." + month.getName() + " ";
+            sql += ", m_payments.p_" + month.getName() + " ";
+            sql += ", m_installments.i_" + month.getName() + " ";
         }
         sql += "FROM (SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, c.amount AS contract_amount, " +
                 "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " +
@@ -657,14 +658,21 @@ public class DbStudentContract extends BaseDb {
                 "AND edu.id IN (" + edu_statuses_ids + ") " +
                 "GROUP BY st.id) AS t LEFT JOIN(SELECT cln.id AS class_id";
         for (Month month : ymr.getMonths()) {
-            sql += ", ROUND(SUM(IF(MONTH(vsp.modification_date) = " + month.getId() + ", vsp.normalized_amount, 0)), 2) AS " + month.getName() + " ";
+            sql += ", ROUND(SUM(IF(MONTH(vsp.modification_date) = " + month.getId() + ", vsp.normalized_amount, 0)), 2) AS p_" + month.getName() + " ";
         }
-        sql += "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id LEFT JOIN v_student_payment_amount AS vsp ON st.id = vsp.student_id AND vsp.year_id = ? GROUP BY cln.id) as m_payments on m_payments.class_id = t.class_id " +
+        sql += "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id LEFT JOIN view_student_payment_amount AS vsp ON st.id = vsp.student_id AND vsp.year_id = ? GROUP BY cln.id) as m_payments on m_payments.class_id = t.class_id " +
+                "LEFT JOIN (SELECT cln.id AS class_id";
+        for (Month month : ymr.getMonths()) {
+            sql += ", ROUND(SUM(IF(MONTH(ip.date_of_payment) = " + month.getId() + ", ip.amount, 0)), 2) AS i_" + month.getName() + " ";
+        }
+        sql += "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id left join student_installement_plan as ip on st.id = ip.student_id and ip.year_id = ? GROUP BY cln.id) as m_installments on m_installments.class_id = t.class_id  " +
                 "LEFT JOIN class_number AS cl ON cl.id = t.class_number_id " +
                 "LEFT JOIN school AS sch ON sch.id = t.school_id " +
                 "GROUP BY t.school_id, t.class_id ORDER BY t.school_id, cl.name, t.class_name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         int counter = 0;
+        stat.setInt(++counter, year_id);
+        stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
@@ -771,7 +779,8 @@ public class DbStudentContract extends BaseDb {
                             / (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue());
                 }
                 for (Month month : ymr.getMonths()) {
-                    item.getItemProperty(myUI.getMessage(Messages.Payments) + " " + month.getName()).setValue(result.getDouble(month.getName()));
+                    item.getItemProperty(myUI.getMessage(Messages.Payments) + " " + month.getName()).setValue(result.getDouble("p_" + month.getName()));
+                    item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName()).setValue(result.getDouble("i_" + month.getName()));
                 }
             }
         }

@@ -30,7 +30,6 @@ import org.apache.logging.log4j.Logger;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -77,6 +76,7 @@ public class YearMonthReport implements Button.ClickListener,
             months = dbCon.exec_months();
             dbCon.close();
             for (Month month : months) {
+                year_reports_props.add(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName());
                 year_reports_props.add(myUI.getMessage(Messages.Payments) + " " + month.getName());
             }
         } catch (Exception e) {
@@ -207,6 +207,7 @@ public class YearMonthReport implements Button.ClickListener,
         container.addContainerProperty(myUI.getMessage(Messages.Paid), Double.class, null);
         container.addContainerProperty(Settings.percentage, Double.class, 0.0);
         for (Month month : months) {
+            container.addContainerProperty(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName(), Double.class, null);
             container.addContainerProperty(myUI.getMessage(Messages.Payments) + " " + month.getName(), Double.class, null);
         }
 
@@ -235,6 +236,7 @@ public class YearMonthReport implements Button.ClickListener,
             dataTable.setColumnWidth(myUI.getMessage(Messages.PreviousYearOverpay), 80);
             for (Month month : months) {
                 dataTable.setColumnAlignment(myUI.getMessage(Messages.Payments) + " " + month.getName(), Table.Align.RIGHT);
+                dataTable.setColumnAlignment(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName(), Table.Align.RIGHT);
             }
         } else {
             dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_MONTH);
