@@ -14,15 +14,9 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ellipse.MyVaadinUI;
 import kg.alex.ellipse.Settings;
 import kg.alex.ellipse.dao.DbDefinition;
-import kg.alex.ellipse.dao.DbEmployee;
-import kg.alex.ellipse.dao.DbSchool;
 import kg.alex.ellipse.dao.DbStudentContract;
 import kg.alex.ellipse.domain.Month;
-import kg.alex.ellipse.domain.StudentInfoPdf;
 import kg.alex.ellipse.i18n.Messages;
-import kg.alex.ellipse.pdf.MonthsReportPdf;
-import kg.alex.ellipse.pdf.SummaryReportPdf;
-import kg.alex.ellipse.pdf.YearReportPdf;
 import kg.alex.ellipse.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ellipse.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
@@ -40,12 +34,12 @@ public class YearMonthReport implements Button.ClickListener,
     private final MyVaadinUI myUI;
     private final HorizontalSplitPanel splitPanel;
     private final String[] NATURAL_COL_ORDER_MONTH;
-    private List<String> year_reports_props = new ArrayList<>();
+    private final List<String> year_reports_props = new ArrayList<>();
     public VerticalLayout rightLay;
     public int totalStudents = 0, totalActive = 0;
     public double contracts = 0.0, discounts = 0.0, prevYearDebts = 0.0, prevYearOverpays = 0.0, corrections = 0.0, nets = 0.0,
             paid_amounts = 0.0, debts = 0.0, overpays = 0.0, inst_plans = 0.0;
-    private Button generateBtn, makePdfBtn, excelBtn;
+    private Button generateBtn, excelBtn;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private EnhancedFormatExcelExport excelReport;
@@ -148,15 +142,6 @@ public class YearMonthReport implements Button.ClickListener,
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
-        makePdfBtn = new Button();
-        makePdfBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
-        makePdfBtn.setWidth(Settings.PERCENTS100);
-        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        makePdfBtn.addStyleName(ValoTheme.BUTTON_SMALL);
-        makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
-        makePdfBtn.addClickListener(this);
-        makePdfBtn.setEnabled(false);
-
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
@@ -169,8 +154,7 @@ public class YearMonthReport implements Button.ClickListener,
         leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
         leftGrid.addComponent(educationStatusMCB, 0, 1, 3, 1);
         leftGrid.addComponent(type, 0, 2, 3, 2);
-        leftGrid.addComponent(generateBtn, 0, 3, 1, 3);
-        leftGrid.addComponent(makePdfBtn, 2, 3);
+        leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
         leftGrid.addComponent(excelBtn, 3, 3);
         leftGrid.setRowExpandRatio(2, 1);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
@@ -247,7 +231,6 @@ public class YearMonthReport implements Button.ClickListener,
         dataTable.setColumnAlignment(myUI.getMessage(Messages.Paid), Table.Align.RIGHT);
         dataTable.setColumnAlignment(Settings.percentage, Table.Align.RIGHT);
         if (container.size() != 0) {
-            makePdfBtn.setEnabled(true);
             excelBtn.setEnabled(true);
         }
         rightLay.addComponent(dataTable);
@@ -264,7 +247,8 @@ public class YearMonthReport implements Button.ClickListener,
         if (source == generateBtn) {
             try {
                 for (Month month : months) {
-                    month.setTotal(0);
+                    month.setTotalPayments(0);
+                    month.setTotalInstallments(0);
                 }
                 DbStudentContract dbsc = new DbStudentContract();
                 dbsc.connect();
@@ -287,41 +271,7 @@ public class YearMonthReport implements Button.ClickListener,
                 logger.catching(e);
             }
             if (rightLay.getComponentCount() != 0) {
-                makePdfBtn.setEnabled(true);
                 excelBtn.setEnabled(true);
-            }
-        } else if (source == makePdfBtn) {
-            StudentInfoPdf studentInfo = new StudentInfoPdf();
-            try {
-                DbSchool dbsc = new DbSchool();
-                dbsc.connect();
-                studentInfo.setSchool(dbsc.execSchool(myUI.getUser().getSchool().getId()));
-                dbsc.close();
-                DbEmployee dbEmployee = new DbEmployee();
-                dbEmployee.connect();
-                studentInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
-                studentInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
-                dbEmployee.close();
-                if (studentInfo.getAccountant() != null) {
-                    if (studentInfo.getSchool().getAddress() != null) {
-                        if (type.getValue().toString().equals(myUI.getMessage(Messages.Yearly))) {
-                            new YearReportPdf(myUI, rightLay, studentInfo);
-                        } else if (type.getValue().toString().equals(myUI.getMessage(Messages.Monthly))) {
-                            new MonthsReportPdf(myUI, rightLay, studentInfo);
-                        } else {
-                            new SummaryReportPdf(myUI, rightLay, studentInfo);
-                        }
-                    } else {
-                        Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
-                                Notification.Type.WARNING_MESSAGE);
-                    }
-                } else {
-                    Notification.show(myUI.getMessage(Messages.NoAccountant),
-                            Notification.Type.WARNING_MESSAGE);
-                }
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
             }
         } else if (source == excelBtn) {
             try {
@@ -374,11 +324,9 @@ public class YearMonthReport implements Button.ClickListener,
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (property == yearSelect) {
-            makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
             rightLay.removeAllComponents();
         } else if (property == type && type.getValue() != null) {
-            makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
             rightLay.removeAllComponents();
         }

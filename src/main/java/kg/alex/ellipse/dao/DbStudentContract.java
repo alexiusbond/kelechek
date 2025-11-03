@@ -590,7 +590,7 @@ public class DbStudentContract extends BaseDb {
     public void execSQL_Yearly_by_classes(MyVaadinUI myUI, String school_ids, String edu_statuses_ids, int year_id,
                                           YearMonthReport ymr) throws SQLException {
 
-        String sql = "SELECT t.class_id, t.school_id, sch.code, sch.name_ru, CONCAT(cl.name, ' - ', t.class_name) as cl, " +
+        StringBuilder sql = new StringBuilder("SELECT t.class_id, t.school_id, sch.code, sch.name_ru, CONCAT(cl.name, ' - ', t.class_name) as cl, " +
                 "COUNT(t.stud_id) as total_studs, COUNT(IF(t.status_id = 2, 1, NULL)) as active_studs, " +
                 "SUM(IFNULL(t.contract_amount, 0.0)) as contract_amount, " +
                 "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt > 0.0, t.prev_debt, 0.0)) AS prev_debt, " +
@@ -612,64 +612,21 @@ public class DbStudentContract extends BaseDb {
                 "IFNULL(t.net_payments, 0.0) < 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
                 "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
                 "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
-                "IFNULL(t.net_payments, 0.0), 0.0)) AS overpay ";
+                "IFNULL(t.net_payments, 0.0), 0.0)) AS overpay ");
         for (Month month : ymr.getMonths()) {
-            sql += ", m_payments.p_" + month.getName() + " ";
-            sql += ", m_installments.i_" + month.getName() + " ";
+            sql.append(", m_payments.p_").append(month.getName()).append(" ");
+            sql.append(", m_installments.i_").append(month.getName()).append(" ");
         }
-        sql += "FROM (SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, c.amount AS contract_amount, " +
-                "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " +
-                "WHERE student_id = st.id AND year_id < ?), 0.0) + " +
-                "IFNULL((SELECT SUM(amount) FROM view_corrections " +
-                "WHERE student_id = st.id AND year_id < ?), 0.0) - " +
-                "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - " +
-                "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
-                "FROM student_payments as sp " +
-                "left join student on student.id = sp.student_id " +
-                "left join school as sch on sch.id = student.school_id " +
-                "WHERE sp.student_id = st.id AND sp.year_id < ?), 0.0)) AS prev_debt, " +
-                "vc.amount AS correction, stud_pay.amount AS net_payments,  sc.contr_with_disc as contr_with_disc, " +
-                "cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name " +
-                "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " +
-                "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp " +
-                "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
-                "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) " +
-                "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) " +
-                "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
-                "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
-                "LEFT JOIN " +
-                "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
-                "scc.amount, ' " + Settings.KGS + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
-                "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
-                "FROM student_correction scc " +
-                "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
-                "LEFT JOIN student st ON st.id = scc.student_id " +
-                "WHERE year_id = ? GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
-                "LEFT JOIN " +
-                "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
-                "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
-                "FROM student_payments as sp " +
-                "left join student on student.id = sp.student_id " +
-                "left join school as sch on sch.id = student.school_id " +
-                "WHERE sp.year_id = ? GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
-                "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
-                "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
-                "WHERE st.school_id in (" + school_ids + ") AND st.entering_year_id <= ? " +
-                "AND edu.id IN (" + edu_statuses_ids + ") " +
-                "GROUP BY st.id) AS t LEFT JOIN(SELECT cln.id AS class_id";
+        sql.append("FROM (SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, c.amount AS contract_amount, " + "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " + "WHERE student_id = st.id AND year_id < ?), 0.0) + " + "IFNULL((SELECT SUM(amount) FROM view_corrections " + "WHERE student_id = st.id AND year_id < ?), 0.0) - " + "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - " + "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " + "FROM student_payments as sp " + "left join student on student.id = sp.student_id " + "left join school as sch on sch.id = student.school_id " + "WHERE sp.student_id = st.id AND sp.year_id < ?), 0.0)) AS prev_debt, " + "vc.amount AS correction, stud_pay.amount AS net_payments,  sc.contr_with_disc as contr_with_disc, " + "cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name " + "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp " + "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " + "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) " + "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) " + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " + "LEFT JOIN contract AS c ON c.id = sc.contract_id " + "LEFT JOIN " + "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " + "scc.amount, ' " + Settings.KGS + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " + "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " + "FROM student_correction scc " + "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " + "LEFT JOIN student st ON st.id = scc.student_id " + "WHERE year_id = ? GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " + "LEFT JOIN " + "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " + "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " + "FROM student_payments as sp " + "left join student on student.id = sp.student_id " + "left join school as sch on sch.id = student.school_id " + "WHERE sp.year_id = ? GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " + "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " + "LEFT JOIN discount AS d ON d.id = sd.discount_id " + "WHERE st.school_id in (").append(school_ids).append(") AND st.entering_year_id <= ? ").append("AND edu.id IN (").append(edu_statuses_ids).append(") ").append("GROUP BY st.id) AS t LEFT JOIN(SELECT cln.id AS class_id");
         for (Month month : ymr.getMonths()) {
-            sql += ", ROUND(SUM(IF(MONTH(vsp.modification_date) = " + month.getId() + ", vsp.normalized_amount, 0)), 2) AS p_" + month.getName() + " ";
+            sql.append(", ROUND(SUM(IF(MONTH(vsp.modification_date) = ").append(month.getId()).append(", vsp.normalized_amount, 0)), 2) AS p_").append(month.getName()).append(" ");
         }
-        sql += "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id LEFT JOIN view_student_payment_amount AS vsp ON st.id = vsp.student_id AND vsp.year_id = ? GROUP BY cln.id) as m_payments on m_payments.class_id = t.class_id " +
-                "LEFT JOIN (SELECT cln.id AS class_id";
+        sql.append("FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id LEFT JOIN view_student_payment_amount AS vsp ON st.id = vsp.student_id AND vsp.year_id = ? GROUP BY cln.id) as m_payments on m_payments.class_id = t.class_id " + "LEFT JOIN (SELECT cln.id AS class_id");
         for (Month month : ymr.getMonths()) {
-            sql += ", ROUND(SUM(IF(MONTH(ip.date_of_payment) = " + month.getId() + ", ip.amount, 0)), 2) AS i_" + month.getName() + " ";
+            sql.append(", ROUND(SUM(IF(MONTH(ip.date_of_payment) = ").append(month.getId()).append(", ip.amount, 0)), 2) AS i_").append(month.getName()).append(" ");
         }
-        sql += "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id left join student_installement_plan as ip on st.id = ip.student_id and ip.year_id = ? GROUP BY cln.id) as m_installments on m_installments.class_id = t.class_id  " +
-                "LEFT JOIN class_number AS cl ON cl.id = t.class_number_id " +
-                "LEFT JOIN school AS sch ON sch.id = t.school_id " +
-                "GROUP BY t.school_id, t.class_id ORDER BY t.school_id, cl.name, t.class_name";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
+        sql.append("FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id left join student_installement_plan as ip on st.id = ip.student_id and ip.year_id = ? GROUP BY cln.id) as m_installments on m_installments.class_id = t.class_id  " + "LEFT JOIN class_number AS cl ON cl.id = t.class_number_id " + "LEFT JOIN school AS sch ON sch.id = t.school_id " + "GROUP BY t.school_id, t.class_id ORDER BY t.school_id, cl.name, t.class_name");
+        PreparedStatement stat = dbCon.prepareStatement(sql.toString());
         int counter = 0;
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
@@ -684,7 +641,6 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         int school_id = 0;
         Table t = null;
@@ -717,6 +673,12 @@ public class DbStudentContract extends BaseDb {
                             Settings.dFormat2.format(ymr.debts));
                     t.setColumnFooter(myUI.getMessage(Messages.OverPay),
                             Settings.dFormat2.format(ymr.overpays));
+                    for (Month month : ymr.getMonths()) {
+                        t.setColumnFooter(myUI.getMessage(Messages.Payments) + " " + month.getName(),
+                                Settings.dFormat2.format(month.getTotalPayments()));
+                        t.setColumnFooter(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName(),
+                                Settings.dFormat2.format(month.getTotalInstallments()));
+                    }
                     if (ymr.nets != 0.0) {
                         t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(ymr.paid_amounts * 100 / ymr.nets));
                     }
@@ -730,6 +692,10 @@ public class DbStudentContract extends BaseDb {
                     ymr.nets = 0.0;
                     ymr.paid_amounts = 0.0;
                     ymr.debts = 0.0;
+                    for (Month month : ymr.getMonths()) {
+                        month.setTotalPayments(0);
+                        month.setTotalInstallments(0);
+                    }
                     ymr.overpays = 0.0;
                 }
                 t = ymr.createTable(result.getString("sch.code")
@@ -779,8 +745,14 @@ public class DbStudentContract extends BaseDb {
                             / (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue());
                 }
                 for (Month month : ymr.getMonths()) {
-                    item.getItemProperty(myUI.getMessage(Messages.Payments) + " " + month.getName()).setValue(result.getDouble("p_" + month.getName()));
-                    item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName()).setValue(result.getDouble("i_" + month.getName()));
+                    item.getItemProperty(myUI.getMessage(Messages.Payments) + " " + month.getName()).setValue(
+                            result.getDouble("p_" + month.getName()));
+                    month.setTotalPayments(month.getTotalPayments() +
+                            (Double) item.getItemProperty(myUI.getMessage(Messages.Payments) + " " + month.getName()).getValue());
+                    item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName()).setValue(
+                            result.getDouble("i_" + month.getName()));
+                    month.setTotalInstallments(month.getTotalInstallments() +
+                            (Double) item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName()).getValue());
                 }
             }
         }
@@ -805,8 +777,12 @@ public class DbStudentContract extends BaseDb {
                     Settings.dFormat2.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(Messages.Paid),
                     Settings.dFormat2.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(Messages.Debts), Settings.dFormat2.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(Messages.Debt), Settings.dFormat2.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(Messages.OverPay), Settings.dFormat2.format(ymr.overpays));
+            for (Month month : ymr.getMonths()) {
+                t.setColumnFooter(myUI.getMessage(Messages.Payments) + " " + month.getName(), Settings.dFormat2.format(month.getTotalPayments()));
+                t.setColumnFooter(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName(), Settings.dFormat2.format(month.getTotalInstallments()));
+            }
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
                         ymr.paid_amounts * 100 / ymr.nets));
@@ -822,6 +798,10 @@ public class DbStudentContract extends BaseDb {
             ymr.paid_amounts = 0.0;
             ymr.debts = 0.0;
             ymr.overpays = 0.0;
+            for (Month month : ymr.getMonths()) {
+                month.setTotalPayments(0);
+                month.setTotalInstallments(0);
+            }
         }
         if (ymr.rightLay.getComponentCount() != 0) {
             execSQL_Yearly_by_class_numbers(myUI, school_ids, edu_statuses_ids, year_id, ymr);
@@ -933,72 +913,21 @@ public class DbStudentContract extends BaseDb {
     public void execSQL_Yearly_by_class_numbers(MyVaadinUI myUI, String school_ids, String edu_statuses_ids, int year_id,
                                                 YearMonthReport ymr) throws SQLException {
 
-        String sql = "SELECT t.class_id, t.school_id, cl.name as cl, " +
-                "COUNT(t.stud_id) as total_studs, COUNT(IF(t.status_id = 2, 1, NULL)) as active_studs, " +
-                "SUM(IFNULL(t.contract_amount, 0.0)) as contract_amount, " +
-                "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt > 0.0, t.prev_debt, 0.0)) AS prev_debt, " +
-                "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt < 0.0, t.prev_debt, 0.0)) AS prev_overpay, " +
-                "SUM(IFNULL(t.correction, 0.0)) as correction, SUM(IFNULL(t.net_payments, 0.0)) as net_payments, " +
-                "SUM(IFNULL(t.contr_with_disc, 0.0)) as contr_with_disc, " +
-                "SUM(CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
-                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
-                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) as net, " +
-                "SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
-                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
-                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
-                "IFNULL(t.net_payments, 0.0) > 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 " +
-                "THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
-                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
-                "IFNULL(t.net_payments, 0.0), 0.0)) AS debt, SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 " +
-                "THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
-                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
-                "IFNULL(t.net_payments, 0.0) < 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
-                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
-                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
-                "IFNULL(t.net_payments, 0.0), 0.0)) AS overpay FROM " +
-                "(SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, c.amount AS contract_amount, " +
-                "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " +
-                "WHERE student_id = st.id AND year_id < ?), 0.0) + " +
-                "IFNULL((SELECT SUM(amount) FROM view_corrections " +
-                "WHERE student_id = st.id AND year_id < ?), 0.0) - " +
-                "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - " +
-                "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
-                "FROM student_payments as sp " +
-                "left join student on student.id = sp.student_id " +
-                "left join school as sch on sch.id = student.school_id " +
-                "WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, " +
-                "vc.amount AS correction, stud_pay.amount AS net_payments, sc.contr_with_disc as contr_with_disc, " +
-                "cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name " +
-                "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so " +
-                "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp " +
-                "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
-                "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) " +
-                "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) " +
-                "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
-                "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
-                "LEFT JOIN " +
-                "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
-                "scc.amount, ' " + Settings.KGS + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
-                "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
-                "FROM student_correction scc " +
-                "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
-                "LEFT JOIN student st ON st.id = scc.student_id " +
-                "WHERE year_id = ? GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
-                "LEFT JOIN " +
-                "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
-                "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
-                "FROM student_payments as sp " +
-                "left join student on student.id = sp.student_id " +
-                "left join school as sch on sch.id = student.school_id " +
-                "WHERE sp.year_id = ? GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
-                "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
-                "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
-                "WHERE st.school_id in (" + school_ids + ") AND st.entering_year_id <= ? " +
-                "AND edu.id IN (" + edu_statuses_ids + ") " +
-                "GROUP BY st.id) AS t " +
-                "LEFT JOIN class_number AS cl ON cl.id = t.class_number_id " +
-                "GROUP BY t.class_number_id ORDER BY t.class_number_id";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
+        StringBuilder sql = new StringBuilder("SELECT t.class_id, t.school_id, cl.name as cl, COUNT(t.stud_id) as total_studs, COUNT(IF(t.status_id = 2, 1, NULL)) as active_studs, SUM(IFNULL(t.contract_amount, 0.0)) as contract_amount, SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt > 0.0, t.prev_debt, 0.0)) AS prev_debt, SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt < 0.0, t.prev_debt, 0.0)) AS prev_overpay, SUM(IFNULL(t.correction, 0.0)) as correction, SUM(IFNULL(t.net_payments, 0.0)) as net_payments, SUM(IFNULL(t.contr_with_disc, 0.0)) as contr_with_disc, SUM(CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) as net, SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - IFNULL(t.net_payments, 0.0) > 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - IFNULL(t.net_payments, 0.0), 0.0)) AS debt, SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - IFNULL(t.net_payments, 0.0) < 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - IFNULL(t.net_payments, 0.0), 0.0)) AS overpay ");
+        for (Month month : ymr.getMonths()) {
+            sql.append(", m_payments.p_").append(month.getName()).append(" ");
+            sql.append(", m_installments.i_").append(month.getName()).append(" ");
+        }
+        sql.append(" FROM (SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, c.amount AS contract_amount, IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract WHERE student_id = st.id AND year_id < ?), 0.0) + IFNULL((SELECT SUM(amount) FROM view_corrections WHERE student_id = st.id AND year_id < ?), 0.0) - IFNULL( (SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) FROM student_payments as sp left join student on student.id = sp.student_id left join school as sch on sch.id = student.school_id WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, vc.amount AS correction, stud_pay.amount AS net_payments, sc.contr_with_disc as contr_with_disc, cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? LEFT JOIN contract AS c ON c.id = sc.contract_id LEFT JOIN (SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', scc.amount, ' KGS' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount FROM student_correction scc LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id LEFT JOIN student st ON st.id = scc.student_id WHERE year_id = ? GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id LEFT JOIN (SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount FROM student_payments as sp left join student on student.id = sp.student_id left join school as sch on sch.id = student.school_id WHERE sp.year_id = ? GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? LEFT JOIN discount AS d ON d.id = sd.discount_id WHERE st.school_id in (").append(school_ids).append(") AND st.entering_year_id <= ? AND edu.id IN (").append(edu_statuses_ids).append(") GROUP BY st.id) AS t LEFT JOIN(SELECT cl.id AS class_id ");
+        for (Month month : ymr.getMonths()) {
+            sql.append(", ROUND(SUM(IF(MONTH(vsp.modification_date) = ").append(month.getId()).append(", vsp.normalized_amount, 0)), 2) AS p_").append(month.getName()).append(" ");
+        }
+        sql.append(" FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id LEFT JOIN view_student_payment_amount AS vsp ON st.id = vsp.student_id AND vsp.year_id = ? GROUP BY cl.id) as m_payments on m_payments.class_id = t.class_number_id LEFT JOIN (SELECT cl.id AS class_id ");
+        for (Month month : ymr.getMonths()) {
+            sql.append(", ROUND(SUM(IF(MONTH(ip.date_of_payment) = ").append(month.getId()).append(", ip.amount, 0)), 2) AS i_").append(month.getName()).append(" ");
+        }
+        sql.append(" FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id left join student_installement_plan as ip on st.id = ip.student_id and ip.year_id = ? GROUP BY cl.id) as m_installments on m_installments.class_id = t.class_number_id LEFT JOIN class_number AS cl ON cl.id = t.class_number_id GROUP BY t.class_number_id ORDER BY t.class_number_id");
+        PreparedStatement stat = dbCon.prepareStatement(sql.toString());
         int counter = 0;
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
@@ -1009,6 +938,11 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
+        stat.setInt(++counter, year_id);
+        stat.setInt(++counter, year_id);
+        stat.setInt(++counter, year_id);
+        stat.setInt(++counter, year_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         Table t;
         int i = 0;
@@ -1055,10 +989,19 @@ public class DbStudentContract extends BaseDb {
                 item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue() * 100
                         / (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue());
             }
+            for (Month month : ymr.getMonths()) {
+                item.getItemProperty(myUI.getMessage(Messages.Payments) + " " + month.getName()).setValue(
+                        result.getDouble("p_" + month.getName()));
+                month.setTotalPayments(month.getTotalPayments() +
+                        (Double) item.getItemProperty(myUI.getMessage(Messages.Payments) + " " + month.getName()).getValue());
+                item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName()).setValue(
+                        result.getDouble("i_" + month.getName()));
+                month.setTotalInstallments(month.getTotalInstallments() +
+                        (Double) item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName()).getValue());
+            }
         }
         if (t != null) {
-            t.setColumnFooter(myUI.getMessage(Messages.Total_Active),
-                    ymr.totalStudents + "/" + ymr.totalActive);
+            t.setColumnFooter(myUI.getMessage(Messages.Total_Active), ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(Messages.Contract), Settings.dFormat2.format(ymr.contracts));
             t.setColumnFooter(myUI.getMessage(Messages.Correction), Settings.dFormat2.format(ymr.corrections));
             t.setColumnFooter(myUI.getMessage(Messages.Discount), Settings.dFormat2.format(ymr.discounts));
@@ -1066,15 +1009,17 @@ public class DbStudentContract extends BaseDb {
                 t.setColumnFooter(myUI.getMessage(Messages.DiscountPercentage),
                         Settings.dFormat2.format((100 * ymr.discounts) / ymr.contracts));
             }
-            t.setColumnFooter(myUI.getMessage(Messages.PreviousYearDebt),
-                    Settings.dFormat2.format(ymr.prevYearDebts));
+            t.setColumnFooter(myUI.getMessage(Messages.PreviousYearDebt), Settings.dFormat2.format(ymr.prevYearDebts));
             t.setColumnFooter(myUI.getMessage(Messages.Net), Settings.dFormat2.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(Messages.Paid), Settings.dFormat2.format(ymr.paid_amounts));
             t.setColumnFooter(myUI.getMessage(Messages.Debt), Settings.dFormat2.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(Messages.OverPay), Settings.dFormat2.format(ymr.overpays));
+            for (Month month : ymr.getMonths()) {
+                t.setColumnFooter(myUI.getMessage(Messages.Payments) + " " + month.getName(), Settings.dFormat2.format(month.getTotalPayments()));
+                t.setColumnFooter(myUI.getMessage(Messages.InstPlanDebt) + " " + month.getName(), Settings.dFormat2.format(month.getTotalInstallments()));
+            }
             if (ymr.nets != 0.0) {
-                t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
-                        ymr.paid_amounts * 100 / ymr.nets));
+                t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(ymr.paid_amounts * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
             ymr.totalActive = 0;
@@ -1085,283 +1030,10 @@ public class DbStudentContract extends BaseDb {
             ymr.nets = 0.0;
             ymr.paid_amounts = 0.0;
             ymr.debts = 0.0;
-            ymr.overpays = 0.0;
-        }
-    }
-
-    public void execSQL_Summary_report(MyVaadinUI myUI, String school_ids, String edu_statuses_ids, int year_id,
-                                       Date from_date, Date till_date, YearMonthReport ymr) throws SQLException {
-
-        String sql = "SELECT t.class_id, t.school_id, concat(sch.code, ' - ', sch.name_ru) as school, " +
-                "COUNT(t.stud_id) as total_studs, COUNT(IF(t.status_id = 2, 1, NULL)) as active_studs, " +
-                "SUM(IFNULL(t.contract_amount, 0.0)) as contract_amount, " +
-                "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt > 0.0, t.prev_debt, 0.0)) AS prev_debt, " +
-                "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt < 0.0, t.prev_debt, 0.0)) AS prev_overpay, " +
-                "SUM(IFNULL(t.correction, 0.0)) as correction, SUM(IFNULL(t.net_payments, 0.0)) as net_payments, " +
-                "SUM(IFNULL(t.contr_with_disc, 0.0)) as contr_with_disc, " +
-                "SUM(CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
-                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
-                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) as net, " +
-                "SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
-                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
-                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
-                "IFNULL(t.net_payments, 0.0) > 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 " +
-                "THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
-                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
-                "IFNULL(t.net_payments, 0.0), 0.0)) AS debt, SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 " +
-                "THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
-                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
-                "IFNULL(t.net_payments, 0.0) < 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
-                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
-                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
-                "IFNULL(t.net_payments, 0.0), 0.0)) AS overpay FROM " +
-                "(SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, ";
-        if (from_date != null && till_date != null) {
-            sql += "IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
-        } else if (from_date != null) {
-            sql += "IF(sc.creation_date >= ?, c.amount, 0.0) AS contract_amount, ";
-        } else if (till_date != null) {
-            sql += "IF(sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
-        } else {
-            sql += "c.amount AS contract_amount, ";
-        }
-        sql += "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " +
-                "WHERE student_id = st.id AND year_id < ?), 0.0) + IFNULL((SELECT SUM(amount) " +
-                "FROM view_corrections WHERE student_id = st.id AND year_id < ?), 0.0) - " +
-                "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - " +
-                "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
-                "FROM student_payments as sp " +
-                "left join student on student.id = sp.student_id " +
-                "left join school as sch on sch.id = student.school_id " +
-                "WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, " +
-                "vc.amount AS correction, stud_pay.amount AS net_payments, ";
-        if (from_date != null && till_date != null) {
-            sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0), " +
-                    "st.id, ?, ?, ?)) as contr_with_disc, ";
-        } else if (from_date != null) {
-            sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ?, c.amount, 0.0), " +
-                    "st.id, ?, ?, NULL)) as contr_with_disc, ";
-        } else if (till_date != null) {
-            sql += "(select get_contract_with_discounts(IF(sc.creation_date <= ?, c.amount, 0.0), " +
-                    "st.id, ?, NULL, ?)) as contr_with_disc, ";
-        } else {
-            sql += "sc.contr_with_disc as contr_with_disc, ";
-        }
-        sql += "cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name " +
-                "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " +
-                "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 ";
-        if (from_date != null && till_date != null) {
-            sql += "AND DATE(so.modification_date) >= ? AND DATE(so.modification_date) <= ? ";
-        } else if (from_date != null) {
-            sql += "AND DATE(so.modification_date) >= ? ";
-        } else if (till_date != null) {
-            sql += "AND DATE(so.modification_date) <= ? ";
-        }
-        sql += "GROUP BY so.student_id) AS o_temp " +
-                "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid ";
-        if (from_date != null || till_date != null) {
-            sql += "LEFT JOIN education_status AS edu ON edu.id = stud_o.to_education_status_id " +
-                    "LEFT JOIN class_name AS cln ON cln.id = stud_o.to_class_name_id ";
-        } else {
-            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) " +
-                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) ";
-        }
-        sql += "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
-                "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
-                "LEFT JOIN " +
-                "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
-                "scc.amount, ' ' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
-                "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
-                "FROM student_correction scc " +
-                "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
-                "LEFT JOIN student st ON st.id = scc.student_id " +
-                "WHERE year_id = ? ";
-        if (from_date != null) {
-            sql += "AND scc.creation_date >= ? ";
-        }
-        if (till_date != null) {
-            sql += "AND scc.creation_date <= ? ";
-        }
-        sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
-                "LEFT JOIN " +
-                "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
-                "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
-                "FROM student_payments as sp " +
-                "left join student on student.id = sp.student_id " +
-                "left join school as sch on sch.id = student.school_id " +
-                "WHERE sp.year_id = ? ";
-        if (from_date != null) {
-            sql += "AND DATE(sp.modification_date) >= ? ";
-        }
-        if (till_date != null) {
-            sql += "AND DATE(sp.modification_date) <= ? ";
-        }
-        sql += "GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
-                "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
-                "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
-                "WHERE st.school_id in (" + school_ids + ") AND st.entering_year_id <= ? " +
-                "AND edu.id IN (" + edu_statuses_ids + ") " +
-                "GROUP BY st.id) AS t " +
-                "LEFT JOIN class_number AS cl ON cl.id = t.class_number_id " +
-                "LEFT JOIN school AS sch ON sch.id = t.school_id " +
-                "GROUP BY sch.id ORDER BY CAST(sch.code AS UNSIGNED)";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        int counter = 0;
-        if (from_date != null && till_date != null) {
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-        } else if (from_date != null) {
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-        } else if (till_date != null) {
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-        } else {
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-            stat.setInt(++counter, year_id);
-        }
-        ResultSet result = stat.executeQuery();
-        Table t;
-        int i = 0;
-        ymr.clearLayout();
-        t = ymr.createTable(myUI.getMessage(Messages.Total));
-        ymr.rightLay.addComponent(t);
-        while (result.next()) {
-            Item item = t.getContainerDataSource().addItem(i++);
-            item.getItemProperty(myUI.getMessage(Messages.School)).setValue(
-                    result.getString("school"));
-            item.getItemProperty(myUI.getMessage(Messages.Total_Active)).setValue(
-                    result.getInt("total_studs") + "/" + result.getInt("active_studs"));
-            ymr.totalStudents += result.getInt("total_studs");
-            ymr.totalActive += result.getInt("active_studs");
-            item.getItemProperty(myUI.getMessage(Messages.Contract)).setValue(
-                    result.getDouble("contract_amount"));
-            ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(Messages.Contract)).getValue();
-            item.getItemProperty(myUI.getMessage(Messages.Discount)).setValue(
-                    result.getDouble("contract_amount") - result.getDouble("contr_with_disc"));
-            if (result.getDouble("contract_amount") != 0) {
-                item.getItemProperty(myUI.getMessage(Messages.DiscountPercentage)).setValue((100 *
-                        (result.getDouble("contract_amount") - result.getDouble("contr_with_disc")))
-                        / result.getDouble("contract_amount"));
+            for (Month month : ymr.getMonths()) {
+                month.setTotalPayments(0);
+                month.setTotalInstallments(0);
             }
-            ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Discount)).getValue();
-            item.getItemProperty(myUI.getMessage(Messages.Correction)).setValue(
-                    result.getDouble("correction"));
-            ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(Messages.Correction)).getValue();
-            item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).setValue(
-                    result.getDouble("prev_debt"));
-            ymr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).getValue();
-            item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).setValue(
-                    result.getDouble("prev_overpay"));
-            ymr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).getValue();
-            item.getItemProperty(myUI.getMessage(Messages.Net)).setValue(result.getDouble("net"));
-            ymr.nets += (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue();
-            item.getItemProperty(myUI.getMessage(Messages.Paid)).setValue(
-                    result.getDouble("net_payments"));
-            ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue();
-            item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(result.getDouble("debt"));
-            ymr.debts += (Double) item.getItemProperty(myUI.getMessage(Messages.Debt)).getValue();
-            item.getItemProperty(myUI.getMessage(Messages.OverPay)).setValue(result.getDouble("overpay"));
-            ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(Messages.OverPay)).getValue();
-            if ((Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue() != 0.0) {
-                item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue() * 100
-                        / (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue());
-            }
-        }
-        if (t != null) {
-            t.setColumnFooter(myUI.getMessage(Messages.Total_Active),
-                    ymr.totalStudents + "/" + ymr.totalActive);
-            t.setColumnFooter(myUI.getMessage(Messages.Contract),
-                    Settings.dFormat2.format(ymr.contracts));
-            t.setColumnFooter(myUI.getMessage(Messages.Correction),
-                    Settings.dFormat2.format(ymr.corrections));
-            t.setColumnFooter(myUI.getMessage(Messages.Discount),
-                    Settings.dFormat2.format(ymr.discounts));
-            if (ymr.contracts != 0) {
-                t.setColumnFooter(myUI.getMessage(Messages.DiscountPercentage),
-                        Settings.dFormat2.format(ymr.discounts * 100 / ymr.contracts));
-            }
-            t.setColumnFooter(myUI.getMessage(Messages.PreviousYearDebt),
-                    Settings.dFormat2.format(ymr.prevYearDebts));
-            t.setColumnFooter(myUI.getMessage(Messages.PreviousYearOverpay),
-                    Settings.dFormat2.format(ymr.prevYearOverpays));
-            t.setColumnFooter(myUI.getMessage(Messages.Net),
-                    Settings.dFormat2.format(ymr.nets));
-            t.setColumnFooter(myUI.getMessage(Messages.Paid),
-                    Settings.dFormat2.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(Messages.Debt),
-                    Settings.dFormat2.format(ymr.debts));
-            t.setColumnFooter(myUI.getMessage(Messages.OverPay),
-                    Settings.dFormat2.format(ymr.overpays));
-            if (ymr.nets != 0.0) {
-                t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
-                        ymr.paid_amounts * 100 / ymr.nets));
-            }
-            ymr.totalStudents = 0;
-            ymr.totalActive = 0;
-            ymr.contracts = 0.0;
-            ymr.corrections = 0.0;
-            ymr.discounts = 0.0;
-            ymr.prevYearDebts = 0.0;
-            ymr.prevYearOverpays = 0.0;
-            ymr.nets = 0.0;
-            ymr.paid_amounts = 0.0;
-            ymr.debts = 0.0;
             ymr.overpays = 0.0;
         }
     }

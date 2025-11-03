@@ -13,7 +13,8 @@ public class Month implements Serializable {
 
     private int id;
     private String name;
-    private double total;
+    private double totalPayments;
+    private double totalInstallments;
 
     public Month() {
     }
@@ -39,11 +40,19 @@ public class Month implements Serializable {
         this.name = name;
     }
 
-    public double getTotal() {
-        return total;
+    public double getTotalPayments() {
+        return totalPayments;
     }
 
-    public void setTotal(double total) {
-        this.total = total;
+    public void setTotalPayments(double totalPayments) {
+        this.totalPayments = totalPayments;
+    }
+
+    public double getTotalInstallments() {
+        return totalInstallments;
+    }
+
+    public void setTotalInstallments(double totalInstallments) {
+        this.totalInstallments = totalInstallments;
     }
 }
