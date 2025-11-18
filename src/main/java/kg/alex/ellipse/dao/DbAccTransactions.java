@@ -504,7 +504,7 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(Messages.LastIncomeDate), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.ExpensesTotal), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(Messages.LastExpenseDate), String.class, null);
-        container.addContainerProperty(myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")", Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(c.getTime()) + ")", Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(Messages.CashBox), Double.class, 0.0);
         double ttlInc = 0;
         double ttlExp = 0;
@@ -529,7 +529,7 @@ public class DbAccTransactions extends BaseDb {
             }
             item.getItemProperty(myUI.getMessage(Messages.CashBox)).setValue(
                     result.getDouble("incTtl") + result.getDouble("prev_balance") - result.getDouble("expTtl"));
-            item.getItemProperty(myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")").setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(c.getTime()) + ")").setValue(
                     result.getDouble("prev_balance"));
             ttlPrev += result.getDouble("prev_balance");
         }
@@ -541,7 +541,7 @@ public class DbAccTransactions extends BaseDb {
                 Settings.dFormat2.format(ttlInc));
         sar.dataTable.setColumnFooter(myUI.getMessage(Messages.ExpensesTotal),
                 Settings.dFormat2.format(ttlExp));
-        sar.dataTable.setColumnFooter(myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")",
+        sar.dataTable.setColumnFooter(myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(c.getTime()) + ")",
                 Settings.dFormat2.format(ttlPrev));
         sar.dataTable.setColumnFooter(myUI.getMessage(Messages.CashBox),
                 Settings.dFormat2.format(ttlInc - ttlExp));
@@ -623,7 +623,7 @@ public class DbAccTransactions extends BaseDb {
                 + "UNION ALL "
                 + "SELECT tr.date_time AS creation_date, "
                 + "IF(c.acc_currency_id != ?, tr.amount " + sign + " tr.currency_rate, tr.amount) AS amount, "
-                + "tr.currency_rate as rate, tr.note as note, ? as type FROM acc_transactions AS tr "
+                + "tr.currency_rate as rate, concat(tr.note, ' (', c.name, ')') as note, ? as type FROM acc_transactions AS tr "
                 + "LEFT JOIN acc_cashbox AS c ON tr.acc_cashbox_id = c.id "
                 + "WHERE tr.acc_category_id = ? AND (date(tr.date_time) BETWEEN ? AND ?) AND tr.school_id = ? ) t "
                 + "ORDER BY creation_date";
@@ -694,7 +694,7 @@ public class DbAccTransactions extends BaseDb {
                 totalAccruals += prevBalance;
             }
             item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(type);
-            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(myUI.getMessage(Messages.PreviousBalance));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(myUI.getMessage(Messages.Saldo));
         }
         t.setColumnFooter(myUI.getMessage(Messages.Accrual), Settings.dFormat2.format(totalAccruals));
         t.setColumnFooter(myUI.getMessage(Messages.Payout), Settings.dFormat2.format(totalAccruals - currentBalance));
@@ -776,7 +776,7 @@ public class DbAccTransactions extends BaseDb {
                 totalIncomes += prevBalance;
             }
             item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(type);
-            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(myUI.getMessage(Messages.PreviousBalance));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(myUI.getMessage(Messages.Saldo));
         }
         t.setColumnFooter(myUI.getMessage(Messages.Income), Settings.dFormat2.format(totalIncomes));
         t.setColumnFooter(myUI.getMessage(Messages.Expense), Settings.dFormat2.format(totalIncomes - currentBalance));

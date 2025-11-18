@@ -164,7 +164,7 @@ public class SchoolsReport implements Button.ClickListener,
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.Total), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.IncomesTotal), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.ExpensesTotal), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(Messages.PreviousBalance)
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Saldo)
                             + " (" + Settings.df.format(c.getTime()) + ")", Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {

@@ -359,7 +359,7 @@ public class DateReport implements Button.ClickListener,
                         Calendar c = Calendar.getInstance();
                         c.setTime(fromDateDF.getValue());
                         c.add(Calendar.DAY_OF_MONTH, -1);
-                        prev_balanceLab.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + "): " + Settings.dFormat2.format(
+                        prev_balanceLab.setValue("<b>" + myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(c.getTime()) + "): " + Settings.dFormat2.format(
                                 schoolAcc.getPrevious_balance()) + getCurrency() + "</b>");
                         dbtr.close();
                     } catch (Exception e) {
@@ -435,7 +435,7 @@ public class DateReport implements Button.ClickListener,
                                             myUI.getMessage(Messages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + getCurrency() + "\t "
                                                     + myUI.getMessage(Messages.ExpensesTotal) + ": " + Settings.dFormat2.format(
                                                     schoolAcc.getTotal_outcome()) + getCurrency() + "\t "
-                                                    + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime())
+                                                    + myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(c.getTime())
                                                     + "): " + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + getCurrency() + "\t "
                                                     + myUI.getMessage(Messages.CashBox) + ": " + Settings.dFormat2.format(
                                                     (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + getCurrency() + "\t ");

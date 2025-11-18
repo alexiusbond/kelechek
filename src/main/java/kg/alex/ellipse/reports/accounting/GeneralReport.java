@@ -245,7 +245,7 @@ public class GeneralReport implements Button.ClickListener,
         if (event.getProperty() == yearSelect) {
             prevDayCal.setTime((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.StartDate)).getValue());
             prevDayCal.add(Calendar.DAY_OF_MONTH, -1);
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
         }
     }
 
@@ -401,7 +401,7 @@ public class GeneralReport implements Button.ClickListener,
         prevBalanceLbl = new Label();
         prevBalanceLbl.setContentMode(ContentMode.HTML);
         prevBalanceLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime())
+        prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(prevDayCal.getTime())
                 + "): </b>");
         hl.addComponent(prevBalanceLbl);
 
@@ -498,7 +498,7 @@ public class GeneralReport implements Button.ClickListener,
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_income()) + " " + Settings.KGS);
             outcomeTotalLbl.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal)
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + " " + Settings.KGS);
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance)
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.Saldo)
                     + " (" + Settings.df.format(prevDayCal.getTime())
                     + "): </b>" + schoolAcc.getPrevious_balance() + " " + Settings.KGS);
             totalLbl.setValue("<b>" + myUI.getMessage(Messages.CashBox)
@@ -506,7 +506,7 @@ public class GeneralReport implements Button.ClickListener,
         } else {
             incTotalLbl.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal) + ": </b>");
             outcomeTotalLbl.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal) + ": </b>");
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
             totalLbl.setValue("<b>" + myUI.getMessage(Messages.CashBox) + ": </b>");
         }
     }

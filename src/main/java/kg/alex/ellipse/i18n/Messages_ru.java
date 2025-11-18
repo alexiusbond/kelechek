@@ -547,6 +547,7 @@ public class Messages_ru extends kg.alex.ellipse.i18n.Messages {
             {AssertsTotal, "Всего возвр. активов"},
             {DebtsTotal, "Всего кратк. долгов"},
             {PreviousBalance, "Предыдущий баланс"},
+            {Saldo, "Сальдо"},
             {Balance, "Баланс"},
             {LastIncomeDate, "Дата последнего прихода"},
             {LastExpenseDate, "Дата последнего расхода"},

@@ -539,6 +539,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String AssertsTotal = generateId();
     public static final String DebtsTotal = generateId();
     public static final String PreviousBalance = generateId();
+    public static final String Saldo = generateId();
     public static final String Balance = generateId();
     public static final String LastIncomeDate = generateId();
     public static final String LastExpenseDate = generateId();

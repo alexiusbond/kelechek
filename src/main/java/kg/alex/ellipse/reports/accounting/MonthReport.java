@@ -269,7 +269,7 @@ public class MonthReport implements Button.ClickListener,
                                     (Integer) cashBoxSelect.getValue(), current.getTime(),
                                     tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                             incomesDataTable.setColumnFooter(
-                                    Settings.ymdf.format(current.getTime()), myUI.getMessage(Messages.PreviousBalance) + " ("
+                                    Settings.ymdf.format(current.getTime()), myUI.getMessage(Messages.Saldo) + " ("
                                             + Settings.df.format(prev_date.getTime()) + "): " + Settings.dFormat2.format(scAcc.getPrevious_balance())
                                             + getCurrency() + "; " + myUI.getMessage(Messages.Total)
                                             + ": " + incomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())) + getCurrency());

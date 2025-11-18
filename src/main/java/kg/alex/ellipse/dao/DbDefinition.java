@@ -466,7 +466,7 @@ public class DbDefinition extends BaseDb {
 
 
     public List<Month> exec_months() throws SQLException {
-        String sql = "SELECT t.id, t.name FROM MONTHS as t order by t.order_num";
+        String sql = "SELECT t.id, t.name FROM months as t order by t.order_num";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();

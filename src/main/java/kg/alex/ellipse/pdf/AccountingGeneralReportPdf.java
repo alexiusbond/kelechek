@@ -127,7 +127,7 @@ public class AccountingGeneralReportPdf {
                 accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.LastIncomeDate) + ":", normal_font));
                 accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.ExpensesTotal) + ":", normal_font));
                 accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.LastExpenseDate) + ":", normal_font));
-                accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.PreviousBalance) + " (" + prevDay + "):", normal_font));
+                accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.Saldo) + " (" + prevDay + "):", normal_font));
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                 accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.CashBox) + ":", normal_font));
 
