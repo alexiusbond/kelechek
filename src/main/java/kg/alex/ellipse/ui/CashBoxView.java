@@ -506,7 +506,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 }
                 if (st != 0) {
                     if (cr.getManual() == 0) {
-                        currencyTF.getPropertyDataSource().setValue(myUI.getCurrencyRateFromOptima());
+                        currencyTF.getPropertyDataSource().setValue(myUI.getCurrencyRateFromBank());
                     }
                     Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                 }
