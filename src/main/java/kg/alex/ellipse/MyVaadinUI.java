@@ -40,6 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
 import org.w3c.dom.*;
 
 import java.io.InputStream;
@@ -62,7 +63,9 @@ public class MyVaadinUI extends UI {
 
     public static MyVaadinUI getInstance() {
         return (MyVaadinUI) MyVaadinUI.getCurrent();
-    }private static final String NBKR_DAILY_URL = "https://www.nbkr.kg/XML/daily.xml";
+    }
+
+    private static final String NBKR_DAILY_URL = "https://www.nbkr.kg/XML/daily.xml";
     private static final String TARGET_ISO_CODE = "USD";
     private static final int NBKR_CACHE_TTL_MINUTES = 3000; // как у тебя было
 
@@ -125,7 +128,7 @@ public class MyVaadinUI extends UI {
             DbSchool dbs = new DbSchool();
             dbs.connect();
             if (currentUser.isPermitted(Settings.prmShowAllSchools + ":" + Settings.prmMenu) ||
-                getUser().getPosition_id() == 116) {
+                    getUser().getPosition_id() == 116) {
                 setSchoolCont(dbs.execSchoolSel(this, 0, this.getUser().getId()));
             } else {
                 setSchoolCont(dbs.execSchoolSel(this, getUser().getSchool().getId(), this.getUser().getId()));
@@ -263,63 +266,6 @@ public class MyVaadinUI extends UI {
         // Сохраняем твою логику округления до 4 знаков
         return Double.parseDouble(Settings.dFormat4.format(currency_rate));
     }
-/*
-    public double getCurrencyRateFromBank() {
-        Calendar c = Calendar.getInstance();
-        c.setTime(nbkr_time);
-        c.add(Calendar.MINUTE, 3000);
-        if (currency_rate == 0.00 || c.getTime().before(new Date())) {
-            nbkr_time = new Date();
-            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-            symbols.setDecimalSeparator(',');
-            DecimalFormat format = new DecimalFormat("##.####");
-            format.setDecimalFormatSymbols(symbols);
-            try {
-                URL url = new URL("https://www.nbkr.kg/XML/daily.xml");
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                Document doc = db.parse(url.openStream());
-                NodeList nl = doc.getElementsByTagName("Currency");
-                for (int temp = 0; temp < nl.getLength(); temp++) {
-                    Node nNode = nl.item(temp);
-                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                        Element eElement = (Element) nNode;
-                        if (eElement.getAttribute("ISOCode").equals("USD")) {
-                            currency_rate = format.parse(eElement.getElementsByTagName("Value")
-                                    .item(0).getTextContent()).doubleValue();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
-            }
-        }
-        return Double.parseDouble(Settings.dFormat4.format(currency_rate));
-    }*/
-/*
-    public double getCurrencyRateFromOptima() {
-        Calendar c = Calendar.getInstance();
-        c.setTime(nbkr_time);
-        c.add(Calendar.MINUTE, 3000);
-        if (currency_rate == 0.00 || c.getTime().before(new Date())) {
-            nbkr_time = new Date();
-            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-            symbols.setDecimalSeparator('.');
-            DecimalFormat format = new DecimalFormat("##.####");
-            format.setDecimalFormatSymbols(symbols);
-            try {
-                org.jsoup.nodes.Document doc = Jsoup.connect("https://www.optimabank.kg/index.php?lang=ru").get();
-                org.jsoup.nodes.Element elem = doc.getElementById("tab-cash");
-                Elements elements = elem.getElementsByClass("up");
-                currency_rate = format.parse(elements.get(1).text()).doubleValue();
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
-            }
-        }
-        return Double.parseDouble(Settings.dFormat4.format(currency_rate));
-    }*/
 
     public double getDb_currency_rate() {
         double db_currency_rate = 0.0;
