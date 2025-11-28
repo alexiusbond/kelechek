@@ -623,7 +623,7 @@ public class DbAccTransactions extends BaseDb {
                 + "UNION ALL "
                 + "SELECT tr.date_time AS creation_date, "
                 + "IF(c.acc_currency_id != ?, tr.amount " + sign + " tr.currency_rate, tr.amount) AS amount, "
-                + "tr.currency_rate as rate, concat(tr.note, ' (', c.name, ')') as note, ? as type FROM acc_transactions AS tr "
+                + "tr.currency_rate as rate, concat(ifnull(tr.note, ''), ' (', c.name, ')') as note, ? as type FROM acc_transactions AS tr "
                 + "LEFT JOIN acc_cashbox AS c ON tr.acc_cashbox_id = c.id "
                 + "WHERE tr.acc_category_id = ? AND (date(tr.date_time) BETWEEN ? AND ?) AND tr.school_id = ? ) t "
                 + "ORDER BY creation_date";
