@@ -20,9 +20,9 @@ public class BaseDb {
         Context env;
         try {
             env = (Context) new InitialContext().lookup("java:comp/env");
-            pool = (DataSource) env.lookup("jdbc/ellipse");
+            pool = (DataSource) env.lookup("jdbc/aim");
             if (pool == null) {
-                throw new Exception("ellipse can not found");
+                throw new Exception("aim can not found");
             }
         } catch (NamingException ne) {
             throw new Exception("...BaseDB... " + ne.getMessage());

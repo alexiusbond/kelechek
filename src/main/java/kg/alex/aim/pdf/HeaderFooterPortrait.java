@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 public class HeaderFooterPortrait extends PdfPageEventHelper {
 
     static final Logger logger = LogManager.getLogger(HeaderFooterPortrait.class);
-    private final static String FONT_LOCATION = "/home/ellipse/PT_Sans-Web-Regular.ttf";
+    private final static String FONT_LOCATION = "/home/aim/PT_Sans-Web-Regular.ttf";
     private final MyVaadinUI myUI;
     private final String name, address, phone;
 

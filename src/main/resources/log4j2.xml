@@ -7,8 +7,8 @@
             <PatternLayout pattern="%-5p %c{1} [%t] - %m%n"/>
         </Console>
         #Апендер для вывода логов в файл
-        <RollingFile name="ellipse" fileName="/home/ellipse/ellipse.log"
-                     filePattern="/home/ellipse/ellipse-%d{MM-dd-yyyy}-%i.log">
+        <RollingFile name="aim" fileName="/home/aim/aim.log"
+                     filePattern="/home/aim/aim-%d{MM-dd-yyyy}-%i.log">
             <PatternLayout pattern="%d %d{Z} [%t] %-5p (%F:%L) - %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -19,8 +19,8 @@
 
     <Loggers>
 
-        <Logger name="kg.alex.ellipse">
-            <AppenderRef ref="ellipse"/>
+        <Logger name="kg.alex.aim">
+            <AppenderRef ref="aim"/>
         </Logger>
 
         <Root level="all">

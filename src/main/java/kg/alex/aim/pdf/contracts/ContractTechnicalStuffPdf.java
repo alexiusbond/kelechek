@@ -16,8 +16,8 @@ import java.io.ByteArrayOutputStream;
 public class ContractTechnicalStuffPdf {
 
     static final Logger logger = LogManager.getLogger(ContractTechnicalStuffPdf.class);
-    private final static String FONT_LOCATION = "/home/ellipse/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/ellipse/TimesNewRomanBold.ttf";
+    private final static String FONT_LOCATION = "/home/aim/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/aim/TimesNewRomanBold.ttf";
     private final EmployeeInfoPdf employeeInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;

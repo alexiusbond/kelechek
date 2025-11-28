@@ -24,8 +24,8 @@ import java.util.List;
 public class ContractPdf {
 
     static final Logger logger = LogManager.getLogger(ContractPdf.class);
-    private final static String FONT_LOCATION = "/home/ellipse/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/ellipse/TimesNewRomanBold.ttf";
+    private final static String FONT_LOCATION = "/home/aim/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/aim/TimesNewRomanBold.ttf";
     private final MyVaadinUI myUI;
     private final StudentInfoPdf studentInfo;
     private byte[] b = null;
@@ -85,11 +85,11 @@ public class ContractPdf {
                 p.add(new Phrase("\n\nДареги: ш. Бишкек, к. Курулуш шаарчасы 9,\n" +
                         "720016\n" +
                         "Тел: +996 (558) 250 250, +996 (508) 250 250\n" +
-                        "Эл. почтасы: ellipse.bishkek@gmail.com", headerBoldFont));
+                        "Эл. почтасы: aim.bishkek@gmail.com", headerBoldFont));
                 tableHeader.addCell(p);
 
                 try {
-                    Image logo = Image.getInstance("/home/ellipse/" + studentInfo.getSchool().getPhoto());
+                    Image logo = Image.getInstance("/home/aim/" + studentInfo.getSchool().getPhoto());
                     logo.scaleToFit(95f, 95f);
 
                     PdfPCell logoCell = new PdfPCell(logo);
@@ -108,7 +108,7 @@ public class ContractPdf {
                 p.add(new Phrase("\n\nАдрес: г. Бишкек, ул. Городок Строителей 9,\n" +
                         "720016\n" +
                         "Тел: +996 (558) 250 250, +996 (508) 250 250\n" +
-                        "Эл. почта: ellipse.bishkek@gmail.com", headerBoldFont));
+                        "Эл. почта: aim.bishkek@gmail.com", headerBoldFont));
                 tableHeader.addCell(p);
 
                 document.add(tableHeader);

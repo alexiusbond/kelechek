@@ -56,7 +56,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
         final Button source = event.getButton();
         if (source == takeBakup) {
             try {
-                ProcessBuilder pb = new ProcessBuilder("/home/ellipse/backup.sh", "myArg1", "myArg2");
+                ProcessBuilder pb = new ProcessBuilder("/home/aim/backup.sh", "myArg1", "myArg2");
                 pb.start();
             } catch (IOException e) {
                 logger.error(e);
@@ -66,7 +66,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
         } else {
             try {
                 myUI.getPage().open(new FileResource(
-                                new File("/home/ellipse/backups/" + source.getData())),
+                                new File("/home/aim/backups/" + source.getData())),
                         "_blank", false);
             } catch (Exception e) {
                 logger.error(e);
@@ -90,7 +90,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
         container.addContainerProperty(myUI.getMessage(Messages.Date), Date.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
         try {
-            File folder = new File("/home/ellipse/backups");
+            File folder = new File("/home/aim/backups");
             File[] listOfFiles = folder.listFiles();
             if (listOfFiles != null) {
                 for (File listOfFile : listOfFiles) {

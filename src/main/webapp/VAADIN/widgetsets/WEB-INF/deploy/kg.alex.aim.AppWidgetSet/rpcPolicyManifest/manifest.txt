@@ -1,2 +1,2 @@
-# Module kg.alex.ellipse.AppWidgetSet
+# Module kg.alex.aim.AppWidgetSet
 # RPC service class, partial path of RPC policy file

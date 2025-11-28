@@ -80,8 +80,8 @@ public class AccountingGeneralReportPdf {
                         school.getAddress(), school.getPhone());
                 writer.setPageEvent(event);
 
-                final String FONT_LOCATION = "/home/ellipse/PT_Sans-Web-Regular.ttf";
-                final String FONT_LOCATION_BOLD = "/home/ellipse/PT_Sans-Web-Bold.ttf";
+                final String FONT_LOCATION = "/home/aim/PT_Sans-Web-Regular.ttf";
+                final String FONT_LOCATION_BOLD = "/home/aim/PT_Sans-Web-Bold.ttf";
 
                 BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
                         BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);

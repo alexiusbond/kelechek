@@ -4,7 +4,7 @@ public class Messages_ru extends kg.alex.aim.i18n.Messages {
 
     static final Object[][] contents_ru = {
             // Application
-            {AppTitle, "ШКОЛА ЭЛЛИПС"},
+            {AppTitle, "ШКОЛА ЭЙМ СКУЛЗ"},
             // Login Form
             {Language, "Язык"},
             {Level, "Уровень"},
@@ -174,7 +174,7 @@ public class Messages_ru extends kg.alex.aim.i18n.Messages {
             {ExtraPosition, "Доп. должность"},
             {ExtraPositions, "Доп должности"},
             {TotalWorkExperience, "Общий стаж работы"},
-            {EllipseWorkExperience, "Стаж работы в Эллипс"},
+            {AimWorkExperience, "Стаж работы в Эйм Скулз"},
             {ExtraBranches, "Доп. области преподавания"},
             {GenerateButton, "Сгенерировать"},
             {Permissions, "Разрешения"},
@@ -289,7 +289,7 @@ public class Messages_ru extends kg.alex.aim.i18n.Messages {
             {Left, "Осталось"},
             {TotalHours, "Кол-во часов за "},
             {WorkPlace, "Место работы"},
-            {Ellipse, "Эллипс"},
+            {Aim, "Эйм Скулз"},
             {RelativeType, "Кем является"},
             {Relative, "Родственник"},
             {Passport, "Серия и номер паспорта"},
@@ -411,7 +411,7 @@ public class Messages_ru extends kg.alex.aim.i18n.Messages {
             {To, "по"},
             {ToAge, "Возраст по"},
             {Director, "Директор"},
-            {EllipseExam, "Экзамен-Эллипс"},
+            {AimExam, "Экзамен-Эйм Скулз"},
             {AllClasses, "Все классы"},
             {All, "Все"},
             {AllIncomes, "Все приходы"},

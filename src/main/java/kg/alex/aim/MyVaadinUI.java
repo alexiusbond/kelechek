@@ -319,7 +319,7 @@ public class MyVaadinUI extends UI {
 
     @WebServlet(value = {"/*", "/VAADIN/*"}, asyncSupported = true)
     @VaadinServletConfiguration(productionMode = true,
-            ui = MyVaadinUI.class, widgetset = "kg.alex.ellipse.AppWidgetSet")
+            ui = MyVaadinUI.class, widgetset = "kg.alex.aim.AppWidgetSet")
     public static class Servlet extends VaadinServlet {
     }
 
