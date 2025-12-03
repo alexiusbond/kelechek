@@ -768,7 +768,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             addCallsItem();
         } else if (source == calculateInitialPaymentButton) {
             if (netContrAmount != null) {
-                initialPaymentTF.setValue(Settings.dFormat2.format(netContrAmount * 0.3));
+                initialPaymentTF.setValue(Settings.dFormat2.format(1000));
             }
         } else if (source == divideBtn) {
             if (divideTF.getValue() != null && !divideTF.getValue().isEmpty()) {

@@ -4,9 +4,12 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.TextField;
 import kg.alex.aim.MyVaadinUI;
 import kg.alex.aim.Settings;
 import kg.alex.aim.domain.StudentInfoPdf;
+import kg.alex.aim.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,7 +47,9 @@ public class ContractPdf {
                 BaseFont baseFont = BaseFont.createFont(FONT_LOCATION, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
                 BaseFont baseFontBold = BaseFont.createFont(FONT_LOCATION2, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
                 Font ordFont = new Font(baseFont, 10.5f);
+                Font ordItalicFont = new Font(baseFont, 10.5f, Font.ITALIC);
                 Font ordBoldFont = new Font(baseFontBold, 10.5f);
+                Font ordBolditalicFont = new Font(baseFontBold, 10.5f, Font.ITALIC);
                 Font boldUnderlinedFont = new Font(baseFontBold, 10.5f, Font.UNDERLINE);
 
                 document.open();
@@ -86,13 +91,13 @@ public class ContractPdf {
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("“" + studentInfo.getSchool().getName_kg() + "” билим берүү мекемеси, уставдын негизинде иш алып барган директору ", ordFont));
 
-                String fullName = studentInfo.getDirector().getSurname() + " " + studentInfo.getDirector().getName();
+                String directorFullName = studentInfo.getDirector().getSurname() + " " + studentInfo.getDirector().getName();
                 if (studentInfo.getDirector().getMiddle_name() != null && !studentInfo.getDirector().getMiddle_name().isEmpty()) {
-                    fullName += " " + studentInfo.getDirector().getMiddle_name();
+                    directorFullName += " " + studentInfo.getDirector().getMiddle_name();
                 }
-                paragraph.add(new Phrase(fullName, ordBoldFont));
+                paragraph.add(new Phrase(directorFullName, ordBoldFont));
                 paragraph.add(new Phrase(" атынан, мындан ары “Мектеп” деп аталат, бир тараптан жана мындан ары “Окуучу” деп аталуучу ", ordFont));
-                fullName = studentInfo.getStudent().getSurname() + " " + studentInfo.getStudent().getName();
+                String fullName = studentInfo.getStudent().getSurname() + " " + studentInfo.getStudent().getName();
                 if (!studentInfo.getStudent().getMiddle_name().isEmpty()) {
                     fullName = fullName + " " + studentInfo.getStudent().getMiddle_name();
                 }
@@ -595,8 +600,115 @@ public class ContractPdf {
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("5.7. Келишим эки нускада мамлекеттик тилде түзүлдү жана Тараптар тарабынан кол тамгалар коюлду. Эки нуска тең бирдей жана бирдей юридикалык күчкө ээ. Тараптардын ар биринде ушул келишимдин бирден нускасы болот.", ordFont));
                 contractBody.add(paragraph);
-                contractBody.add(new Paragraph(10, " "));
+                contractBody.add(new Paragraph(20, " "));
+
+                paragraph = new Paragraph();
+                paragraph.setIndentationLeft(15);
+                paragraph.setIndentationRight(10);
+                paragraph.setLeading(13);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("Мен келишимдин шарттары менен тааныштым жана аларга макулмун  ________________________ ", ordBolditalicFont));
+                contractBody.add(paragraph);
                 addTwoColumnText(document, writer, contractBody);
+                contractBody.clear();
+
+                paragraph = new Paragraph();
+                paragraph.setIndentationLeft(15);
+                paragraph.setIndentationRight(10);
+                paragraph.setLeading(13);
+                paragraph.setAlignment(Element.ALIGN_CENTER);
+                paragraph.add(new Phrase("6. ТАРАПТАРДЫН РЕКВИЗИТТЕРИ", ordBoldFont));
+                contractBody.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setIndentationLeft(15);
+                paragraph.setIndentationRight(10);
+                paragraph.setLeading(13);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("\n«" + studentInfo.getSchool().getName_kg() + "»   билим берүү мекемеси.\n" +
+                        "Дарек: " + studentInfo.getSchool().getAddress() + ".\n" +
+                        "ИНН: " + studentInfo.getSchool().getInn() + "\n" +
+                        "ОКПО: " + studentInfo.getSchool().getOkpo() + "\n" +
+                        "Банк: " + studentInfo.getSchool().getBank() + "\n" +
+                        "Т/эсеби (мультив.эсеп): " + studentInfo.getSchool().getBank_account() + "\n" +
+                        "БИК: " + studentInfo.getSchool().getBik() + "\n" +
+                        "Тел. " + studentInfo.getSchool().getPhone() + "\n" +
+                        "\n", ordFont));
+                paragraph.add(new Phrase(
+                        "Мектептин мүдүрү: ", ordBoldFont));
+                paragraph.add(new Phrase(directorFullName.replaceFirst("\\s+(?=[^\\s]+$)", "\n") + "   _______________________\n\n", ordFont));
+                paragraph.add(new Phrase("                                            (М.О.)", ordFont));
+                contractBody.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setIndentationLeft(15);
+                paragraph.setIndentationRight(10);
+                paragraph.setLeading(13);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("\n\nАта-эненин аты-жөнү: ", ordBoldFont));
+                paragraph.add(new Phrase(studentInfo.getMainRelative().getFullName() + "\n", ordFont));
+                paragraph.add(new Phrase("Жашаган дареги: ", ordBoldFont));
+                paragraph.add(new Phrase(studentInfo.getMainRelative().getAddress() + "\n", ordFont));
+                paragraph.add(new Phrase("Паспорт  ИНН: ", ordBoldFont));
+                paragraph.add(new Phrase(studentInfo.getMainRelative().getPassport() + "\n", ordFont));
+                paragraph.add(new Phrase("Тел.: ", ordBoldFont));
+                paragraph.add(new Phrase(studentInfo.getMainRelative().getPhone() + "\n\n", ordFont));
+                paragraph.add(new Phrase("Кол тамгасы:   __________________", ordBoldFont));
+                contractBody.add(paragraph);
+                contractBody.add(new Paragraph(20, " "));
+
+                paragraph = new Paragraph();
+                paragraph.setIndentationLeft(15);
+                paragraph.setIndentationRight(10);
+                paragraph.setLeading(13);
+                paragraph.setAlignment(Element.ALIGN_CENTER);
+                paragraph.add(new Phrase("ТӨЛӨМ ТӨЛӨӨ ГРАФИГИ:", ordBoldFont));
+                contractBody.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setIndentationLeft(15);
+                paragraph.setIndentationRight(10);
+                paragraph.setLeading(13);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("Жалпы төлөм: ", ordBolditalicFont));
+                paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getContract()) + " АКШ доллары\n", ordFont));
+                paragraph.add(new Phrase("Жеңилдик: ", ordBolditalicFont));
+                paragraph.add(new Phrase(studentInfo.getContractInfo().getDiscountStr() + "\n", ordFont));
+                paragraph.add(new Phrase("Корректировкалоо: ", ordBolditalicFont));
+                paragraph.add(new Phrase(studentInfo.getContractInfo().getCorrectionStr() + "\n", ordFont));
+                paragraph.add(new Phrase("* Төлөмдөр төлөм графигине ылайык төлөнбөгөн учурда берилген жеңилдик жокко чыгарылат!", ordItalicFont));
+                contractBody.add(paragraph);
+                contractBody.add(new Paragraph(10, " "));
+
+                float[] TContract_colsWidth = {2f, 1f};
+                PdfPTable TContract = new PdfPTable(2);
+                TContract.setWidthPercentage(90f);
+                TContract.setWidths(TContract_colsWidth);
+                TContract.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                TContract.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+                TContract.getDefaultCell().setPaddingTop(5f);
+                TContract.getDefaultCell().setPaddingBottom(5f);
+                TContract.getDefaultCell().setPaddingRight(5f);
+                TContract.addCell(new Phrase("Баштапкы төлөм \n(келишим түзүү төлөмү)", ordFont));
+                TContract.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                TContract.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()) + " " + Settings.USD, ordFont));
+                for (Object obj : instPlanCont.getItemIds()) {
+                    if ((Integer) instPlanCont.getContainerProperty(obj, Settings.status_id).getValue() == 1) {
+                        TContract.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                        TContract.addCell(new Phrase(((DateField) instPlanCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Date)).getValue()).getValue().toString(), ordFont));
+                        TContract.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                        TContract.addCell(new Phrase(Settings.dFormat2.format(((TextField) instPlanCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()) + " " + Settings.USD, ordFont));
+                    }
+                }
+                TContract.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                TContract.addCell(new Phrase("Жалпы төлөм:", ordBoldFont));
+                TContract.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                TContract.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getNet()) + " " + Settings.USD, ordBoldFont));
+                contractBody.add(TContract);
+
+                addToSecondColumn(document, writer, contractBody);
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -688,5 +800,48 @@ public class ContractPdf {
             }
         }
     }
+
+    private static void addToSecondColumn(Document document,
+                                          PdfWriter writer,
+                                          List<Element> elements) throws DocumentException {
+
+        PdfContentByte cb = writer.getDirectContent();
+
+        float gutter = 5f; // расстояние между колонками
+
+        float left = document.left();
+        float right = document.right();
+        float top = document.top(); // чуть ниже верхней границы
+        float bottom = document.bottom();
+
+        float fullWidth = right - left;
+        float columnWidth = (fullWidth - gutter) / 2f;
+
+        // левая/правая границы второй колонки
+        float colLeft = left + columnWidth + gutter;
+        float colRight = right;
+
+        ColumnText ct = new ColumnText(cb);
+
+        // изначальный прямоугольник второй колонки на текущей странице
+        ct.setSimpleColumn(colLeft, bottom, colRight, top);
+
+        for (Element e : elements) {
+            ct.addElement(e);
+        }
+
+        while (true) {
+            int status = ct.go();
+
+            if ((status & ColumnText.NO_MORE_TEXT) != 0) {
+                break; // всё отрисовано
+            }
+
+            // текст не влез — новая страница и снова рисуем во второй колонке
+            document.newPage();
+            ct.setSimpleColumn(colLeft, bottom, colRight, top);
+        }
+    }
+
 
 }
