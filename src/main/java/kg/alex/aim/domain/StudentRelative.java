@@ -18,6 +18,7 @@ public class StudentRelative implements Serializable {
     private String phone;
     private String address;
     private String passport;
+    private String inn;
     private int is_main;
     private int relative_id;
     private String relativeDeclarative;
@@ -25,6 +26,14 @@ public class StudentRelative implements Serializable {
     private int gender_id;
     private int attachment_id;
     private String attachmentUniqueName;
+
+    public String getInn() {
+        return inn;
+    }
+
+    public void setInn(String inn) {
+        this.inn = inn;
+    }
 
     public int getAttachment_id() {
         return attachment_id;

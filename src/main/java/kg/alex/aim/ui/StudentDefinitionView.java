@@ -2044,6 +2044,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.Passport),
                     myUI.getMessage(Messages.GivenBy),
                     myUI.getMessage(Messages.IssueDate),
+                    myUI.getMessage(Messages.INN),
                     myUI.getMessage(Messages.Responsible)};
         }
         try {
@@ -2073,6 +2074,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.FullName), TextField.class, null);
             productsContainer.addContainerProperty(
                     myUI.getMessage(Messages.Passport), TextField.class, null);
+            productsContainer.addContainerProperty(
+                    myUI.getMessage(Messages.INN), TextField.class, null);
             productsContainer.addContainerProperty(
                     myUI.getMessage(Messages.GivenBy), TextField.class, null);
             productsContainer.addContainerProperty(
@@ -2360,6 +2363,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         return false;
                     }
                     if (!((TextField) relativesTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.INN)).getValue()).isValid()) {
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
+                                Notification.Type.WARNING_MESSAGE);
+                        return false;
+                    }
+                    if (!((TextField) relativesTable.getItem(next).getItemProperty(
                             myUI.getMessage(Messages.Phone)).getValue()).isValid()) {
                         Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
@@ -2487,6 +2496,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.Passport),
                     myUI.getMessage(Messages.GivenBy),
                     myUI.getMessage(Messages.IssueDate),
+                    myUI.getMessage(Messages.INN),
                     myUI.getMessage(Messages.Responsible)};
         }
         String id = Settings.FreshItem + (--r_table_counter);
@@ -2524,6 +2534,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 createTextField(null, myUI.getMessage(Messages.Passport), id,
                         new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
                                 null, 50, true), false));
+        item.getItemProperty(myUI.getMessage(Messages.INN)).setValue(
+                createTextField(null, myUI.getMessage(Messages.INN), id,
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
+                                null, 20, true), false));
         item.getItemProperty(myUI.getMessage(Messages.Phone)).setValue(
                 createTextField(null, myUI.getMessage(Messages.Phone), id,
                         new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
@@ -2728,6 +2742,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 myUI.getMessage(Messages.Address)).getValue()).getValue());
         rel.setPassport(((TextField) item.getItemProperty(
                 myUI.getMessage(Messages.Passport)).getValue()).getValue());
+        rel.setInn(((TextField) item.getItemProperty(
+                myUI.getMessage(Messages.INN)).getValue()).getValue());
         if (((CheckBox) ((HorizontalLayout) item.getItemProperty(myUI.getMessage(Messages.Responsible))
                 .getValue()).getComponent(0)).getValue()) {
             rel.setIs_main(1);
@@ -4102,6 +4118,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.NotificationWrongValue), 1, 50, false));
 
             ((TextField) relativesTable.getContainerProperty(itemId,
+                    myUI.getMessage(Messages.INN)).getValue()).setRequired(true);
+            ((TextField) relativesTable.getContainerProperty(itemId,
+                    myUI.getMessage(Messages.INN)).getValue()).setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
+            ((TextField) relativesTable.getContainerProperty(itemId,
+                    myUI.getMessage(Messages.INN)).getValue()).addValidator(new StringLengthValidator(
+                    myUI.getMessage(Messages.NotificationWrongValue), 1, 20, false));
+
+            ((TextField) relativesTable.getContainerProperty(itemId,
                     myUI.getMessage(Messages.GivenBy)).getValue()).setRequired(true);
             ((TextField) relativesTable.getContainerProperty(itemId,
                     myUI.getMessage(Messages.GivenBy)).getValue()).setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
@@ -4134,6 +4158,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.Passport)).getValue()).setRequired(false);
             ((TextField) relativesTable.getContainerProperty(itemId,
                     myUI.getMessage(Messages.Passport)).getValue()).removeAllValidators();
+
+            ((TextField) relativesTable.getContainerProperty(itemId,
+                    myUI.getMessage(Messages.INN)).getValue()).setRequired(false);
+            ((TextField) relativesTable.getContainerProperty(itemId,
+                    myUI.getMessage(Messages.INN)).getValue()).removeAllValidators();
 
             ((TextField) relativesTable.getContainerProperty(itemId,
                     myUI.getMessage(Messages.GivenBy)).getValue()).setRequired(false);

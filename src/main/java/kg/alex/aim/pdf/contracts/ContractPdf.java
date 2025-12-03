@@ -650,7 +650,8 @@ public class ContractPdf {
                 paragraph.add(new Phrase("Жашаган дареги: ", ordBoldFont));
                 paragraph.add(new Phrase(studentInfo.getMainRelative().getAddress() + "\n", ordFont));
                 paragraph.add(new Phrase("Паспорт  ИНН: ", ordBoldFont));
-                paragraph.add(new Phrase(studentInfo.getMainRelative().getPassport() + "\n", ordFont));
+                paragraph.add(new Phrase(studentInfo.getMainRelative().getPassport() + "   " +
+                        studentInfo.getMainRelative().getInn() + "\n", ordFont));
                 paragraph.add(new Phrase("Тел.: ", ordBoldFont));
                 paragraph.add(new Phrase(studentInfo.getMainRelative().getPhone() + "\n\n", ordFont));
                 paragraph.add(new Phrase("Кол тамгасы:   __________________", ordBoldFont));
