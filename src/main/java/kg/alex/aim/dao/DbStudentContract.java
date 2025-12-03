@@ -159,8 +159,8 @@ public class DbStudentContract extends BaseDb {
         double debt = 0.0;
         String sql = "SELECT ROUND(IFNULL((SELECT SUM(sc.contr_with_disc) FROM student_contract AS sc "
                 + "WHERE sc.student_id = ? and sc.year_id < ?), 0.0), 2) + IFNULL((SELECT SUM(vc.amount) FROM view_corrections AS vc WHERE vc.student_id = ? and vc.year_id < ?), 0.0) "
-                + "- ROUND(IFNULL((SELECT SUM(if(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - "
-                + "sum(if(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) "
+                + "- ROUND(IFNULL((SELECT SUM(if(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)) - "
+                + "sum(if(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)) "
                 + "FROM student_payments AS sp "
                 + "WHERE sp.student_id = ? and sp.year_id < ?), 0.0), 2) AS debt";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -191,7 +191,7 @@ public class DbStudentContract extends BaseDb {
 
     public IndexedContainer execSQL_ClassList(MyVaadinUI myUI, String class_ids, int year_id, Date from_date, Date till_date,
                                               String edu_statuses_ids, ClassListReport clr) throws SQLException {
-        String currency = Settings.KGS;
+        String currency = Settings.USD;
         clr.activeStudents = 0;
         clr.discountedStudents = 0;
         clr.prevYearDebts = 0;
@@ -219,8 +219,8 @@ public class DbStudentContract extends BaseDb {
                 "WHERE student_id = st.id AND year_id < ?), 0.0) + " +
                 "IFNULL((SELECT SUM(amount) FROM view_corrections " +
                 "WHERE student_id = st.id AND year_id < ?), 0.0) - " +
-                "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - " +
-                "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) FROM student_payments as sp " +
+                "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)) - " +
+                "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)) FROM student_payments as sp " +
                 "WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, vc.amount, vc.full_details, " +
                 "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, sr.address, rel.name, ";
         if (from_date != null && till_date != null) {
@@ -278,7 +278,7 @@ public class DbStudentContract extends BaseDb {
                 "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
                 "LEFT JOIN " +
                 "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
-                "scc.amount, ' " + Settings.KGS + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
+                "scc.amount, ' " + Settings.USD + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
                 "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
                 "FROM student_correction scc " +
                 "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
@@ -292,8 +292,8 @@ public class DbStudentContract extends BaseDb {
         }
         sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
                 "LEFT JOIN " +
-                "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " +
-                "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " +
+                "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)) " +
+                "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0))) AS amount " +
                 "FROM student_payments as sp WHERE sp.year_id = ? ";
         if (from_date != null) {
             sql += "AND DATE(sp.modification_date) >= ? ";
@@ -480,7 +480,7 @@ public class DbStudentContract extends BaseDb {
     public IndexedContainer execSQL_Discounts(MyVaadinUI myUI, String class_ids,
                                               String discounts_ids, int year_id,
                                               String edu_statuses_ids, DiscountsReport dr) throws SQLException {
-        String currency = Settings.KGS;
+        String currency = Settings.USD;
         dr.activeStudents = 0;
         dr.discountedStudents = 0;
         dr.debts = 0;
@@ -617,7 +617,7 @@ public class DbStudentContract extends BaseDb {
             sql.append(", m_payments.p_").append(month.getName()).append(" ");
             sql.append(", m_installments.i_").append(month.getName()).append(" ");
         }
-        sql.append("FROM (SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, c.amount AS contract_amount, " + "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " + "WHERE student_id = st.id AND year_id < ?), 0.0) + " + "IFNULL((SELECT SUM(amount) FROM view_corrections " + "WHERE student_id = st.id AND year_id < ?), 0.0) - " + "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - " + "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " + "FROM student_payments as sp " + "left join student on student.id = sp.student_id " + "left join school as sch on sch.id = student.school_id " + "WHERE sp.student_id = st.id AND sp.year_id < ?), 0.0)) AS prev_debt, " + "vc.amount AS correction, stud_pay.amount AS net_payments,  sc.contr_with_disc as contr_with_disc, " + "cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name " + "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp " + "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " + "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) " + "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) " + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " + "LEFT JOIN contract AS c ON c.id = sc.contract_id " + "LEFT JOIN " + "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " + "scc.amount, ' " + Settings.KGS + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " + "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " + "FROM student_correction scc " + "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " + "LEFT JOIN student st ON st.id = scc.student_id " + "WHERE year_id = ? GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " + "LEFT JOIN " + "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " + "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " + "FROM student_payments as sp " + "left join student on student.id = sp.student_id " + "left join school as sch on sch.id = student.school_id " + "WHERE sp.year_id = ? GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " + "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " + "LEFT JOIN discount AS d ON d.id = sd.discount_id " + "WHERE st.school_id in (").append(school_ids).append(") AND st.entering_year_id <= ? ").append("AND edu.id IN (").append(edu_statuses_ids).append(") ").append("GROUP BY st.id) AS t LEFT JOIN(SELECT cln.id AS class_id");
+        sql.append("FROM (SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, c.amount AS contract_amount, " + "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " + "WHERE student_id = st.id AND year_id < ?), 0.0) + " + "IFNULL((SELECT SUM(amount) FROM view_corrections " + "WHERE student_id = st.id AND year_id < ?), 0.0) - " + "IFNULL((SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)) - " + "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " + "FROM student_payments as sp " + "left join student on student.id = sp.student_id " + "left join school as sch on sch.id = student.school_id " + "WHERE sp.student_id = st.id AND sp.year_id < ?), 0.0)) AS prev_debt, " + "vc.amount AS correction, stud_pay.amount AS net_payments,  sc.contr_with_disc as contr_with_disc, " + "cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name " + "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp " + "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " + "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) " + "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) " + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " + "LEFT JOIN contract AS c ON c.id = sc.contract_id " + "LEFT JOIN " + "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " + "scc.amount, ' " + Settings.USD + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " + "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " + "FROM student_correction scc " + "LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " + "LEFT JOIN student st ON st.id = scc.student_id " + "WHERE year_id = ? GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " + "LEFT JOIN " + "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) " + "- SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount " + "FROM student_payments as sp " + "left join student on student.id = sp.student_id " + "left join school as sch on sch.id = student.school_id " + "WHERE sp.year_id = ? GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " + "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " + "LEFT JOIN discount AS d ON d.id = sd.discount_id " + "WHERE st.school_id in (").append(school_ids).append(") AND st.entering_year_id <= ? ").append("AND edu.id IN (").append(edu_statuses_ids).append(") ").append("GROUP BY st.id) AS t LEFT JOIN(SELECT cln.id AS class_id");
         for (Month month : ymr.getMonths()) {
             sql.append(", ROUND(SUM(IF(MONTH(vsp.modification_date) = ").append(month.getId()).append(", vsp.normalized_amount, 0)), 2) AS p_").append(month.getName()).append(" ");
         }
@@ -821,9 +821,9 @@ public class DbStudentContract extends BaseDb {
                 + "MONTH(inst.date_of_payment)) AS i_temp "
                 + "ON i_temp.mnth = months.id AND s_temp.id = i_temp.s_id "
                 + "LEFT JOIN (SELECT sch.id AS s_id, SUM(IF(pay.payment_category_id = 3, "
-                + "-CASE WHEN pay.acc_currency_id = 1 THEN pay.amount "
-                + "ELSE pay.amount * pay.dollar_rate END, "
-                + "CASE WHEN pay.acc_currency_id = 1 THEN pay.amount ELSE pay.amount * pay.dollar_rate END)) AS amn, "
+                + "-CASE WHEN pay.acc_currency_id = 1 THEN pay.amount / pay.dollar_rate "
+                + "ELSE pay.amount END, "
+                + "CASE WHEN pay.acc_currency_id = 1 THEN pay.amount / pay.dollar_rate ELSE pay.amount END)) AS amn, "
                 + "MONTH(pay.modification_date) AS mnth "
                 + "FROM student_payments as pay "
                 + "LEFT JOIN student ON student.id = pay.student_id "
@@ -918,7 +918,7 @@ public class DbStudentContract extends BaseDb {
             sql.append(", m_payments.p_").append(month.getName()).append(" ");
             sql.append(", m_installments.i_").append(month.getName()).append(" ");
         }
-        sql.append(" FROM (SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, c.amount AS contract_amount, IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract WHERE student_id = st.id AND year_id < ?), 0.0) + IFNULL((SELECT SUM(amount) FROM view_corrections WHERE student_id = st.id AND year_id < ?), 0.0) - IFNULL( (SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) FROM student_payments as sp left join student on student.id = sp.student_id left join school as sch on sch.id = student.school_id WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, vc.amount AS correction, stud_pay.amount AS net_payments, sc.contr_with_disc as contr_with_disc, cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? LEFT JOIN contract AS c ON c.id = sc.contract_id LEFT JOIN (SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', scc.amount, ' KGS' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount FROM student_correction scc LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id LEFT JOIN student st ON st.id = scc.student_id WHERE year_id = ? GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id LEFT JOIN (SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount FROM student_payments as sp left join student on student.id = sp.student_id left join school as sch on sch.id = student.school_id WHERE sp.year_id = ? GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? LEFT JOIN discount AS d ON d.id = sd.discount_id WHERE st.school_id in (").append(school_ids).append(") AND st.entering_year_id <= ? AND edu.id IN (").append(edu_statuses_ids).append(") GROUP BY st.id) AS t LEFT JOIN(SELECT cl.id AS class_id ");
+        sql.append(" FROM (SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, c.amount AS contract_amount, IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract WHERE student_id = st.id AND year_id < ?), 0.0) + IFNULL((SELECT SUM(amount) FROM view_corrections WHERE student_id = st.id AND year_id < ?), 0.0) - IFNULL( (SELECT SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)) - SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) FROM student_payments as sp left join student on student.id = sp.student_id left join school as sch on sch.id = student.school_id WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, vc.amount AS correction, stud_pay.amount AS net_payments, sc.contr_with_disc as contr_with_disc, cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? LEFT JOIN contract AS c ON c.id = sc.contract_id LEFT JOIN (SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', scc.amount, ' " + Settings.USD + "' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount FROM student_correction scc LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id LEFT JOIN student st ON st.id = scc.student_id WHERE year_id = ? GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id LEFT JOIN (SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount FROM student_payments as sp left join student on student.id = sp.student_id left join school as sch on sch.id = student.school_id WHERE sp.year_id = ? GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? LEFT JOIN discount AS d ON d.id = sd.discount_id WHERE st.school_id in (").append(school_ids).append(") AND st.entering_year_id <= ? AND edu.id IN (").append(edu_statuses_ids).append(") GROUP BY st.id) AS t LEFT JOIN(SELECT cl.id AS class_id ");
         for (Month month : ymr.getMonths()) {
             sql.append(", ROUND(SUM(IF(MONTH(vsp.modification_date) = ").append(month.getId()).append(", vsp.normalized_amount, 0)), 2) AS p_").append(month.getName()).append(" ");
         }
@@ -1052,7 +1052,7 @@ public class DbStudentContract extends BaseDb {
                 + "AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
                 + "group by month(inst.date_of_payment)) as i_temp on i_temp.mnth = months.id "
                 + "left join ("
-                + "select sum(if(pay.payment_category_id = 3, - CASE WHEN pay.acc_currency_id = 1 THEN pay.amount ELSE pay.amount * pay.dollar_rate END, CASE WHEN pay.acc_currency_id = 1 THEN pay.amount ELSE pay.amount * pay.dollar_rate END)) as amn, "
+                + "select sum(if(pay.payment_category_id = 3, - CASE WHEN pay.acc_currency_id = 1 THEN pay.amount / pay.dollar_rate ELSE pay.amount END, CASE WHEN pay.acc_currency_id = 1 THEN pay.amount / pay.dollar_rate ELSE pay.amount END)) as amn, "
                 + "month(pay.modification_date) as mnth from student_payments as pay "
                 + "left join student on student.id = pay.student_id "
                 + "left join school as sch on sch.id = student.school_id "
@@ -1177,9 +1177,9 @@ public class DbStudentContract extends BaseDb {
                 + "LEFT JOIN "
                 + "(SELECT sp.student_id AS stud_id, "
                 + "(SUM(IF(sp.payment_category_id != 3, "
-                + "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) "
+                + "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)) "
                 + "-SUM(IF(sp.payment_category_id = 3, "
-                + "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0))) AS amount "
+                + "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0))) AS amount "
                 + "FROM student_payments AS sp WHERE DATE(sp.modification_date) >= ? "
                 + "AND DATE(sp.modification_date) <= ? AND sp.year_id = ? "
                 + "GROUP BY sp.student_id) AS sp_temp "
@@ -1275,7 +1275,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public void execFinancialHistory(MyVaadinUI myUI, int studentId, Table t) throws SQLException {
-        String currency = Settings.KGS;
+        String currency = Settings.USD;
         String sql = "SELECT * FROM (" +
                 "(SELECT concat('sc', sc.id) as  id, y.name AS academic_year, sc.creation_date AS creation_date, " +
                 "'Контракт' AS type, c.name AS note, c.amount AS amount FROM student_contract AS sc " +
@@ -1303,14 +1303,14 @@ public class DbStudentContract extends BaseDb {
                 "UNION " +
                 "(SELECT concat('sp', sp.id) as  id, y.name AS academic_year, DATE(sp.modification_date) AS creation_date, " +
                 "'Оплата' AS type, CONCAT(pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
-                "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END AS amount " +
+                "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END AS amount " +
                 "FROM student_payments AS sp LEFT JOIN year AS y ON sp.year_id = y.id " +
                 "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
                 "WHERE sp.student_id = ? and sp.payment_category_id != 3 ORDER BY sp.year_id, DATE(sp.modification_date)) " +
                 "UNION " +
                 "(SELECT concat('sp', sp.id) as  id, y.name AS academic_year, DATE(sp.modification_date) AS creation_date, " +
                 "'Возврат' AS type, CONCAT(pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
-                "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END AS amount " +
+                "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END AS amount " +
                 "FROM student_payments AS sp LEFT JOIN year AS y ON sp.year_id = y.id " +
                 "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
                 "WHERE sp.student_id = ? and sp.payment_category_id = 3 ORDER BY sp.year_id, DATE(sp.modification_date))) AS t " +
@@ -1375,7 +1375,7 @@ public class DbStudentContract extends BaseDb {
 
     public void execDebtsAndRepayments(MyVaadinUI myUI, int yearId, String classIds, String educationStatusIds,
                                        Date fromDate, Date tillDate, Table t) throws SQLException {
-        String currency = Settings.KGS;
+        String currency = Settings.USD;
         String sql = " SELECT * FROM (" +
                 "(SELECT concat('sc', sc.id) as  id, vcs.class_name AS class, " +
                 "vcs.education_status AS education_status, st.login AS login, " +
@@ -1413,7 +1413,7 @@ public class DbStudentContract extends BaseDb {
                 "CONCAT(st.name, ' ', st.surname) AS fullname, DATE(sp.modification_date) AS creation_date, " +
                 "IF(sp.payment_category_id = 3, 'Возврат', 'Оплата') AS type, " +
                 "CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
-                "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END AS amount " +
+                "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END AS amount " +
                 "FROM student_payments AS sp LEFT JOIN student AS st ON st.id = sp.student_id " +
                 "LEFT JOIN year AS y ON sp.year_id = y.id LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
                 "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id " +

@@ -253,9 +253,9 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         paymentsWeekLab.setValue("<b>" + myUI.getMessage(Messages.Payments) + ":</b>");
 
         layout.addComponent(instPlanWeekLab);
-        layout.addComponent(new Label(week_plan + " " + Settings.KGS));
+        layout.addComponent(new Label(week_plan + " " + Settings.USD));
         layout.addComponent(paymentsWeekLab);
-        layout.addComponent(new Label(week_paid + " " + Settings.KGS));
+        layout.addComponent(new Label(week_paid + " " + Settings.USD));
         return layout;
     }
 
@@ -300,9 +300,9 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         paymentsMonthLab.setValue("<b>" + myUI.getMessage(Messages.Payments) + ":</b>");
 
         layout.addComponent(instPlanMonthLab);
-        layout.addComponent(new Label(month_plan + " " + Settings.KGS));
+        layout.addComponent(new Label(month_plan + " " + Settings.USD));
         layout.addComponent(paymentsMonthLab);
-        layout.addComponent(new Label(month_paid + " " + Settings.KGS));
+        layout.addComponent(new Label(month_paid + " " + Settings.USD));
         return layout;
     }
 
@@ -423,17 +423,17 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         }
         layout.addComponent(caption, 0, 0, 1, 0);
         layout.addComponent(ttlContractLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getContract()) + " " + Settings.KGS));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getContract()) + " " + Settings.USD));
         layout.addComponent(ttlDiscLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDiscount()) + " " + Settings.KGS));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDiscount()) + " " + Settings.USD));
         layout.addComponent(ttlCorrectionLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getCorrection()) + " " + Settings.KGS));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getCorrection()) + " " + Settings.USD));
         layout.addComponent(ttlDebtLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDebt()) + " " + Settings.KGS));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDebt()) + " " + Settings.USD));
         layout.addComponent(ttlPaymentLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getPaid()) + " " + Settings.KGS));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getPaid()) + " " + Settings.USD));
         layout.addComponent(ttlLeftLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getLeft()) + " " + Settings.KGS));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getLeft()) + " " + Settings.USD));
         return layout;
     }
 

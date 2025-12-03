@@ -48,7 +48,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
 
     public ClassPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.currency = Settings.KGS;
+        this.currency = Settings.USD;
         this.splitPanel = splitPanel;
         buildLeftPanel();
         NATURAL_COL_ORDER = new String[]{

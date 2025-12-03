@@ -155,7 +155,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     public StudentDefinitionView(final MyVaadinUI myUI) {
         this.myUI = myUI;
-        this.currency = Settings.KGS;
+        this.currency = Settings.USD;
 
         buildButtonsLayout();
         buildStudGridLayout();
@@ -4011,10 +4011,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     && initialPayCashBoxCB.getValue() != null) {
                 if ((Integer) initialPayCashBoxCB.getContainerProperty(initialPayCashBoxCB.getValue(),
                         Settings.acc_currency_id).getValue() == 1) {
-                    instFirstPay = (Double) initialPaymentTF.getPropertyDataSource().getValue();
+                    instFirstPay = (Double) initialPaymentTF.getPropertyDataSource().getValue() /
+                            (Double) initialPaymentRateTF.getPropertyDataSource().getValue();
                 } else {
-                    instFirstPay = (Double) initialPaymentTF.getPropertyDataSource().getValue()
-                            * (Double) initialPaymentRateTF.getPropertyDataSource().getValue();
+                    instFirstPay = (Double) initialPaymentTF.getPropertyDataSource().getValue();
                 }
                 instCtrAmount -= instFirstPay;
             }

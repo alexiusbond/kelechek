@@ -132,12 +132,12 @@ public class AccountingGeneralReportPdf {
                 accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.CashBox) + ":", normal_font));
 
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_income()) + Settings.KGS, normal_font));
-                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_outcome()) + Settings.KGS, normal_font));
-                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance()) + Settings.KGS, normal_font));
+                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_income()) + Settings.USD, normal_font));
+                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_outcome()) + Settings.USD, normal_font));
+                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance()) + Settings.USD, normal_font));
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                 accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance() + sclAccInfo.getTotal_income()
-                                                                         - sclAccInfo.getTotal_outcome()) + Settings.KGS, normal_font));
+                                                                         - sclAccInfo.getTotal_outcome()) + Settings.USD, normal_font));
 
                 document.add(accInfoTable);
 

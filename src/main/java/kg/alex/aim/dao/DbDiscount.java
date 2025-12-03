@@ -142,14 +142,14 @@ public class DbDiscount extends BaseDb {
             } else if (result.getInt("t.discount_type_id") == 4) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - (max " + result.getString("t.amount")
-                        + " " + Settings.KGS + ")");
+                        + " " + Settings.USD + ")");
             } else if (result.getInt("t.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount") + "%");
             } else if (result.getInt("t.discount_type_id") == 2) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount")
-                        + " " + Settings.KGS + ")");
+                        + " " + Settings.USD + ")");
             }
             item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(
                     result.getDouble("t.amount"));
@@ -210,7 +210,7 @@ public class DbDiscount extends BaseDb {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - (max "
                         + Settings.dFormat2.format(result.getDouble("amount"))
-                        + " " + Settings.KGS + ")");
+                        + " " + Settings.USD + ")");
             } else if (result.getInt("d.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - "
@@ -219,7 +219,7 @@ public class DbDiscount extends BaseDb {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - "
                         + Settings.dFormat2.format(result.getDouble("amount"))
-                        + " " + Settings.KGS);
+                        + " " + Settings.USD);
             }
             item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(Settings.round(
                     result.getDouble("amount"), 2));

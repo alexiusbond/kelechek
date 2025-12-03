@@ -959,14 +959,14 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                     if ((Integer) ((ComboBox) transfersTable.getItem(next).getItemProperty(
                             myUI.getMessage(Messages.Currency)).getValue()).getValue() == 2) {
                         totalAmount += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
-                                * (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                         amountUsd += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                     } else {
                         totalAmount += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
+                                / (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
                         amountKgs += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                     }
@@ -974,7 +974,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             }
         }
         transfersTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.USD);
         transfersTable.setColumnFooter(myUI.getMessage(Messages.Rate),
                 Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
         transfersTable.setColumnFooter(myUI.getMessage(Messages.Currency),
@@ -1026,7 +1026,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     public void setTransfersFooter(double amountUsd, double amountKgs, double total) {
         totalAmount = total;
         transfersTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.USD);
         transfersTable.setColumnFooter(myUI.getMessage(Messages.Currency),
                 Settings.dFormat2.format(amountUsd) + " " + Settings.USD);
         transfersTable.setColumnFooter(myUI.getMessage(Messages.Rate),

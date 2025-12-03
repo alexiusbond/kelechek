@@ -865,14 +865,14 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     if ((Integer) cb.getContainerProperty(cb.getValue(),
                             Settings.acc_currency_id).getValue() == 2) {
                         totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
-                                * (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                         amountUsd += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                     } else {
                         totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
+                                / (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
                         amountKgs += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                     }
@@ -880,7 +880,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             }
         }
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.USD);
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Rate),
                 Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.CashBox),
@@ -1006,7 +1006,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     public void setPayoutsFooter(double amountUsd, double amountKgs, double total) {
         totalAmount = total;
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.USD);
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.CashBox),
                 Settings.dFormat2.format(amountUsd) + " " + Settings.USD);
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Rate),

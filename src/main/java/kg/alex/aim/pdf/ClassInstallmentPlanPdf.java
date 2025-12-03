@@ -129,7 +129,7 @@ public class ClassInstallmentPlanPdf {
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(myUI.getMessage(Messages.Total) + ": "
-                                                  + Settings.dFormat2.format(ttl_plan) + " " + Settings.KGS, ordFontBold));
+                                                  + Settings.dFormat2.format(ttl_plan) + " " + Settings.USD, ordFontBold));
 
                     document.add(table_plan);
 

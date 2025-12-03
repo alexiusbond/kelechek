@@ -96,10 +96,10 @@ public class DbTransfers extends BaseDb {
                             null, 250, acc_invoice_type_id == 1), acc_invoice_type_id != 1));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {
-                total += result.getDouble("t.amount");
+                total += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
                 kgs += result.getDouble("t.amount");
             } else {
-                total += result.getDouble("t.amount") * result.getDouble("t.currency_rate");
+                total += result.getDouble("t.amount");
                 usd += result.getDouble("t.amount");
             }
         }

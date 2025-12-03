@@ -103,10 +103,10 @@ public class DbAccTransactions extends BaseDb {
                     result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(Messages.NotificationWrongValue), null, 250, true), true));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             if (result.getInt("c.acc_currency_id") == 1) {
-                total += result.getDouble("t.amount");
+                total += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
                 kgs += result.getDouble("t.amount");
             } else {
-                total += result.getDouble("t.amount") * result.getDouble("t.currency_rate");
+                total += result.getDouble("t.amount") ;
                 usd += result.getDouble("t.amount");
             }
         }
@@ -478,11 +478,11 @@ public class DbAccTransactions extends BaseDb {
                 + "MAX(IF(tr.acc_type_id = 2, DATE(tr.date_time), null)) as max_exp, "
                 + "MAX(IF(tr.acc_type_id = 1, DATE(tr.date_time), null)) as max_inc, "
                 + "SUM(IF(tr.acc_type_id = 1 AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ?, "
-                + "if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2)), 0.0)) AS incTtl, "
+                + "if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount), 0.0)) AS incTtl, "
                 + "SUM(IF(tr.acc_type_id = 2 AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ?, "
-                + "if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2)), 0.0)) AS expTtl, "
-                + "SUM(IF(DATE(tr.date_time) < ?, IF(tr.acc_type_id = 1, if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2)), "
-                + "-(if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2)))), 0.0)) AS prev_balance "
+                + "if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount), 0.0)) AS expTtl, "
+                + "SUM(IF(DATE(tr.date_time) < ?, IF(tr.acc_type_id = 1, if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount), "
+                + "-(if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount))), 0.0)) AS prev_balance "
                 + "FROM acc_transactions AS tr "
                 + "LEFT JOIN acc_cashbox AS c ON c.id = tr.acc_cashbox_id "
                 + "LEFT JOIN school AS sch ON sch.id = tr.school_id "
@@ -1131,13 +1131,13 @@ public class DbAccTransactions extends BaseDb {
                 + "WHERE pay.year_id = ? AND st.school_id = ? AND pay.payment_category_id IN (1, 2, 3) "
                 + "AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
                 + "GROUP BY MONTH(pay.modification_date)) AS p_temp ON p_temp.mnth = months.id "
-                + "LEFT JOIN (SELECT SUM(if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2))) AS amn, "
+                + "LEFT JOIN (SELECT SUM(if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount)) AS amn, "
                 + "MONTH(tr.date_time) AS mnth FROM acc_transactions AS tr "
                 + "LEFT JOIN acc_cashbox as c ON c.id = tr.acc_cashbox_id "
                 + "WHERE tr.school_id = ? AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? "
                 + "AND tr.acc_category_id IN (SELECT acc_category_id FROM payment_category WHERE id IN (1, 2)) "
                 + "GROUP BY MONTH(date_time)) AS in_temp ON in_temp.mnth = months.id LEFT JOIN "
-                + "(SELECT SUM(if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2))) AS amn, "
+                + "(SELECT SUM(if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount)) AS amn, "
                 + "MONTH(tr.date_time) AS mnth FROM acc_transactions AS tr "
                 + "LEFT JOIN acc_cashbox as c ON c.id = tr.acc_cashbox_id "
                 + "WHERE tr.school_id = ? AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? "

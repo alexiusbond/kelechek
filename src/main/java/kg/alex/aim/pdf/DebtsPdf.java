@@ -40,7 +40,7 @@ public class DebtsPdf {
                     final double total_paid, final double total_debt) {
         this.fromDate = fDate;
         this.tillDate = tDate;
-        this.currency = Settings.KGS;
+        this.currency = Settings.USD;
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
             private static final long serialVersionUID = 1L;

@@ -144,7 +144,7 @@ public class ClassPaymentsPdf {
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(Messages.Total) + ": "
-                                                 + Settings.dFormat2.format(total) + " " + Settings.KGS, ordFontBold));
+                                                 + Settings.dFormat2.format(total) + " " + Settings.USD, ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
 
                     document.add(infoTable);

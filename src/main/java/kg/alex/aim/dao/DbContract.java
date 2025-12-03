@@ -157,7 +157,7 @@ public class DbContract extends BaseDb {
                     result.getString("t.name"));
             item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name") + " " + Settings.dFormat2.format(result.getDouble("t.amount"))
-                    + " " + Settings.KGS + " (" + result.getString("y.name") + ")");
+                    + " " + Settings.USD + " (" + result.getString("y.name") + ")");
             item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(
                     result.getDouble("t.amount"));
         }

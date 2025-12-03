@@ -49,7 +49,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
 
     public ContractDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
-        amountTitle = myUI.getMessage(Messages.AmountKGS);
+        amountTitle = myUI.getMessage(Messages.AmountUSD);
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Title),
                 amountTitle, myUI.getMessage(Messages.School),

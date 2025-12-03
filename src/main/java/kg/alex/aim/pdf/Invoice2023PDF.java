@@ -46,7 +46,7 @@ public class Invoice2023PDF {
 
             try {
                 paymentCurrency = invoiceInfo.getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
-                contractCurrency = Settings.KGS;
+                contractCurrency = Settings.USD;
                 SimpleDateFormat dateRu = new SimpleDateFormat(
                         "«dd» MMMMM yyyy г.", myDateFormatSymbols);
 

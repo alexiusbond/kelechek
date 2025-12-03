@@ -495,14 +495,14 @@ public class GeneralReport implements Button.ClickListener,
     private void setSchoolAccounting(SchoolAccounting schoolAcc) {
         if (schoolAcc != null) {
             incTotalLbl.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal)
-                    + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_income()) + " " + Settings.KGS);
+                    + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_income()) + " " + Settings.USD);
             outcomeTotalLbl.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal)
-                    + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + " " + Settings.KGS);
+                    + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + " " + Settings.USD);
             prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.Saldo)
                     + " (" + Settings.df.format(prevDayCal.getTime())
-                    + "): </b>" + schoolAcc.getPrevious_balance() + " " + Settings.KGS);
+                    + "): </b>" + schoolAcc.getPrevious_balance() + " " + Settings.USD);
             totalLbl.setValue("<b>" + myUI.getMessage(Messages.CashBox)
-                    + ": </b>" + Settings.dFormat2.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + " " + Settings.KGS);
+                    + ": </b>" + Settings.dFormat2.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + " " + Settings.USD);
         } else {
             incTotalLbl.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal) + ": </b>");
             outcomeTotalLbl.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal) + ": </b>");
@@ -524,13 +524,13 @@ public class GeneralReport implements Button.ClickListener,
         }
         if (contractTtl != null) {
             totalsGrid.addComponent(new Label(contractTtl.getStudents() + ""), 1, 1);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getContract()) + " " + Settings.KGS), 1, 2);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getDebt()) + " " + Settings.KGS), 1, 3);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getDiscount()) + " " + Settings.KGS), 1, 4);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getCorrection()) + " " + Settings.KGS), 1, 5);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getNet()) + " " + Settings.KGS), 1, 6);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getPaid()) + " " + Settings.KGS), 1, 7);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getLeft()) + " " + Settings.KGS), 1, 8);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getContract()) + " " + Settings.USD), 1, 2);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getDebt()) + " " + Settings.USD), 1, 3);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getDiscount()) + " " + Settings.USD), 1, 4);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getCorrection()) + " " + Settings.USD), 1, 5);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getNet()) + " " + Settings.USD), 1, 6);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getPaid()) + " " + Settings.USD), 1, 7);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getLeft()) + " " + Settings.USD), 1, 8);
             //draw discounts chart
             double totalDisc = contractTtl.getNet() + contractTtl.getDiscount();
             if (totalDisc != 0.0) {

@@ -436,6 +436,6 @@ public class MonthReport implements Button.ClickListener,
     private String getCurrency() {
         Object currency = cashBoxSelect.getContainerProperty(cashBoxSelect.getValue(),
                 myUI.getMessage(Messages.Currency)).getValue();
-        return currency == null ? " " + Settings.KGS : " " + currency;
+        return currency == null ? " " + Settings.USD : " " + currency;
     }
 }
