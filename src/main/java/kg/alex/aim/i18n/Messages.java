@@ -74,7 +74,6 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String AcademicYear = generateId();
     public static final String Hours = generateId();
     public static final String ExtraHours = generateId();
-    public static final String ClassNumberDefinition = generateId();
     public static final String ClassNumber = generateId();
     public static final String LanguageDefinition = generateId();
     public static final String ExamDefinition = generateId();

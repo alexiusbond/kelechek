@@ -200,7 +200,7 @@ public class DbStudentPayment extends BaseDb {
 
     public int getMaxOrderNum(int id) throws SQLException {
         int maxValue;
-        String sql = "select infull((max(sp.order_number)+1),1) as max_plus1 "
+        String sql = "select ifnull((max(sp.order_number)+1),1) as max_plus1 "
                 + "from student_payments as sp "
                 + "left join student as s on s.id = sp.student_id where "
                 + "s.school_id = (SELECT school_id FROM student where id = ?)";

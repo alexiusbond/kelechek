@@ -63,7 +63,6 @@ public class Messages_ru extends kg.alex.aim.i18n.Messages {
             {Hours, "Часы"},
             {ExtraHours, "Доп. часы"},
             {AcademicYear, "Акад. год"},
-            {ClassNumberDefinition, "Определение номеров класса"},
             {ClassNumber, "Номер класса"},
             {LanguageDefinition, "Определение языков"},
             {ExamDefinition, "Определение экзаменов"},
