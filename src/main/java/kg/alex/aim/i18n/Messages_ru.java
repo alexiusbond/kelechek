@@ -281,6 +281,8 @@ public class Messages_ru extends kg.alex.aim.i18n.Messages {
             {ModificationDate, "Дата изменения"},
             {Materials, "Материалы"},
             {Contract, "Контракт"},
+            {ContractKG, "Контракт (KG)"},
+            {ContractRU, "Контракт (RU)"},
             {Discount, "Скидка"},
             {DiscountPercentage, "% Скидки"},
             {Net, "К оплате"},

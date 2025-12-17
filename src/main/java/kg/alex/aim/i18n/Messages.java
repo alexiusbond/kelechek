@@ -285,6 +285,8 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String TransferInstruction = generateId();
     public static final String Materials = generateId();
     public static final String Contract = generateId();
+    public static final String ContractKG = generateId();
+    public static final String ContractRU = generateId();
     public static final String Discount = generateId();
     public static final String DiscountPercentage = generateId();
     public static final String Net = generateId();

@@ -25,7 +25,8 @@ import kg.alex.aim.dao.*;
 import kg.alex.aim.domain.*;
 import kg.alex.aim.i18n.Messages;
 import kg.alex.aim.pdf.Invoice2023PDF;
-import kg.alex.aim.pdf.contracts.ContractPdf;
+import kg.alex.aim.pdf.contracts.ContractKgPdf;
+import kg.alex.aim.pdf.contracts.ContractRuPdf;
 import kg.alex.aim.tableexport.ExcelExport;
 import kg.alex.aim.utils.ExistsValidator;
 import kg.alex.aim.utils.FormattedTable;
@@ -114,7 +115,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private FormattedTable installmentTable;
     private FormattedTable discountsTable;
     private FormattedTable correctionsTable;
-    private Button printButton;
+    private PopupButton printButton;
+    private OptionGroup contractTypeOG;
     private Button excelButton;
     private Button financialHistoryButton;
     private IndexedContainer productsContainer = null,
@@ -495,12 +497,19 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         financialHistoryButton.addClickListener(this);
         buttonsLay.addComponent(financialHistoryButton);
 
+        contractTypeOG = new OptionGroup();
+        contractTypeOG.setNullSelectionAllowed(true);
+        contractTypeOG.addValueChangeListener(this);
+        contractTypeOG.addItem(myUI.getMessage(Messages.ContractKG));
+        contractTypeOG.addItem(myUI.getMessage(Messages.ContractRU));
+
         printButton = new PopupButton(myUI.getMessage(Messages.Print));
         printButton.setDescription(myUI.getMessage(Messages.Print));
         printButton.setIcon(FontAwesome.PRINT);
         printButton.setImmediate(true);
         printButton.addClickListener(this);
         printButton.setEnabled(false);
+        printButton.setContent(contractTypeOG);
         buttonsLay.addComponent(printButton);
 
         excelButton = new Button(myUI.getMessage(Messages.ExportToExcel));
@@ -1066,6 +1075,94 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 logger.catching(e);
             }
         } else if (source == printButton) {
+        } else if (source == financialHistoryButton) {
+            if (studDataTable.getValue() != null) {
+                int st_id = (Integer) studDataTable.getValue();
+                myUI.addWindow(new StudentFinancialHistoryWindow(myUI, myUI.getMessage(Messages.FinancialHistory) + " - " +
+                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.FirstName)).getValue() + " " +
+                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.LastName)).getValue() + "; " +
+                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.ClassName)).getValue(), st_id));
+            }
+        } else if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
+            StudentRelative sr = new StudentRelative();
+            sr.setId(source.getData().toString());
+            Button b = (Button) ((HorizontalLayout) relativesTable.getContainerProperty(sr.getId() + "",
+                    myUI.getMessage(Messages.Responsible)).getValue()).getComponent(1);
+            if (b.getData() != null) {
+                sr.setAttachmentUniqueName(((Attachment) b.getData()).getUnique_name());
+            }
+            delRelIds.add(sr);
+            relativesTable.removeItem(event.getButton().getData().toString());
+        } else if (tabs.getSelectedTab() == tabs.getTab(callsTableLay).getComponent()) {
+            delCallIds.add((String) source.getData());
+            callsTable.removeItem(event.getButton().getData().toString());
+        } else if (tabs.getSelectedTab() == tabs.getTab(acsGiveTableLay).getComponent()) {
+            acsGiveTable.removeItem(event.getButton().getData().toString());
+        } else if (tabs.getSelectedTab() == tabs.getTab(acsReceiveTableLay).getComponent()) {
+            acsReceiveTable.removeItem(event.getButton().getData().toString());
+        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentInstallment)) {
+            installmentTable.removeItem(event.getButton().getData().toString());
+            if (initialPaymentTF.isValid()) {
+                recountInstPlanLabel();
+            }
+        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentDiscount)) {
+            discCounter--;
+            delDiscIds.add(source.getData().toString());
+            discountsTable.removeItem(event.getButton().getData().toString());
+            if (initialPaymentTF.isValid()) {
+                recountInstPlanLabel();
+            }
+        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentCorrection)) {
+            delCorrectionIds.add(source.getData().toString());
+            correctionsTable.removeItem(event.getButton().getData().toString());
+            if (initialPaymentTF.isValid()) {
+                recountInstPlanLabel();
+            }
+        } else if (tabs.getSelectedTab() == tabs.getTab(payTableLay).getComponent() && source.getCaption() == null) {
+            delPayIds.add(source.getData().toString());
+            paymentsTable.removeItem(event.getButton().getData().toString());
+        }
+    }
+
+    private StreamResource getFileStream(File inputFile) {
+        StreamResource.StreamSource source = () -> {
+            InputStream input = null;
+            try {
+                input = new FileInputStream(inputFile);
+            } catch (FileNotFoundException ex) {
+                logger.error(ex);
+                logger.catching(ex);
+            }
+            return input;
+        };
+        return new StreamResource(source, inputFile.getName());
+    }
+
+    @Override
+    public void valueChange(Property.ValueChangeEvent event) {
+        Property property = event.getProperty();
+        if (property == initialPayCashBoxCB && initialPaymentRateTF.getValue() == null) {
+            initialPaymentRateTF.getPropertyDataSource().setValue(myUI.getDb_currency_rate());
+        }
+        if (property == studDataTable) {
+            if (studDataTable.getItem(studDataTable.getValue()) != null) {
+                netContrAmount = 0.0;
+                clearFields();
+                fillFields();
+                recount();
+                printButton.setEnabled(true);
+                if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmFinancialHistoryInfo)) {
+                    financialHistoryButton.setEnabled(true);
+                }
+                setContractCb(contr_id);
+                initialPaymentTF.setData(null);
+                initialPaymentRateTF.setData(null);
+                initialPayCashBoxCB.setData(null);
+                initialPaymentTF.getPropertyDataSource().setValue(null);
+                initialPaymentRateTF.getPropertyDataSource().setValue(null);
+                initialPayCashBoxCB.setValue(null);
+            }
+        } else if (property == contractTypeOG && contractTypeOG.getValue() != null) {
             tabs.setSelectedTab(contractTabLay);
             if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
                     && studDataTable.getValue() != null) {
@@ -1079,7 +1176,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         dbs.close();
                         DbEmployee dbEmployee = new DbEmployee();
                         dbEmployee.connect();
-                        studInfo.setDirector(dbEmployee.exec_president(1));
+                        studInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
                         studInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
                         dbEmployee.close();
                         DbSchool dbSchool = new DbSchool();
@@ -1177,7 +1274,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (studInfo.getMainRelative() != null && studInfo.getMainRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
-                                new ContractPdf(myUI, studInfo, instPlanCont);
+                                if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractKG))) {
+                                    new ContractKgPdf(myUI, studInfo, instPlanCont);
+                                } else if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractRU))) {
+                                    new ContractRuPdf(myUI, studInfo, instPlanCont);
+                                }
                             } else {
                                 Notification.show(myUI.getMessage(Messages.NoDirectorAssigned),
                                         Notification.Type.WARNING_MESSAGE);
@@ -1190,100 +1291,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         Notification.show(myUI.getMessage(Messages.FillRelativeInfo),
                                 Notification.Type.WARNING_MESSAGE);
                     }
-                } else {
-                    Notification.show(myUI.getMessage(Messages.SelectContract),
-                            Notification.Type.WARNING_MESSAGE);
                 }
-            } else {
-                Notification.show(myUI.getMessage(Messages.SelectContractTab),
-                        Notification.Type.WARNING_MESSAGE);
-            }
-        } else if (source == financialHistoryButton) {
-            if (studDataTable.getValue() != null) {
-                int st_id = (Integer) studDataTable.getValue();
-                myUI.addWindow(new StudentFinancialHistoryWindow(myUI, myUI.getMessage(Messages.FinancialHistory) + " - " +
-                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.FirstName)).getValue() + " " +
-                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.LastName)).getValue() + "; " +
-                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.ClassName)).getValue(), st_id));
-            }
-        } else if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
-            StudentRelative sr = new StudentRelative();
-            sr.setId(source.getData().toString());
-            Button b = (Button) ((HorizontalLayout) relativesTable.getContainerProperty(sr.getId() + "",
-                    myUI.getMessage(Messages.Responsible)).getValue()).getComponent(1);
-            if (b.getData() != null) {
-                sr.setAttachmentUniqueName(((Attachment) b.getData()).getUnique_name());
-            }
-            delRelIds.add(sr);
-            relativesTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(callsTableLay).getComponent()) {
-            delCallIds.add((String) source.getData());
-            callsTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(acsGiveTableLay).getComponent()) {
-            acsGiveTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(acsReceiveTableLay).getComponent()) {
-            acsReceiveTable.removeItem(event.getButton().getData().toString());
-        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentInstallment)) {
-            installmentTable.removeItem(event.getButton().getData().toString());
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
-        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentDiscount)) {
-            discCounter--;
-            delDiscIds.add(source.getData().toString());
-            discountsTable.removeItem(event.getButton().getData().toString());
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
-        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentCorrection)) {
-            delCorrectionIds.add(source.getData().toString());
-            correctionsTable.removeItem(event.getButton().getData().toString());
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
-        } else if (tabs.getSelectedTab() == tabs.getTab(payTableLay).getComponent() && source.getCaption() == null) {
-            delPayIds.add(source.getData().toString());
-            paymentsTable.removeItem(event.getButton().getData().toString());
-        }
-    }
-
-    private StreamResource getFileStream(File inputFile) {
-        StreamResource.StreamSource source = () -> {
-            InputStream input = null;
-            try {
-                input = new FileInputStream(inputFile);
-            } catch (FileNotFoundException ex) {
-                logger.error(ex);
-                logger.catching(ex);
-            }
-            return input;
-        };
-        return new StreamResource(source, inputFile.getName());
-    }
-
-    @Override
-    public void valueChange(Property.ValueChangeEvent event) {
-        Property property = event.getProperty();
-        if (property == initialPayCashBoxCB && initialPaymentRateTF.getValue() == null) {
-            initialPaymentRateTF.getPropertyDataSource().setValue(myUI.getDb_currency_rate());
-        }
-        if (property == studDataTable) {
-            if (studDataTable.getItem(studDataTable.getValue()) != null) {
-                netContrAmount = 0.0;
-                clearFields();
-                fillFields();
-                recount();
-                printButton.setEnabled(true);
-                if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmFinancialHistoryInfo)) {
-                    financialHistoryButton.setEnabled(true);
-                }
-                setContractCb(contr_id);
-                initialPaymentTF.setData(null);
-                initialPaymentRateTF.setData(null);
-                initialPayCashBoxCB.setData(null);
-                initialPaymentTF.getPropertyDataSource().setValue(null);
-                initialPaymentRateTF.getPropertyDataSource().setValue(null);
-                initialPayCashBoxCB.setValue(null);
             }
         } else if (property == contractCB) {
             if (initialPaymentTF.isValid()) {
