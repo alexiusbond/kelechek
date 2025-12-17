@@ -61,7 +61,7 @@ public class MyVaadinUI extends UI {
 
     private static final String NBKR_DAILY_URL = "https://www.nbkr.kg/XML/daily.xml";
     private static final String TARGET_ISO_CODE = "USD";
-    private static final int NBKR_CACHE_TTL_MINUTES = 3000; // как у тебя было
+    private static final int NBKR_CACHE_TTL_MINUTES = 60; // как у тебя было
 
     @Override
     protected void init(VaadinRequest request) {
@@ -169,31 +169,29 @@ public class MyVaadinUI extends UI {
         this.schoolCont = schoolCont;
     }
 
-
     public double getCurrencyRateFromBank() {
         Date now = new Date();
         Calendar c = Calendar.getInstance();
 
-        boolean cacheExpired = false;
-
+        boolean cacheExpired;
         if (nbkr_time == null || currency_rate == 0.0) {
             cacheExpired = true;
         } else {
             c.setTime(nbkr_time);
             c.add(Calendar.MINUTE, NBKR_CACHE_TTL_MINUTES);
-            if (c.getTime().before(now)) {
-                cacheExpired = true;
-            }
+            cacheExpired = c.getTime().before(now);
         }
 
         if (cacheExpired) {
+            HttpURLConnection conn = null;
+            double oldRate = currency_rate;
 
             try {
                 URL url = new URL(NBKR_DAILY_URL);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
-                conn.setConnectTimeout(15000); // 15s
-                conn.setReadTimeout(30000);    // 30s
+                conn.setConnectTimeout(15000);
+                conn.setReadTimeout(30000);
                 conn.setUseCaches(false);
                 conn.setRequestProperty("Connection", "close");
                 conn.setRequestProperty("User-Agent", "Mozilla/5.0");
@@ -202,17 +200,16 @@ public class MyVaadinUI extends UI {
                 int status = conn.getResponseCode();
                 if (status != HttpURLConnection.HTTP_OK) {
                     logger.error("NBKR HTTP error: {}", status);
-                    // оставляем старый currency_rate, если он был
                 } else {
-                    nbkr_time = now;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     try {
                         dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
                     } catch (Exception ignored) {
-                        // если фича недоступна - просто пропускаем
                     }
 
                     DocumentBuilder db = dbf.newDocumentBuilder();
+
+                    boolean updated = false;
 
                     try (InputStream is = conn.getInputStream()) {
                         Document doc = db.parse(is);
@@ -220,49 +217,41 @@ public class MyVaadinUI extends UI {
 
                         for (int i = 0; i < nl.getLength(); i++) {
                             Node node = nl.item(i);
-                            if (node.getNodeType() != Node.ELEMENT_NODE) {
-                                continue;
-                            }
+                            if (node.getNodeType() != Node.ELEMENT_NODE) continue;
+
                             Element el = (Element) node;
+                            if (!TARGET_ISO_CODE.equals(el.getAttribute("ISOCode"))) continue;
 
-                            if (!TARGET_ISO_CODE.equals(el.getAttribute("ISOCode"))) {
-                                continue;
-                            }
+                            Node nominalNode = el.getElementsByTagName("Nominal").item(0);
+                            Node valueNode = el.getElementsByTagName("Value").item(0);
+                            if (nominalNode == null || valueNode == null) break;
 
-                            String nominalStr = el.getElementsByTagName("Nominal")
-                                    .item(0)
-                                    .getTextContent()
-                                    .trim();
-
-                            String valueStr = el.getElementsByTagName("Value")
-                                    .item(0)
-                                    .getTextContent()
-                                    .trim();
-
-                            // "87,4500" -> "87.4500"
-                            valueStr = valueStr.replace(',', '.');
+                            String nominalStr = nominalNode.getTextContent().trim();
+                            String valueStr = valueNode.getTextContent().trim().replace(',', '.');
 
                             int nominal = Integer.parseInt(nominalStr);
                             double value = Double.parseDouble(valueStr);
 
-                            if (nominal <= 0) {
-                                currency_rate = value;
-                            } else {
-                                currency_rate = value / nominal;
-                            }
-
-                            break; // нашли USD — выходим
+                            currency_rate = (nominal > 0) ? (value / nominal) : value;
+                            nbkr_time = now;          // ✅ только после успеха
+                            updated = true;
+                            break;
                         }
                     }
+
+                    if (!updated) {
+                        currency_rate = oldRate; // не нашли USD → откат
+                        logger.warn("NBKR: USD not found in XML, keeping previous rate");
+                    }
                 }
-                conn.disconnect();
             } catch (Exception e) {
+                currency_rate = oldRate; // при любой ошибке — держим старое
                 logger.error("Error while fetching currency rate from NBKR", e);
-                logger.catching(e);
+            } finally {
+                if (conn != null) conn.disconnect();
             }
         }
 
-        // Сохраняем твою логику округления до 4 знаков
         return Double.parseDouble(Settings.dFormat4.format(currency_rate));
     }
 
