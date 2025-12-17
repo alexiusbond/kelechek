@@ -824,12 +824,11 @@ public class ContractKgPdf {
 
         // левая/правая границы второй колонки
         float colLeft = left + columnWidth + gutter;
-        float colRight = right;
 
         ColumnText ct = new ColumnText(cb);
 
         // изначальный прямоугольник второй колонки на текущей странице
-        ct.setSimpleColumn(colLeft, bottom, colRight, top);
+        ct.setSimpleColumn(colLeft, bottom, right, top);
 
         for (Element e : elements) {
             ct.addElement(e);
@@ -844,7 +843,7 @@ public class ContractKgPdf {
 
             // текст не влез — новая страница и снова рисуем во второй колонке
             document.newPage();
-            ct.setSimpleColumn(colLeft, bottom, colRight, top);
+            ct.setSimpleColumn(colLeft, bottom, right, top);
         }
     }
 

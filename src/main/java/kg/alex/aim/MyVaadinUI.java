@@ -187,20 +187,24 @@ public class MyVaadinUI extends UI {
         }
 
         if (cacheExpired) {
-            nbkr_time = now;
 
             try {
                 URL url = new URL(NBKR_DAILY_URL);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(5000);
-                conn.setReadTimeout(5000);
                 conn.setRequestMethod("GET");
+                conn.setConnectTimeout(15000); // 15s
+                conn.setReadTimeout(30000);    // 30s
+                conn.setUseCaches(false);
+                conn.setRequestProperty("Connection", "close");
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                conn.setRequestProperty("Accept", "application/xml,text/xml,*/*");
 
                 int status = conn.getResponseCode();
                 if (status != HttpURLConnection.HTTP_OK) {
                     logger.error("NBKR HTTP error: {}", status);
                     // оставляем старый currency_rate, если он был
                 } else {
+                    nbkr_time = now;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     try {
                         dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -251,6 +255,7 @@ public class MyVaadinUI extends UI {
                         }
                     }
                 }
+                conn.disconnect();
             } catch (Exception e) {
                 logger.error("Error while fetching currency rate from NBKR", e);
                 logger.catching(e);
