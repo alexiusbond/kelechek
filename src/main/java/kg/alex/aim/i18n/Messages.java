@@ -349,6 +349,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String MaterialsReceive = generateId();
     public static final String MaterialsGive = generateId();
     public static final String InstPlanDebt = generateId();
+    public static final String PaidPercentage = generateId();
     public static final String PlanDebtDate = generateId();
     public static final String City = generateId();
     public static final String SelectContractTab = generateId();
@@ -526,6 +527,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String ExamsSettings = generateId();
     public static final String Currency = generateId();
     public static final String CashBox = generateId();
+    public static final String AllCashBoxes = generateId();
     public static final String Accruals = generateId();
     public static final String Payouts = generateId();
     public static final String Accrual = generateId();
