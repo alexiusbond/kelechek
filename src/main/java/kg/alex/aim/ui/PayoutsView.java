@@ -291,51 +291,51 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     dbCon.connect();
                     if (isNew) {
                         Invoice inv = getInvoice(0);
-                        AccTransaction tr = insertTestPayments(new Date());
+                        /*AccTransaction tr = insertTestPayments(new Date());
                         if (tr != null) {
                             Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                             + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                                     Notification.Type.ERROR_MESSAGE);
+                        } else {*/
+                        int id = dbCon.exec_insert(inv);
+                        if (id != 0) {
+                            insertPayouts(id, dbAt);
+                            addDataContainerItem(id, Settings.dtmf.format(dateDF.getValue()));
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
+                                    Notification.Type.HUMANIZED_MESSAGE);
+                            prepareNormalMode();
                         } else {
-                            int id = dbCon.exec_insert(inv);
-                            if (id != 0) {
-                                insertPayouts(id, dbAt);
-                                addDataContainerItem(id, Settings.dtmf.format(dateDF.getValue()));
-                                Notification.show(myUI.getMessage(Messages.ValueSaved),
-                                        Notification.Type.HUMANIZED_MESSAGE);
-                                prepareNormalMode();
-                            } else {
-                                Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
-                                        Notification.Type.WARNING_MESSAGE);
-                            }
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
+                                    Notification.Type.WARNING_MESSAGE);
                         }
+                        //}
                     } else {
                         int status = 0;
                         Invoice inv = getInvoice(invID);
-                        AccTransaction tr = insertTestPayments(new Date());
+                        /*AccTransaction tr = insertTestPayments(new Date());
                         if (tr != null) {
                             Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                             + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                                     Notification.Type.ERROR_MESSAGE);
-                        } else {
-                            try {
-                                status = dbCon.exec_update(inv);
-                            } catch (Exception e) {
-                                logger.error(e);
-                                logger.catching(e);
-                            }
-                            if (status != 0) {
-                                insertPayouts(invID, dbAt);
-                                updateDataContainer();
-                                setPayoutsTable();
-                                Notification.show(myUI.getMessage(Messages.ValueSaved),
-                                        Notification.Type.HUMANIZED_MESSAGE);
-                                prepareNormalMode();
-                            } else {
-                                Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
-                                        Notification.Type.WARNING_MESSAGE);
-                            }
+                        } else {*/
+                        try {
+                            status = dbCon.exec_update(inv);
+                        } catch (Exception e) {
+                            logger.error(e);
+                            logger.catching(e);
                         }
+                        if (status != 0) {
+                            insertPayouts(invID, dbAt);
+                            updateDataContainer();
+                            setPayoutsTable();
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
+                                    Notification.Type.HUMANIZED_MESSAGE);
+                            prepareNormalMode();
+                        } else {
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
+                                    Notification.Type.WARNING_MESSAGE);
+                        }
+                        //}
                     }
                     dbAt.close();
                     dbCon.close();
@@ -953,48 +953,48 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             if (rate == 0.0) {
                 Notification.show(myUI.getMessage(Messages.CantGetFromNBKR), Notification.Type.ERROR_MESSAGE);
             } else {
-                AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), 2,
+                /*AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), 2,
                         inv.getCreation_date(), 0, totalAmount, 2);
                 if (tr != null) {
                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-                } else {
-                    int id = dbCon.exec_insert(inv);
-                    if (id != 0) {
-                        DbAccTransactions dbTr = new DbAccTransactions();
-                        dbTr.connect();
-                        if (payoutsTable.getContainerDataSource().size() > 0) {
-                            for (Object next : payoutsTable.getItemIds()) {
-                                ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(Messages.Category)).getValue();
-                                tr = new AccTransaction();
-                                tr.setAcc_invoice_id(id);
-                                tr.setDate(inv.getCreation_date());
-                                tr.setEmployee_id(myUI.getUser().getId());
-                                tr.setSchool_id(myUI.getUser().getSchool().getId());
-                                tr.setCurrency_rate(rate);
-                                tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
-                                tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(Messages.Amount)).getValue()).getValue());
-                                tr.setCategory_id((Integer) cb.getValue());
-                                tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
-                                tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
-                                cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(Messages.CashBox)).getValue();
-                                tr.setCashbox(new CashBox((Integer) cb.getValue(),
-                                        (Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_currency_id).getValue()));
-                                dbTr.exec_insert(tr, dbTr.getConnection());
-                            }
+                } else {*/
+                int id = dbCon.exec_insert(inv);
+                if (id != 0) {
+                    DbAccTransactions dbTr = new DbAccTransactions();
+                    dbTr.connect();
+                    if (payoutsTable.getContainerDataSource().size() > 0) {
+                        for (Object next : payoutsTable.getItemIds()) {
+                            ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(Messages.Category)).getValue();
+                            AccTransaction tr = new AccTransaction();
+                            tr.setAcc_invoice_id(id);
+                            tr.setDate(inv.getCreation_date());
+                            tr.setEmployee_id(myUI.getUser().getId());
+                            tr.setSchool_id(myUI.getUser().getSchool().getId());
+                            tr.setCurrency_rate(rate);
+                            tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                                    myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
+                            tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
+                                    myUI.getMessage(Messages.Amount)).getValue()).getValue());
+                            tr.setCategory_id((Integer) cb.getValue());
+                            tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
+                            tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
+                            cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(
+                                    myUI.getMessage(Messages.CashBox)).getValue();
+                            tr.setCashbox(new CashBox((Integer) cb.getValue(),
+                                    (Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_currency_id).getValue()));
+                            dbTr.exec_insert(tr, dbTr.getConnection());
                         }
-                        dbTr.close();
-                        addDataContainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
-                        Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
-                    } else {
-                        Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
                     }
-                    dbCon.close();
-                    prepareNormalMode();
+                    dbTr.close();
+                    addDataContainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
+                    Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                } else {
+                    Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
                 }
+                dbCon.close();
+                prepareNormalMode();
+                //}
                 dbAt.close();
             }
         } catch (Exception e) {
@@ -1013,7 +1013,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
     }
 
-    private AccTransaction insertTestPayments(Date date) {
+    /*private AccTransaction insertTestPayments(Date date) {
         AccTransaction lowBalance = null;
         try {
             DbCashbox dbc = new DbCashbox();
@@ -1069,7 +1069,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             logger.catching(e);
         }
         return lowBalance;
-    }
+    }*/
 
     public Component getNewObj() {
         return new PayoutsView(myUI);

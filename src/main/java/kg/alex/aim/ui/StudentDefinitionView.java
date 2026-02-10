@@ -1009,12 +1009,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                         Notification.Type.HUMANIZED_MESSAGE);
                                             } //pressed save button on payments tab
                                             else if (tabs.getSelectedTab() == tabs.getTab(payTableLay).getComponent()) {
-                                                AccTransaction tr = insertTestPayments(new Date());
+                                                /*AccTransaction tr = insertTestPayments(new Date());
                                                 if (tr != null) {
                                                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                                                     + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                                                             Notification.Type.ERROR_MESSAGE);
-                                                } else {
+                                                } else {*/
                                                     insertPayments((Integer) studDataTable.getValue());
                                                     setPaymentsTable();
                                                     recount();
@@ -1023,7 +1023,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     prepareNormalMode();
                                                     Notification.show(myUI.getMessage(Messages.ValueSaved),
                                                             Notification.Type.HUMANIZED_MESSAGE);
-                                                }
+                                                // }
                                             } else if (tabs.getSelectedTab() == tabs.getTab(callsTableLay).getComponent()) {
                                                 //save calls
                                                 insertCalls((Integer) studDataTable.getValue());
@@ -1309,7 +1309,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if ((property == initialPaymentTF || property == initialPaymentRateTF || property == initialPayCashBoxCB)
                 && initialPaymentTF != null && initialPaymentRateTF != null && initialPayCashBoxCB != null) {
             try {
-                AccTransaction tr = insertTestInitialPayment();
+                /*AccTransaction tr = insertTestInitialPayment();
                 if (tr != null) {
                     double amount = 0.0;
                     if (initialPaymentTF.getPropertyDataSource().getValue() != null) {
@@ -1322,12 +1322,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                     + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                             Notification.Type.ERROR_MESSAGE);
-                } else {
-                    initialPaymentTF.removeAllValidators();
-                    initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.1, null));
-                    changeRequiredInitialPayment();
-                    recountInstPlanLabel();
-                }
+                } else {*/
+                initialPaymentTF.removeAllValidators();
+                initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.1, null));
+                changeRequiredInitialPayment();
+                recountInstPlanLabel();
+                //}
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -1373,7 +1373,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
     }
 
-    private AccTransaction insertTestInitialPayment() {
+    /*private AccTransaction insertTestInitialPayment() {
         AccTransaction lowBalance = null;
         try {
             DbPaymentCategory dbpc = new DbPaymentCategory();
@@ -1448,7 +1448,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
         return lowBalance;
-    }
+    }*/
 
     private void prepareModificationMode() {
         if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()
@@ -1794,7 +1794,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbAccTransactions dbt = new DbAccTransactions();
             dbt.connect();
-            DbCashbox dbc = new DbCashbox();
+            /*DbCashbox dbc = new DbCashbox();
             dbc.connect();
             AccTransaction tr = null;
             for (Object o : dbc.execSQL(myUI).getItemIds()) {
@@ -1809,7 +1809,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                 + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                         Notification.Type.ERROR_MESSAGE);
-            } else {
+            } else {*/
                 DbStudent dbst = new DbStudent();
                 DbDefinition dbdef = new DbDefinition();
                 dbst.connect();
@@ -1839,7 +1839,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 }
                 dbst.close();
                 dbdef.close();
-            }
+            //}
             dbt.close();
         } catch (SQLIntegrityConstraintViolationException e) {
             Notification.show(myUI.getMessage(Messages.CanNotDelete),
@@ -3943,8 +3943,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (studentContract.getContr_with_disc() +
                     studentContract.getCorrection() + debt != 0) {
                 paidPercentageLab.setValue(myUI.getMessage(Messages.PaidPercentage) + ": " +
-                        Settings.dFormat2.format(ttl_payment * 100 /(studentContract.getContr_with_disc() +
-                                studentContract.getCorrection() + debt) ) + "%");
+                        Settings.dFormat2.format(ttl_payment * 100 / (studentContract.getContr_with_disc() +
+                                studentContract.getCorrection() + debt)) + "%");
             } else {
                 paidPercentageLab.setValue(myUI.getMessage(Messages.PaidPercentage) + ": 0.00%");
             }
@@ -4447,7 +4447,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
     }
-
+/*
     private AccTransaction insertTestPayments(Date date) {
         AccTransaction lowBalance = null;
         try {
@@ -4501,7 +4501,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
         return lowBalance;
-    }
+    }*/
 
     private void insertCalls(int student_id) {
         try {

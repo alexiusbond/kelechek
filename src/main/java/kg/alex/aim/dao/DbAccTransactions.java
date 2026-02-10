@@ -296,7 +296,7 @@ public class DbAccTransactions extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public AccTransaction exec_allow_delete_by_st_id(int st_id, int school_id, int cashbox_id) throws SQLException {
+    /*public AccTransaction exec_allow_delete_by_st_id(int st_id, int school_id, int cashbox_id) throws SQLException {
         String sql = "select tr.date_time, tr.amount, sp.payment_category_id from acc_transactions as tr "
                 + "left join student_payments as sp on sp.id = tr.student_payments_id "
                 + "where sp.student_id = ? and tr.acc_cashbox_id = ?";
@@ -314,7 +314,7 @@ public class DbAccTransactions extends BaseDb {
             }
         }
         return null;
-    }
+    }*/
 
     public IndexedContainer exec_for_select(MyVaadinUI myUI, int type_id, int school_id) throws SQLException {
         String sql = "select ac.id, concat(ifnull(concat(ac.parent_code,'.',ac.code), ac.code), ' - ', ac.name) as name "
@@ -1199,7 +1199,7 @@ public class DbAccTransactions extends BaseDb {
         t.setColumnFooter(myUI.getMessage(Messages.Difference), Settings.dFormat2.format(totalTransactions));
     }
 
-    public AccTransaction exec_low_balance(Connection conn, int school_id, int cashbox_id, Date date, double old_amount,
+    /*public AccTransaction exec_low_balance(Connection conn, int school_id, int cashbox_id, Date date, double old_amount,
                                            double new_amount, int inOut) throws SQLException {
 
         Date d = exec_nearestDate(conn, school_id, cashbox_id, date);
@@ -1249,7 +1249,7 @@ public class DbAccTransactions extends BaseDb {
             return tr;
         }
         return null;
-    }
+    }*/
 
     public Date exec_nearestDate(Connection conn, int school_id, int cashbox_id, Date date) throws SQLException {
 
