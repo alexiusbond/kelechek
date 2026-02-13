@@ -16409,3 +16409,7 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .v-filterselect-suggestpopup div[class*="page"] {
 	opacity: 0.6;
 }
+
+.mytheme .v-table-noWrap .v-table-body-wrapper, .mytheme .v-table-noWrap .v-table-body {
+	overflow: auto !important;
+}

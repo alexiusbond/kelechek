@@ -428,4 +428,8 @@
     opacity: 0.6;
   }
 
+  .v-table-noWrap .v-table-body-wrapper,
+  .v-table-noWrap .v-table-body {
+    overflow: auto !important;
+  }
 }
