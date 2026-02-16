@@ -260,7 +260,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                     }
                 } else if (paymentsCkb.getValue() && instPlanCkb.getValue()) {
                     if (installmentTable.getContainerDataSource().size() != 0
-                        && paymentsTable.getContainerDataSource().size() != 0) {
+                            && paymentsTable.getContainerDataSource().size() != 0) {
                         excelReport = new EnhancedFormatExcelExport(paymentsTable, "sheet1");
                         excelReport.setReportTitle(paymentsTable.getCaption());
                         excelReport.setDisplayTotals(true);
@@ -283,7 +283,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         Property property = event.getProperty();
         makePdfBtn.setEnabled(false);
         if ((property == classTable || property == yearSelect)
-            && classTable.getValue() != null && yearSelect.getValue() != null) {
+                && classTable.getValue() != null && yearSelect.getValue() != null) {
             try {
                 DbStudent dbst = new DbStudent();
                 dbst.connect();
@@ -296,7 +296,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 logger.catching(e);
             }
         } else if (property == studentsTable || property == instPlanCkb
-                   || property == paymentsCkb || property == yearSelect) {
+                || property == paymentsCkb || property == yearSelect) {
             makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
         }
@@ -335,7 +335,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             installmentTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
             installmentTable.setColumnFooter(myUI.getMessage(Messages.Amount),
                     myUI.getMessage(Messages.Total) + ": "
-                    + Settings.dFormat2.format(total_inst) + " " + currency);
+                            + Settings.dFormat2.format(total_inst) + " " + currency);
             if (!paymentsCkb.getValue()) {
                 rightGrid.addComponent(instCaption, 0, 4, 6, 4);
                 rightGrid.addComponent(installmentTable, 0, 5, 6, 5);
@@ -374,7 +374,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             }
             paymentsTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
             paymentsTable.setColumnFooter(myUI.getMessage(Messages.Amount), myUI.getMessage(Messages.Total) + ": "
-                                                                            + Settings.dFormat2.format(total_pay) + " " + currency);
+                    + Settings.dFormat2.format(total_pay) + " " + currency);
 
             if (!instPlanCkb.getValue()) {
                 rightGrid.addComponent(paymentsCaption, 0, 4, 6, 4);
@@ -502,7 +502,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             debt = dbsc.exec_get_debt((Integer) studentsTable.getValue(),
                     (Integer) yearSelect.getValue());
             ttl_payment = sp.getTtl_pay();
-            plan_debt = c.getPlan_debt() - total_pay;
+            plan_debt = c.getPlan_debt();
             to_pay = c.getContr_with_disc() + debt + c.getCorrection();
             ttl_left = (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection();
             dbsc.close();
@@ -557,7 +557,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         }
         debtLab.setValue(myUI.getMessage(Messages.PreviousYearDebt) + ": " + Settings.dFormat2.format(debt) + " " + currency);
         netLab.setValue(myUI.getMessage(Messages.Net) + ": " + Settings.dFormat2.format(c.getContr_with_disc() + debt
-                                                                                        + c.getCorrection()) + " " + currency);
+                + c.getCorrection()) + " " + currency);
         paidLab.setValue(myUI.getMessage(Messages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + " " + currency);
         leftLab.setValue(myUI.getMessage(Messages.Left) + ": " + Settings.dFormat2.format(
                 (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection()) + " " + currency);
