@@ -942,7 +942,6 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         Table t;
         int i = 0;

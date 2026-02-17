@@ -1015,14 +1015,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                                     + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                                                             Notification.Type.ERROR_MESSAGE);
                                                 } else {*/
-                                                    insertPayments((Integer) studDataTable.getValue());
-                                                    setPaymentsTable();
-                                                    recount();
-                                                    updateNetPaymentDb(ttl_payment, (Integer) studDataTable.getValue(),
-                                                            myUI.getUser().getCurrent_year().getId());
-                                                    prepareNormalMode();
-                                                    Notification.show(myUI.getMessage(Messages.ValueSaved),
-                                                            Notification.Type.HUMANIZED_MESSAGE);
+                                                insertPayments((Integer) studDataTable.getValue());
+                                                setPaymentsTable();
+                                                recount();
+                                                updateNetPaymentDb(ttl_payment, (Integer) studDataTable.getValue(),
+                                                        myUI.getUser().getCurrent_year().getId());
+                                                prepareNormalMode();
+                                                Notification.show(myUI.getMessage(Messages.ValueSaved),
+                                                        Notification.Type.HUMANIZED_MESSAGE);
                                                 // }
                                             } else if (tabs.getSelectedTab() == tabs.getTab(callsTableLay).getComponent()) {
                                                 //save calls
@@ -1810,35 +1810,35 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                         Notification.Type.ERROR_MESSAGE);
             } else {*/
-                DbStudent dbst = new DbStudent();
-                DbDefinition dbdef = new DbDefinition();
-                dbst.connect();
-                dbdef.connect();
-                dbt.exec_delete_by_st_id((Integer) studDataTable.getValue(), 0, dbt.getConnection());
-                dbst.exec_delete((Integer) studDataTable.getValue());
-                int st = dbdef.exec_delete((Integer) studDataTable.getValue(), Settings.dbStudent);
-                if (st != 0) {
-                    clearFields();
-                    eduStatCont.getContainerProperty(studDataTable
-                                    .getContainerProperty(studDataTable.getValue(),
-                                            Settings.education_status_id).getValue(), Settings.count)
-                            .setValue(((Integer) eduStatCont.getContainerProperty(studDataTable
-                                            .getContainerProperty(studDataTable.getValue(),
-                                                    Settings.education_status_id).getValue(),
-                                    Settings.count).getValue()) - 1);
-                    eduStatCont.getContainerProperty(6, Settings.count)
-                            .setValue(((Integer) eduStatCont.getContainerProperty(6, Settings.count)
-                                    .getValue()) - 1);
-                    repaint();
-                    studDataTable.removeItem(studDataTable.getValue());
-                    studDataTable.setValue(null);
-                    Notification.show(myUI.getMessage(Messages.StudentDeletedSuccessfully),
-                            Notification.Type.HUMANIZED_MESSAGE);
-                    tabs.setSelectedTab(studDataTable);
-                    clearContractInfo();
-                }
-                dbst.close();
-                dbdef.close();
+            DbStudent dbst = new DbStudent();
+            DbDefinition dbdef = new DbDefinition();
+            dbst.connect();
+            dbdef.connect();
+            dbt.exec_delete_by_st_id((Integer) studDataTable.getValue(), 0, dbt.getConnection());
+            dbst.exec_delete((Integer) studDataTable.getValue());
+            int st = dbdef.exec_delete((Integer) studDataTable.getValue(), Settings.dbStudent);
+            if (st != 0) {
+                clearFields();
+                eduStatCont.getContainerProperty(studDataTable
+                                .getContainerProperty(studDataTable.getValue(),
+                                        Settings.education_status_id).getValue(), Settings.count)
+                        .setValue(((Integer) eduStatCont.getContainerProperty(studDataTable
+                                        .getContainerProperty(studDataTable.getValue(),
+                                                Settings.education_status_id).getValue(),
+                                Settings.count).getValue()) - 1);
+                eduStatCont.getContainerProperty(6, Settings.count)
+                        .setValue(((Integer) eduStatCont.getContainerProperty(6, Settings.count)
+                                .getValue()) - 1);
+                repaint();
+                studDataTable.removeItem(studDataTable.getValue());
+                studDataTable.setValue(null);
+                Notification.show(myUI.getMessage(Messages.StudentDeletedSuccessfully),
+                        Notification.Type.HUMANIZED_MESSAGE);
+                tabs.setSelectedTab(studDataTable);
+                clearContractInfo();
+            }
+            dbst.close();
+            dbdef.close();
             //}
             dbt.close();
         } catch (SQLIntegrityConstraintViolationException e) {
@@ -3936,9 +3936,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 planDebt.setValue(myUI.getMessage(Messages.InstPlanDebt) + ": " + Settings.dFormat2.format(0.0) + " " + currency);
             }
         }
-        System.out.println("netContrAmount: " + netContrAmount);
-        System.out.println("ttl_payment: " + (studentContract.getContr_with_disc() +
-                studentContract.getCorrection() + debt));
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfo)) {
             if (studentContract.getContr_with_disc() +
                     studentContract.getCorrection() + debt != 0) {

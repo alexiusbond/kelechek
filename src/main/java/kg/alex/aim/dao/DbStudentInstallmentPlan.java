@@ -127,7 +127,6 @@ public class DbStudentInstallmentPlan extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
