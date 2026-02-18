@@ -133,7 +133,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Label instPlanTtlLab;
     private Label netIPlanTtlLab;
     private Label planDebt;
-    private Label paidPercentageLab;
     private Label instPlanDifLab;
     private Label tabContractLab;
     private Label tabContractNetLab;
@@ -713,11 +712,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
         planDebt.setValue(myUI.getMessage(Messages.InstPlanDebt) + ":");
 
-        paidPercentageLab = new Label();
-        paidPercentageLab.setContentMode(ContentMode.HTML);
-        paidPercentageLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        paidPercentageLab.setValue(myUI.getMessage(Messages.PaidPercentage) + ":");
-
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfo)) {
             contractLay.addComponent(contractLab);
             contractLay.setComponentAlignment(contractLab, Alignment.BOTTOM_LEFT);
@@ -729,6 +723,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             contractLay.setComponentAlignment(debtLab, Alignment.BOTTOM_LEFT);
             contractLay.addComponent(netLab);
             contractLay.setComponentAlignment(netLab, Alignment.BOTTOM_LEFT);
+            contractLay.addComponent(paidLab);
+            contractLay.setComponentAlignment(paidLab, Alignment.BOTTOM_LEFT);
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":"
                 + Settings.prmContractInfoLeftDebt)) {
@@ -736,10 +732,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             contractLay.setComponentAlignment(leftLab, Alignment.BOTTOM_LEFT);
             contractLay.addComponent(planDebt);
             contractLay.setComponentAlignment(planDebt, Alignment.BOTTOM_LEFT);
-        }
-        if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfo)) {
-            contractLay.addComponent(paidPercentageLab);
-            contractLay.setComponentAlignment(paidPercentageLab, Alignment.BOTTOM_LEFT);
         }
     }
 
@@ -3924,7 +3916,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             debtLab.setValue(myUI.getMessage(Messages.PreviousYearDebt) + ": " + Settings.dFormat2.format(debt) + " " + currency);
             netLab.setValue(myUI.getMessage(Messages.Net) + ": " + Settings.dFormat2.format(studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) + " " + currency);
-            paidLab.setValue(myUI.getMessage(Messages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + " " + currency);
+            double paidPercentage = 0.0;
+            if (studentContract.getContr_with_disc() +
+                    studentContract.getCorrection() + debt != 0) {
+                paidPercentage = ttl_payment * 100 / (studentContract.getContr_with_disc() + studentContract.getCorrection() + debt);
+            }
+            paidLab.setValue(myUI.getMessage(Messages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + " " + currency
+                    + " (" + Settings.dFormat2.format(paidPercentage) + "%)");
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfoLeftDebt)) {
             leftLab.setValue(myUI.getMessage(Messages.Left) + ": " + Settings.dFormat2.format((studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) - ttl_payment) + " " + currency);
@@ -3934,16 +3932,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             } else {
                 planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
                 planDebt.setValue(myUI.getMessage(Messages.InstPlanDebt) + ": " + Settings.dFormat2.format(0.0) + " " + currency);
-            }
-        }
-        if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfo)) {
-            if (studentContract.getContr_with_disc() +
-                    studentContract.getCorrection() + debt != 0) {
-                paidPercentageLab.setValue(myUI.getMessage(Messages.PaidPercentage) + ": " +
-                        Settings.dFormat2.format(ttl_payment * 100 / (studentContract.getContr_with_disc() +
-                                studentContract.getCorrection() + debt)) + "%");
-            } else {
-                paidPercentageLab.setValue(myUI.getMessage(Messages.PaidPercentage) + ": 0.00%");
             }
         }
     }
@@ -4562,7 +4550,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         paidLab.setValue(myUI.getMessage(Messages.Paid) + ":");
         leftLab.setValue(myUI.getMessage(Messages.Left) + ":");
         planDebt.setValue(myUI.getMessage(Messages.InstPlanDebt) + ":");
-        paidPercentageLab.setValue(myUI.getMessage(Messages.PaidPercentage) + ":");
     }
 
     private void clearInstPlanInfo() {
