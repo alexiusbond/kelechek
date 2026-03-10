@@ -25,6 +25,7 @@ import kg.alex.aim.dao.*;
 import kg.alex.aim.domain.*;
 import kg.alex.aim.i18n.Messages;
 import kg.alex.aim.pdf.Invoice2023PDF;
+import kg.alex.aim.pdf.contracts.ContractKg46Pdf;
 import kg.alex.aim.pdf.contracts.ContractKgPdf;
 import kg.alex.aim.pdf.contracts.ContractRuPdf;
 import kg.alex.aim.tableexport.ExcelExport;
@@ -1276,7 +1277,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
                                 if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractKG))) {
-                                    new ContractKgPdf(myUI, studInfo, instPlanCont);
+                                    if (myUI.getUser().getSchool().getId() == 46 && myUI.getUser().getCurrent_year().getId() == 12) {
+                                        new ContractKg46Pdf(myUI, studInfo, instPlanCont);
+                                    } else {
+                                        new ContractKgPdf(myUI, studInfo, instPlanCont);
+                                    }
                                 } else if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractRU))) {
                                     new ContractRuPdf(myUI, studInfo, instPlanCont);
                                 }
