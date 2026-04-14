@@ -365,6 +365,14 @@ public class Settings implements Serializable {
                     "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"};
         }
     });
+    public static final SimpleDateFormat monthKg = new SimpleDateFormat(
+            "MMMMM", new DateFormatSymbols() {
+        @Override
+        public String[] getMonths() {
+            return new String[]{"январь", "февраль", "март", "апрель", "май", "июнь",
+                    "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"};
+        }
+    });
 
     public static NumberFormat getNumberFormat(int digits) {
         NumberFormat format = NumberFormat.getNumberInstance();

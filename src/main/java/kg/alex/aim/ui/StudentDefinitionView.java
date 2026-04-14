@@ -25,9 +25,7 @@ import kg.alex.aim.dao.*;
 import kg.alex.aim.domain.*;
 import kg.alex.aim.i18n.Messages;
 import kg.alex.aim.pdf.Invoice2023PDF;
-import kg.alex.aim.pdf.contracts.ContractKg46Pdf;
-import kg.alex.aim.pdf.contracts.ContractKgPdf;
-import kg.alex.aim.pdf.contracts.ContractRuPdf;
+import kg.alex.aim.pdf.contracts.*;
 import kg.alex.aim.tableexport.ExcelExport;
 import kg.alex.aim.utils.ExistsValidator;
 import kg.alex.aim.utils.FormattedTable;
@@ -501,8 +499,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG = new OptionGroup();
         contractTypeOG.setNullSelectionAllowed(true);
         contractTypeOG.addValueChangeListener(this);
-        contractTypeOG.addItem(myUI.getMessage(Messages.ContractKG));
+        contractTypeOG.addItem(myUI.getMessage(Messages.ContractPrimaryKG));
+        contractTypeOG.addItem(myUI.getMessage(Messages.ContractSeniorKG));
         contractTypeOG.addItem(myUI.getMessage(Messages.ContractRU));
+        contractTypeOG.addItem(myUI.getMessage(Messages.ContractKG));
+        contractTypeOG.addItem(myUI.getMessage(Messages.InternalRules));
 
         printButton = new PopupButton(myUI.getMessage(Messages.Print));
         printButton.setDescription(myUI.getMessage(Messages.Print));
@@ -1276,14 +1277,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (studInfo.getMainRelative() != null && studInfo.getMainRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
-                                if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractKG))) {
-                                    if (myUI.getUser().getSchool().getId() == 46 && myUI.getUser().getCurrent_year().getId() == 12) {
-                                        new ContractKg46Pdf(myUI, studInfo, instPlanCont);
-                                    } else {
-                                        new ContractKgPdf(myUI, studInfo, instPlanCont);
-                                    }
+                                if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractPrimaryKG))) {
+                                    new ContractPrimaryKgPdf(myUI, studInfo, instPlanCont);
+                                } else if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractSeniorKG))) {
+                                    new ContractSeniorKgPdf(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractRU))) {
                                     new ContractRuPdf(myUI, studInfo, instPlanCont);
+                                } else if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractKG))) {
+                                    new ContractKgPdf(myUI, studInfo, instPlanCont);
+                                } else if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.InternalRules))) {
+                                    new InternalRules(myUI, studInfo);
                                 }
                             } else {
                                 Notification.show(myUI.getMessage(Messages.NoDirectorAssigned),
