@@ -22,8 +22,8 @@ import java.util.List;
 public class ContractRuPdf {
 
     static final Logger logger = LogManager.getLogger(ContractRuPdf.class);
-    private final static String FONT_LOCATION = "/home/aim/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/aim/TimesNewRomanBold.ttf";
+    private final static String FONT_LOCATION = "/home/star/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/star/TimesNewRomanBold.ttf";
     private final MyVaadinUI myUI;
     private final StudentInfoPdf studentInfo;
     private byte[] b = null;

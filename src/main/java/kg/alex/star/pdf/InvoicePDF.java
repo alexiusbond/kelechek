@@ -48,8 +48,8 @@ public class InvoicePDF {
                 document = new Document(PageSize.A4, 10, 10, 10, 10);
                 PdfWriter.getInstance(document, buffer);
 
-                final String FONT_LOCATION = "/home/aim/PT_Sans-Web-Regular.ttf";
-                final String FONT_LOCATION_BOLD = "/home/aim/PT_Sans-Web-Bold.ttf";
+                final String FONT_LOCATION = "/home/star/PT_Sans-Web-Regular.ttf";
+                final String FONT_LOCATION_BOLD = "/home/star/PT_Sans-Web-Bold.ttf";
 
                 BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
                         BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);

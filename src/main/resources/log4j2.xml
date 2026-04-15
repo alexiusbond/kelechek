@@ -7,8 +7,8 @@
             <PatternLayout pattern="%-5p %c{1} [%t] - %m%n"/>
         </Console>
         #Апендер для вывода логов в файл
-        <RollingFile name="aim" fileName="/home/aim/aim.log"
-                     filePattern="/home/aim/aim-%d{MM-dd-yyyy}-%i.log">
+        <RollingFile name="star" fileName="/home/star/star.log"
+                     filePattern="/home/star/star-%d{MM-dd-yyyy}-%i.log">
             <PatternLayout pattern="%d %d{Z} [%t] %-5p (%F:%L) - %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -19,8 +19,8 @@
 
     <Loggers>
 
-        <Logger name="kg.alex.aim">
-            <AppenderRef ref="aim"/>
+        <Logger name="kg.alex.star">
+            <AppenderRef ref="star"/>
         </Logger>
 
         <Root level="all">

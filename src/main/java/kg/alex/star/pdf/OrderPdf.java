@@ -32,8 +32,8 @@ public class OrderPdf {
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
             private static final long serialVersionUID = 1L;
-            private final static String FONT_LOCATION = "/home/aim/TimesNewRomanRegular.ttf";
-            private final static String FONT_LOCATION2 = "/home/aim/TimesNewRomanBold.ttf";
+            private final static String FONT_LOCATION = "/home/star/TimesNewRomanRegular.ttf";
+            private final static String FONT_LOCATION2 = "/home/star/TimesNewRomanBold.ttf";
 
             @Override
             public InputStream getStream() {
@@ -51,7 +51,7 @@ public class OrderPdf {
                     Font fontRegular = new Font(baseFont, 14);
                     Font dateFont = new Font(baseFont, 10);
 
-                    PdfReader pdfReader = new PdfReader("/home/aim/discount_order.pdf");
+                    PdfReader pdfReader = new PdfReader("/home/star/discount_order.pdf");
 
                     pdfStamper = new PdfStamper(pdfReader, buffer);
 

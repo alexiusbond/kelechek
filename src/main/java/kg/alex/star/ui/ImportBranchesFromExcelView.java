@@ -325,7 +325,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         } else if (source == templateBtn) {
             try {
                 myUI.getPage().open(new FileResource(
-                                new File(Settings.PATH_TO_UPLOADS + "aim_hr_branches.xlsx")),
+                                new File(Settings.PATH_TO_UPLOADS + "star_hr_branches.xlsx")),
                         "_blank", false);
             } catch (Exception e) {
                 logger.error(e);

@@ -28,8 +28,8 @@ import java.util.*;
 public class Settings implements Serializable {
 
     public static final int MAIN_OFFICE_ID = 0;
-    public static final String PATH_TO_UPLOADS = "/home/aim/";
-    public static final String PATH_TO_UPLOADS_HR = "/home/aim/hr/";
+    public static final String PATH_TO_UPLOADS = "/home/star/";
+    public static final String PATH_TO_UPLOADS_HR = "/home/star/hr/";
     public static final DecimalFormat dFormat2 = new DecimalFormat("#,##0.00");
     public static final DecimalFormat dFormat4 = new DecimalFormat("#,##0.0000");
     public static final String datePattern = "dd-MM-yyyy";

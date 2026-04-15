@@ -1,10 +1,10 @@
 package kg.alex.star.i18n;
 
-public class Messages_ru extends kg.alex.star.i18n.Messages {
+public class Messages_ru extends Messages {
 
     static final Object[][] contents_ru = {
             // Application
-            {AppTitle, "ШКОЛА ЭЙМ СКУЛЗ"},
+            {AppTitle, "STAR EDUCATIONAL COMPLEX"},
             // Login Form
             {Language, "Язык"},
             {Level, "Уровень"},
@@ -173,7 +173,7 @@ public class Messages_ru extends kg.alex.star.i18n.Messages {
             {ExtraPosition, "Доп. должность"},
             {ExtraPositions, "Доп должности"},
             {TotalWorkExperience, "Общий стаж работы"},
-            {AimWorkExperience, "Стаж работы в Эйм Скулз"},
+            {StarWorkExperience, "Стаж работы в Star Educational Complex"},
             {ExtraBranches, "Доп. области преподавания"},
             {GenerateButton, "Сгенерировать"},
             {Permissions, "Разрешения"},
@@ -293,7 +293,7 @@ public class Messages_ru extends kg.alex.star.i18n.Messages {
             {Left, "Осталось"},
             {TotalHours, "Кол-во часов за "},
             {WorkPlace, "Место работы"},
-            {Aim, "Эйм Скулз"},
+            {StarEduComplex, "Star Educational Complex"},
             {RelativeType, "Кем является"},
             {Relative, "Родственник"},
             {Passport, "Серия и номер паспорта"},
@@ -416,7 +416,7 @@ public class Messages_ru extends kg.alex.star.i18n.Messages {
             {To, "по"},
             {ToAge, "Возраст по"},
             {Director, "Директор"},
-            {AimExam, "Экзамен-Эйм Скулз"},
+            {StarExam, "Экзамен-Star Educational Complex"},
             {AllClasses, "Все классы"},
             {All, "Все"},
             {AllIncomes, "Все приходы"},

@@ -201,7 +201,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String ExtraPosition = generateId();
     public static final String ExtraPositions = generateId();
     public static final String TotalWorkExperience = generateId();
-    public static final String AimWorkExperience = generateId();
+    public static final String StarWorkExperience = generateId();
     public static final String ExtraBranches = generateId();
     public static final String GenerateButton = generateId();
     public static final String Functions = generateId();
@@ -297,7 +297,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String Left = generateId();
     public static final String TotalHours = generateId();
     public static final String WorkPlace = generateId();
-    public static final String Aim = generateId();
+    public static final String StarEduComplex = generateId();
     public static final String Passport = generateId();
     public static final String PassportGiven = generateId();
     public static final String PassportDate = generateId();
@@ -408,7 +408,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String To = generateId();
     public static final String ToAge = generateId();
     public static final String Director = generateId();
-    public static final String AimExam = generateId();
+    public static final String StarExam = generateId();
     public static final String AllClasses = generateId();
     public static final String All = generateId();
     public static final String AllIncomes = generateId();

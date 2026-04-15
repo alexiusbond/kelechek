@@ -20,9 +20,9 @@ public class BaseDb {
         Context env;
         try {
             env = (Context) new InitialContext().lookup("java:comp/env");
-            pool = (DataSource) env.lookup("jdbc/aim");
+            pool = (DataSource) env.lookup("jdbc/star");
             if (pool == null) {
-                throw new Exception("aim can not found");
+                throw new Exception("star can not found");
             }
         } catch (NamingException ne) {
             throw new Exception("...BaseDB... " + ne.getMessage());

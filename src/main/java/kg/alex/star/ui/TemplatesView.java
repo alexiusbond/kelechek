@@ -41,7 +41,7 @@ public class TemplatesView extends VerticalLayout implements Button.ClickListene
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         try {
-            myUI.getPage().open(new FileResource(new File("/home/aim/docs/" + source.getData())),
+            myUI.getPage().open(new FileResource(new File("/home/star/docs/" + source.getData())),
                     "_blank", false);
         } catch (Exception e) {
             logger.error(e);
@@ -64,7 +64,7 @@ public class TemplatesView extends VerticalLayout implements Button.ClickListene
         container.addContainerProperty(myUI.getMessage(Messages.Date), Date.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
         try {
-            File folder = new File("/home/aim/docs");
+            File folder = new File("/home/star/docs");
             File[] listOfFiles = folder.listFiles();
             if (listOfFiles != null) {
                 for (File listOfFile : listOfFiles) {

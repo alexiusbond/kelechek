@@ -38,8 +38,8 @@ public class CurrentAccountStatementPdf {
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
             private static final long serialVersionUID = 1L;
-            private final static String FONT_LOCATION = "/home/aim/PT_Sans-Web-Regular.ttf";
-            private final static String FONT_LOCATION2 = "/home/aim/PT_Sans-Web-Bold.ttf";
+            private final static String FONT_LOCATION = "/home/star/PT_Sans-Web-Regular.ttf";
+            private final static String FONT_LOCATION2 = "/home/star/PT_Sans-Web-Bold.ttf";
 
             @Override
             public InputStream getStream() {
