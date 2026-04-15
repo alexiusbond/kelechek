@@ -519,7 +519,7 @@ public class ContractSeniorKgPdf {
                     if ((Integer) instPlanCont.getContainerProperty(obj, Settings.status_id).getValue() == 1) {
                         TContract.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                         TContract.addCell(new Phrase(
-                                Settings.monthKg.format(((DateField) instPlanCont.getContainerProperty(obj,
+                                Settings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
                                         myUI.getMessage(Messages.Date)).getValue()).getValue()) + " айынын төлөмү", ordFont));
                         TContract.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         TContract.addCell(new Phrase(Settings.dFormat2.format(((TextField) instPlanCont.getContainerProperty(obj,
