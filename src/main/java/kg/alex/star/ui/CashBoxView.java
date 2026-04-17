@@ -606,13 +606,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                 if (item.getItemProperty(myUI.getMessage(Messages.Amount)).getValue() != null) {
                                     old_amount = (Double) item.getItemProperty(myUI.getMessage(Messages.Amount)).getValue();
                                 }
-                                /*DbAccTransactions dbTr = new DbAccTransactions();
+                                DbAccTransactions dbTr = new DbAccTransactions();
                                 dbTr.connect();
                                 AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(),
                                         (Integer) cashBoxesOG.getValue(),
-                                        dateDf.getValue(), old_amount, amount, 2);*/
+                                        dateDf.getValue(), old_amount, amount, 2);
                                 amountTf.removeAllValidators();
-                                /*if (tr != null) {
+                                if (tr != null) {
                                     double limit = tr.getLimit();
                                     amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                             + " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue()
@@ -620,10 +620,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                             + " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue()
                                             + " (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-                                } else {*/
-                                refreshValidators(amountTf);
-                                /*}
-                                dbTr.close();*/
+                                } else {
+                                    refreshValidators(amountTf);
+                                }
+                                dbTr.close();
                             } else {
                                 refreshValidators(amountTf);
                             }
@@ -645,13 +645,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                 double old_amount = (Double) item.getItemProperty(myUI.getMessage(Messages.Amount)).getValue();
                                 if (amount <= old_amount || DateUtils.truncate(dateDf.getValue(), Calendar.DAY_OF_MONTH)
                                         .compareTo((Date) item.getItemProperty(myUI.getMessage(Messages.Date)).getValue()) != 0) {
-                                    /*DbAccTransactions dbTr = new DbAccTransactions();
+                                    DbAccTransactions dbTr = new DbAccTransactions();
                                     dbTr.connect();
                                     AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(),
                                             myUI.getUser().getSchool().getId(),
-                                            (Integer) cashBoxesOG.getValue(), dateDf.getValue(), old_amount, amount, 1);*/
+                                            (Integer) cashBoxesOG.getValue(), dateDf.getValue(), old_amount, amount, 1);
                                     amountTf.removeAllValidators();
-                                    /*if (tr != null) {
+                                    if (tr != null) {
                                         double limit = tr.getLimit();
                                         amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                                 + " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue() +
@@ -659,10 +659,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                         Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                                 + " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue() +
                                                 " (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-                                    } else {*/
-                                    refreshValidators(amountTf);
-                                    /*}
-                                    dbTr.close();*/
+                                    } else {
+                                        refreshValidators(amountTf);
+                                    }
+                                    dbTr.close();
                                 } else {
                                     refreshValidators(amountTf);
                                 }
@@ -888,25 +888,25 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 dbTr.connect();
                 double amount = (Double) incomesCont.getContainerProperty(source.getId(),
                         myUI.getMessage(Messages.Amount)).getValue();
-                /*AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(),
+                AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(),
                         (Integer) cashBoxesOG.getValue(), (Date) incomesCont.getContainerProperty(source.getId(),
                                 myUI.getMessage(Messages.Date)).getValue(), amount, 0.0, 1);
                 if (tr != null) {
                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                             + " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue() +
                             " (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-                } else {*/
-                dbDef.exec_update_emp_id(Integer.parseInt(source.getId()),
-                        myUI.getUser().getId(), Settings.dbAcc_transactions);
-                int st = dbDef.exec_delete(Integer.parseInt(source.getId()), Settings.dbAcc_transactions);
-                if (st != 0) {
-                    Notification.show(myUI.getMessage(Messages.ValueDeleted), Notification.Type.HUMANIZED_MESSAGE);
-                    incomesCont.removeItem(source.getId());
-                    getTotals();
-                    recount();
+                } else {
+                    dbDef.exec_update_emp_id(Integer.parseInt(source.getId()),
+                            myUI.getUser().getId(), Settings.dbAcc_transactions);
+                    int st = dbDef.exec_delete(Integer.parseInt(source.getId()), Settings.dbAcc_transactions);
+                    if (st != 0) {
+                        Notification.show(myUI.getMessage(Messages.ValueDeleted), Notification.Type.HUMANIZED_MESSAGE);
+                        incomesCont.removeItem(source.getId());
+                        getTotals();
+                        recount();
+                    }
                 }
-                /*}
-                dbTr.close();*/
+                dbTr.close();
             } else {
                 dbDef.exec_update_emp_id(Integer.parseInt(source.getId()),
                         myUI.getUser().getId(), Settings.dbAcc_transactions);

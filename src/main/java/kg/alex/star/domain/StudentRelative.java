@@ -18,37 +18,19 @@ public class StudentRelative implements Serializable {
     private String phone;
     private String address;
     private String passport;
-    private String inn;
+    private String workPlace;
     private int is_main;
     private int relative_id;
     private String relativeDeclarative;
     private String relativeTitle;
     private int gender_id;
-    private int attachment_id;
-    private String attachmentUniqueName;
 
-    public String getInn() {
-        return inn;
+    public String getWorkPlace() {
+        return workPlace;
     }
 
-    public void setInn(String inn) {
-        this.inn = inn;
-    }
-
-    public int getAttachment_id() {
-        return attachment_id;
-    }
-
-    public void setAttachment_id(int attachment_id) {
-        this.attachment_id = attachment_id;
-    }
-
-    public String getAttachmentUniqueName() {
-        return attachmentUniqueName;
-    }
-
-    public void setAttachmentUniqueName(String attachmentUniqueName) {
-        this.attachmentUniqueName = attachmentUniqueName;
+    public void setWorkPlace(String workPlace) {
+        this.workPlace = workPlace;
     }
 
     public Date getIssueDate() {

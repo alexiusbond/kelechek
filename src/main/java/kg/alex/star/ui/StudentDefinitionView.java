@@ -25,7 +25,7 @@ import kg.alex.star.dao.*;
 import kg.alex.star.domain.*;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.pdf.Invoice2023PDF;
-import kg.alex.star.pdf.contracts.*;
+import kg.alex.star.pdf.contracts.ContractPdfKg;
 import kg.alex.star.tableexport.ExcelExport;
 import kg.alex.star.utils.ExistsValidator;
 import kg.alex.star.utils.FormattedTable;
@@ -77,7 +77,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private final ArrayList<String> delCallIds = new ArrayList<>();
     private final ArrayList<String> delCorrectionIds = new ArrayList<>();
     private final ArrayList<String> delDiscIds = new ArrayList<>();
-    private final ArrayList<StudentRelative> delRelIds = new ArrayList<>();
+    private final ArrayList<String> delRelIds = new ArrayList<>();
     private final Label eduStatTtlLab;
     private final String[] NATURAL_COL_ORDER;
     private final VerticalLayout famTableLay;
@@ -114,11 +114,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private FormattedTable installmentTable;
     private FormattedTable discountsTable;
     private FormattedTable correctionsTable;
-    private PopupButton printButton;
-    private OptionGroup contractTypeOG;
+    private Button printButton;
     private Button excelButton;
     private Button financialHistoryButton;
-    private IndexedContainer productsContainer = null,
+    private IndexedContainer relativesContainer = null,
             acsGivContainer = null, acsRecContainer = null, instPlanCont = null,
             paymentCont = null, discountCont = null, correctionCont = null, callsCont = null;
     private boolean isNew;
@@ -496,22 +495,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         financialHistoryButton.addClickListener(this);
         buttonsLay.addComponent(financialHistoryButton);
 
-        contractTypeOG = new OptionGroup();
-        contractTypeOG.setNullSelectionAllowed(true);
-        contractTypeOG.addValueChangeListener(this);
-        contractTypeOG.addItem(myUI.getMessage(Messages.ContractPrimaryKG));
-        contractTypeOG.addItem(myUI.getMessage(Messages.ContractSeniorKG));
-        contractTypeOG.addItem(myUI.getMessage(Messages.ContractRU));
-        contractTypeOG.addItem(myUI.getMessage(Messages.ContractKG));
-        contractTypeOG.addItem(myUI.getMessage(Messages.InternalRules));
-
         printButton = new PopupButton(myUI.getMessage(Messages.Print));
         printButton.setDescription(myUI.getMessage(Messages.Print));
         printButton.setIcon(FontAwesome.PRINT);
         printButton.setImmediate(true);
         printButton.addClickListener(this);
         printButton.setEnabled(false);
-        printButton.setContent(contractTypeOG);
         buttonsLay.addComponent(printButton);
 
         excelButton = new Button(myUI.getMessage(Messages.ExportToExcel));
@@ -1003,21 +992,21 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                         Notification.Type.HUMANIZED_MESSAGE);
                                             } //pressed save button on payments tab
                                             else if (tabs.getSelectedTab() == tabs.getTab(payTableLay).getComponent()) {
-                                                /*AccTransaction tr = insertTestPayments(new Date());
+                                                AccTransaction tr = insertTestPayments(new Date());
                                                 if (tr != null) {
                                                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                                                     + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                                                             Notification.Type.ERROR_MESSAGE);
-                                                } else {*/
-                                                insertPayments((Integer) studDataTable.getValue());
-                                                setPaymentsTable();
-                                                recount();
-                                                updateNetPaymentDb(ttl_payment, (Integer) studDataTable.getValue(),
-                                                        myUI.getUser().getCurrent_year().getId());
-                                                prepareNormalMode();
-                                                Notification.show(myUI.getMessage(Messages.ValueSaved),
-                                                        Notification.Type.HUMANIZED_MESSAGE);
-                                                // }
+                                                } else {
+                                                    insertPayments((Integer) studDataTable.getValue());
+                                                    setPaymentsTable();
+                                                    recount();
+                                                    updateNetPaymentDb(ttl_payment, (Integer) studDataTable.getValue(),
+                                                            myUI.getUser().getCurrent_year().getId());
+                                                    prepareNormalMode();
+                                                    Notification.show(myUI.getMessage(Messages.ValueSaved),
+                                                            Notification.Type.HUMANIZED_MESSAGE);
+                                                }
                                             } else if (tabs.getSelectedTab() == tabs.getTab(callsTableLay).getComponent()) {
                                                 //save calls
                                                 insertCalls((Integer) studDataTable.getValue());
@@ -1078,94 +1067,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 logger.catching(e);
             }
         } else if (source == printButton) {
-        } else if (source == financialHistoryButton) {
-            if (studDataTable.getValue() != null) {
-                int st_id = (Integer) studDataTable.getValue();
-                myUI.addWindow(new StudentFinancialHistoryWindow(myUI, myUI.getMessage(Messages.FinancialHistory) + " - " +
-                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.FirstName)).getValue() + " " +
-                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.LastName)).getValue() + "; " +
-                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.ClassName)).getValue(), st_id));
-            }
-        } else if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
-            StudentRelative sr = new StudentRelative();
-            sr.setId(source.getData().toString());
-            Button b = (Button) ((HorizontalLayout) relativesTable.getContainerProperty(sr.getId() + "",
-                    myUI.getMessage(Messages.Responsible)).getValue()).getComponent(1);
-            if (b.getData() != null) {
-                sr.setAttachmentUniqueName(((Attachment) b.getData()).getUnique_name());
-            }
-            delRelIds.add(sr);
-            relativesTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(callsTableLay).getComponent()) {
-            delCallIds.add((String) source.getData());
-            callsTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(acsGiveTableLay).getComponent()) {
-            acsGiveTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(acsReceiveTableLay).getComponent()) {
-            acsReceiveTable.removeItem(event.getButton().getData().toString());
-        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentInstallment)) {
-            installmentTable.removeItem(event.getButton().getData().toString());
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
-        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentDiscount)) {
-            discCounter--;
-            delDiscIds.add(source.getData().toString());
-            discountsTable.removeItem(event.getButton().getData().toString());
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
-        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentCorrection)) {
-            delCorrectionIds.add(source.getData().toString());
-            correctionsTable.removeItem(event.getButton().getData().toString());
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
-        } else if (tabs.getSelectedTab() == tabs.getTab(payTableLay).getComponent() && source.getCaption() == null) {
-            delPayIds.add(source.getData().toString());
-            paymentsTable.removeItem(event.getButton().getData().toString());
-        }
-    }
-
-    private StreamResource getFileStream(File inputFile) {
-        StreamResource.StreamSource source = () -> {
-            InputStream input = null;
-            try {
-                input = new FileInputStream(inputFile);
-            } catch (FileNotFoundException ex) {
-                logger.error(ex);
-                logger.catching(ex);
-            }
-            return input;
-        };
-        return new StreamResource(source, inputFile.getName());
-    }
-
-    @Override
-    public void valueChange(Property.ValueChangeEvent event) {
-        Property property = event.getProperty();
-        if (property == initialPayCashBoxCB && initialPaymentRateTF.getValue() == null) {
-            initialPaymentRateTF.getPropertyDataSource().setValue(myUI.getDb_currency_rate());
-        }
-        if (property == studDataTable) {
-            if (studDataTable.getItem(studDataTable.getValue()) != null) {
-                netContrAmount = 0.0;
-                clearFields();
-                fillFields();
-                recount();
-                printButton.setEnabled(true);
-                if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmFinancialHistoryInfo)) {
-                    financialHistoryButton.setEnabled(true);
-                }
-                setContractCb(contr_id);
-                initialPaymentTF.setData(null);
-                initialPaymentRateTF.setData(null);
-                initialPayCashBoxCB.setData(null);
-                initialPaymentTF.getPropertyDataSource().setValue(null);
-                initialPaymentRateTF.getPropertyDataSource().setValue(null);
-                initialPayCashBoxCB.setValue(null);
-            }
-        } else if (property == contractTypeOG && contractTypeOG.getValue() != null) {
             tabs.setSelectedTab(contractTabLay);
             if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
                     && studDataTable.getValue() != null) {
@@ -1277,17 +1178,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (studInfo.getMainRelative() != null && studInfo.getMainRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
-                                if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractPrimaryKG))) {
-                                    new ContractPrimaryKgPdf(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractSeniorKG))) {
-                                    new ContractSeniorKgPdf(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractRU))) {
-                                    new ContractRuPdf(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.ContractKG))) {
-                                    new ContractKgPdf(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().equals(myUI.getMessage(Messages.InternalRules))) {
-                                    new InternalRules(myUI, studInfo);
-                                }
+                                new ContractPdfKg(myUI, studInfo, instPlanCont);
                             } else {
                                 Notification.show(myUI.getMessage(Messages.NoDirectorAssigned),
                                         Notification.Type.WARNING_MESSAGE);
@@ -1302,6 +1193,86 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     }
                 }
             }
+        } else if (source == financialHistoryButton) {
+            if (studDataTable.getValue() != null) {
+                int st_id = (Integer) studDataTable.getValue();
+                myUI.addWindow(new StudentFinancialHistoryWindow(myUI, myUI.getMessage(Messages.FinancialHistory) + " - " +
+                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.FirstName)).getValue() + " " +
+                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.LastName)).getValue() + "; " +
+                        studDataTable.getContainerProperty(st_id, myUI.getMessage(Messages.ClassName)).getValue(), st_id));
+            }
+        } else if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
+            delRelIds.add((String) source.getData());
+            relativesTable.removeItem(event.getButton().getData().toString());
+        } else if (tabs.getSelectedTab() == tabs.getTab(callsTableLay).getComponent()) {
+            delCallIds.add((String) source.getData());
+            callsTable.removeItem(event.getButton().getData().toString());
+        } else if (tabs.getSelectedTab() == tabs.getTab(acsGiveTableLay).getComponent()) {
+            acsGiveTable.removeItem(event.getButton().getData().toString());
+        } else if (tabs.getSelectedTab() == tabs.getTab(acsReceiveTableLay).getComponent()) {
+            acsReceiveTable.removeItem(event.getButton().getData().toString());
+        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentInstallment)) {
+            installmentTable.removeItem(event.getButton().getData().toString());
+            if (initialPaymentTF.isValid()) {
+                recountInstPlanLabel();
+            }
+        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentDiscount)) {
+            discCounter--;
+            delDiscIds.add(source.getData().toString());
+            discountsTable.removeItem(event.getButton().getData().toString());
+            if (initialPaymentTF.isValid()) {
+                recountInstPlanLabel();
+            }
+        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentCorrection)) {
+            delCorrectionIds.add(source.getData().toString());
+            correctionsTable.removeItem(event.getButton().getData().toString());
+            if (initialPaymentTF.isValid()) {
+                recountInstPlanLabel();
+            }
+        } else if (tabs.getSelectedTab() == tabs.getTab(payTableLay).getComponent() && source.getCaption() == null) {
+            delPayIds.add(source.getData().toString());
+            paymentsTable.removeItem(event.getButton().getData().toString());
+        }
+    }
+
+    private StreamResource getFileStream(File inputFile) {
+        StreamResource.StreamSource source = () -> {
+            InputStream input = null;
+            try {
+                input = new FileInputStream(inputFile);
+            } catch (FileNotFoundException ex) {
+                logger.error(ex);
+                logger.catching(ex);
+            }
+            return input;
+        };
+        return new StreamResource(source, inputFile.getName());
+    }
+
+    @Override
+    public void valueChange(Property.ValueChangeEvent event) {
+        Property property = event.getProperty();
+        if (property == initialPayCashBoxCB && initialPaymentRateTF.getValue() == null) {
+            initialPaymentRateTF.getPropertyDataSource().setValue(myUI.getDb_currency_rate());
+        }
+        if (property == studDataTable) {
+            if (studDataTable.getItem(studDataTable.getValue()) != null) {
+                netContrAmount = 0.0;
+                clearFields();
+                fillFields();
+                recount();
+                printButton.setEnabled(true);
+                if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmFinancialHistoryInfo)) {
+                    financialHistoryButton.setEnabled(true);
+                }
+                setContractCb(contr_id);
+                initialPaymentTF.setData(null);
+                initialPaymentRateTF.setData(null);
+                initialPayCashBoxCB.setData(null);
+                initialPaymentTF.getPropertyDataSource().setValue(null);
+                initialPaymentRateTF.getPropertyDataSource().setValue(null);
+                initialPayCashBoxCB.setValue(null);
+            }
         } else if (property == contractCB) {
             if (initialPaymentTF.isValid()) {
                 recountInstPlanLabel();
@@ -1309,7 +1280,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if ((property == initialPaymentTF || property == initialPaymentRateTF || property == initialPayCashBoxCB)
                 && initialPaymentTF != null && initialPaymentRateTF != null && initialPayCashBoxCB != null) {
             try {
-                /*AccTransaction tr = insertTestInitialPayment();
+                AccTransaction tr = insertTestInitialPayment();
                 if (tr != null) {
                     double amount = 0.0;
                     if (initialPaymentTF.getPropertyDataSource().getValue() != null) {
@@ -1322,12 +1293,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                     + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                             Notification.Type.ERROR_MESSAGE);
-                } else {*/
-                initialPaymentTF.removeAllValidators();
-                initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.1, null));
-                changeRequiredInitialPayment();
-                recountInstPlanLabel();
-                //}
+                } else {
+                    initialPaymentTF.removeAllValidators();
+                    initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.1, null));
+                    changeRequiredInitialPayment();
+                    recountInstPlanLabel();
+                }
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -1373,7 +1344,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
     }
 
-    /*private AccTransaction insertTestInitialPayment() {
+    private AccTransaction insertTestInitialPayment() {
         AccTransaction lowBalance = null;
         try {
             DbPaymentCategory dbpc = new DbPaymentCategory();
@@ -1448,7 +1419,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
         return lowBalance;
-    }*/
+    }
 
     private void prepareModificationMode() {
         if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()
@@ -1794,7 +1765,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbAccTransactions dbt = new DbAccTransactions();
             dbt.connect();
-            /*DbCashbox dbc = new DbCashbox();
+            DbCashbox dbc = new DbCashbox();
             dbc.connect();
             AccTransaction tr = null;
             for (Object o : dbc.execSQL(myUI).getItemIds()) {
@@ -1809,37 +1780,37 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                 + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
                         Notification.Type.ERROR_MESSAGE);
-            } else {*/
-            DbStudent dbst = new DbStudent();
-            DbDefinition dbdef = new DbDefinition();
-            dbst.connect();
-            dbdef.connect();
-            dbt.exec_delete_by_st_id((Integer) studDataTable.getValue(), 0, dbt.getConnection());
-            dbst.exec_delete((Integer) studDataTable.getValue());
-            int st = dbdef.exec_delete((Integer) studDataTable.getValue(), Settings.dbStudent);
-            if (st != 0) {
-                clearFields();
-                eduStatCont.getContainerProperty(studDataTable
-                                .getContainerProperty(studDataTable.getValue(),
-                                        Settings.education_status_id).getValue(), Settings.count)
-                        .setValue(((Integer) eduStatCont.getContainerProperty(studDataTable
-                                        .getContainerProperty(studDataTable.getValue(),
-                                                Settings.education_status_id).getValue(),
-                                Settings.count).getValue()) - 1);
-                eduStatCont.getContainerProperty(6, Settings.count)
-                        .setValue(((Integer) eduStatCont.getContainerProperty(6, Settings.count)
-                                .getValue()) - 1);
-                repaint();
-                studDataTable.removeItem(studDataTable.getValue());
-                studDataTable.setValue(null);
-                Notification.show(myUI.getMessage(Messages.StudentDeletedSuccessfully),
-                        Notification.Type.HUMANIZED_MESSAGE);
-                tabs.setSelectedTab(studDataTable);
-                clearContractInfo();
+            } else {
+                DbStudent dbst = new DbStudent();
+                DbDefinition dbdef = new DbDefinition();
+                dbst.connect();
+                dbdef.connect();
+                dbt.exec_delete_by_st_id((Integer) studDataTable.getValue(), 0, dbt.getConnection());
+                dbst.exec_delete((Integer) studDataTable.getValue());
+                int st = dbdef.exec_delete((Integer) studDataTable.getValue(), Settings.dbStudent);
+                if (st != 0) {
+                    clearFields();
+                    eduStatCont.getContainerProperty(studDataTable
+                                    .getContainerProperty(studDataTable.getValue(),
+                                            Settings.education_status_id).getValue(), Settings.count)
+                            .setValue(((Integer) eduStatCont.getContainerProperty(studDataTable
+                                            .getContainerProperty(studDataTable.getValue(),
+                                                    Settings.education_status_id).getValue(),
+                                    Settings.count).getValue()) - 1);
+                    eduStatCont.getContainerProperty(6, Settings.count)
+                            .setValue(((Integer) eduStatCont.getContainerProperty(6, Settings.count)
+                                    .getValue()) - 1);
+                    repaint();
+                    studDataTable.removeItem(studDataTable.getValue());
+                    studDataTable.setValue(null);
+                    Notification.show(myUI.getMessage(Messages.StudentDeletedSuccessfully),
+                            Notification.Type.HUMANIZED_MESSAGE);
+                    tabs.setSelectedTab(studDataTable);
+                    clearContractInfo();
+                }
+                dbst.close();
+                dbdef.close();
             }
-            dbst.close();
-            dbdef.close();
-            //}
             dbt.close();
         } catch (SQLIntegrityConstraintViolationException e) {
             Notification.show(myUI.getMessage(Messages.CanNotDelete),
@@ -2061,7 +2032,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.Passport),
                     myUI.getMessage(Messages.GivenBy),
                     myUI.getMessage(Messages.IssueDate),
-                    myUI.getMessage(Messages.INN),
+                    myUI.getMessage(Messages.WorkPlace),
                     myUI.getMessage(Messages.Responsible)};
         }
         try {
@@ -2082,33 +2053,33 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     public IndexedContainer prepareRelativesContainer() {
-        if (productsContainer == null) {
-            productsContainer = new IndexedContainer();
-            productsContainer.addContainerProperty(Settings.button, Button.class, null);
-            productsContainer.addContainerProperty(
+        if (relativesContainer == null) {
+            relativesContainer = new IndexedContainer();
+            relativesContainer.addContainerProperty(Settings.button, Button.class, null);
+            relativesContainer.addContainerProperty(
                     myUI.getMessage(Messages.RelativeType), ComboBox.class, null);
-            productsContainer.addContainerProperty(
+            relativesContainer.addContainerProperty(
                     myUI.getMessage(Messages.FullName), TextField.class, null);
-            productsContainer.addContainerProperty(
+            relativesContainer.addContainerProperty(
                     myUI.getMessage(Messages.Passport), TextField.class, null);
-            productsContainer.addContainerProperty(
-                    myUI.getMessage(Messages.INN), TextField.class, null);
-            productsContainer.addContainerProperty(
+            relativesContainer.addContainerProperty(
+                    myUI.getMessage(Messages.WorkPlace), TextField.class, null);
+            relativesContainer.addContainerProperty(
                     myUI.getMessage(Messages.GivenBy), TextField.class, null);
-            productsContainer.addContainerProperty(
+            relativesContainer.addContainerProperty(
                     myUI.getMessage(Messages.IssueDate), DateField.class, null);
-            productsContainer.addContainerProperty(
+            relativesContainer.addContainerProperty(
                     myUI.getMessage(Messages.Phone), TextField.class, null);
-            productsContainer.addContainerProperty(
+            relativesContainer.addContainerProperty(
                     myUI.getMessage(Messages.Address), TextField.class, null);
-            productsContainer.addContainerProperty(
-                    myUI.getMessage(Messages.Responsible), HorizontalLayout.class, false);
-            productsContainer.addContainerProperty(
+            relativesContainer.addContainerProperty(
+                    myUI.getMessage(Messages.Responsible), CheckBox.class, false);
+            relativesContainer.addContainerProperty(
                     Settings.crud_status, String.class, null);
         } else {
-            productsContainer.removeAllItems();
+            relativesContainer.removeAllItems();
         }
-        return productsContainer;
+        return relativesContainer;
     }
 
     public Button createButton(String description, String itemId, String table_name, Resource icon) {
@@ -2351,8 +2322,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 int counter = 0;
                 while (iter.hasNext()) {
                     Object next = iter.next();
-                    if (((CheckBox) ((HorizontalLayout) relativesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(Messages.Responsible)).getValue()).getComponent(0)).getValue()) {
+                    if (((CheckBox) relativesTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.Responsible)).getValue()).getValue()) {
                         counter++;
                     }
                     if (!((TextField) relativesTable.getItem(next).getItemProperty(
@@ -2380,7 +2351,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         return false;
                     }
                     if (!((TextField) relativesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(Messages.INN)).getValue()).isValid()) {
+                            myUI.getMessage(Messages.WorkPlace)).getValue()).isValid()) {
                         Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                         return false;
@@ -2513,7 +2484,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.Passport),
                     myUI.getMessage(Messages.GivenBy),
                     myUI.getMessage(Messages.IssueDate),
-                    myUI.getMessage(Messages.INN),
+                    myUI.getMessage(Messages.WorkPlace),
                     myUI.getMessage(Messages.Responsible)};
         }
         String id = Settings.FreshItem + (--r_table_counter);
@@ -2526,23 +2497,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(Settings.button).setValue(
                 createButton(myUI.getMessage(Messages.DeleteButton), id,
                         Settings.dbStudentRelatives, FontAwesome.MINUS_SQUARE));
-        HorizontalLayout hl = new HorizontalLayout();
-        hl.setSpacing(true);
         CheckBox cb = createCheckBox(false, myUI.getMessage(Messages.Responsible), id);
-        hl.addComponent(cb);
-        hl.setComponentAlignment(cb, Alignment.MIDDLE_LEFT);
-        Button b = createButton(myUI.getMessage(Messages.DownLoad), null,
-                Settings.download_button, FontAwesome.DOWNLOAD);
-        b.setStyleName("unread");
-        b.addStyleName(ValoTheme.BUTTON_SMALL);
-        b.setEnabled(false);
-        hl.addComponent(b);
-
-        Upload u = createUpload("", false);
-        u.setId(id);
-        u.setData(b);
-        hl.addComponent(u);
-        item.getItemProperty(myUI.getMessage(Messages.Responsible)).setValue(hl);
+        item.getItemProperty(myUI.getMessage(Messages.Responsible)).setValue(cb);
         item.getItemProperty(myUI.getMessage(Messages.FullName)).setValue(
                 createTextField(null, myUI.getMessage(Messages.FullName), id,
                         new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
@@ -2551,10 +2507,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 createTextField(null, myUI.getMessage(Messages.Passport), id,
                         new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
                                 null, 50, true), false));
-        item.getItemProperty(myUI.getMessage(Messages.INN)).setValue(
-                createTextField(null, myUI.getMessage(Messages.INN), id,
+        item.getItemProperty(myUI.getMessage(Messages.WorkPlace)).setValue(
+                createTextField(null, myUI.getMessage(Messages.WorkPlace), id,
                         new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
-                                null, 20, true), false));
+                                null, 250, true), false));
         item.getItemProperty(myUI.getMessage(Messages.Phone)).setValue(
                 createTextField(null, myUI.getMessage(Messages.Phone), id,
                         new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
@@ -2759,19 +2715,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 myUI.getMessage(Messages.Address)).getValue()).getValue());
         rel.setPassport(((TextField) item.getItemProperty(
                 myUI.getMessage(Messages.Passport)).getValue()).getValue());
-        rel.setInn(((TextField) item.getItemProperty(
-                myUI.getMessage(Messages.INN)).getValue()).getValue());
-        if (((CheckBox) ((HorizontalLayout) item.getItemProperty(myUI.getMessage(Messages.Responsible))
-                .getValue()).getComponent(0)).getValue()) {
+        rel.setWorkPlace(((TextField) item.getItemProperty(
+                myUI.getMessage(Messages.WorkPlace)).getValue()).getValue());
+        if (((CheckBox) item.getItemProperty(
+                myUI.getMessage(Messages.Responsible)).getValue()).getValue()) {
             rel.setIs_main(1);
         } else {
             rel.setIs_main(0);
-        }
-        Button b = (Button) ((HorizontalLayout) item.getItemProperty(myUI.getMessage(Messages.Responsible))
-                .getValue()).getComponent(1);
-        if (b.getData() != null) {
-            rel.setAttachment_id(((Attachment) b.getData()).getId());
-            logger.info(">>> ATTACHMENT ID FROM BUTTON " + rel.getAttachment_id());
         }
         rel.setRelative_id((Integer) ((ComboBox) item.getItemProperty(
                 myUI.getMessage(Messages.RelativeType)).getValue()).getValue());
@@ -4141,12 +4091,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.NotificationWrongValue), 1, 50, false));
 
             ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.INN)).getValue()).setRequired(true);
+                    myUI.getMessage(Messages.WorkPlace)).getValue()).setRequired(true);
             ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.INN)).getValue()).setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
+                    myUI.getMessage(Messages.WorkPlace)).getValue()).setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
             ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.INN)).getValue()).addValidator(new StringLengthValidator(
-                    myUI.getMessage(Messages.NotificationWrongValue), 1, 20, false));
+                    myUI.getMessage(Messages.WorkPlace)).getValue()).addValidator(new StringLengthValidator(
+                    myUI.getMessage(Messages.NotificationWrongValue), 1, 250, false));
 
             ((TextField) relativesTable.getContainerProperty(itemId,
                     myUI.getMessage(Messages.GivenBy)).getValue()).setRequired(true);
@@ -4183,9 +4133,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(Messages.Passport)).getValue()).removeAllValidators();
 
             ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.INN)).getValue()).setRequired(false);
+                    myUI.getMessage(Messages.WorkPlace)).getValue()).setRequired(false);
             ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.INN)).getValue()).removeAllValidators();
+                    myUI.getMessage(Messages.WorkPlace)).getValue()).removeAllValidators();
 
             ((TextField) relativesTable.getContainerProperty(itemId,
                     myUI.getMessage(Messages.GivenBy)).getValue()).setRequired(false);
@@ -4329,18 +4279,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (delRelIds.size() > 0) {
                 DbDefinition dbCon = new DbDefinition();
                 dbCon.connect();
-                for (StudentRelative delRelId : delRelIds) {
-                    try {
-                        if (delRelId.getAttachmentUniqueName() != null) {
-                            File f = new File(Settings.PATH_TO_UPLOADS
-                                    + delRelId.getAttachmentUniqueName());
-                            f.delete();
-                        }
-                    } catch (Exception ex) {
-                        logger.error(ex);
-                        logger.catching(ex);
-                    }
-                    dbCon.exec_delete(delRelId.getId(), Settings.dbStudentRelatives);
+                for (String delRelId : delRelIds) {
+                    dbCon.exec_delete(delRelId, Settings.dbStudentRelatives);
                 }
                 dbCon.close();
             }
@@ -4440,7 +4380,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
     }
-/*
+
     private AccTransaction insertTestPayments(Date date) {
         AccTransaction lowBalance = null;
         try {
@@ -4494,7 +4434,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
         return lowBalance;
-    }*/
+    }
 
     private void insertCalls(int student_id) {
         try {

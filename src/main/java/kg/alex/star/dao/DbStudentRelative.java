@@ -39,10 +39,8 @@ public class DbStudentRelative extends BaseDb {
                                            StudentDefinitionView dw) throws SQLException {
 
         String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.given_by, sr.issue_date, "
-                + "sr.phone, sr.address, sr.passport, sr.inn, sr.is_main, sr.relatives_id, "
-                + "a.id, a.name, a.extension, a.unique_name "
+                + "sr.phone, sr.address, sr.passport, sr.work_place, sr.is_main, sr.relatives_id "
                 + "FROM student_relatives as sr "
-                + "left join attachments as a on a.id = sr.attachment_id "
                 + "where sr.student_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
@@ -59,36 +57,9 @@ public class DbStudentRelative extends BaseDb {
                             myUi.getMessage(Messages.FullName), id, new StringLengthValidator(
                                     myUi.getMessage(Messages.NotificationWrongValue),
                                     1, 250, false), true));
-            HorizontalLayout hl = new HorizontalLayout();
-            hl.setSpacing(true);
             CheckBox cb = dw.createCheckBox(result.getBoolean("sr.is_main"),
                     myUi.getMessage(Messages.Responsible), id);
-            hl.addComponent(cb);
-            hl.setComponentAlignment(cb, Alignment.MIDDLE_LEFT);
-            Button b = dw.createButton(myUi.getMessage(Messages.DownLoad), id,
-                    Settings.download_button, FontAwesome.DOWNLOAD);
-            b.setStyleName("unread");
-            b.addStyleName(ValoTheme.BUTTON_SMALL);
-            b.setEnabled(false);
-            b.setData(null);
-            if (result.getInt("a.id") != 0) {
-                Attachment a = new Attachment();
-                a.setId(result.getInt("a.id"));
-                a.setUnique_name(result.getString("a.unique_name"));
-                a.setExtension(result.getString("a.extension"));
-                a.setName(result.getString("a.name"));
-                b.setData(a);
-                b.setEnabled(true);
-                b.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-                b.addStyleName(ValoTheme.BUTTON_SMALL);
-            }
-            hl.addComponent(b);
-
-            Upload upload = dw.createUpload("", false);
-            upload.setId(id);
-            upload.setData(b);
-            hl.addComponent(upload);
-            item.getItemProperty(myUi.getMessage(Messages.Responsible)).setValue(hl);
+            item.getItemProperty(myUi.getMessage(Messages.Responsible)).setValue(cb);
             if (result.getBoolean("sr.is_main")) {
                 item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
                         dw.createTextField(result.getString("sr.address"),
@@ -114,11 +85,11 @@ public class DbStudentRelative extends BaseDb {
                                 myUi.getMessage(Messages.Passport), id, new StringLengthValidator(
                                         myUi.getMessage(Messages.NotificationWrongValue),
                                         1, 50, false), true));
-                item.getItemProperty(myUi.getMessage(Messages.INN)).setValue(
-                        dw.createTextField(result.getString("sr.inn"),
-                                myUi.getMessage(Messages.INN), id, new StringLengthValidator(
+                item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
+                        dw.createTextField(result.getString("sr.work_place"),
+                                myUi.getMessage(Messages.WorkPlace), id, new StringLengthValidator(
                                         myUi.getMessage(Messages.NotificationWrongValue),
-                                        1, 20, false), true));
+                                        1, 250, false), true));
             } else {
                 item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
                         dw.createTextField(result.getString("sr.address"),
@@ -144,11 +115,11 @@ public class DbStudentRelative extends BaseDb {
                                 myUi.getMessage(Messages.Passport), id, new StringLengthValidator(
                                         myUi.getMessage(Messages.NotificationWrongValue),
                                         null, 50, true), false));
-                item.getItemProperty(myUi.getMessage(Messages.INN)).setValue(
-                        dw.createTextField(result.getString("sr.inn"),
-                                myUi.getMessage(Messages.INN), id, new StringLengthValidator(
+                item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
+                        dw.createTextField(result.getString("sr.work_place"),
+                                myUi.getMessage(Messages.WorkPlace), id, new StringLengthValidator(
                                         myUi.getMessage(Messages.NotificationWrongValue),
-                                        null, 20, true), false));
+                                        null, 250, true), false));
             }
             item.getItemProperty(myUi.getMessage(Messages.RelativeType)).setValue(
                     dw.createCombobox(result.getInt("sr.relatives_id"),
@@ -161,7 +132,9 @@ public class DbStudentRelative extends BaseDb {
 
     public List<StudentRelative> allRelativesByStudentId(int stud_id) throws SQLException {
 
-        String sql = "select distinct(r.id) as id, r.name, sr.fullname, sr.phone, sr.is_main from student_relatives as sr left join relatives as r on sr.relatives_id = r.id where sr.student_id = ? order by sr.is_main desc";
+        String sql = "select distinct(r.id) as id, r.name, sr.fullname, sr.phone, sr.is_main from student_relatives as sr " +
+                "left join relatives as r on sr.relatives_id = r.id " +
+                "where sr.student_id = ? order by sr.is_main desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         ResultSet result = stat.executeQuery();
@@ -178,9 +151,9 @@ public class DbStudentRelative extends BaseDb {
 
     public int exec_insert(StudentRelative sr) throws SQLException {
         String sql = "INSERT INTO student_relatives (student_id, fullname, "
-                + "given_by, phone, address, passport, inn, is_main, "
-                + "relatives_id, issue_date, attachment_id) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+                + "given_by, phone, address, passport, work_place, is_main, "
+                + "relatives_id, issue_date) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sr.getStudent_id());
         stat.setString(2, sr.getFullName());
@@ -188,7 +161,7 @@ public class DbStudentRelative extends BaseDb {
         stat.setString(4, sr.getPhone());
         stat.setString(5, sr.getAddress());
         stat.setString(6, sr.getPassport());
-        stat.setString(7, sr.getInn());
+        stat.setString(7, sr.getWorkPlace());
         stat.setInt(8, sr.getIs_main());
         stat.setInt(9, sr.getRelative_id());
         if (sr.getIssueDate() != null) {
@@ -196,19 +169,14 @@ public class DbStudentRelative extends BaseDb {
         } else {
             stat.setNull(10, Types.DATE);
         }
-        if (sr.getAttachment_id() != 0) {
-            stat.setInt(11, sr.getAttachment_id());
-        } else {
-            stat.setNull(11, Types.INTEGER);
-        }
         return stat.executeUpdate();
     }
 
     public int exec_update(StudentRelative sr) throws SQLException {
         String sql = "update student_relatives set student_id = ?, "
                 + "fullname = ?, given_by = ?, phone = ?, address = ?, "
-                + "passport = ?, is_main = ?, relatives_id = ?, issue_date = ?, inn = ?, "
-                + "attachment_id = ? WHERE id = ?";
+                + "passport = ?, is_main = ?, relatives_id = ?, issue_date = ?, work_place = ? "
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sr.getStudent_id());
         stat.setString(2, sr.getFullName());
@@ -223,13 +191,8 @@ public class DbStudentRelative extends BaseDb {
         } else {
             stat.setNull(9, Types.DATE);
         }
-        stat.setString(10, sr.getInn());
-        if (sr.getAttachment_id() != 0) {
-            stat.setInt(11, sr.getAttachment_id());
-        } else {
-            stat.setNull(11, Types.INTEGER);
-        }
-        stat.setString(12, sr.getId());
+        stat.setString(10, sr.getWorkPlace());
+        stat.setString(11, sr.getId());
         return stat.executeUpdate();
     }
 
