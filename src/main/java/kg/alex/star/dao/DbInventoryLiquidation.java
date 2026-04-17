@@ -12,10 +12,10 @@ import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.InventoryLiquidation;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.InventoryLiquidationView;
+import kg.alex.star.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

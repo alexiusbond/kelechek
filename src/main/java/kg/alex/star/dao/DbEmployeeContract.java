@@ -13,10 +13,10 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.EmployeeContract;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.EmployeeDefinitionView;
+import kg.alex.star.utils.Settings;
 import org.vaadin.hene.popupbutton.PopupButton;
 
 import java.sql.*;

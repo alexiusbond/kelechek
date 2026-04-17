@@ -11,10 +11,10 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.Attachment;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.EmployeeDefinitionView;
+import kg.alex.star.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

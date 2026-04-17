@@ -14,10 +14,10 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.Employee;
 import kg.alex.star.domain.EmployeesCount;
 import kg.alex.star.i18n.Messages;
+import kg.alex.star.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

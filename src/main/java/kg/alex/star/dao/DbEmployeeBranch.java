@@ -9,10 +9,10 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.EmployeeBranch;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.EmployeeDefinitionView;
+import kg.alex.star.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

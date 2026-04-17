@@ -15,11 +15,11 @@ import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.Definition;
 import kg.alex.star.domain.InventoryOrganization;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.InventoryOrganizationView;
+import kg.alex.star.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

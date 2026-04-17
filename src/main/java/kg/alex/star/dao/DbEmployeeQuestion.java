@@ -10,10 +10,10 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.TextField;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.EmployeeQuestioning;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.EmployeeDefinitionView;
+import kg.alex.star.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

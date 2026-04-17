@@ -14,10 +14,10 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.StudentCorrection;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.StudentDefinitionView;
+import kg.alex.star.utils.Settings;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 

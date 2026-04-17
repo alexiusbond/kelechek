@@ -8,11 +8,11 @@ package kg.alex.star.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.AccBalanceSettings;
 import kg.alex.star.domain.Definition;
 import kg.alex.star.domain.Month;
 import kg.alex.star.i18n.Messages;
+import kg.alex.star.utils.Settings;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
 import java.sql.PreparedStatement;

@@ -10,7 +10,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.EducationStatus;
 import kg.alex.star.domain.Student;
 import kg.alex.star.i18n.Messages;
@@ -18,6 +17,7 @@ import kg.alex.star.reports.students.StatusesReport;
 import kg.alex.star.ui.CallsView;
 import kg.alex.star.ui.IssueOrderView;
 import kg.alex.star.ui.StudentDefinitionView;
+import kg.alex.star.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

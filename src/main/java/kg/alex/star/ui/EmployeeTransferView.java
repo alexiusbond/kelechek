@@ -19,7 +19,6 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.dao.DbAccCategory;
 import kg.alex.star.dao.DbEmployee;
 import kg.alex.star.dao.DbEmployeeOrder;
@@ -28,6 +27,7 @@ import kg.alex.star.domain.AccCategory;
 import kg.alex.star.domain.EmployeeOrder;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.utils.FormattedTable;
+import kg.alex.star.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

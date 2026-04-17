@@ -10,12 +10,12 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.StudentInstallmentPlan;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.reports.students.ClassInstPlanReport;
 import kg.alex.star.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.star.ui.StudentDefinitionView;
+import kg.alex.star.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

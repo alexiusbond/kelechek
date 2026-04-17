@@ -10,12 +10,12 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.*;
+import com.vaadin.ui.CheckBox;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.StudentRelative;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.StudentDefinitionView;
+import kg.alex.star.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
