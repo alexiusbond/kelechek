@@ -16,6 +16,7 @@ import kg.alex.star.dao.DbStudentOrder;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.reports.students.BankPaymentsByDateReport;
 import kg.alex.star.ui.*;
+import kg.alex.star.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;

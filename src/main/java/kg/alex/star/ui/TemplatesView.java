@@ -9,7 +9,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

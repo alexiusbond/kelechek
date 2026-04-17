@@ -10,7 +10,7 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.TreeTable;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.AccCategory;
 import kg.alex.star.i18n.Messages;
 import org.tepi.filtertable.FilterTreeTable;

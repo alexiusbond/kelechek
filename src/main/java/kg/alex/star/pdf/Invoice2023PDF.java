@@ -8,7 +8,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.dao.DbStudentInstallmentPlan;
 import kg.alex.star.domain.InvoiceInfoPdf;
 import kg.alex.star.i18n.Messages;

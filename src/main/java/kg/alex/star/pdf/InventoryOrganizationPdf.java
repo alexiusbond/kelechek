@@ -15,7 +15,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.InventoryInvoice;
 import kg.alex.star.domain.School;
 import kg.alex.star.i18n.Messages;

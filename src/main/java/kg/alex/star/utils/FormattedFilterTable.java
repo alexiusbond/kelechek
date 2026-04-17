@@ -7,7 +7,6 @@ package kg.alex.star.utils;
 
 import com.vaadin.data.Property;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
 import kg.alex.star.i18n.Messages;
 import org.tepi.filtertable.FilterTable;
 

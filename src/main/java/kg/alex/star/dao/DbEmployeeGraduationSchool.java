@@ -5,7 +5,7 @@
  */
 package kg.alex.star.dao;
 
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.EmployeeGraduationSchool;
 
 import java.sql.PreparedStatement;

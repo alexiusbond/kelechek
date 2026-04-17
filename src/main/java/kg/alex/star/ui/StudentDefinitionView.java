@@ -20,12 +20,12 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.pdf.contracts.ContractPdfKg;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.dao.*;
 import kg.alex.star.domain.*;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.pdf.Invoice2023PDF;
-import kg.alex.star.pdf.contracts.ContractPdfKg;
 import kg.alex.star.tableexport.ExcelExport;
 import kg.alex.star.utils.ExistsValidator;
 import kg.alex.star.utils.FormattedTable;
@@ -1129,7 +1129,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 allDisc.append(" - ").append(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
                                         .getPropertyDataSource().getValue().toString()).append("% (").append(Settings.dFormat2.format(count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue()) / 100)).append(" ").append(currency).append(")");
+                                        .getPropertyDataSource().getValue()) / 100)).append(" ").append(")");
                                 count_amount -= count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
                                         .getPropertyDataSource().getValue()) / 100;
@@ -1142,7 +1142,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
                                             myUI.getMessage(Messages.DiscountType)).getValue() == 4)) {
                                 allDisc.append(" (").append(Settings.dFormat2.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue())).append(" ").append(currency).append(")");
+                                        .getPropertyDataSource().getValue())).append(" ").append(")");
                                 count_amount -= (Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
                                         .getPropertyDataSource().getValue();
                             }

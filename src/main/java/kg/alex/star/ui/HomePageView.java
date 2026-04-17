@@ -16,7 +16,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.dao.*;
 import kg.alex.star.domain.ContractInfo;
 import kg.alex.star.domain.EducationStatus;

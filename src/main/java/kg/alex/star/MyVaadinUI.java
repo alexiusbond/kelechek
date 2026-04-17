@@ -18,6 +18,7 @@ import kg.alex.star.dao.DbUserDetails;
 import kg.alex.star.domain.UserDetails;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.ViewManager;
+import kg.alex.star.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;

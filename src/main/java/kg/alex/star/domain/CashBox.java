@@ -5,7 +5,7 @@
  */
 package kg.alex.star.domain;
 
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 
 import java.io.Serializable;
 

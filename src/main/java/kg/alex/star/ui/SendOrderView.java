@@ -14,7 +14,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.dao.*;
 import kg.alex.star.domain.EmployeeMessage;
 import kg.alex.star.domain.OrderMessage;

@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.Invoice;
 import kg.alex.star.i18n.Messages;
 import org.apache.shiro.SecurityUtils;

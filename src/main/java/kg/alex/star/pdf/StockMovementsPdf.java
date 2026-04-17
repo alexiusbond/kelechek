@@ -14,7 +14,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.StockInvoice;
 import kg.alex.star.domain.StudentInfoPdf;
 import kg.alex.star.i18n.Messages;

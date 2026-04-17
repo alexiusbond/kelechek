@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.star;
+package kg.alex.star.utils;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -12,6 +12,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.ui.*;
+import kg.alex.star.MyVaadinUI;
 import kg.alex.star.i18n.Messages;
 import org.apache.commons.lang3.StringUtils;
 

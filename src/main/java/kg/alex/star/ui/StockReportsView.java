@@ -9,7 +9,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.reports.stock.ProductMovementsReport;
 import kg.alex.star.reports.stock.StockGeneralReport;

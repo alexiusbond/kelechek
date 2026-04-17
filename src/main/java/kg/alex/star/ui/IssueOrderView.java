@@ -9,7 +9,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.dao.*;
 import kg.alex.star.domain.StudentOrder;
 import kg.alex.star.i18n.Messages;

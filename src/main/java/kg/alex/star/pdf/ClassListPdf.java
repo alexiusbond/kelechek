@@ -12,7 +12,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.StudentInfoPdf;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.reports.students.ClassListReport;

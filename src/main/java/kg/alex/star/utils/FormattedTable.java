@@ -8,7 +8,6 @@ package kg.alex.star.utils;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Table;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
 import kg.alex.star.i18n.Messages;
 
 /**

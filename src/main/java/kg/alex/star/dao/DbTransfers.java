@@ -14,7 +14,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.SchoolAccounting;
 import kg.alex.star.domain.Transfer;
 import kg.alex.star.i18n.Messages;

@@ -10,7 +10,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.StudentOrder;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.reports.students.OutOfList;

@@ -4,7 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.server.StreamResource;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.EmployeeInfoPdf;
 import kg.alex.star.utils.Decliner;
 import kg.alex.star.utils.money.WritableSummRu;

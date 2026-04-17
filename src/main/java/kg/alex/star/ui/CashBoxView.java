@@ -25,7 +25,7 @@ import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.dao.*;
 import kg.alex.star.domain.*;
 import kg.alex.star.i18n.Messages;

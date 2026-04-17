@@ -17,7 +17,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.EmployeeLessons;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.EmployeeDefinitionView;

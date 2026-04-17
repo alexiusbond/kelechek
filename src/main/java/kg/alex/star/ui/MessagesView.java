@@ -4,7 +4,7 @@ import com.vaadin.ui.CustomTable;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.dao.DbEmployeeMessage;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.utils.MyFilterDecorator;

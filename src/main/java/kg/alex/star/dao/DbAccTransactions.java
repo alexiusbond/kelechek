@@ -13,7 +13,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.ui.*;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.AccTransaction;
 import kg.alex.star.domain.SchoolAccounting;
 import kg.alex.star.i18n.Messages;

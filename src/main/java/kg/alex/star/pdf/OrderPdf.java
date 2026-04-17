@@ -9,7 +9,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.server.StreamResource;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.OrderMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

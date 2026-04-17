@@ -9,7 +9,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.ContractInfo;
 import kg.alex.star.domain.Month;
 import kg.alex.star.domain.StudentContract;

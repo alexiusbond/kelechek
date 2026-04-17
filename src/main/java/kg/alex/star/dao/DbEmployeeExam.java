@@ -16,7 +16,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.Attachment;
 import kg.alex.star.domain.EmployeeExam;
 import kg.alex.star.i18n.Messages;

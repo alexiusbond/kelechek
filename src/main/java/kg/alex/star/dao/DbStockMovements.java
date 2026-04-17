@@ -15,7 +15,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import kg.alex.star.MyVaadinUI;
-import kg.alex.star.Settings;
+import kg.alex.star.utils.Settings;
 import kg.alex.star.domain.StockMovement;
 import kg.alex.star.i18n.Messages;
 import kg.alex.star.ui.StockIncomeView;
