@@ -387,7 +387,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         tabs.addTab(studSearchLay).setCaption(myUI.getMessage(Messages.Search));
         tabs.addTab(famTableLay).setCaption(myUI.getMessage(Messages.FamilyInfo));
         tabs.addTab(contractTabLay).setCaption(myUI.getMessage(Messages.Contract));
-        tabs.addTab(payTableLay).setCaption(myUI.getMessage(Messages.Payment));
+        tabs.addTab(payTableLay).setCaption(myUI.getMessage(Messages.Payments));
         tabs.addTab(acsGiveTableLay).setCaption(myUI.getMessage(Messages.MaterialsGive));
         tabs.addTab(acsReceiveTableLay).setCaption(myUI.getMessage(Messages.MaterialsReceive));
         tabs.addTab(callsTableLay).setCaption(myUI.getMessage(Messages.Calls));

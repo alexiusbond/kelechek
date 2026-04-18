@@ -153,8 +153,7 @@ public class Messages_ru extends Messages {
             {PhoneNumbers, "Номера телефонов"},
             {ProductCategory, "Категория товаров"},
             {Logo, "Логотип"},
-            {ConfirmChangeYear, "При смене текущего года, год изменится у всех "
-                    + "пользователей вашей школы. Продолжить?"},
+            {ConfirmChangeYear, "Вы действительно хотите изменить учебный год?"},
             {AccessoriesDefinition, "Определение принадлежностей"},
             {FullName, "ФИО"},
             {Hobbies, "Хобби"},
