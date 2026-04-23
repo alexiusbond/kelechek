@@ -542,13 +542,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         fieldsLay1 = new FormLayout();
         fieldsLay1.setSpacing(false);
 
-        loginTF = new TextField(myUI.getMessage(Messages.StudentId));
-        loginTF.setRequired(true);
+        loginTF = new TextField(myUI.getMessage(Messages.Id));
         loginTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        loginTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         loginTF.setWidth(Settings.PERCENTS100);
-        loginTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(Messages.NotificationWrongValue), 1, 20, false));
+        loginTF.setEnabled(false);
         fieldsLay1.addComponent(loginTF);
 
         nameTF = new TextField(myUI.getMessage(Messages.FirstName));
@@ -630,6 +627,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.error(e);
             logger.catching(e);
         }
+        classCB.addValueChangeListener(this);
         fieldsLay2.addComponent(classCB);
 
         statusCB = new ComboBox(myUI.getMessage(Messages.EducationStatus));
@@ -886,6 +884,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                         DbStudent dbst = new DbStudent();
                                         dbst.connect();
                                         if (isNew) {
+                                            loginTF.setValue(generateStudId(
+                                                    myUI.getUser().getCurrent_year().getId(),
+                                                    myUI.getUser().getCurrent_year().getName()));
                                             Student student = getStudent(0);
                                             int id = dbst.exec_insert(student);
                                             if (id != 0) {
@@ -1269,6 +1270,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 initialPaymentRateTF.getPropertyDataSource().setValue(null);
                 initialPayCashBoxCB.setValue(null);
             }
+        } else if (property == classCB) {
+            if (classCB.getValue() != null) {
+                photoUpl.setEnabled(true);
+                if (isNew) {
+                    loginTF.setValue(generateStudId(myUI.getUser().getCurrent_year().getId(),
+                            myUI.getUser().getCurrent_year().getName()));
+                }
+            } else {
+                photoUpl.setEnabled(false);
+            }
         } else if (property == contractCB) {
             if (initialPaymentTF.isValid()) {
                 recountInstPlanLabel();
@@ -1420,7 +1431,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private void prepareModificationMode() {
         if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()
                 || tabs.getSelectedTab() == tabs.getTab(studSearchLay).getComponent()) {
-            loginTF.setEnabled(true);
             nameTF.setEnabled(true);
             surnameTF.setEnabled(true);
             addressTF.setEnabled(true);
@@ -1520,7 +1530,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         studDataTable.setEnabled(true);
-        loginTF.setEnabled(false);
         nameTF.setEnabled(false);
         surnameTF.setEnabled(false);
         addressTF.setEnabled(false);
@@ -4570,6 +4579,60 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
         studDataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
+    }
+
+    private String generateStudId(int yearId, String yearName) {
+        String generated_id = null;
+        try {
+            DbStudent dbCon = new DbStudent();
+            dbCon.connect();
+            String school_code = (Integer) classCB.getContainerProperty(
+                    classCB.getValue(), myUI.getMessage(Messages.ClassNumber)).getValue() < 7 ?
+                    myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
+                            myUI.getMessage(Messages.PrimaryCode)).getValue().toString() :
+                    myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
+                            myUI.getMessage(Messages.SecondaryCode)).getValue().toString();
+            String school_level = null;
+            if ((Integer) classCB.getContainerProperty(
+                    classCB.getValue(), myUI.getMessage(Messages.ClassNumber)).getValue() < 7 &&
+                    !myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
+                            myUI.getMessage(Messages.PrimaryCode)).getValue().equals(
+                            myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
+                                    myUI.getMessage(Messages.SecondaryCode)).getValue())) {
+                school_level = myUI.getMessage(Messages.PrimaryCode);
+            } else if ((Integer) classCB.getContainerProperty(
+                    classCB.getValue(), myUI.getMessage(Messages.ClassNumber)).getValue() >= 7 &&
+                    !myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
+                            myUI.getMessage(Messages.PrimaryCode)).getValue().equals(
+                            myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
+                                    myUI.getMessage(Messages.SecondaryCode)).getValue())) {
+                myUI.getMessage(Messages.SecondaryCode);
+            }
+            int year_ord = Integer.parseInt(yearName.substring(2, 4));
+            String class_num = Integer.toString(year_ord - (Integer) classCB.getContainerProperty(
+                    classCB.getValue(), Settings.class_order_number).getValue());
+            char cl = (Integer) classCB.getContainerProperty(classCB.getValue(), Settings.class_type_id).getValue() >= 4
+                    ? '0' : class_num.charAt(class_num.length() - 1);
+            int order_number = 1;
+            do {
+                generated_id = school_code + year_ord + cl + String.format("%03d", dbCon.execSQL_login(myUI,
+                        yearId, myUI.getUser().getSchool().getId(), (Integer) classCB.getContainerProperty(
+                                classCB.getValue(), Settings.class_type_id).getValue(),
+                        order_number, (Integer) classCB.getContainerProperty(
+                                classCB.getValue(), Settings.min).getValue(),
+                        (Integer) classCB.getContainerProperty(
+                                classCB.getValue(), Settings.max).getValue(), school_level));
+                order_number++;
+                if (order_number == 100) {
+                    break;
+                }
+            } while (dbCon.isLoginExists(generated_id));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        return generated_id;
     }
 
     private void createBtnAction() {

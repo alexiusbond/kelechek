@@ -4,7 +4,7 @@ public class Messages_ru extends Messages {
 
     static final Object[][] contents_ru = {
             // Application
-            {AppTitle, "International School Princeton Academy"},
+            {AppTitle, "International School Academy"},
             // Login Form
             {Language, "Язык"},
             {Level, "Уровень"},
@@ -172,7 +172,7 @@ public class Messages_ru extends Messages {
             {ExtraPosition, "Доп. должность"},
             {ExtraPositions, "Доп должности"},
             {TotalWorkExperience, "Общий стаж работы"},
-            {IspaWorkExperience, "Стаж работы в Princeton Academy"},
+            {IspaWorkExperience, "Стаж работы в Academy"},
             {ExtraBranches, "Доп. области преподавания"},
             {GenerateButton, "Сгенерировать"},
             {Permissions, "Разрешения"},
@@ -292,7 +292,7 @@ public class Messages_ru extends Messages {
             {Left, "Осталось"},
             {TotalHours, "Кол-во часов за "},
             {WorkPlace, "Место работы"},
-            {Ispa, "Princeton Academy"},
+            {Ispa, "International School Academy"},
             {RelativeType, "Кем является"},
             {Relative, "Родственник"},
             {Passport, "Серия и номер паспорта"},
@@ -415,7 +415,7 @@ public class Messages_ru extends Messages {
             {To, "по"},
             {ToAge, "Возраст по"},
             {Director, "Директор"},
-            {IspaExam, "Экзамен-Princeton Academy"},
+            {IspaExam, "Экзамен-Academy"},
             {AllClasses, "Все классы"},
             {All, "Все"},
             {AllIncomes, "Все приходы"},
@@ -606,7 +606,7 @@ public class Messages_ru extends Messages {
             {DetailedReport, "Подробный отчет"},
             {TransactionNumber, "Номер транзакции"},
             {TransactionsQuantity, "Количество трансакций"},
-            {StudentId, "ИНН ученика"},
+            {StudentId, "ID ученика"},
             {StudentsPossessive, "ученика"},
             {Age, "Возраст"},
             {ReturnableAssetsUSD, "ВОЗВРАЩАЕМЫЕ АКТИВЫ (USD)"},
