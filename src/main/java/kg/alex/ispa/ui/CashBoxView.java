@@ -982,7 +982,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 SchoolAccounting acc = dbAc.exec_get_totals(myUI.getUser().getSchool().getId(), (Integer) cashBoxId,
                         fromDateDF.getValue(), tillDateDF.getValue(), null);
                 if (cashBoxesOG.getContainerProperty(cashBoxId, myUI.getMessage(Messages.Currency)).getValue().equals(Settings.KGS)) {
-                    total += (acc.getPrevious_balance() + acc.getTotal_income() - acc.getTotal_outcome()) / myUI.getCurrencyRateFromBank();
+                    total += (acc.getPrevious_balance() + acc.getTotal_income() - acc.getTotal_outcome()) / myUI.getDb_currency_rate();
                 } else {
                     total += (acc.getPrevious_balance() + acc.getTotal_income() - acc.getTotal_outcome());
                 }

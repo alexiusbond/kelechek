@@ -1137,8 +1137,8 @@ public class DbStudentContract extends BaseDb {
 
     public ContractInfo execSQLTotals(int scl_id, int year_id)
             throws SQLException {
-        String sql = "SELECT sum(c.amount) as contract, sum(sc.debt) as debt, "
-                + "(sum(c.amount)-sum(sc.contr_with_disc)) as disc, sum(vc.amount) as correction, "
+        String sql = "SELECT sum(c.amount) as contract, "
+                + "(sum(c.amount) - sum(sc.contr_with_disc)) as disc, sum(vc.amount) as correction, "
                 + "(sum(sc.net_payments)) as payment "
                 + "FROM student_contract as sc "
                 + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
@@ -1152,15 +1152,38 @@ public class DbStudentContract extends BaseDb {
         ContractInfo ct = new ContractInfo();
         while (result.next()) {
             ct.setContract(result.getDouble("contract"));
-            ct.setDebt(result.getDouble("debt"));
+            ct.setDebt(execSQLPrevDebts(scl_id, year_id));
             ct.setDiscount(result.getDouble("disc"));
             ct.setCorrection(result.getDouble("correction"));
+            ct.setNet(ct.getContract() - ct.getDiscount() + ct.getCorrection());
             ct.setPaid(result.getDouble("payment"));
-            ct.setLeft(result.getDouble("debt") + result.getDouble("contract")
-                    - result.getDouble("disc") - result.getDouble("payment")
-                    + result.getDouble("correction"));
+            ct.setLeft(ct.getContract() - ct.getDiscount() - ct.getPaid() + ct.getCorrection());
         }
         return ct;
+    }
+
+    public double execSQLPrevDebts(int scl_id, int year_id)
+            throws SQLException {
+        String sql = "SELECT SUM(t.prev_balance) AS total_prev_balance FROM ( " +
+                "SELECT st.id, IFNULL(sc.debt, IFNULL(( " +
+                "SELECT SUM(sc2.contr_with_disc) FROM student_contract sc2 WHERE sc2.student_id = st.id AND sc2.year_id < ? ), 0) + " +
+                "IFNULL(( SELECT SUM(vc.amount) FROM view_corrections vc WHERE vc.student_id = st.id AND vc.year_id < ? ), 0) - " +
+                "IFNULL(( SELECT SUM(IF(sp.payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate " +
+                "ELSE sp.amount END, 0)) - SUM(IF(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 " +
+                "THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)) FROM student_payments sp " +
+                "WHERE sp.student_id = st.id AND sp.year_id < ? ), 0) ) AS prev_balance FROM student st " +
+                "LEFT JOIN student_contract sc ON sc.student_id = st.id AND sc.year_id = ? WHERE st.school_id = ? ) t";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, year_id);
+        stat.setInt(2, year_id);
+        stat.setInt(3, year_id);
+        stat.setInt(4, year_id);
+        stat.setInt(5, scl_id);
+        ResultSet result = stat.executeQuery();
+        if (result.next()) {
+            return result.getDouble("total_prev_balance");
+        }
+        return 0;
     }
 
     public IndexedContainer execSQL_DebtsByClass(MyVaadinUI myUI, Date from,

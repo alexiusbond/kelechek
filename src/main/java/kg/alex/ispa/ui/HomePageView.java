@@ -16,13 +16,13 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.ContractInfo;
 import kg.alex.ispa.domain.EducationStatus;
 import kg.alex.ispa.domain.EmployeesCount;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.tableexport.EnhancedFormatExcelExport;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -68,7 +68,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
             this.addComponent(createChart(), 2, 0, 2, 1);
         }
         if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmLogsInfo)
-            || currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmAccountingLogsSelect)) {
+                || currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmAccountingLogsSelect)) {
             this.addComponent(buildLogLayout(), 0, 2, 2, 2);
         }
     }
@@ -122,7 +122,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
                 try {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(logTable);
                     excelReport.setReportTitle(logsTypeSelect.getItemCaption(logsTypeSelect.getValue() + " - "
-                                                                             + logTableCaption.getValue()));
+                            + logTableCaption.getValue()));
                     excelReport.setDisplayTotals(false);
                     excelReport.convertTable();
                     excelReport.sendConverted();
@@ -195,7 +195,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         othersLabCpt.setContentMode(ContentMode.HTML);
         othersLabCpt.setStyleName(ValoTheme.LABEL_SMALL);
         othersLabCpt.setValue("<b>" + myUI.getMessage(Messages.OtherUsers) + " (" + emp.getOthers_count()
-                              + "):</b> ");
+                + "):</b> ");
         layout.addComponent(othersLabCpt);
 
         Label othersLab = new Label();
@@ -398,10 +398,10 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         ttlCorrectionLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlCorrectionLab.setValue("<b>" + myUI.getMessage(Messages.TotalCorrection) + "</b>");
 
-        Label ttlDebtLab = new Label();
-        ttlDebtLab.setContentMode(ContentMode.HTML);
-        ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlDebtLab.setValue("<b>" + myUI.getMessage(Messages.TotalDebt) + "</b>");
+        Label ttlNetLab = new Label();
+        ttlNetLab.setContentMode(ContentMode.HTML);
+        ttlNetLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlNetLab.setValue("<b>" + myUI.getMessage(Messages.Net) + "</b>");
 
         Label ttlPaymentLab = new Label();
         ttlPaymentLab.setContentMode(ContentMode.HTML);
@@ -413,14 +413,22 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         ttlLeftLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlLeftLab.setValue("<b>" + myUI.getMessage(Messages.TotalLeft) + "</b>");
 
+        Label ttlDebtLab = new Label();
+        ttlDebtLab.setContentMode(ContentMode.HTML);
+        ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlDebtLab.setValue("<b>" + myUI.getMessage(Messages.TotalDebt) + "</b>");
+
         try {
             DbStudentContract dbsc = new DbStudentContract();
             dbsc.connect();
             tc = dbsc.execSQLTotals(myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
             dbsc.close();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
         }
+
         layout.addComponent(caption, 0, 0, 1, 0);
         layout.addComponent(ttlContractLab);
         layout.addComponent(new Label(Settings.dFormat2.format(tc.getContract()) + " " + Settings.USD));
@@ -428,12 +436,14 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         layout.addComponent(new Label(Settings.dFormat2.format(tc.getDiscount()) + " " + Settings.USD));
         layout.addComponent(ttlCorrectionLab);
         layout.addComponent(new Label(Settings.dFormat2.format(tc.getCorrection()) + " " + Settings.USD));
-        layout.addComponent(ttlDebtLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDebt()) + " " + Settings.USD));
+        layout.addComponent(ttlNetLab);
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getNet()) + " " + Settings.USD));
         layout.addComponent(ttlPaymentLab);
         layout.addComponent(new Label(Settings.dFormat2.format(tc.getPaid()) + " " + Settings.USD));
         layout.addComponent(ttlLeftLab);
         layout.addComponent(new Label(Settings.dFormat2.format(tc.getLeft()) + " " + Settings.USD));
+        layout.addComponent(ttlDebtLab);
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDebt()) + " " + Settings.USD));
         return layout;
     }
 

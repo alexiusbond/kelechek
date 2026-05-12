@@ -24,7 +24,7 @@ public class DbRelative extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi, int stud_id) throws SQLException {
 
         String sql = "SELECT sr.fullname, sr.given_by, sr.phone, "
-                + "sr.address, sr.passport, sr.relatives_id, sr.is_main "
+                + "sr.address, sr.passport, sr.work_place, sr.relatives_id, sr.is_main "
                 + "FROM student_relatives as sr where sr.student_id = ? "
                 + "and (sr.relatives_id = 1 or sr.relatives_id = 2) "
                 + "group by sr.relatives_id";
@@ -37,6 +37,7 @@ public class DbRelative extends BaseDb {
         container.addContainerProperty(myUi.getMessage(Messages.Phone), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Address), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Passport), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.WorkPlace), String.class, null);
         container.addContainerProperty(Settings.is_main, Integer.class, 0);
 
         while (result.next()) {
@@ -51,8 +52,8 @@ public class DbRelative extends BaseDb {
                     result.getString("sr.address"));
             item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                     result.getString("sr.passport"));
-            item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
-                    result.getString("sr.phone"));
+            item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
+                    result.getString("sr.work_place"));
             item.getItemProperty(Settings.is_main).setValue(
                     result.getInt("sr.is_main"));
         }

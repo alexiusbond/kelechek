@@ -24,7 +24,7 @@ import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.*;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.pdf.Invoice2023PDF;
-import kg.alex.ispa.pdf.contracts.ContractPdfKg;
+import kg.alex.ispa.pdf.contracts.ContractPdfRu;
 import kg.alex.ispa.tableexport.ExcelExport;
 import kg.alex.ispa.utils.*;
 import net.coobird.thumbnailator.Thumbnails;
@@ -1106,6 +1106,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         String dis;
                         double count_amount = (Double) (contractCB.getContainerProperty(contractCB.getValue(),
                                 myUI.getMessage(Messages.Amount)).getValue());
+                        double discount_amount = 0;
                         while (iter.hasNext()) {
                             Object next = iter.next();
                             dis = ((((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
@@ -1127,9 +1128,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                         .getPropertyDataSource().getValue().toString()).append("% (").append(Settings.dFormat2.format(count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
                                         .getPropertyDataSource().getValue()) / 100)).append(" ").append(")");
-                                count_amount -= count_amount
+                                discount_amount += count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
                                         .getPropertyDataSource().getValue()) / 100;
+                                count_amount -= discount_amount;
                             } else if (((Integer) ((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
                                     .getContainerProperty(((ComboBox) discountsTable
                                                     .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
@@ -1140,14 +1142,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                             myUI.getMessage(Messages.DiscountType)).getValue() == 4)) {
                                 allDisc.append(" (").append(Settings.dFormat2.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
                                         .getPropertyDataSource().getValue())).append(" ").append(")");
-                                count_amount -= (Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
+                                discount_amount += (Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
                                         .getPropertyDataSource().getValue();
+                                count_amount -= discount_amount;
                             }
                             if (iter.hasNext()) {
                                 allDisc.append(", ");
                             }
                         }
                         studInfo.getContractInfo().setDiscountStr(allDisc.toString());
+                        studInfo.getContractInfo().setDiscount(discount_amount);
                     }
                     if (correctionsTable.size() > 0) {
                         Iterator<?> iter = correctionsTable.getItemIds().iterator();
@@ -1171,11 +1175,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     studInfo.getContractInfo().setNet(toPay);
                     studInfo.getContractInfo().setLeft(ttl_left);
                     studInfo.getContractInfo().setPaid(ttl_payment);
-                    studInfo.getContractInfo().setCurrency(currency);
+                    studInfo.getContractInfo().setCurrency(Settings.KGS);
                     if (studInfo.getMainRelative() != null && studInfo.getMainRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
-                                new ContractPdfKg(myUI, studInfo, instPlanCont);
+                                new ContractPdfRu(myUI, studInfo, instPlanCont);
                             } else {
                                 Notification.show(myUI.getMessage(Messages.NoDirectorAssigned),
                                         Notification.Type.WARNING_MESSAGE);
