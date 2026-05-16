@@ -685,7 +685,7 @@ public class ContractPdfRu {
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("ИТОГО взноса: ", ordFont));
                 text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getContract())), ordBoldFont));
-                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
+                text15.add(new Phrase(" USD.", ordFont));
                 text15.add(Chunk.NEWLINE);
                 if (studentInfo.getContractInfo().getDebt() >= 0) {
                     text15.add(new Phrase("Долг с предыдущего года: ", ordFont));
@@ -693,7 +693,7 @@ public class ContractPdfRu {
                     text15.add(new Phrase("Переплата с предыдущего года: ", ordFont));
                 }
                 text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getDebt())), ordBoldFont));
-                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
+                text15.add(new Phrase(" USD.", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Скидка: ", ordFont));
                 if (studentInfo.getContractInfo().getDiscountStr() != null) {
@@ -709,11 +709,11 @@ public class ContractPdfRu {
                 text15.add(new Phrase("Предоплата: ", ordFont));
                 text15.add(new Phrase(studentInfo.getContractInfo().getInitialPayment() == null ? "0.00" :
                         Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()), ordBoldFont));
-                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
+                text15.add(new Phrase(" USD.", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Остаток: ", ordFont));
                 text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()), ordBoldFont));
-                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
+                text15.add(new Phrase(" USD.", ordFont));
                 document.add(text15);
                 document.add(new Paragraph(10, " "));
 
@@ -736,18 +736,20 @@ public class ContractPdfRu {
                 TContract.addCell(new Phrase("Подпись ", ordBoldFont));
                 int n = 1;
                 for (Object obj : instPlanCont.getItemIds()) {
-                    TContract.addCell(new Phrase(n + "", ordFont));
-                    TContract.addCell(new Phrase(Settings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(Messages.Date)).getValue()).getValue()), ordFont));
-                    TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(Messages.Amount)).getValue()).getValue(), ordFont));
-                    TContract.addCell(new Phrase("", ordFont));
-                    TContract.addCell(new Phrase("", ordFont));
-                    n += 1;
+                    if ((Integer) instPlanCont.getContainerProperty(obj, Settings.status_id).getValue() == 1) {
+                        TContract.addCell(new Phrase(n + "", ordFont));
+                        TContract.addCell(new Phrase(Settings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Date)).getValue()).getValue()), ordFont));
+                        TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Amount)).getValue()).getValue(), ordFont));
+                        TContract.addCell(new Phrase("", ordFont));
+                        TContract.addCell(new Phrase("", ordFont));
+                        n += 1;
+                    }
                 }
                 TContract.addCell(new Phrase("", ordFont));
                 TContract.addCell(new Phrase("Итого:", ordBoldFont));
-                TContract.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getNet()), ordBoldFont));
+                TContract.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()), ordBoldFont));
                 TContract.addCell(new Phrase("", ordFont));
                 TContract.addCell(new Phrase("", ordFont));
 
