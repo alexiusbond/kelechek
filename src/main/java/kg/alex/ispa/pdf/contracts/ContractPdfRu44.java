@@ -7,7 +7,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import kg.alex.ispa.MyVaadinUI;
-import kg.alex.ispa.dao.DbRelative;
+import kg.alex.ispa.dao.DbStudentRelative;
 import kg.alex.ispa.domain.StudentInfoPdf;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.utils.Decliner;
@@ -20,9 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Iterator;
 
-public class ContractPdfRu {
+public class ContractPdfRu44 {
 
-    static final Logger logger = LogManager.getLogger(ContractPdfRu.class);
+    static final Logger logger = LogManager.getLogger(ContractPdfRu44.class);
     private final static String FONT_LOCATION = "/home/ispa/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/ispa/TimesNewRomanBold.ttf";
     private final MyVaadinUI myUI;
@@ -31,7 +31,7 @@ public class ContractPdfRu {
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
 
-    public ContractPdfRu(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractPdfRu44(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.studentInfo = st_info;
 
@@ -594,7 +594,7 @@ public class ContractPdfRu {
                 IndexedContainer relativeCont = null;
                 table_info.addCell(text10);
                 try {
-                    DbRelative dbr = new DbRelative();
+                    DbStudentRelative dbr = new DbStudentRelative();
                     dbr.connect();
                     relativeCont = dbr.execSQL(myUI, studentInfo.getStudent().getId());
                     dbr.close();
@@ -685,7 +685,7 @@ public class ContractPdfRu {
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("ИТОГО взноса: ", ordFont));
                 text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getContract())), ordBoldFont));
-                text15.add(new Phrase(" USD.", ordFont));
+                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 text15.add(Chunk.NEWLINE);
                 if (studentInfo.getContractInfo().getDebt() >= 0) {
                     text15.add(new Phrase("Долг с предыдущего года: ", ordFont));
@@ -693,7 +693,7 @@ public class ContractPdfRu {
                     text15.add(new Phrase("Переплата с предыдущего года: ", ordFont));
                 }
                 text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getDebt())), ordBoldFont));
-                text15.add(new Phrase(" USD.", ordFont));
+                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Скидка: ", ordFont));
                 if (studentInfo.getContractInfo().getDiscountStr() != null) {
@@ -709,11 +709,11 @@ public class ContractPdfRu {
                 text15.add(new Phrase("Предоплата: ", ordFont));
                 text15.add(new Phrase(studentInfo.getContractInfo().getInitialPayment() == null ? "0.00" :
                         Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()), ordBoldFont));
-                text15.add(new Phrase(" USD.", ordFont));
+                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Остаток: ", ordFont));
                 text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()), ordBoldFont));
-                text15.add(new Phrase(" USD.", ordFont));
+                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 document.add(text15);
                 document.add(new Paragraph(10, " "));
 

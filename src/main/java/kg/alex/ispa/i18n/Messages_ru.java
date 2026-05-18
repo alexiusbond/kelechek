@@ -601,7 +601,7 @@ public class Messages_ru extends kg.alex.ispa.i18n.Messages {
             {DetailedReport, "Подробный отчет"},
             {TransactionNumber, "Номер транзакции"},
             {TransactionsQuantity, "Количество трансакций"},
-            {StudentId, "ИНН ученика"},
+            {StudentId, "ID ученика"},
             {StudentsPossessive, "ученика"},
             {Age, "Возраст"},
             {ReturnableAssetsUSD, "ВОЗВРАЩАЕМЫЕ АКТИВЫ (USD)"},

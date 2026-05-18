@@ -631,7 +631,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         school.setPhone(phoneTF.getValue());
         school.setStatus_id((Integer) statusSelect.getValue());
         school.setSchool_type_id((Integer) typeSelect.getValue());
-        school.setSchool_type_id(1);
         school.setPhoto(photoName);
         return school;
     }
