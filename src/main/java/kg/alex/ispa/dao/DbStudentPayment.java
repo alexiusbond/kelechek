@@ -8,12 +8,12 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.StudentPayment;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.reports.students.ClassPaymentsReport;
 import kg.alex.ispa.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.ispa.ui.StudentDefinitionView;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -35,9 +35,9 @@ public class DbStudentPayment extends BaseDb {
 
     public StudentPayment exec_recount_payment(int stud_id, int year_id) throws SQLException {
         String sql = "SELECT sum(if(sp.payment_category_id != 3, " +
-                "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0.0)) - "
-                + "sum(if(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0.0)) as ttl_payment, "
-                + "sum(if(sp.payment_category_id = 1, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0.0)) as init_payment "
+                "CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0.0)) - "
+                + "sum(if(sp.payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0.0)) as ttl_payment, "
+                + "sum(if(sp.payment_category_id = 1, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0.0)) as init_payment "
                 + "FROM student_payments as sp where sp.student_id = ? and year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
@@ -200,7 +200,7 @@ public class DbStudentPayment extends BaseDb {
 
     public int getMaxOrderNum(int id) throws SQLException {
         int maxValue;
-        String sql = "select ifnull((max(sp.order_number)+1),1) as max_plus1 "
+        String sql = "select (max(sp.order_number)+1) as max_plus1 "
                 + "from student_payments as sp "
                 + "left join student as s on s.id = sp.student_id where "
                 + "s.school_id = (SELECT school_id FROM student where id = ?)";
@@ -222,9 +222,9 @@ public class DbStudentPayment extends BaseDb {
         stat.setString(1, id);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
-            orderNum = String.format("%07d", (result.getInt("order_number")));
+            orderNum = (result.getString("order_number"));
         } else {
-            orderNum = String.format("%07d", 1);
+            orderNum = "1";
         }
         return orderNum;
     }
@@ -267,9 +267,9 @@ public class DbStudentPayment extends BaseDb {
                     result.getInt("pc.id"));
             double amount;
             if (result.getInt("acc_currency_id") == 1) {
-                amount = result.getDouble("sp.amount") / result.getDouble("sp.dollar_rate");
-            } else {
                 amount = result.getDouble("sp.amount");
+            } else {
+                amount = result.getDouble("sp.amount") * result.getDouble("sp.dollar_rate");
             }
             if (result.getInt("pc.id") != 3) {
                 ip.total_pay += amount;
@@ -282,24 +282,27 @@ public class DbStudentPayment extends BaseDb {
 
     public IndexedContainer execSQL_PaymentsByClass(MyVaadinUI myUI, Date from,
                                                     Date till, int year_id, String class_ids, String edu_statuses_ids,
-                                                    ClassPaymentsReport cpr) throws SQLException {
+                                                    String cashbox_ids, ClassPaymentsReport cpr) throws SQLException {
 
         String sql = "SELECT sp.id, sp.modification_date, vcs.class_name, cur.name, sp.dollar_rate, sp.acc_currency_id, "
-                + "st.name, st.surname, sp.amount, pc.name, sp.who_paid, sp.payment_category_id "
+                + "st.name, st.surname, sp.amount, pc.name, sp.who_paid, sp.payment_category_id, cb.name "
                 + "FROM student_payments AS sp "
                 + "LEFT JOIN student AS st ON st.id = sp.student_id "
                 + "LEFT JOIN acc_currency AS cur ON cur.id = sp.acc_currency_id "
                 + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
                 + "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id "
+                + "LEFT JOIN acc_transactions AS tr ON tr.student_payments_id = sp.id "
+                + "LEFT JOIN acc_cashbox AS cb ON tr.acc_cashbox_id = cb.id "
                 + "WHERE vcs.class_name_id IN (" + class_ids + ") "
                 + "AND DATE(sp.modification_date) >= ? AND DATE(sp.modification_date) <= ? "
-                + "AND sp.year_id = ? AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
+                + "AND sp.year_id = ? AND vcs.education_status_id IN (" + edu_statuses_ids + ") AND tr.acc_cashbox_id IN (" + cashbox_ids + ")"
                 + "ORDER BY vcs.class_number_id, vcs.class_name_id, st.name, st.surname, sp.modification_date";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setDate(2, new java.sql.Date(from.getTime()));
         stat.setDate(3, new java.sql.Date(till.getTime()));
         stat.setInt(4, year_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
@@ -308,7 +311,7 @@ public class DbStudentPayment extends BaseDb {
         container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(Messages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.CashBox), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.PaymentCategoryType), String.class, null);
         container.addContainerProperty(Settings.payment_category_id, Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(Messages.WhoPaid), String.class, null);
@@ -324,8 +327,8 @@ public class DbStudentPayment extends BaseDb {
                     result.getDouble("sp.dollar_rate"));
             item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                     result.getDouble("sp.amount"));
-            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(
-                    result.getString("cur.name"));
+            item.getItemProperty(myUI.getMessage(Messages.CashBox)).setValue(
+                    result.getString("cb.name"));
             item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format((result.getDate("sp.modification_date"))));
             item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(
@@ -336,9 +339,9 @@ public class DbStudentPayment extends BaseDb {
                     result.getString("sp.who_paid"));
             double amount;
             if (result.getInt("acc_currency_id") == 1) {
-                amount = result.getDouble("sp.amount") / result.getDouble("sp.dollar_rate");
-            } else {
                 amount = result.getDouble("sp.amount");
+            } else {
+                amount = result.getDouble("sp.amount") * result.getDouble("sp.dollar_rate");
             }
             if (result.getInt("sp.payment_category_id") != 3) {
                 cpr.total += amount;
@@ -351,8 +354,8 @@ public class DbStudentPayment extends BaseDb {
 
     public double exec_get_difference(int st_id, int year_id) throws SQLException {
         double ip = 0;
-        String sql = "SELECT ifnull(SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)) - "
-                + "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount / sp.dollar_rate ELSE sp.amount END, 0)), 0.0)  as total "
+        String sql = "SELECT ifnull(SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - "
+                + "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)), 0.0)  as total "
                 + "FROM student_payments as sp where sp.student_id = ? and sp.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
@@ -367,8 +370,10 @@ public class DbStudentPayment extends BaseDb {
     public String execGetWeeklyPaid(String students, int scl_id, int year_id)
             throws SQLException {
         String sql = "SELECT count(distinct st.id) as st, "
-                + "ifnull(sum(if(sp.payment_category_id = 3, -IF(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount / sp.dollar_rate,  sp.amount), "
-                + "IF(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount / sp.dollar_rate,  sp.amount))),0.00) as week_paid FROM student_payments as sp "
+                + "ifnull(sum(if(sp.payment_category_id = 3, "
+                + "-if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount), "
+                + "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount))),0.00) as week_paid "
+                + "FROM student_payments as sp "
                 + "left join student as st on st.id = sp.student_id "
                 + "where st.school_id = ? and sp.year_id = ? and "
                 + "yearweek(date(sp.modification_date), 1) = YEARWEEK(curdate(),1)";
@@ -387,8 +392,10 @@ public class DbStudentPayment extends BaseDb {
             throws SQLException {
 
         String sql = "SELECT count(distinct st.id) as st, "
-                + "ifnull(sum(if(sp.payment_category_id = 3, -IF(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount / sp.dollar_rate,  sp.amount), "
-                + "IF(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount / sp.dollar_rate,  sp.amount))),0.00) as month_paid FROM student_payments as sp "
+                + "ifnull(sum(if(sp.payment_category_id = 3, "
+                + "-if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate, sp.amount), "
+                + "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate, sp.amount))),0.00) as month_paid "
+                + "FROM student_payments as sp "
                 + "left join student as st on st.id = sp.student_id "
                 + "where st.school_id = ? and sp.year_id = ? and "
                 + "MONTH(sp.modification_date) = MONTH(CURRENT_DATE())";
@@ -415,7 +422,7 @@ public class DbStudentPayment extends BaseDb {
     public IndexedContainer execSQL_Payments(MyVaadinUI myUI, int currency_id, int school_id, Date from, Date till, Table t) throws SQLException {
 
         String sql = "SELECT sp.id, sp.bank_transaction_id, sp.modification_date, sp.dollar_rate, " +
-                "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount / sp.dollar_rate,  sp.amount) as amount, c.name, st.login, " +
+                "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount) as amount, c.name, st.login, " +
                 "CONCAT(st.surname, ' ', st.name, ' ', IFNULL(st.middle_name, '')) AS fullname " +
                 "FROM student_payments AS sp " +
                 "LEFT JOIN student AS st ON st.id = sp.student_id " +
@@ -458,7 +465,7 @@ public class DbStudentPayment extends BaseDb {
     public IndexedContainer execSQL_Payments_group_by_date(MyVaadinUI myUI, int currency_id, int school_id, Date from, Date till, Table t) throws SQLException {
 
         String sql = "SELECT sp.modification_date, " +
-                "sum(if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount / sp.dollar_rate, sp.amount)) as amount, " +
+                "sum(if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount)) as amount, " +
                 "count(sp.id) as quantity, c.name FROM student_payments AS sp " +
                 "LEFT JOIN student AS st ON st.id = sp.student_id " +
                 "left join acc_currency as c on c.id = sp.acc_currency_id " +

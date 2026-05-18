@@ -25,11 +25,11 @@ import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.*;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.pdf.TransactionInvoicePDF;
-import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.utils.ValueFromContainerConverter;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
@@ -58,7 +58,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     private Button addButton, saveButton, searchButton;
     private OptionGroup currencySettingsOG, cashBoxesOG;
     private TextField currencyTF;
-    private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab, allCashboxesLab;
+    private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab;
     private DateField fromDateDF, tillDateDF;
     private GeneratedPropertyContainer incomesCont = null, expensesCont = null;
     private int r_table_counter = 1000;
@@ -148,12 +148,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         ttlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         ttlLab.setImmediate(true);
         ttlLab.setWidth(Settings.PERCENTS100);
-
-        allCashboxesLab = new Label();
-        allCashboxesLab.setContentMode(ContentMode.HTML);
-        allCashboxesLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        allCashboxesLab.setImmediate(true);
-        allCashboxesLab.setWidth(Settings.PERCENTS100);
 
         prev_balanceLab = new Label();
         prev_balanceLab.setStyleName(ValoTheme.LABEL_SUCCESS);
@@ -246,18 +240,16 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
         addComponent(hl, 0, 1);
         addComponent(addButton, 0, 2);
-        addComponent(cashBoxesOG, 1, 0);
+        addComponent(cashBoxesOG, 1, 0, 2, 0);
         addComponent(prev_balanceLab, 1, 1);
         addComponent(incomeTtlLab, 1, 2);
         addComponent(expenseTtlLab, 2, 2);
         addComponent(ttlLab, 2, 1);
-        addComponent(allCashboxesLab, 2, 0);
         addComponent(currencyHl, 3, 1);
         addComponent(currencySettingsHl, 3, 2);
         setComponentAlignment(cashBoxesOG, Alignment.MIDDLE_CENTER);
         setComponentAlignment(addButton, Alignment.BOTTOM_RIGHT);
         setComponentAlignment(ttlLab, Alignment.MIDDLE_RIGHT);
-        setComponentAlignment(allCashboxesLab, Alignment.MIDDLE_RIGHT);
         setComponentAlignment(prev_balanceLab, Alignment.BOTTOM_LEFT);
         setColumnExpandRatio(0, 2.2f);
         setColumnExpandRatio(1, 4);
@@ -967,32 +959,12 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         ttlLab.setValue("<b>" + myUI.getMessage(Messages.CashBox) + ": " + Settings.dFormat2.format(
                 (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) +
                 " " + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue() + "</b>");
-
         Calendar c = Calendar.getInstance();
         c.setTime(fromDateDF.getValue());
         c.add(Calendar.DAY_OF_MONTH, -1);
         prev_balanceLab.setValue(myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(c.getTime()) + "): "
                 + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + " "
                 + cashBoxesOG.getContainerProperty(cashBoxesOG.getValue(), myUI.getMessage(Messages.Currency)).getValue());
-        try {
-            DbAccTransactions dbAc = new DbAccTransactions();
-            dbAc.connect();
-            double total = 0;
-            for (Object cashBoxId : cashBoxesOG.getContainerDataSource().getItemIds()) {
-                SchoolAccounting acc = dbAc.exec_get_totals(myUI.getUser().getSchool().getId(), (Integer) cashBoxId,
-                        fromDateDF.getValue(), tillDateDF.getValue(), null);
-                if (cashBoxesOG.getContainerProperty(cashBoxId, myUI.getMessage(Messages.Currency)).getValue().equals(Settings.KGS)) {
-                    total += (acc.getPrevious_balance() + acc.getTotal_income() - acc.getTotal_outcome()) / myUI.getDb_currency_rate();
-                } else {
-                    total += (acc.getPrevious_balance() + acc.getTotal_income() - acc.getTotal_outcome());
-                }
-            }
-            dbAc.close();
-            allCashboxesLab.setValue("<b>" + myUI.getMessage(Messages.AllCashBoxes) + ": " + Settings.dFormat2.format(total) + " " + Settings.USD + "</b>");
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
     }
 
     private void getTotals() {

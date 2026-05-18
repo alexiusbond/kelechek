@@ -5,8 +5,8 @@
  */
 package kg.alex.ispa.dao;
 
-import kg.alex.ispa.domain.EmployeeGraduationSchool;
 import kg.alex.ispa.utils.Settings;
+import kg.alex.ispa.domain.EmployeeGraduationSchool;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

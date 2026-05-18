@@ -12,9 +12,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.StudentInfoPdf;
 import kg.alex.ispa.i18n.Messages;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,63 +81,7 @@ public class AccountingByDatesPdf {
                         spr.setFirstLineIndent(40);
                         document.add(spr);
                         document.add(new Paragraph(10, " "));
-                        float[] table_payments_colsWidth = {0.7f, 1.8f, 1.5f, 4.2f, 0.75f, 1.3f, 1.9f, 4.0f};
-                        PdfPTable table_payments = new PdfPTable(8);
-                        table_payments.setWidthPercentage(90f);
-                        table_payments.setWidths(table_payments_colsWidth);
-                        table_payments.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
-                        table_payments.addCell(new Phrase(" №", ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Code), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Category), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Currency), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Rate), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Amount), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Note), ordFontBold));
-
-                        int i = 0;
-                        Iterator<?> iterator = incomesContainer.getItemIds().iterator();
-                        double total = 0;
-                        while (iterator.hasNext()) {
-                            Object next = iterator.next();
-                            table_payments.addCell(new Phrase(new Phrase((++i) + "", tableFont)));
-                            table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(Messages.Date)).getValue().toString(), tableFont));
-                            table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(Messages.Code)).getValue().toString(), tableFont));
-                            table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(Messages.Category)).getValue().toString(), tableFont));
-                            table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(Messages.Currency)).getValue().toString(), tableFont));
-                            table_payments.addCell(new Phrase(Settings.dFormat4.format(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(Messages.Rate)).getValue()), tableFont));
-                            table_payments.addCell(new Phrase(Settings.dFormat2.format(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(Messages.Amount)).getValue()), tableFont));
-                            table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                            table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(Messages.Note)).getValue().toString(), tableFont));
-                            total += (Double) incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(Messages.Amount)).getValue();
-                        }
-                        table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        table_payments.addCell(new Phrase(" "));
-                        table_payments.addCell(new Phrase(" "));
-                        table_payments.addCell(new Phrase(" "));
-                        table_payments.addCell(new Phrase(" "));
-                        table_payments.addCell(new Phrase(" "));
-                        table_payments.addCell(new Phrase(" "));
-                        table_payments.addCell(new Phrase(Settings.dFormat2.format(total), footerFont));
-                        table_payments.addCell(new Phrase(" "));
-                        document.add(table_payments);
-                    }
-                    if (expensesContainer != null && expensesContainer.size() > 0) {
-                        spr = new Paragraph(myUI.getMessage(Messages.Expenses), fontSubheader);
-                        spr.setIndentationLeft(40);
-                        spr.setFirstLineIndent(40);
-                        document.add(spr);
-                        document.add(new Paragraph(10, " "));
-                        float[] table_colsWidth = {0.7f, 1.8f, 1.5f, 4.2f, 0.75f, 1.3f, 1.9f, 4.0f};
+                        float[] table_colsWidth = {0.7f, 1.8f, 1.5f, 4.2f, 1f, 1.3f, 1.9f, 4.0f};
                         PdfPTable table = new PdfPTable(8);
                         table.setWidthPercentage(90f);
                         table.setWidths(table_colsWidth);
@@ -146,7 +90,63 @@ public class AccountingByDatesPdf {
                         table.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
                         table.addCell(new Phrase(myUI.getMessage(Messages.Code), ordFontBold));
                         table.addCell(new Phrase(myUI.getMessage(Messages.Category), ordFontBold));
-                        table.addCell(new Phrase(myUI.getMessage(Messages.Currency), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.CashBox), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Rate), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Amount), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Note), ordFontBold));
+
+                        int i = 0;
+                        Iterator<?> iterator = incomesContainer.getItemIds().iterator();
+                        double total = 0;
+                        while (iterator.hasNext()) {
+                            Object next = iterator.next();
+                            table.addCell(new Phrase(new Phrase((++i) + "", tableFont)));
+                            table.addCell(new Phrase(incomesContainer.getContainerProperty(next,
+                                    myUI.getMessage(Messages.Date)).getValue().toString(), tableFont));
+                            table.addCell(new Phrase(incomesContainer.getContainerProperty(next,
+                                    myUI.getMessage(Messages.Code)).getValue().toString(), tableFont));
+                            table.addCell(new Phrase(incomesContainer.getContainerProperty(next,
+                                    myUI.getMessage(Messages.Category)).getValue().toString(), tableFont));
+                            table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                            table.addCell(new Phrase(incomesContainer.getContainerProperty(next,
+                                    myUI.getMessage(Messages.CashBox)).getValue().toString(), tableFont));
+                            table.addCell(new Phrase(Settings.dFormat4.format(incomesContainer.getContainerProperty(next,
+                                    myUI.getMessage(Messages.Rate)).getValue()), tableFont));
+                            table.addCell(new Phrase(Settings.dFormat2.format(incomesContainer.getContainerProperty(next,
+                                    myUI.getMessage(Messages.Amount)).getValue()), tableFont));
+                            table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                            table.addCell(new Phrase(incomesContainer.getContainerProperty(next,
+                                    myUI.getMessage(Messages.Note)).getValue().toString(), tableFont));
+                            total += (Double) incomesContainer.getContainerProperty(next,
+                                    myUI.getMessage(Messages.Amount)).getValue();
+                        }
+                        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                        table.addCell(new Phrase(" "));
+                        table.addCell(new Phrase(" "));
+                        table.addCell(new Phrase(" "));
+                        table.addCell(new Phrase(" "));
+                        table.addCell(new Phrase(" "));
+                        table.addCell(new Phrase(" "));
+                        table.addCell(new Phrase(Settings.dFormat2.format(total), footerFont));
+                        table.addCell(new Phrase(" "));
+                        document.add(table);
+                    }
+                    if (expensesContainer != null && expensesContainer.size() > 0) {
+                        spr = new Paragraph(myUI.getMessage(Messages.Expenses), fontSubheader);
+                        spr.setIndentationLeft(40);
+                        spr.setFirstLineIndent(40);
+                        document.add(spr);
+                        document.add(new Paragraph(10, " "));
+                        float[] table_colsWidth = {0.7f, 1.8f, 1.5f, 4.2f, 1f, 1.3f, 1.9f, 4.0f};
+                        PdfPTable table = new PdfPTable(8);
+                        table.setWidthPercentage(90f);
+                        table.setWidths(table_colsWidth);
+                        table.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
+                        table.addCell(new Phrase(" №", ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Code), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Category), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.CashBox), ordFontBold));
                         table.addCell(new Phrase(myUI.getMessage(Messages.Rate), ordFontBold));
                         table.addCell(new Phrase(myUI.getMessage(Messages.Amount), ordFontBold));
                         table.addCell(new Phrase(myUI.getMessage(Messages.Note), ordFontBold));
@@ -165,7 +165,7 @@ public class AccountingByDatesPdf {
                                     myUI.getMessage(Messages.Category)).getValue().toString(), tableFont));
                             table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             table.addCell(new Phrase(expensesContainer.getContainerProperty(next,
-                                    myUI.getMessage(Messages.Currency)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.CashBox)).getValue().toString(), tableFont));
                             table.addCell(new Phrase(Settings.dFormat4.format(expensesContainer.getContainerProperty(next,
                                     myUI.getMessage(Messages.Rate)).getValue()), tableFont));
                             table.addCell(new Phrase(Settings.dFormat2.format(expensesContainer.getContainerProperty(next,
@@ -223,7 +223,7 @@ public class AccountingByDatesPdf {
             }
         };
 
-        StreamResource resource = new StreamResource(source1, "InstallmentPlanPayments"
+        StreamResource resource = new StreamResource(source1, "DateReport"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 

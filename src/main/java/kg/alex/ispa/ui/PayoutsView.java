@@ -16,13 +16,17 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.AccTransaction;
 import kg.alex.ispa.domain.CashBox;
 import kg.alex.ispa.domain.Invoice;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.tableexport.EnhancedFormatExcelExport;
-import kg.alex.ispa.utils.*;
+import kg.alex.ispa.utils.ExistsValidator;
+import kg.alex.ispa.utils.FormattedFilterTable;
+import kg.alex.ispa.utils.FormattedTable;
+import kg.alex.ispa.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -861,14 +865,14 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     if ((Integer) cb.getContainerProperty(cb.getValue(),
                             Settings.acc_currency_id).getValue() == 2) {
                         totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
+                                * (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
                         amountUsd += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                     } else {
                         totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
-                                / (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                         amountKgs += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                     }
@@ -876,7 +880,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             }
         }
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.USD);
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Rate),
                 Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.CashBox),
@@ -1002,7 +1006,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     public void setPayoutsFooter(double amountUsd, double amountKgs, double total) {
         totalAmount = total;
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.USD);
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(totalAmount) + " " + Settings.KGS);
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.CashBox),
                 Settings.dFormat2.format(amountUsd) + " " + Settings.USD);
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Rate),

@@ -3,9 +3,9 @@ package kg.alex.ispa.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.Discount;
 import kg.alex.ispa.i18n.Messages;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -142,14 +142,14 @@ public class DbDiscount extends BaseDb {
             } else if (result.getInt("t.discount_type_id") == 4) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - (max " + result.getString("t.amount")
-                        + " " + Settings.USD + ")");
+                        + " " + Settings.KGS + ")");
             } else if (result.getInt("t.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount") + "%");
             } else if (result.getInt("t.discount_type_id") == 2) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount")
-                        + " " + Settings.USD + ")");
+                        + " " + Settings.KGS + ")");
             }
             item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(
                     result.getDouble("t.amount"));
@@ -210,7 +210,7 @@ public class DbDiscount extends BaseDb {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - (max "
                         + Settings.dFormat2.format(result.getDouble("amount"))
-                        + " " + Settings.USD + ")");
+                        + " " + Settings.KGS + ")");
             } else if (result.getInt("d.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - "
@@ -219,7 +219,7 @@ public class DbDiscount extends BaseDb {
                 item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                         result.getString("d.name") + " - "
                         + Settings.dFormat2.format(result.getDouble("amount"))
-                        + " " + Settings.USD);
+                        + " " + Settings.KGS);
             }
             item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(Settings.round(
                     result.getDouble("amount"), 2));

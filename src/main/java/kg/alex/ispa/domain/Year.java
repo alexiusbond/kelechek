@@ -29,9 +29,8 @@ public class Year implements Serializable {
         this.installment_date_limit = installment_date_limit;
     }
 
-    public Year(String period, String periodKg, String name, Date end_date) {
+    public Year(String period, String name, Date end_date) {
         this.period = period;
-        this.period_kg = periodKg;
         this.name = name;
         this.end_date = end_date;
     }

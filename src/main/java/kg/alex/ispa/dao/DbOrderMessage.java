@@ -11,11 +11,11 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.CustomTable;
 import com.vaadin.ui.HorizontalLayout;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.EmployeeMessage;
 import kg.alex.ispa.domain.OrderMessage;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.ui.SendOrderView;
-import kg.alex.ispa.utils.Settings;
 import org.tepi.filtertable.FilterTable;
 
 import java.sql.*;
@@ -150,8 +150,8 @@ public class DbOrderMessage extends BaseDb {
                 "FROM order_messages WHERE id = (SELECT MAX(id) FROM order_messages " +
                 "WHERE year_id = ? AND discount_unit_id in (" + discount_unit_ids + ") AND " +
                 "(student_id = ? OR student_id IS NULL AND " +
-                "(LOWER(SUBSTRING_INDEX(order_content, 'Эллипстин', 1)) LIKE '%" + studentFullName.toLowerCase() + "%' " +
-                "OR transliterate_func(LOWER(SUBSTRING_INDEX(order_content, 'Эллипстин', 1))) LIKE '%"
+                "(LOWER(SUBSTRING_INDEX(order_content, 'Испанын', 1)) LIKE '%" + studentFullName.toLowerCase() + "%' " +
+                "OR transliterate_func(LOWER(SUBSTRING_INDEX(order_content, 'Испанын', 1))) LIKE '%"
                 + studentFullName.toLowerCase().replace(" ", "-") + "%')))";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);

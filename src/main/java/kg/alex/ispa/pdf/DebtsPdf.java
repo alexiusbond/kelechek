@@ -12,9 +12,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.StudentInfoPdf;
 import kg.alex.ispa.i18n.Messages;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +40,7 @@ public class DebtsPdf {
                     final double total_paid, final double total_debt) {
         this.fromDate = fDate;
         this.tillDate = tDate;
-        this.currency = Settings.USD;
+        this.currency = Settings.KGS;
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
             private static final long serialVersionUID = 1L;

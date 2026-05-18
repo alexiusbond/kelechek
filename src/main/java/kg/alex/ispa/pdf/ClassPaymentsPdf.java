@@ -12,9 +12,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.StudentInfoPdf;
 import kg.alex.ispa.i18n.Messages;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -103,7 +103,7 @@ public class ClassPaymentsPdf {
                     infoTable.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(Messages.Rate), ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(Messages.Amount), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.Currency), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.CashBox), ordFontBold));
 
                     Iterator<?> iter = dataContainer.getItemIds().iterator();
                     int i = 0;
@@ -132,7 +132,7 @@ public class ClassPaymentsPdf {
                                 myUI.getMessage(Messages.Amount)).getValue()), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         infoTable.addCell(new Phrase(dataContainer.getContainerProperty(next,
-                                myUI.getMessage(Messages.Currency)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.CashBox)).getValue().toString(), tableFont));
                         i++;
                     }
                     infoTable.addCell(new Phrase(" ", ordFontBold));
@@ -144,7 +144,7 @@ public class ClassPaymentsPdf {
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(Messages.Total) + ": "
-                                                 + Settings.dFormat2.format(total) + " " + Settings.USD, ordFontBold));
+                                                 + Settings.dFormat2.format(total) + " " + Settings.KGS, ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
 
                     document.add(infoTable);

@@ -9,10 +9,10 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.reports.stock.ProductMovementsReport;
 import kg.alex.ispa.reports.stock.StockGeneralReport;
-import kg.alex.ispa.utils.Settings;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 

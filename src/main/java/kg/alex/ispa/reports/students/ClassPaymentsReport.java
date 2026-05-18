@@ -13,6 +13,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.StudentInfoPdf;
 import kg.alex.ispa.i18n.Messages;
@@ -20,7 +21,6 @@ import kg.alex.ispa.pdf.ClassPaymentsPdf;
 import kg.alex.ispa.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ispa.utils.FormattedTable;
 import kg.alex.ispa.utils.MyFilterDecorator;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
@@ -40,7 +40,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private FilterTable classTable;
     private ComboBox yearSelect;
-    private ComboBoxMultiselect educationStatusMCB;
+    private ComboBoxMultiselect educationStatusMCB, cashboxMCB;
     private DateField tillDateDF, fromDateDF;
     private FormattedTable dataTable;
     private IndexedContainer paymentsCont;
@@ -48,7 +48,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
 
     public ClassPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.currency = Settings.USD;
+        this.currency = Settings.KGS;
         this.splitPanel = splitPanel;
         buildLeftPanel();
         NATURAL_COL_ORDER = new String[]{
@@ -56,12 +56,12 @@ public class ClassPaymentsReport implements Button.ClickListener,
                 myUI.getMessage(Messages.ClassName), myUI.getMessage(Messages.PaymentCategoryType),
                 myUI.getMessage(Messages.WhoPaid), myUI.getMessage(Messages.Date),
                 myUI.getMessage(Messages.Rate), myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Currency)
+                myUI.getMessage(Messages.CashBox)
         };
     }
 
     private void buildLeftPanel() {
-        GridLayout leftGrid = new GridLayout(4, 6);
+        GridLayout leftGrid = new GridLayout(4, 7);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -73,6 +73,27 @@ public class ClassPaymentsReport implements Button.ClickListener,
         yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
+
+        cashboxMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.CashBox));
+        cashboxMCB.setRequired(true);
+        cashboxMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
+        cashboxMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
+        cashboxMCB.setWidth(Settings.PERCENTS100);
+        cashboxMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
+        cashboxMCB.setFilteringMode(FilteringMode.CONTAINS);
+        cashboxMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
+        cashboxMCB.setShowSelectAllButton((filter, page) -> true);
+        cashboxMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
+        try {
+            DbCashbox dbd = new DbCashbox();
+            dbd.connect();
+            cashboxMCB.setContainerDataSource(dbd.execSQL(myUI));
+            dbd.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        cashboxMCB.addValueChangeListener(this);
 
         educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.EducationStatus));
         educationStatusMCB.setRequired(true);
@@ -97,6 +118,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
         }
         educationStatusMCB.setValue(Settings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
+        educationStatusMCB.addValueChangeListener(this);
 
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
         yearSelect.addValueChangeListener(this);
@@ -143,6 +165,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
         fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
+        fromDateDF.addValueChangeListener(this);
 
         tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
@@ -151,6 +174,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
         tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
+        tillDateDF.addValueChangeListener(this);
 
         generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -178,16 +202,17 @@ public class ClassPaymentsReport implements Button.ClickListener,
         excelBtn.addClickListener(this);
 
         leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
-        leftGrid.addComponent(educationStatusMCB, 0, 1, 3, 1);
-        leftGrid.addComponent(selectAllBtn, 0, 2, 1, 2);
-        leftGrid.addComponent(deselectAllBtn, 2, 2, 3, 2);
-        leftGrid.addComponent(classTable, 0, 3, 3, 3);
-        leftGrid.addComponent(fromDateDF, 0, 4, 1, 4);
-        leftGrid.addComponent(tillDateDF, 2, 4, 3, 4);
-        leftGrid.addComponent(generateBtn, 0, 5, 1, 5);
-        leftGrid.addComponent(makePdfBtn, 2, 5);
-        leftGrid.addComponent(excelBtn, 3, 5);
-        leftGrid.setRowExpandRatio(3, 1);
+        leftGrid.addComponent(cashboxMCB, 0, 1, 3, 1);
+        leftGrid.addComponent(educationStatusMCB, 0, 2, 3, 2);
+        leftGrid.addComponent(selectAllBtn, 0, 3, 1, 3);
+        leftGrid.addComponent(deselectAllBtn, 2, 3, 3, 3);
+        leftGrid.addComponent(classTable, 0, 4, 3, 4);
+        leftGrid.addComponent(fromDateDF, 0, 5, 1, 5);
+        leftGrid.addComponent(tillDateDF, 2, 5, 3, 5);
+        leftGrid.addComponent(generateBtn, 0, 6, 1, 6);
+        leftGrid.addComponent(makePdfBtn, 2, 6);
+        leftGrid.addComponent(excelBtn, 3, 6);
+        leftGrid.setRowExpandRatio(4, 1);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
@@ -254,7 +279,8 @@ public class ClassPaymentsReport implements Button.ClickListener,
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
-        if (property == classTable || property == yearSelect) {
+        if (property == classTable || property == yearSelect || educationStatusMCB == property ||
+                cashboxMCB == property || fromDateDF == property || tillDateDF == property) {
             makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
         }
@@ -278,7 +304,9 @@ public class ClassPaymentsReport implements Button.ClickListener,
                     fromDateDF.getValue(), tillDateDF.getValue(),
                     (Integer) yearSelect.getValue(),
                     Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
-                    Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
+                    Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                    Settings.convertCollectionToStr((Set<?>) cashboxMCB.getValue()),
+                    this);
             dataTable.setContainerDataSource(paymentsCont);
             dbsp.close();
         } catch (Exception e) {

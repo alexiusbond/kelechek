@@ -67,7 +67,7 @@ public abstract class AbstractExcelUploader<T> implements Upload.Receiver, Uploa
         listeners.remove(listener);
     }
 
-    private void fireUploadSucceededEvent(Upload.SucceededEvent event, List<T> items) {
+    private void fireUploadSucceededEvent(SucceededEvent event, List<T> items) {
         if (listeners != null) {
             for (ExcelUploaderSucceededListener listener : listeners) {
                 listener.succeededListener(event, items);

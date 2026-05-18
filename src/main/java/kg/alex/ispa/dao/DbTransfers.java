@@ -14,12 +14,12 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.SchoolAccounting;
 import kg.alex.ispa.domain.Transfer;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.ui.TransfersView;
 import kg.alex.ispa.utils.FormattedTreeTable;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -96,10 +96,10 @@ public class DbTransfers extends BaseDb {
                             null, 250, acc_invoice_type_id == 1), acc_invoice_type_id != 1));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {
-                total += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
+                total += result.getDouble("t.amount");
                 kgs += result.getDouble("t.amount");
             } else {
-                total += result.getDouble("t.amount");
+                total += result.getDouble("t.amount") * result.getDouble("t.currency_rate");
                 usd += result.getDouble("t.amount");
             }
         }

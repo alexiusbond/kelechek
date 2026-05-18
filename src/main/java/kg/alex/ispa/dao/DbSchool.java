@@ -8,9 +8,9 @@ package kg.alex.ispa.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.School;
 import kg.alex.ispa.i18n.Messages;
-import kg.alex.ispa.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -90,7 +90,7 @@ public class DbSchool extends BaseDb {
 
     public int exec_update(School scl) throws SQLException {
         String sql = "UPDATE school SET code = ?, name_ru = ?, name_kg = ?, name_en = ?, activity_status_id = ?, " +
-                     "address = ?, inn = ?, bank = ?, bank_account = ?, phone = ?, photo = ?, city = ?, school_type_id = ?, primary_code = ?, secondary_code = ?" +
+                     "address = ?, inn = ?, bank = ?, bank_account = ?, phone = ?, photo = ?, city = ?, school_type_id = ? " +
                      "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());
@@ -142,9 +142,7 @@ public class DbSchool extends BaseDb {
             stat.setNull(12, Types.VARCHAR);
         }
         stat.setInt(13, scl.getSchool_type_id());
-        stat.setString(14, scl.getCode());
-        stat.setString(15, scl.getCode());
-        stat.setInt(16, scl.getId());
+        stat.setInt(14, scl.getId());
 
         return stat.executeUpdate();
     }
@@ -152,8 +150,8 @@ public class DbSchool extends BaseDb {
     public int exec_insert(School scl) throws SQLException {
         String sql = "INSERT IGNORE INTO school (code, name_ru, name_kg, name_en, "
                      + "activity_status_id, city, address, inn, bank, "
-                     + "bank_account, phone, photo, school_type_id, primary_code, secondary_code) "
-                     + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                     + "bank_account, phone, photo, school_type_id) "
+                     + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());
         stat.setString(2, scl.getName_ru());
@@ -204,8 +202,6 @@ public class DbSchool extends BaseDb {
             stat.setNull(12, Types.VARCHAR);
         }
         stat.setInt(13, scl.getSchool_type_id());
-        stat.setString(14, scl.getCode());
-        stat.setString(15, scl.getCode());
 
         int st = stat.executeUpdate();
         if (st != 0) {

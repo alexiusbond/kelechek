@@ -12,9 +12,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.StudentInfoPdf;
 import kg.alex.ispa.i18n.Messages;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -129,7 +129,7 @@ public class ClassInstallmentPlanPdf {
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(myUI.getMessage(Messages.Total) + ": "
-                                                  + Settings.dFormat2.format(ttl_plan) + " " + Settings.USD, ordFontBold));
+                                                  + Settings.dFormat2.format(ttl_plan) + " " + Settings.KGS, ordFontBold));
 
                     document.add(table_plan);
 

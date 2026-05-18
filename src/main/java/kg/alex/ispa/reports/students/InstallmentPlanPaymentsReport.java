@@ -14,6 +14,7 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.StudentContract;
 import kg.alex.ispa.domain.StudentInfoPdf;
@@ -23,7 +24,6 @@ import kg.alex.ispa.pdf.InstallmentPlanPaymentsPdf;
 import kg.alex.ispa.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ispa.utils.FormattedTable;
 import kg.alex.ispa.utils.MyFilterDecorator;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
@@ -63,7 +63,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
 
     public InstallmentPlanPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        currency = Settings.USD;
+        currency = Settings.KGS;
         this.splitPanel = splitPanel;
         buildLeftPanel();
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Date),

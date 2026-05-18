@@ -14,6 +14,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.EmployeeMessage;
 import kg.alex.ispa.domain.OrderMessage;
@@ -22,7 +23,6 @@ import kg.alex.ispa.pdf.OrderPdf;
 import kg.alex.ispa.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ispa.utils.FormattedFilterTable;
 import kg.alex.ispa.utils.MyFilterDecorator;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -437,7 +437,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 discount = discountTF.getPropertyDataSource().getValue() + " сом жеңилдик берилсин.";
             }
             contentRTA.setValue(school + class_name + "-классынын окуучусу " + student
-                    + "га “Эллипстин” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
+                    + "га “Испанын” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
                     "Жобосунун 3-пунктунун негизинде "
                     + yearSelect.getItemCaption(yearSelect.getValue())
                     + "-окуу жылынын окуу төлөмүндө " + discount);

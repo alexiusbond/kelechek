@@ -8,9 +8,9 @@ package kg.alex.ispa.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.Contract;
 import kg.alex.ispa.i18n.Messages;
-import kg.alex.ispa.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -157,7 +157,7 @@ public class DbContract extends BaseDb {
                     result.getString("t.name"));
             item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name") + " " + Settings.dFormat2.format(result.getDouble("t.amount"))
-                    + " " + Settings.USD + " (" + result.getString("y.name") + ")");
+                    + " " + Settings.KGS + " (" + result.getString("y.name") + ")");
             item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(
                     result.getDouble("t.amount"));
         }

@@ -9,6 +9,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.DbAccCategory;
 import kg.alex.ispa.dao.DbAccTransactions;
 import kg.alex.ispa.dao.DbCashbox;
@@ -17,7 +18,6 @@ import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ispa.utils.FormattedTreeTable;
 import kg.alex.ispa.utils.MyFilterDecorator;
-import kg.alex.ispa.utils.Settings;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -436,6 +436,6 @@ public class MonthReport implements Button.ClickListener,
     private String getCurrency() {
         Object currency = cashBoxSelect.getContainerProperty(cashBoxSelect.getValue(),
                 myUI.getMessage(Messages.Currency)).getValue();
-        return currency == null ? " " + Settings.USD : " " + currency;
+        return currency == null ? " " + Settings.KGS : " " + currency;
     }
 }

@@ -12,9 +12,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.StudentInfoPdf;
 import kg.alex.ispa.i18n.Messages;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,7 +43,7 @@ public class InstallmentPlanPaymentsPdf {
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/ispa/PT_Sans-Web-Regular.ttf";
             private final static String FONT_LOCATION2 = "/home/ispa/PT_Sans-Web-Bold.ttf";
-            private final String currency = Settings.USD;
+            private final String currency = Settings.KGS;
 
             @Override
             public InputStream getStream() {

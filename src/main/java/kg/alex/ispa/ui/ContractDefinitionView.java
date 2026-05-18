@@ -13,6 +13,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.DbContract;
 import kg.alex.ispa.dao.DbDefinition;
 import kg.alex.ispa.dao.DbStudentContract;
@@ -21,7 +22,6 @@ import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.utils.DefinitionsFilterGenerator;
 import kg.alex.ispa.utils.FormattedFilterTable;
 import kg.alex.ispa.utils.MyFilterDecorator;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -49,7 +49,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
 
     public ContractDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
-        amountTitle = myUI.getMessage(Messages.AmountUSD);
+        amountTitle = myUI.getMessage(Messages.AmountKGS);
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Title),
                 amountTitle, myUI.getMessage(Messages.School),

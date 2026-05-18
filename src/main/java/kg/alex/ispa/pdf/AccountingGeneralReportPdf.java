@@ -6,13 +6,13 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.server.StreamResource;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.DbSchool;
 import kg.alex.ispa.domain.ContractInfo;
 import kg.alex.ispa.domain.School;
 import kg.alex.ispa.domain.SchoolAccounting;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.utils.FormattedTable;
-import kg.alex.ispa.utils.Settings;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.bridge.*;
 import org.apache.batik.dom.svg.SVGDocumentFactory;
@@ -132,12 +132,12 @@ public class AccountingGeneralReportPdf {
                 accInfoTable.addCell(new Phrase(myUI.getMessage(Messages.CashBox) + ":", normal_font));
 
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_income()) + Settings.USD, normal_font));
-                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_outcome()) + Settings.USD, normal_font));
-                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance()) + Settings.USD, normal_font));
+                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_income()) + Settings.KGS, normal_font));
+                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getTotal_outcome()) + Settings.KGS, normal_font));
+                accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance()) + Settings.KGS, normal_font));
                 accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                 accInfoTable.addCell(new Phrase(Settings.dFormat2.format(sclAccInfo.getPrevious_balance() + sclAccInfo.getTotal_income()
-                                                                         - sclAccInfo.getTotal_outcome()) + Settings.USD, normal_font));
+                                                                         - sclAccInfo.getTotal_outcome()) + Settings.KGS, normal_font));
 
                 document.add(accInfoTable);
 

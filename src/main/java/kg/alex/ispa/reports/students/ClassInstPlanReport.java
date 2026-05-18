@@ -13,6 +13,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.StudentInfoPdf;
 import kg.alex.ispa.i18n.Messages;
@@ -20,7 +21,6 @@ import kg.alex.ispa.pdf.ClassInstallmentPlanPdf;
 import kg.alex.ispa.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ispa.utils.FormattedTable;
 import kg.alex.ispa.utils.MyFilterDecorator;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
@@ -284,7 +284,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
         }
         dataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
         dataTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(total) + " " + Settings.USD);
+                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(total) + " " + Settings.KGS);
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);

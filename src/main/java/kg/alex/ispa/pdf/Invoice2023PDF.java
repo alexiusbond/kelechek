@@ -8,10 +8,10 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.DbStudentInstallmentPlan;
 import kg.alex.ispa.domain.InvoiceInfoPdf;
 import kg.alex.ispa.i18n.Messages;
-import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.utils.money.WritableSummRu;
 import kg.alex.ispa.utils.money.WritableSummRuSOM;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +46,7 @@ public class Invoice2023PDF {
 
             try {
                 paymentCurrency = invoiceInfo.getCurrency_id() == 1 ? Settings.KGS : Settings.USD;
-                contractCurrency = Settings.USD;
+                contractCurrency = Settings.KGS;
                 SimpleDateFormat dateRu = new SimpleDateFormat(
                         "«dd» MMMMM yyyy г.", myDateFormatSymbols);
 

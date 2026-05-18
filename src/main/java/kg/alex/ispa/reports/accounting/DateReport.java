@@ -15,6 +15,7 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.SchoolAccounting;
 import kg.alex.ispa.domain.StudentInfoPdf;
@@ -23,7 +24,6 @@ import kg.alex.ispa.pdf.AccountingByDatesPdf;
 import kg.alex.ispa.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ispa.utils.FormattedTable;
 import kg.alex.ispa.utils.MyFilterDecorator;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -34,7 +34,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.tepi.filtertable.FilterTreeTable;
 
 import java.util.*;
-import java.util.Calendar;
 
 public class DateReport implements Button.ClickListener,
         Property.ValueChangeListener {
@@ -51,7 +50,7 @@ public class DateReport implements Button.ClickListener,
     private EnhancedFormatExcelExport excelReport;
     private VerticalLayout rightLayout;
     private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab;
-    private HorizontalLayout infoLay;
+    private GridLayout infoLay;
     private SchoolAccounting schoolAcc;
 
     public DateReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
@@ -235,25 +234,9 @@ public class DateReport implements Button.ClickListener,
         outcomesDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         outcomesDataTable.addStyleName("noWrapHeader");
 
-        infoLay = new HorizontalLayout();
+        infoLay = new GridLayout(2, 2);
         infoLay.setSpacing(true);
         infoLay.setWidth(Settings.PERCENTS100);
-
-        incomeTtlLab = new Label();
-        incomeTtlLab.setContentMode(ContentMode.HTML);
-        incomeTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        incomeTtlLab.setImmediate(true);
-        incomeTtlLab.setWidth(Settings.PERCENTS100);
-        infoLay.addComponent(incomeTtlLab);
-        infoLay.setExpandRatio(incomeTtlLab, 25);
-
-        expenseTtlLab = new Label();
-        expenseTtlLab.setContentMode(ContentMode.HTML);
-        expenseTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        expenseTtlLab.setImmediate(true);
-        expenseTtlLab.setWidth(Settings.PERCENTS100);
-        infoLay.addComponent(expenseTtlLab);
-        infoLay.setExpandRatio(expenseTtlLab, 25);
 
         prev_balanceLab = new Label();
         prev_balanceLab.setContentMode(ContentMode.HTML);
@@ -261,7 +244,6 @@ public class DateReport implements Button.ClickListener,
         prev_balanceLab.setImmediate(true);
         prev_balanceLab.setSizeFull();
         infoLay.addComponent(prev_balanceLab);
-        infoLay.setExpandRatio(prev_balanceLab, 30);
 
         ttlLab = new Label();
         ttlLab.setContentMode(ContentMode.HTML);
@@ -269,7 +251,20 @@ public class DateReport implements Button.ClickListener,
         ttlLab.setImmediate(true);
         ttlLab.setWidth(Settings.PERCENTS100);
         infoLay.addComponent(ttlLab);
-        infoLay.setExpandRatio(ttlLab, 20);
+
+        incomeTtlLab = new Label();
+        incomeTtlLab.setContentMode(ContentMode.HTML);
+        incomeTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
+        incomeTtlLab.setImmediate(true);
+        incomeTtlLab.setWidth(Settings.PERCENTS100);
+        infoLay.addComponent(incomeTtlLab);
+
+        expenseTtlLab = new Label();
+        expenseTtlLab.setContentMode(ContentMode.HTML);
+        expenseTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
+        expenseTtlLab.setImmediate(true);
+        expenseTtlLab.setWidth(Settings.PERCENTS100);
+        infoLay.addComponent(expenseTtlLab);
 
         splitPanel.setSecondComponent(rightLayout);
     }
@@ -354,12 +349,9 @@ public class DateReport implements Button.ClickListener,
                                 schoolAcc.getTotal_income()) + getCurrency() + "</b>");
                         expenseTtlLab.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal) + ": " + Settings.dFormat2.format(
                                 schoolAcc.getTotal_outcome()) + getCurrency() + "</b>");
-                        ttlLab.setValue("<b>" + myUI.getMessage(Messages.CashBox) + ": " + Settings.dFormat2.format(
+                        ttlLab.setValue("<b>" + myUI.getMessage(Messages.SaldoEnd) + ": " + Settings.dFormat2.format(
                                 (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + getCurrency() + "</b>");
-                        Calendar c = Calendar.getInstance();
-                        c.setTime(fromDateDF.getValue());
-                        c.add(Calendar.DAY_OF_MONTH, -1);
-                        prev_balanceLab.setValue("<b>" + myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(c.getTime()) + "): " + Settings.dFormat2.format(
+                        prev_balanceLab.setValue("<b>" + myUI.getMessage(Messages.SaldoStart) + ": " + Settings.dFormat2.format(
                                 schoolAcc.getPrevious_balance()) + getCurrency() + "</b>");
                         dbtr.close();
                     } catch (Exception e) {
@@ -372,9 +364,6 @@ public class DateReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             StudentInfoPdf studentInfo = new StudentInfoPdf();
             try {
-                Calendar c = Calendar.getInstance();
-                c.setTime(fromDateDF.getValue());
-                c.add(Calendar.DAY_OF_MONTH, -1);
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
                 studentInfo.setSchool(dbsc.execSchool(myUI.getUser().getSchool().getId()));
@@ -432,12 +421,11 @@ public class DateReport implements Button.ClickListener,
                                             new CellRangeAddress(excelReport.getTotalsRow().getRowNum(), excelReport.getTotalsRow().getRowNum(),
                                                     excelReport.getTotalsRow().getFirstCellNum(), excelReport.getTotalsRow().getLastCellNum() - 1));
                                     excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getFirstCellNum()).setCellValue(
-                                            myUI.getMessage(Messages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + getCurrency() + "\t "
+                                            myUI.getMessage(Messages.SaldoStart) + ": " + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + getCurrency() + "\t "
+                                                    + myUI.getMessage(Messages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + getCurrency() + "\t "
                                                     + myUI.getMessage(Messages.ExpensesTotal) + ": " + Settings.dFormat2.format(
                                                     schoolAcc.getTotal_outcome()) + getCurrency() + "\t "
-                                                    + myUI.getMessage(Messages.Saldo) + " (" + Settings.df.format(c.getTime())
-                                                    + "): " + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + getCurrency() + "\t "
-                                                    + myUI.getMessage(Messages.CashBox) + ": " + Settings.dFormat2.format(
+                                                    + myUI.getMessage(Messages.SaldoEnd) + ": " + Settings.dFormat2.format(
                                                     (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + getCurrency() + "\t ");
                                 }
                             }
@@ -515,6 +503,6 @@ public class DateReport implements Button.ClickListener,
     private String getCurrency() {
         Object currency = cashBoxSelect.getContainerProperty(cashBoxSelect.getValue(),
                 myUI.getMessage(Messages.Currency)).getValue();
-        return currency == null ? " " + Settings.USD : " " + currency;
+        return currency == null ? " " + Settings.KGS : " " + currency;
     }
 }

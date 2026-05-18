@@ -13,6 +13,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.ui.*;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.AccTransaction;
 import kg.alex.ispa.domain.SchoolAccounting;
 import kg.alex.ispa.i18n.Messages;
@@ -20,7 +21,6 @@ import kg.alex.ispa.reports.accounting.SchoolsReport;
 import kg.alex.ispa.ui.CashBoxView;
 import kg.alex.ispa.ui.PayoutsView;
 import kg.alex.ispa.utils.FormattedTreeTable;
-import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -103,10 +103,10 @@ public class DbAccTransactions extends BaseDb {
                     result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(Messages.NotificationWrongValue), null, 250, true), true));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             if (result.getInt("c.acc_currency_id") == 1) {
-                total += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
+                total += result.getDouble("t.amount");
                 kgs += result.getDouble("t.amount");
             } else {
-                total += result.getDouble("t.amount") ;
+                total += result.getDouble("t.amount") * result.getDouble("t.currency_rate");
                 usd += result.getDouble("t.amount");
             }
         }
@@ -478,11 +478,11 @@ public class DbAccTransactions extends BaseDb {
                 + "MAX(IF(tr.acc_type_id = 2, DATE(tr.date_time), null)) as max_exp, "
                 + "MAX(IF(tr.acc_type_id = 1, DATE(tr.date_time), null)) as max_inc, "
                 + "SUM(IF(tr.acc_type_id = 1 AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ?, "
-                + "if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount), 0.0)) AS incTtl, "
+                + "if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2)), 0.0)) AS incTtl, "
                 + "SUM(IF(tr.acc_type_id = 2 AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ?, "
-                + "if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount), 0.0)) AS expTtl, "
-                + "SUM(IF(DATE(tr.date_time) < ?, IF(tr.acc_type_id = 1, if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount), "
-                + "-(if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount))), 0.0)) AS prev_balance "
+                + "if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2)), 0.0)) AS expTtl, "
+                + "SUM(IF(DATE(tr.date_time) < ?, IF(tr.acc_type_id = 1, if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2)), "
+                + "-(if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2)))), 0.0)) AS prev_balance "
                 + "FROM acc_transactions AS tr "
                 + "LEFT JOIN acc_cashbox AS c ON c.id = tr.acc_cashbox_id "
                 + "LEFT JOIN school AS sch ON sch.id = tr.school_id "
@@ -1059,11 +1059,10 @@ public class DbAccTransactions extends BaseDb {
             }
         }
         String sql = "SELECT t.id, date(t.date_time), ifnull(concat(ac.parent_code,'.',ac.code), ac.code) as code, ac.name as category, "
-                + "cur.name, t.currency_rate, t.amount, t.note, concat(e.name, ' ', e.surname) as fullname "
+                + "c.name, t.currency_rate, t.amount, t.note, concat(e.name, ' ', e.surname) as fullname "
                 + "FROM acc_transactions as t "
                 + "left join acc_category as ac on ac.id = t.acc_category_id "
                 + "left join acc_cashbox as c on c.id = t.acc_cashbox_id "
-                + "left join acc_currency as cur on cur.id = c.acc_currency_id "
                 + "left join employee as e on e.id = t.employee_id "
                 + "where t.school_id = ? and date(t.date_time) >= ? and date(t.date_time) <= ? "
                 + "and t.acc_type_id = ? ";
@@ -1085,7 +1084,7 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Category), String.class, null);
-        container.addContainerProperty(myUI.getMessage(Messages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.CashBox), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
@@ -1098,8 +1097,8 @@ public class DbAccTransactions extends BaseDb {
                     result.getString("code"));
             item.getItemProperty(myUI.getMessage(Messages.Category)).setValue(
                     result.getString("category"));
-            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(
-                    result.getString("cur.name"));
+            item.getItemProperty(myUI.getMessage(Messages.CashBox)).setValue(
+                    result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(
                     result.getDouble("t.currency_rate"));
             item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
@@ -1131,13 +1130,13 @@ public class DbAccTransactions extends BaseDb {
                 + "WHERE pay.year_id = ? AND st.school_id = ? AND pay.payment_category_id IN (1, 2, 3) "
                 + "AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
                 + "GROUP BY MONTH(pay.modification_date)) AS p_temp ON p_temp.mnth = months.id "
-                + "LEFT JOIN (SELECT SUM(if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount)) AS amn, "
+                + "LEFT JOIN (SELECT SUM(if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2))) AS amn, "
                 + "MONTH(tr.date_time) AS mnth FROM acc_transactions AS tr "
                 + "LEFT JOIN acc_cashbox as c ON c.id = tr.acc_cashbox_id "
                 + "WHERE tr.school_id = ? AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? "
                 + "AND tr.acc_category_id IN (SELECT acc_category_id FROM payment_category WHERE id IN (1, 2)) "
                 + "GROUP BY MONTH(date_time)) AS in_temp ON in_temp.mnth = months.id LEFT JOIN "
-                + "(SELECT SUM(if(c.acc_currency_id = 1, ROUND(tr.amount/tr.currency_rate,2), tr.amount)) AS amn, "
+                + "(SELECT SUM(if(c.acc_currency_id = 1, tr.amount, ROUND(tr.amount*tr.currency_rate,2))) AS amn, "
                 + "MONTH(tr.date_time) AS mnth FROM acc_transactions AS tr "
                 + "LEFT JOIN acc_cashbox as c ON c.id = tr.acc_cashbox_id "
                 + "WHERE tr.school_id = ? AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? "

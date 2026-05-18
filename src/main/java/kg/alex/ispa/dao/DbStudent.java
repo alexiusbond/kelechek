@@ -10,6 +10,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.EducationStatus;
 import kg.alex.ispa.domain.Student;
 import kg.alex.ispa.i18n.Messages;
@@ -17,7 +18,6 @@ import kg.alex.ispa.reports.students.StatusesReport;
 import kg.alex.ispa.ui.CallsView;
 import kg.alex.ispa.ui.IssueOrderView;
 import kg.alex.ispa.ui.StudentDefinitionView;
-import kg.alex.ispa.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

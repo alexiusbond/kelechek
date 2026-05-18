@@ -450,7 +450,7 @@ public class ContractPdfRu {
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.2. ", ordBoldFont));
                 paragraph.add(new Phrase("Стоимость оплаты за обучение составляет ", ordFont));
-                paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getContract() * myUI.getDb_currency_rate())
+                paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getContract())
                         + " " + studentInfo.getContractInfo().getCurrency() + ".", ordBoldFont));
                 document.add(paragraph);
 
@@ -480,7 +480,7 @@ public class ContractPdfRu {
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.6. ", ordBoldFont));
                 if (st_info.getContractInfo().getDiscount() != null && st_info.getContractInfo().getDiscount() != 0.0) {
-                    paragraph.add(new Phrase("Скидка на обучение в размере " + Settings.dFormat2.format(st_info.getContractInfo().getDiscount() * myUI.getDb_currency_rate())
+                    paragraph.add(new Phrase("Скидка на обучение в размере " + Settings.dFormat2.format(st_info.getContractInfo().getDiscount())
                             + " " + studentInfo.getContractInfo().getCurrency()
                             + " сохраняется до конца обучения при отличной академической успеваемости, отсутствии нарушений со стороны учащегося и пропусков без предупреждения.", ordFont));
                 } else {

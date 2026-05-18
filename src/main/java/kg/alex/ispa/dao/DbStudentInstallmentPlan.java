@@ -10,12 +10,12 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.ispa.MyVaadinUI;
+import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.StudentInstallmentPlan;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.reports.students.ClassInstPlanReport;
 import kg.alex.ispa.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.ispa.ui.StudentDefinitionView;
-import kg.alex.ispa.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -127,6 +127,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
