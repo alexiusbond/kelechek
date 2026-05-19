@@ -20,9 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Iterator;
 
-public class ContractPdfRu50 {
+public class ContractPdfRu46 {
 
-    static final Logger logger = LogManager.getLogger(ContractPdfRu50.class);
+    static final Logger logger = LogManager.getLogger(ContractPdfRu46.class);
     private final static String FONT_LOCATION = "/home/ispa/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/ispa/TimesNewRomanBold.ttf";
     private final MyVaadinUI myUI;
@@ -31,7 +31,7 @@ public class ContractPdfRu50 {
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
 
-    public ContractPdfRu50(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractPdfRu46(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.studentInfo = st_info;
 
@@ -270,66 +270,71 @@ public class ContractPdfRu50 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.5. ", ordBoldFont));
-                paragraph.add(new Phrase("Школа не будет ежегодно изменять процентные ставки льготникам, однако льгота будет аннулирована в случае наличия у обучающегося дисциплинарного взыскания. Также в случае нарушения графика оплаты родителем 2 раза ранее предоставленные скидки каждый раз снижаются на 5%. Оплата за обучение для учащихся, продлевающих договор, будет повышаться один раз в два года с учётом инфляции.", ordFont));
+                paragraph.add(new Phrase("При заключении договора и оформлении учащегося в школу требовать оплату за регистрацию и тестирование в размере 5 000 сомов (безвозвратно).", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.6. ", ordBoldFont));
-                paragraph.add(new Phrase("Расторгнуть договор в одностороннем порядке в случае отсутствия оплаты за обучение в течение трёх полных календарных месяцев при условии предварительного письменного уведомления родителя (законного представителя) не менее чем за 10 (десять) календарных дней до даты расторжения.", ordFont));
+                paragraph.add(new Phrase("Школа не будет ежегодно изменять процентные ставки льготникам, однако льгота будет аннулирована в случае наличия у обучающегося дисциплинарного взыскания. Также в случае нарушения графика оплаты родителем 2 раза ранее предоставленные скидки каждый раз снижаются на 5%. Оплата за обучение для учащихся, продлевающих договор, будет повышаться один раз в два года с учётом инфляции.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.7. ", ordBoldFont));
-                paragraph.add(new Phrase("Не выдавать документы учащегося при переводе в другую школу при имеющейся финансовой задолженности за обучение.", ordFont));
+                paragraph.add(new Phrase("Расторгнуть договор в одностороннем порядке в случае отсутствия оплаты за обучение в течение трёх полных календарных месяцев при условии предварительного письменного уведомления родителя (законного представителя) не менее чем за 10 (десять) календарных дней до даты расторжения.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.8. ", ordBoldFont));
-                paragraph.add(new Phrase("Требовать оплату за обучение ежемесячно до 5-го (пятого) числа каждого месяца. В случае просрочки начисляется пеня в размере 0,5% за каждый день задержки.", ordFont));
+                paragraph.add(new Phrase("Не выдавать документы учащегося при переводе в другую школу при имеющейся финансовой задолженности за обучение.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.9. ", ordBoldFont));
-                paragraph.add(new Phrase("В целях компетентного подхода к трудовому воспитанию учащегося администрация школы имеет право привлекать учащихся к уборке своего рабочего места в учебных классах.", ordFont));
+                paragraph.add(new Phrase("Требовать оплату за обучение ежемесячно до 5-го (пятого) числа каждого месяца. В случае просрочки начисляется пеня в размере 0,5% за каждый день задержки.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.10. ", ordBoldFont));
-                paragraph.add(new Phrase("Организовывать проведение подготовительных курсов, подготовку к TOEFL, IELTS и международным экзаменам, а также работу кружков по интересам учащихся.", ordFont));
+                paragraph.add(new Phrase("В целях компетентного подхода к трудовому воспитанию учащегося администрация школы имеет право привлекать учащихся к уборке своего рабочего места в учебных классах.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.11. ", ordBoldFont));
-                paragraph.add(new Phrase("Подготовка к ОРТ и SAT проводится бесплатно, однако за комплект пособий для подготовки к ОРТ взимается отдельная плата.", ordFont));
+                paragraph.add(new Phrase("Организовывать проведение подготовительных курсов, подготовку к TOEFL, IELTS и международным экзаменам, а также работу кружков по интересам учащихся.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.12. ", ordBoldFont));
-                paragraph.add(new Phrase("Запретить использование сотовых телефонов, планшетов и ноутбуков на территории школы. Администрация школы не несёт ответственности за их хранение и утерю.", ordFont));
+                paragraph.add(new Phrase("Подготовка к ОРТ и SAT проводится бесплатно, однако за комплект пособий для подготовки к ОРТ взимается отдельная плата.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.13. ", ordBoldFont));
-                paragraph.add(new Phrase("Школа не предоставляет особых условий обучения для учащихся, состоящих на диспансерном учёте по хроническим заболеваниям (эпилепсия, астма, порок сердца, энурез и другие заболевания).", ordFont));
+                paragraph.add(new Phrase("Запретить использование сотовых телефонов, планшетов и ноутбуков на территории школы. Администрация школы не несёт ответственности за их хранение и утерю.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.14. ", ordBoldFont));
-                paragraph.add(new Phrase("При несвоевременной оплате родителем взноса школа вправе, с извещением родителя, ограничить доступ обучающегося ко всем формам учебных и неучебных занятий, а также к использованию материально-технических условий школы (занятий, библиотеки, столовой, кружков, этюдов и т.д.), не допускать к экзаменам и не выставлять оценки в электронном журнале.", ordFont));
+                paragraph.add(new Phrase("Школа не предоставляет особых условий обучения для учащихся, состоящих на диспансерном учёте по хроническим заболеваниям (эпилепсия, астма, порок сердца, энурез и другие заболевания).", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.15. ", ordBoldFont));
-                paragraph.add(new Phrase("Удержать/требовать сумму родительского взноса за один месяц со дня расторжения настоящего договора по инициативе родителя, при этом ранее предусмотренные скидки не учитываются, начиная с сентября.", ordFont));
+                paragraph.add(new Phrase("При несвоевременной оплате родителем взноса школа вправе, с извещением родителя, ограничить доступ обучающегося ко всем формам учебных и неучебных занятий, а также к использованию материально-технических условий школы (занятий, библиотеки, столовой, кружков, этюдов и т.д.), не допускать к экзаменам и не выставлять оценки в электронном журнале.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.16. ", ordBoldFont));
-                paragraph.add(new Phrase("При расторжении настоящего договора по непредвиденным обстоятельствам, с учётом всех понесённых расходов школы, сумма, подлежащая возврату, возвращается по мере возможности школы, но не позднее мая текущего года.", ordFont));
+                paragraph.add(new Phrase("Удержать/требовать сумму родительского взноса за один месяц со дня расторжения настоящего договора по инициативе родителя, при этом ранее предусмотренные скидки не учитываются, начиная с сентября.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.17. ", ordBoldFont));
+                paragraph.add(new Phrase("При расторжении настоящего договора по непредвиденным обстоятельствам, с учётом всех понесённых расходов школы, сумма, подлежащая возврату, возвращается по мере возможности школы, но не позднее мая текущего года.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("2.2.18. ", ordBoldFont));
                 paragraph.add(new Phrase("В целях освещения образовательного процесса и деятельности школы школа вправе без уведомления учащегося и родителей размещать фото- и видеоматериалы на своих интернет-страницах и в СМИ.", ordFont));
                 document.add(paragraph);
 
@@ -345,52 +350,57 @@ public class ContractPdfRu50 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.3.2. ", ordBoldFont));
-                paragraph.add(new Phrase("Перед прибытием учащегося в школу провести его полную медицинскую диспансеризацию и предоставить администрации школы медицинское заключение о состоянии здоровья учащегося.", ordFont));
+                paragraph.add(new Phrase("Ежегодно в период с 1 апреля по 15 мая заключать договор на следующий учебный год с обязательным внесением 5 000 сомов (безвозвратно) за бронь места или полной предоплаты в размере одномесячной оплаты. В случае незаключения договора учебное место может быть предоставлено другому учащемуся.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.3.3. ", ordBoldFont));
-                paragraph.add(new Phrase("В случае болезни и отсутствия учащегося на занятиях в течение длительного времени вносить оплату контракта в полном объёме, учитывая оплату праздничных и каникулярных дней.", ordFont));
+                paragraph.add(new Phrase("Перед прибытием учащегося в школу провести его полную медицинскую диспансеризацию и предоставить администрации школы медицинское заключение о состоянии здоровья учащегося.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.3.4. ", ordBoldFont));
-                paragraph.add(new Phrase("Содействовать выполнению учащимся порядка «Режим дня» и «Правил внутреннего распорядка» школы.", ordFont));
+                paragraph.add(new Phrase("В случае болезни и отсутствия учащегося на занятиях в течение длительного времени вносить оплату контракта в полном объёме, учитывая оплату праздничных и каникулярных дней.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.3.5. ", ordBoldFont));
-                paragraph.add(new Phrase("Нести полную материальную ответственность за все действия учащегося, повлёкшие за собой порчу или уничтожение имущества школы.", ordFont));
+                paragraph.add(new Phrase("Содействовать выполнению учащимся порядка «Режим дня» и «Правил внутреннего распорядка» школы.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.3.6. ", ordBoldFont));
-                paragraph.add(new Phrase("Возместить школе стоимость нанесённого ущерба в течение 7 (семи) календарных дней со дня получения официального счёта от администрации школы.", ordFont));
+                paragraph.add(new Phrase("Нести полную материальную ответственность за все действия учащегося, повлёкшие за собой порчу или уничтожение имущества школы.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.3.7. ", ordBoldFont));
+                paragraph.add(new Phrase("Возместить школе стоимость нанесённого ущерба в течение 7 (семи) календарных дней со дня получения официального счёта от администрации школы.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("2.3.8. ", ordBoldFont));
                 paragraph.add(new Phrase("Постоянно взаимодействовать со школой по всем направлениям воспитания и обучения учащегося. При изменении номера телефона, адреса проживания и иных документов в течение 7 (семи) календарных дней известить администрацию школы ", ordFont));
                 paragraph.add(new Phrase("(бухгалтерию, классного руководителя).", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("2.3.8. ", ordBoldFont));
+                paragraph.add(new Phrase("2.3.9. ", ordBoldFont));
                 paragraph.add(new Phrase("Своевременно и лично приводить и забирать учащегося из школы в случае отказа от трансфера. В случае если учащегося будут приводить и забирать из школы другие совершеннолетние родственники, родитель обязан заранее предупредить администрацию школы и написать соответствующее заявление.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("2.3.9. ", ordBoldFont));
+                paragraph.add(new Phrase("2.3.10. ", ordBoldFont));
                 paragraph.add(new Phrase("Обеспечить обучающегося всеми необходимыми канцелярскими принадлежностями для собственного использования (тетради, альбомы, ручки, цветные карандаши, точилки и т.д.).", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("2.3.10. ", ordBoldFont));
+                paragraph.add(new Phrase("2.3.11. ", ordBoldFont));
                 paragraph.add(new Phrase("Родители несут ответственность за сохранность учебников, выданных школой. В случае порчи или утери учебников родители возмещают их стоимость в полном объёме.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("2.3.11. ", ordBoldFont));
+                paragraph.add(new Phrase("2.3.12. ", ordBoldFont));
                 paragraph.add(new Phrase("Вне территории школы ответственность за жизнь и безопасность учащегося школа не несёт.", ordFont));
                 document.add(paragraph);
 
@@ -454,11 +464,21 @@ public class ContractPdfRu50 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.4. ", ordBoldFont));
-                paragraph.add(new Phrase("В случае отказа от обучения в школе или перевода ученика в другую образовательную организацию родители (законные представители) обязуются уведомить школу в письменной форме не позднее чем за 1 (один) месяц до предполагаемой даты прекращения обучения. В случае прекращения обучения без соблюдения указанного срока уведомления школа вправе удержать/требовать сумму оплаты за 1 (один) месяц обучения в качестве компенсации. При этом родители (законные представители) обязуются оплатить сумму договора за 1 (один) месяц обучения в случае отсутствия своевременного уведомления.", ordFont));
+                paragraph.add(new Phrase("Ежегодно в период с 1 апреля по 15 мая родители обязаны заключить договор на образовательные услуги на следующий учебный год с обязательным внесением 5 000 сомов (безвозвратно) за бронь места или предоплаты родительского взноса за один месяц. После заключения договора и внесения оплаты, в случае отказа от учёбы, внесённая сумма ", ordFont));
+                paragraph.add(new Phrase("не возвращается.", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("В случае не заключения договора в указанные сроки место обучающегося будет предоставлено другим желающим.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.5. ", ordBoldFont));
+                paragraph.add(new Phrase("В случае отказа от обучения в школе или перевода ученика в другую образовательную организацию родители (законные представители) обязуются уведомить школу в письменной форме не позднее чем за 1 (один) месяц до предполагаемой даты прекращения обучения. В случае прекращения обучения без соблюдения указанного срока уведомления школа вправе удержать/требовать сумму оплаты за 1 (один) месяц обучения в качестве компенсации. При этом родители (законные представители) обязуются оплатить сумму договора за 1 (один) месяц обучения в случае отсутствия своевременного уведомления.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.1.6. ", ordBoldFont));
                 if (st_info.getContractInfo().getDiscount() != null && st_info.getContractInfo().getDiscount() != 0.0) {
                     paragraph.add(new Phrase("Скидка на обучение в размере " + Settings.dFormat2.format(st_info.getContractInfo().getDiscount())
                             + " " + studentInfo.getContractInfo().getCurrency()
@@ -469,17 +489,17 @@ public class ContractPdfRu50 {
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("3.1.6. ", ordBoldFont));
+                paragraph.add(new Phrase("3.1.7. ", ordBoldFont));
                 paragraph.add(new Phrase("Своевременно вносить оплату за образовательные услуги обучающегося в школе согласно настоящему договору и индивидуальному графику оплаты, согласованному между школой и родителями.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("3.1.7. ", ordBoldFont));
+                paragraph.add(new Phrase("3.1.8. ", ordBoldFont));
                 paragraph.add(new Phrase("Родительская плата производится согласно графику, подписанному обеими сторонами и являющемуся неотъемлемой частью настоящего договора. При этом последний взнос должен быть внесён не позднее 15 мая следующего года. Размер родительского взноса не изменяется даже при условии перехода школы на дистанционную форму обучения.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("3.1.8. ", ordBoldFont));
+                paragraph.add(new Phrase("3.1.9. ", ordBoldFont));
                 paragraph.add(new Phrase("Родительская плата производится в сомах на банковский счёт школы не позднее 3 (трёх) календарных дней с даты, указанной в официальном счёте/invoice.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));

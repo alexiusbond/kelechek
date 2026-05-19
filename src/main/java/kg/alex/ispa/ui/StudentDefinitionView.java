@@ -20,8 +20,8 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
-import kg.alex.ispa.pdf.contracts.ContractPdfRu49;
-import kg.alex.ispa.pdf.contracts.ContractPdfRu50;
+import kg.alex.ispa.pdf.contracts.ContractPdfRu46;
+import kg.alex.ispa.pdf.contracts.ContractPdfRu47;
 import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.*;
@@ -1181,12 +1181,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (studInfo.getMainRelative() != null && studInfo.getMainRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
+                                System.out.println(myUI.getUser().getSchool().getId());
                                 if (myUI.getUser().getSchool().getId() == 44) {
                                     new ContractPdfRu44(myUI, studInfo, instPlanCont);
-                                } else if (myUI.getUser().getSchool().getId() == 49) {
-                                    new ContractPdfRu49(myUI, studInfo, instPlanCont);
-                                } else if (myUI.getUser().getSchool().getId() == 50) {
-                                    new ContractPdfRu50(myUI, studInfo, instPlanCont);
+                                } else if (myUI.getUser().getSchool().getId() == 46) {
+                                    new ContractPdfRu46(myUI, studInfo, instPlanCont);
+                                } else if (myUI.getUser().getSchool().getId() == 47) {
+                                    new ContractPdfRu47(myUI, studInfo, instPlanCont);
                                 }
                             } else {
                                 Notification.show(myUI.getMessage(Messages.NoDirectorAssigned),
