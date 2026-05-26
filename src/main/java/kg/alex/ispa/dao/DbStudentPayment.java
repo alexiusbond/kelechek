@@ -302,7 +302,6 @@ public class DbStudentPayment extends BaseDb {
         stat.setDate(2, new java.sql.Date(from.getTime()));
         stat.setDate(3, new java.sql.Date(till.getTime()));
         stat.setInt(4, year_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);

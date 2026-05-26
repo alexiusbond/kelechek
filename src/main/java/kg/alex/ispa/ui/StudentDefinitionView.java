@@ -1181,7 +1181,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (studInfo.getMainRelative() != null && studInfo.getMainRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
-                                System.out.println(myUI.getUser().getSchool().getId());
                                 if (myUI.getUser().getSchool().getId() == 44) {
                                     new ContractPdfRu44(myUI, studInfo, instPlanCont);
                                 } else if (myUI.getUser().getSchool().getId() == 46) {

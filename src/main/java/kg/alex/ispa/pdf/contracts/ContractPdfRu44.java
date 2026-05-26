@@ -559,9 +559,10 @@ public class ContractPdfRu44 {
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
-                float[] table_info_colsWidth = {1.5f, 1f};
+                float[] table_info_colsWidth = {1.3f, 1f};
                 PdfPTable table_info = new PdfPTable(2);
                 table_info.getDefaultCell().setBorder(0);
+                table_info.getDefaultCell().setPaddingRight(10f);
                 table_info.setWidthPercentage(90f);
                 table_info.setWidths(table_info_colsWidth);
                 Paragraph text10 = new Paragraph();
@@ -570,6 +571,18 @@ public class ContractPdfRu44 {
                 text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("ИНН: " + (studentInfo.getSchool().getInn() == null ? "" :
                         studentInfo.getSchool().getInn()), ordFont));
+                text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
+                text10.add(new Phrase("Банк: " + (studentInfo.getSchool().getBank() == null ? "" :
+                        studentInfo.getSchool().getBank()), ordFont));
+                text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
+                text10.add(new Phrase("БИК: " + (studentInfo.getSchool().getBik() == null ? "" :
+                        studentInfo.getSchool().getBik()), ordFont));
+                text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
+                text10.add(new Phrase("Р/С: " + (studentInfo.getSchool().getBank_account() == null ? "" :
+                        studentInfo.getSchool().getBank_account()), ordFont));
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("ОКПО: " + (studentInfo.getSchool().getOkpo() == null ? "" :
@@ -754,24 +767,24 @@ public class ContractPdfRu44 {
                 TContract.addCell(new Phrase("", ordFont));
 
                 document.add(TContract);
-
                 paragraph = new Paragraph();
                 paragraph.setIndentationLeft(25);
                 paragraph.setIndentationRight(25);
                 paragraph.add(Chunk.NEWLINE);
-                paragraph.add(new Phrase("Подпись Родителя: ", ordBoldFont));
+                paragraph.add(new Phrase("\nРодитель: ", ordBoldFont));
+                paragraph.add(new Phrase(studentInfo.getMainRelative().getFullName(), ordFont));
+                paragraph.add(new Phrase(" ___________________________", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(5, " "));
                 paragraph = new Paragraph();
                 paragraph.setIndentationLeft(25);
                 paragraph.setIndentationRight(25);
-                paragraph.add(new Phrase("Директор: ", ordBoldFont));
-                document.add(paragraph);
-                document.add(new Paragraph(5, " "));
-                paragraph = new Paragraph();
-                paragraph.setIndentationLeft(25);
-                paragraph.setIndentationRight(25);
-                paragraph.add(new Phrase("Гл. бухгалтер: ", ordBoldFont));
+                paragraph.add(new Phrase("\n\nДиректор Школы: ", ordBoldFont));
+                paragraph.add(new Phrase(studentInfo.getDirector().getSurname() + " "
+                        + studentInfo.getDirector().getName() + " " +
+                        (studentInfo.getDirector().getMiddle_name() == null ?
+                                "" : studentInfo.getDirector().getMiddle_name()), ordFont));
+                paragraph.add(new Phrase(" ___________________________", ordFont));
                 document.add(paragraph);
             } catch (Exception e) {
                 logger.error(e);
