@@ -160,7 +160,7 @@ public class ContractPdfRu46 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Организовать и обеспечить надлежащее исполнение услуг, предусмотренных в статье 1.1. настоящего договора. Образовательные услуги оказываются в соответствии с государственным образовательным стандартом и программой соответствующего уровня образования, утверждённого Министерством образования и науки Кыргызской Республики.", ordFont));
+                paragraph.add(new Phrase("Организовать и обеспечить надлежащее исполнение услуг, предусмотренных в статье 1.1. настоящего договора. Образовательные услуги оказываются в соответствии с государственным образовательным стандартом и программой соответствующего уровня образования, утверждённого Министерством просвещения Кыргызской Республики.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -696,7 +696,7 @@ public class ContractPdfRu46 {
                 text15.add(new Phrase(". Дата регистрации: ", ordFont));
                 text15.add(new Phrase(Settings.df.format(studentInfo.getContractInfo().getCreationDate()), ordBoldFont));
                 text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("ИТОГО взноса: ", ordFont));
+                text15.add(new Phrase("Сумма контракта: ", ordFont));
                 text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getContract())), ordBoldFont));
                 text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 text15.add(Chunk.NEWLINE);

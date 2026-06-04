@@ -216,6 +216,41 @@ public class DbStudentRelative extends BaseDb {
         return p;
     }
 
+    public List<StudentRelative> getStudentRelatives(int studId) throws SQLException {
+
+        String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.given_by, "
+                + "sr.issue_date, sr.phone, sr.address, sr.passport, "
+                + "sr.work_place, sr.is_main, sr.relatives_id "
+                + "FROM student_relatives sr "
+                + "WHERE sr.student_id = ?";
+
+        List<StudentRelative> relatives = new ArrayList<>();
+
+        try (PreparedStatement stat = dbCon.prepareStatement(sql)) {
+            stat.setInt(1, studId);
+
+            try (ResultSet result = stat.executeQuery()) {
+                while (result.next()) {
+                    StudentRelative relative = new StudentRelative();
+
+                    relative.setId(result.getString("id"));
+                    relative.setStudent_id(result.getInt("student_id"));
+                    relative.setFullName(result.getString("fullname"));
+                    relative.setGivenBy(result.getString("given_by"));
+                    relative.setIssueDate(result.getDate("issue_date"));
+                    relative.setPhone(result.getString("phone"));
+                    relative.setAddress(result.getString("address"));
+                    relative.setPassport(result.getString("passport"));
+                    relative.setWorkPlace(result.getString("work_place"));
+                    relative.setIs_main(result.getInt("is_main"));
+                    relative.setRelative_id(result.getInt("relatives_id"));
+
+                    relatives.add(relative);
+                }
+            }
+        }
+        return relatives;
+    }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int stud_id) throws SQLException {
 

@@ -304,6 +304,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String Main = generateId();
     public static final String AddRecord = generateId();
     public static final String AutoInstallment = generateId();
+    public static final String CopyRelatives = generateId();
     public static final String FamilyInfo = generateId();
     public static final String Search = generateId();
     public static final String ContactInfo = generateId();
@@ -429,7 +430,6 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String CanNotSaveIdNumber = generateId();
     public static final String NotificationEmptyTable = generateId();
     public static final String NotificationSameDiscountsAreNotAllowed = generateId();
-    public static final String NotificationSameCorrectionsAreNotAllowed = generateId();
     public static final String NotificationSameDatesAreNotAllowed = generateId();
     public static final String NotificationWrongSumInstSum = generateId();
     public static final String CanNotModify = generateId();
@@ -439,6 +439,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String Backup = generateId();
     public static final String Templates = generateId();
     public static final String Students = generateId();
+    public static final String SelectStudent = generateId();
     public static final String Active = generateId();
     public static final String Discounted = generateId();
     public static final String YearMonthReport = generateId();
