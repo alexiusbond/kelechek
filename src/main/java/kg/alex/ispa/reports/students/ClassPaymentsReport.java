@@ -36,7 +36,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
     private final MyVaadinUI myUI;
     private final HorizontalSplitPanel splitPanel;
     private final String[] NATURAL_COL_ORDER;
-    public double total;
+    public double totalKGS, totalUSD;
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private FilterTable classTable;
     private ComboBox yearSelect;
@@ -243,7 +243,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
                         new ClassPaymentsPdf(myUI, paymentsCont,
                                 yearSelect.getContainerProperty(yearSelect.getValue(),
                                         myUI.getMessage(Messages.Title)).getValue().toString(),
-                                fromDate, tillDate, studentInfo, total);
+                                fromDate, tillDate, studentInfo, totalKGS, totalUSD);
                     } else {
 
                         Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
@@ -299,7 +299,8 @@ public class ClassPaymentsReport implements Button.ClickListener,
             DbStudentPayment dbsp = new DbStudentPayment();
             dbsp.connect();
             dataTable.clear();
-            total = 0;
+            totalKGS = 0;
+            totalUSD = 0;
             paymentsCont = dbsp.execSQL_PaymentsByClass(myUI,
                     fromDateDF.getValue(), tillDateDF.getValue(),
                     (Integer) yearSelect.getValue(),
@@ -315,7 +316,9 @@ public class ClassPaymentsReport implements Button.ClickListener,
         }
         dataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
         dataTable.setColumnFooter(myUI.getMessage(Messages.Amount),
-                myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(total) + " " + currency);
+                  Settings.dFormat2.format(totalKGS) + " " + currency);
+        dataTable.setColumnFooter(myUI.getMessage(Messages.CashBox),
+                Settings.dFormat2.format(totalUSD) + " " + Settings.USD);
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);

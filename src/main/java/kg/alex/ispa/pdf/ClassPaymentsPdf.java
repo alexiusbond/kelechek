@@ -34,7 +34,7 @@ public class ClassPaymentsPdf {
 
 
     public ClassPaymentsPdf(final MyVaadinUI myUI, final IndexedContainer dataContainer, final String year,
-                            final Date fDate, final Date tDate, final StudentInfoPdf studentInfo, final double total) {
+                            final Date fDate, final Date tDate, final StudentInfoPdf studentInfo, final double totalKGS, final double totalUSD) {
         //installment plan table
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
@@ -81,7 +81,7 @@ public class ClassPaymentsPdf {
                     document.add(table_date);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(Messages.ClassPayments) + ": "
-                                                  + year + " (" + Settings.df.format(fDate) + " - " + Settings.df.format(tDate) + ")", fontBold);
+                            + year + " (" + Settings.df.format(fDate) + " - " + Settings.df.format(tDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);
@@ -143,9 +143,8 @@ public class ClassPaymentsPdf {
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.Total) + ": "
-                                                 + Settings.dFormat2.format(total) + " " + Settings.KGS, ordFontBold));
-                    infoTable.addCell(new Phrase(" ", ordFontBold));
+                    infoTable.addCell(new Phrase(Settings.dFormat2.format(totalKGS) + " " + Settings.KGS, ordFontBold));
+                    infoTable.addCell(new Phrase(Settings.dFormat2.format(totalUSD) + " " + Settings.USD, ordFontBold));
 
                     document.add(infoTable);
 
@@ -160,13 +159,13 @@ public class ClassPaymentsPdf {
                     T2.addCell(new Phrase(myUI.getMessage(Messages.Accountant), ordFontBold));
                     T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
                     T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
-                                          + studentInfo.getAccountant().getName() + " " +
-                                          (studentInfo.getAccountant().getMiddle_name() == null ?
-                                                  "" : studentInfo.getAccountant().getMiddle_name()), ordFont));
+                            + studentInfo.getAccountant().getName() + " " +
+                            (studentInfo.getAccountant().getMiddle_name() == null ?
+                                    "" : studentInfo.getAccountant().getMiddle_name()), ordFont));
                     T2.addCell(new Phrase(studentInfo.getDirector().getSurname() + " "
-                                          + studentInfo.getDirector().getName() + " " +
-                                          (studentInfo.getDirector().getMiddle_name() == null ?
-                                                  "" : studentInfo.getDirector().getMiddle_name()), ordFont));
+                            + studentInfo.getDirector().getName() + " " +
+                            (studentInfo.getDirector().getMiddle_name() == null ?
+                                    "" : studentInfo.getDirector().getMiddle_name()), ordFont));
 
                     document.add(T2);
 
@@ -186,7 +185,7 @@ public class ClassPaymentsPdf {
         };
 
         StreamResource resource = new StreamResource(source1, "ClassPayments"
-                                                              + System.currentTimeMillis() + ".pdf");
+                + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
         myUI.getPage().open(resource, "ClassPayments", false);

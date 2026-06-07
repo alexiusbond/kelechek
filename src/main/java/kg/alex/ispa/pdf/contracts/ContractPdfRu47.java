@@ -707,15 +707,21 @@ public class ContractPdfRu47 {
                 }
                 text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getDebt())), ordBoldFont));
                 text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Скидка: ", ordFont));
+
                 if (studentInfo.getContractInfo().getDiscountStr() != null) {
+                    text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("Скидка: ", ordFont));
                     text15.add(new Phrase(studentInfo.getContractInfo().getDiscountStr(), ordBoldFont));
                     text15.add(new Phrase(" (вид скидки прописью, %)", ordFont));
+                    text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("Сумма после скидки: ", ordFont));
+                    text15.add(new Phrase(Settings.dFormat2.format(
+                            studentInfo.getContractInfo().getContractWithDiscount()), ordBoldFont));
+                    text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 }
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Корректировка: ", ordFont));
                 if (studentInfo.getContractInfo().getCorrectionStr() != null) {
+                    text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("Корректировка: ", ordFont));
                     text15.add(new Phrase(studentInfo.getContractInfo().getCorrectionStr(), ordBoldFont));
                 }
                 text15.add(Chunk.NEWLINE);
@@ -749,16 +755,14 @@ public class ContractPdfRu47 {
                 TContract.addCell(new Phrase("Подпись ", ordBoldFont));
                 int n = 1;
                 for (Object obj : instPlanCont.getItemIds()) {
-                    if ((Integer) instPlanCont.getContainerProperty(obj, Settings.status_id).getValue() == 1) {
-                        TContract.addCell(new Phrase(n + "", ordFont));
-                        TContract.addCell(new Phrase(Settings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Date)).getValue()).getValue()), ordFont));
-                        TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Amount)).getValue()).getValue(), ordFont));
-                        TContract.addCell(new Phrase("", ordFont));
-                        TContract.addCell(new Phrase("", ordFont));
-                        n += 1;
-                    }
+                    TContract.addCell(new Phrase(n + "", ordFont));
+                    TContract.addCell(new Phrase(Settings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
+                            myUI.getMessage(Messages.Date)).getValue()).getValue()), ordFont));
+                    TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
+                            myUI.getMessage(Messages.Amount)).getValue()).getValue(), ordFont));
+                    TContract.addCell(new Phrase("", ordFont));
+                    TContract.addCell(new Phrase("", ordFont));
+                    n += 1;
                 }
                 TContract.addCell(new Phrase("", ordFont));
                 TContract.addCell(new Phrase("Итого:", ordBoldFont));

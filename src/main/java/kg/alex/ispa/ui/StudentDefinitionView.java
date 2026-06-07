@@ -125,6 +125,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Double discountAmount;
     private Double debt;
     private Double toPay;
+    private Double contractWithDiscount;
     private FormattedTable installmentTable;
     private FormattedTable discountsTable;
     private FormattedTable correctionsTable;
@@ -1251,6 +1252,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     studInfo.getContractInfo().setInitialPayment(instFirstPay);
                     studInfo.getContractInfo().setNet(toPay);
                     studInfo.getContractInfo().setLeft(ttl_left);
+                    studInfo.getContractInfo().setContractWithDiscount(contractWithDiscount);
                     studInfo.getContractInfo().setPaid(ttl_payment);
                     studInfo.getContractInfo().setCurrency(currency);
                     if (studInfo.getMainRelative() != null && studInfo.getMainRelative().getFullName() != null) {
@@ -3905,6 +3907,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             init_payment = sp.getInit_pay();
             contract_amount = studentContract.getAmount();
             toPay = studentContract.getContr_with_disc() + studentContract.getCorrection() + debt;
+            contractWithDiscount = studentContract.getContr_with_disc();
             ttl_left = (studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) - ttl_payment;
             dbsc.close();
             dbsd.close();

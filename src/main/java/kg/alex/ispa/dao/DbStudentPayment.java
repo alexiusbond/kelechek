@@ -336,16 +336,20 @@ public class DbStudentPayment extends BaseDb {
                     result.getInt("sp.payment_category_id"));
             item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
-            double amount;
+            double amountKGS, amountUSD;
             if (result.getInt("acc_currency_id") == 1) {
-                amount = result.getDouble("sp.amount");
+                amountKGS = result.getDouble("sp.amount");
+                amountUSD = result.getDouble("sp.amount") / result.getDouble("sp.dollar_rate");
             } else {
-                amount = result.getDouble("sp.amount") * result.getDouble("sp.dollar_rate");
+                amountKGS = result.getDouble("sp.amount") * result.getDouble("sp.dollar_rate");
+                amountUSD = result.getDouble("sp.amount");
             }
             if (result.getInt("sp.payment_category_id") != 3) {
-                cpr.total += amount;
+                cpr.totalKGS += amountKGS;
+                cpr.totalUSD += amountUSD;
             } else {
-                cpr.total -= amount;
+                cpr.totalKGS -= amountKGS;
+                cpr.totalUSD -= amountUSD;
             }
         }
         return container;

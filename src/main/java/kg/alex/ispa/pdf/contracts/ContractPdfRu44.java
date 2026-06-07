@@ -707,15 +707,21 @@ public class ContractPdfRu44 {
                 }
                 text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getDebt())), ordBoldFont));
                 text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Скидка: ", ordFont));
+
                 if (studentInfo.getContractInfo().getDiscountStr() != null) {
+                    text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("Скидка: ", ordFont));
                     text15.add(new Phrase(studentInfo.getContractInfo().getDiscountStr(), ordBoldFont));
                     text15.add(new Phrase(" (вид скидки прописью, %)", ordFont));
+                    text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("Сумма после скидки: ", ordFont));
+                    text15.add(new Phrase(Settings.dFormat2.format(
+                            studentInfo.getContractInfo().getContractWithDiscount()), ordBoldFont));
+                    text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
                 }
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Корректировка: ", ordFont));
                 if (studentInfo.getContractInfo().getCorrectionStr() != null) {
+                    text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("Корректировка: ", ordFont));
                     text15.add(new Phrase(studentInfo.getContractInfo().getCorrectionStr(), ordBoldFont));
                 }
                 text15.add(Chunk.NEWLINE);
