@@ -270,7 +270,7 @@ public class ContractPdfRu44 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.5. ", ordBoldFont));
-                paragraph.add(new Phrase("При заключении договора и оформлении учащегося в школу требовать оплату за регистрацию и тестирование в размере 9 000 сомов (безвозвратно).", ordFont));
+                paragraph.add(new Phrase("При заключении договора и оформлении учащегося в школу родитель или законный представитель оплачивает за услугу бронирования места, регистрацию и тестирование в размере 9 000 (девять тысяч) сомов (безвозвратно).", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -345,12 +345,12 @@ public class ContractPdfRu44 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.3.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Своевременно оплачивать родительские взносы согласно настоящему договору.", ordFont));
+                paragraph.add(new Phrase("Родитель обязуется своевременно и в полном объеме оплачивать образовательные услуги и иные предусмотренные настоящим договором платежи.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.3.2. ", ordBoldFont));
-                paragraph.add(new Phrase("Ежегодно в период с 1 апреля по 15 мая заключать договор на следующий учебный год с обязательным внесением 9 000 сомов (безвозвратно) за бронь места или полной предоплаты в размере одномесячной оплаты. В случае незаключения договора учебное место может быть предоставлено другому учащемуся.", ordFont));
+                paragraph.add(new Phrase("Для сохранения за учащимся места на следующий учебный год Родитель обязуется ежегодно, в период с 1 апреля по 15 мая, заключить договор на следующий учебный год и внести невозвратный платеж в размере 9 000 (девять тысяч) сомов в качестве бронирования места либо произвести предоплату в размере одного месяца обучения. В случае невыполнения указанных условий образовательная Школа вправе предоставить учебное место другому учащемуся.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -451,11 +451,11 @@ public class ContractPdfRu44 {
                 paragraph.add(new Phrase("3.1.2. ", ordBoldFont));
                 paragraph.add(new Phrase("Стоимость оплаты за обучение составляет ", ordFont));
                 paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getContract())
-                        + " " + studentInfo.getContractInfo().getCurrency() + ".", ordBoldFont));
+                        + " " + studentInfo.getContractInfo().getCurrency() + " (кыргызских сом) за период, указанный в пункте 1.1. Настоящего Договора.", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("- при полной оплате годовой суммы предусмотрена скидка в размере 5%. Расчёт в инвалюте производится по курсу Национального Банка Кыргызской Республики.", ordFont));
+                paragraph.add(new Phrase("- при полной оплате годовой суммы до 30 июня предусмотрена скидка в размере 5%. Расчёт в инвалюте производится по курсу Национального Банка Кыргызской Республики на дату оплаты.", ordFont));
                 document.add(paragraph);
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.3. ", ordBoldFont));
@@ -464,7 +464,7 @@ public class ContractPdfRu44 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.4. ", ordBoldFont));
-                paragraph.add(new Phrase("Ежегодно в период с 1 апреля по 15 мая родители обязаны заключить договор на образовательные услуги на следующий учебный год с обязательным внесением 9 000 сомов (безвозвратно) за бронь места или предоплаты родительского взноса за один месяц. После заключения договора и внесения оплаты, в случае отказа от учёбы, внесённая сумма ", ordFont));
+                paragraph.add(new Phrase("Ежегодно в период с 1 апреля по 15 мая родители обязаны заключить договор на образовательные услуги на следующий учебный год с обязательным внесением 9 000 (девять тысяч) сомов (безвозвратно) за бронь места или предоплаты стоимости обучения за один месяц. После заключения договора и внесения оплаты, в случае отказа от учёбы, внесённая сумма ", ordFont));
                 paragraph.add(new Phrase("не возвращается.", ordBoldFont));
                 document.add(paragraph);
 
@@ -682,7 +682,27 @@ public class ContractPdfRu44 {
                 Paragraph text15 = new Paragraph();
                 text15.setIndentationLeft(25);
                 text15.setIndentationRight(25);
-                text15.add(new Phrase("График оплаты", boldFont));
+                text15.add(new Phrase("График оплаты за обучение", boldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Оплата стоимости обучения осуществляется одним из следующих способов по выбору Родителя:", ordFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("1. Ежемесячная оплата", ordBoldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Стоимость обучения оплачивается равными платежами в течение 9 (девяти) учебных месяцев — с сентября по май включительно. Оплата производится ежемесячно не позднее 5 числа текущего месяца.", ordFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("2. Ежеквартальная оплата", ordBoldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Стоимость обучения оплачивается частями один раз в квартал в соответствии с графиком, утвержденным Школой.", ordFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("3. Единовременная оплата", ordBoldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Родитель вправе произвести полную оплату стоимости обучения за весь учебный год единовременно до начала учебного года либо в иной срок, установленный настоящим договором.", ordFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("4. Порядок выбора формы оплаты", ordBoldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Выбранная форма оплаты указывается в настоящем договоре и может быть изменена по соглашению сторон путем подачи письменного заявления и заключения дополнительного соглашения.", ordFont));
+                text15.add(Chunk.NEWLINE);
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("ID ученика: ", ordFont));
                 text15.add(new Phrase(studentInfo.getStudent().getLogin(), ordBoldFont));
@@ -751,7 +771,7 @@ public class ContractPdfRu44 {
                 TContract.addCell(new Phrase("№", ordBoldFont));
                 TContract.addCell(new Phrase("Дата оплаты", ordBoldFont));
                 TContract.addCell(new Phrase("Сумма", ordBoldFont));
-                TContract.addCell(new Phrase("Потверждающий документ", ordBoldFont));
+                TContract.addCell(new Phrase("Подтверждающий документ", ordBoldFont));
                 TContract.addCell(new Phrase("Подпись ", ordBoldFont));
                 int n = 1;
                 for (Object obj : instPlanCont.getItemIds()) {

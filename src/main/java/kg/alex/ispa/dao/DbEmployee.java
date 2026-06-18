@@ -113,7 +113,7 @@ public class DbEmployee extends BaseDb {
                      + "LEFT JOIN "
                      + "(select sum(hours) as hours, sum(extra_hours) as extra, employee_id as e_id, year_id as y_id, school_id as sch_id "
                      + "from hr_employee_branch_hours group by employee_id, year_id, school_id) AS ebh ON ebh.e_id = e.id and ebh.y_id = ? and ebh.sch_id = ? "
-                     + "LEFT JOIN hr_employee_order AS eo ON eo.employee_id = e.id AND eo.to_date IS NULL "
+                     + "LEFT JOIN hr_employee_order AS eo ON eo.employee_id = e.id AND eo.to_date IS NULL AND eo.hr_orders_id not in (2, 3) "
                      + "LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id "
                      + "LEFT JOIN position AS pos ON p.id = pos.hr_position_id "
                      + "LEFT JOIN hr_employee_order AS eo2 ON eo2.employee_id = e.id AND eo2.hr_orders_id = 2 and (eo2.to_date IS NULL or eo2.to_date>=NOW()) "

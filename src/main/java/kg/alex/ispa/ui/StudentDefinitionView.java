@@ -858,7 +858,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if (source == plusInstButton) {
             addInstallmentPlanItem(false);
         } else if (source == plusDiscButton) {
-            if (discCounter < 3) {
+            if (discCounter < 4) {
                 addDiscountsItem();
             } else {
                 Notification.show(myUI.getMessage(Messages.OnlyThreeDiscountsAllowed),
