@@ -257,7 +257,6 @@ public class DbStudentRelative extends BaseDb {
         String sql = "SELECT sr.fullname, sr.given_by, sr.phone, "
                 + "sr.address, sr.passport, sr.work_place, sr.relatives_id, sr.is_main "
                 + "FROM student_relatives as sr where sr.student_id = ? "
-                + "and (sr.relatives_id = 1 or sr.relatives_id = 2) "
                 + "group by sr.relatives_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);

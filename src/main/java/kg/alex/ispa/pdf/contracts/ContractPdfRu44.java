@@ -320,12 +320,12 @@ public class ContractPdfRu44 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.15. ", ordBoldFont));
-                paragraph.add(new Phrase("При несвоевременной оплате родителем взноса школа вправе, с извещением родителя, ограничить доступ обучающегося ко всем формам учебных и неучебных занятий, а также к использованию материально-технических условий школы (занятий, библиотеки, столовой, кружков, этюдов и т.д.), не допускать к экзаменам и не выставлять оценки в электронном журнале.", ordFont));
+                paragraph.add(new Phrase("При несвоевременной оплате родителем за обучение учащегося школа вправе, с извещением родителя, ограничить доступ обучающегося ко всем формам учебных и неучебных занятий, а также к использованию материально-технических условий школы (занятий, библиотеки, столовой, кружков, этюдов и т.д.), не допускать к экзаменам и не выставлять оценки в электронном журнале.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.16. ", ordBoldFont));
-                paragraph.add(new Phrase("Удержать/требовать сумму родительского взноса за один месяц со дня расторжения настоящего договора по инициативе родителя, при этом ранее предусмотренные скидки не учитываются, начиная с сентября.", ordFont));
+                paragraph.add(new Phrase("В случае расторжения настоящего договора по инициативе родителя (законного представителя), подлежит оплате стоимость обучения за один месяц с даты расторжения договора. При этом ранее предоставленные скидки при расчете не учитываются, начиная с сентября.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -345,7 +345,7 @@ public class ContractPdfRu44 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.3.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Родитель обязуется своевременно и в полном объеме оплачивать образовательные услуги и иные предусмотренные настоящим договором платежи.", ordFont));
+                paragraph.add(new Phrase("Родитель обязуется осуществлять оплату образовательных услуг и иных предусмотренных настоящим договором платежей в установленные сроки и в полном объеме.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -423,11 +423,6 @@ public class ContractPdfRu44 {
                 paragraph.add(new Phrase("2.4.3. ", ordBoldFont));
                 paragraph.add(new Phrase("Требовать защиты законных прав и интересов детей.", ordFont));
                 document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.4.4. ", ordBoldFont));
-                paragraph.add(new Phrase("Избираться в состав школьного или классного родительского комитета.", ordFont));
-                document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
                 paragraph.clear();
@@ -438,7 +433,7 @@ public class ContractPdfRu44 {
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("3.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Администрацией школы установлены следующие сроки и правила оплаты за обучение учащегося за счёт родительских взносов.", ordFont
+                paragraph.add(new Phrase("Оплата обучения учащегося осуществляет родителем (законным представителем) в порядке, сроки и на условиях, установленных настоящим договором.", ordFont
                 ));
                 document.add(paragraph);
 
@@ -495,12 +490,12 @@ public class ContractPdfRu44 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.8. ", ordBoldFont));
-                paragraph.add(new Phrase("Родительская плата производится согласно графику, подписанному обеими сторонами и являющемуся неотъемлемой частью настоящего договора. При этом последний взнос должен быть внесён не позднее 15 мая следующего года. Размер родительского взноса не изменяется даже при условии перехода школы на дистанционную форму обучения.", ordFont));
+                paragraph.add(new Phrase("Родительская плата производится согласно графику, подписанному обеими сторонами и являющемуся неотъемлемой частью настоящего договора. При этом последняя оплата за услуги обучения должна быть внесена не позднее 15 мая следующего года. Размер родительской оплаты за обучение не меняется даже при условии перехода школы на дистанционную форму обучения.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.9. ", ordBoldFont));
-                paragraph.add(new Phrase("Родительская плата производится в сомах на банковский счёт школы не позднее 3 (трёх) календарных дней с даты, указанной в официальном счёте/invoice.", ordFont));
+                paragraph.add(new Phrase("Оплата за обучение производится в сомах на банковский счёт школы.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -606,6 +601,7 @@ public class ContractPdfRu44 {
 
                 IndexedContainer relativeCont = null;
                 table_info.addCell(text10);
+
                 try {
                     DbStudentRelative dbr = new DbStudentRelative();
                     dbr.connect();
@@ -615,62 +611,156 @@ public class ContractPdfRu44 {
                     logger.error(e);
                     logger.catching(e);
                 }
+
                 Paragraph text11 = new Paragraph();
-                Paragraph text18 = new Paragraph();
+
                 Iterator<?> iter = null;
                 if (relativeCont != null) {
                     iter = relativeCont.getItemIds().iterator();
                 }
+
                 String f_name = "";
                 String f_work_place = "";
+
                 String m_name = "";
                 String m_work_place = "";
-                String passport = "";
+
+                Integer legalRepId = null;
+                String legalRepName = "";
+                String legalRepWorkPlace = "";
+                String legalRepPassport = "";
+                String legalRepPhone = "";
+                String legalRepAddress = "";
+
                 while (iter != null && iter.hasNext()) {
                     Object obj = iter.next();
-                    if ((Integer) obj == 1) {
-                        f_name = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.FullName)).getValue().toString();
-                        if (relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.WorkPlace)).getValue() != null) {
-                            f_work_place = relativeCont.getContainerProperty(obj,
-                                    myUI.getMessage(Messages.WorkPlace)).getValue().toString();
+
+                    Integer relativeId = null;
+                    if (obj instanceof Integer) {
+                        relativeId = (Integer) obj;
+                    } else if (obj != null) {
+                        try {
+                            relativeId = Integer.valueOf(obj.toString());
+                        } catch (Exception ex) {
+                            logger.error(ex);
+                            logger.catching(ex);
                         }
                     }
-                    if ((Integer) obj == 2) {
-                        m_name = relativeCont.getContainerProperty(obj,
+
+                    fullName = "";
+                    String workPlace = "";
+                    String phone = "";
+                    String address = "";
+                    String passportValue = "";
+
+                    if (relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.FullName)) != null
+                            && relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.FullName)).getValue() != null) {
+                        fullName = relativeCont.getContainerProperty(obj,
                                 myUI.getMessage(Messages.FullName)).getValue().toString();
-                        if (relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.WorkPlace)).getValue() != null) {
-                            m_work_place = relativeCont.getContainerProperty(obj,
-                                    myUI.getMessage(Messages.WorkPlace)).getValue().toString();
-                        }
                     }
-                    if ((Integer) relativeCont.getContainerProperty(obj,
-                            Settings.is_main).getValue() == 1) {
-                        text18.add(new Phrase("\nКонтактный тел: ", ordFont));
-                        text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Phone)).getValue().toString(), ordFont));
-                        text18.add(Chunk.NEWLINE);
-                        text18.add(new Phrase("\nАдрес места жительства: ", ordFont));
-                        text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Address)).getValue().toString(), ordFont));
-                        passport = relativeCont.getContainerProperty(obj,
+
+                    if (relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.WorkPlace)) != null
+                            && relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.WorkPlace)).getValue() != null) {
+                        workPlace = relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.WorkPlace)).getValue().toString();
+                    }
+
+                    if (relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Phone)) != null
+                            && relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Phone)).getValue() != null) {
+                        phone = relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Phone)).getValue().toString();
+                    }
+
+                    if (relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Address)) != null
+                            && relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Address)).getValue() != null) {
+                        address = relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Address)).getValue().toString();
+                    }
+
+                    if (relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Passport)) != null
+                            && relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Passport)).getValue() != null) {
+                        passportValue = relativeCont.getContainerProperty(obj,
                                 myUI.getMessage(Messages.Passport)).getValue().toString();
                     }
+
+                    if (relativeId != null && relativeId == 1) {
+                        f_name = fullName;
+                        f_work_place = workPlace;
+                    }
+
+                    if (relativeId != null && relativeId == 2) {
+                        m_name = fullName;
+                        m_work_place = workPlace;
+                    }
+
+                    Object isMainValue = null;
+                    if (relativeCont.getContainerProperty(obj, Settings.is_main) != null) {
+                        isMainValue = relativeCont.getContainerProperty(obj, Settings.is_main).getValue();
+                    }
+
+                    boolean isMain = false;
+                    if (isMainValue instanceof Integer) {
+                        isMain = ((Integer) isMainValue) == 1;
+                    } else if (isMainValue instanceof Boolean) {
+                        isMain = (Boolean) isMainValue;
+                    } else if (isMainValue != null) {
+                        isMain = "1".equals(isMainValue.toString()) || "true".equalsIgnoreCase(isMainValue.toString());
+                    }
+
+                    if (isMain) {
+                        legalRepId = relativeId;
+                        legalRepName = fullName;
+                        legalRepWorkPlace = workPlace;
+                        legalRepPassport = passportValue;
+                        legalRepPhone = phone;
+                        legalRepAddress = address;
+                    }
                 }
-                text11.add(new Phrase("Ф.И.О. отца: " + f_name, ordFont));
-                text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("\nФ.И.О. матери: " + m_name, ordFont));
-                text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("\nДанные паспорта: ", ordFont));
-                text11.add(new Phrase(passport, ordFont));
-                text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("\nМесто работы отца: " + f_work_place, ordFont));
-                text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("\nМесто работы матери: " + m_work_place, ordFont));
-                text11.add(Chunk.NEWLINE);
-                text11.add(text18);
+
+                boolean legalRepIsParent = legalRepId != null && (legalRepId == 1 || legalRepId == 2);
+
+                if (legalRepIsParent) {
+                    text11.add(new Phrase("Ф.И.О. отца: " + f_name, ordFont));
+                    text11.add(Chunk.NEWLINE);
+
+                    text11.add(new Phrase("\nФ.И.О. матери: " + m_name, ordFont));
+                    text11.add(Chunk.NEWLINE);
+
+                    text11.add(new Phrase("\nДанные паспорта: ", ordFont));
+                    text11.add(new Phrase(legalRepPassport, ordFont));
+                    text11.add(Chunk.NEWLINE);
+
+                    text11.add(new Phrase("\nМесто работы отца: " + f_work_place, ordFont));
+                    text11.add(Chunk.NEWLINE);
+
+                    text11.add(new Phrase("\nМесто работы матери: " + m_work_place, ordFont));
+                    text11.add(Chunk.NEWLINE);
+
+                    text11.add(new Phrase("\nКонтактный тел: ", ordFont));
+                    text11.add(new Phrase(legalRepPhone, ordFont));
+                    text11.add(Chunk.NEWLINE);
+
+                    text11.add(new Phrase("\nАдрес места жительства: ", ordFont));
+                    text11.add(new Phrase(legalRepAddress, ordFont));
+                } else {
+                    text11.add(new Phrase("Ф.И.О. законного представителя: " + legalRepName, ordFont));
+                    text11.add(Chunk.NEWLINE);
+
+                    text11.add(new Phrase("\nДанные паспорта: ", ordFont));
+                    text11.add(new Phrase(legalRepPassport, ordFont));
+                    text11.add(Chunk.NEWLINE);
+
+                    text11.add(new Phrase("\nМесто работы: " + legalRepWorkPlace, ordFont));
+                    text11.add(Chunk.NEWLINE);
+
+                    text11.add(new Phrase("\nКонтактный тел: ", ordFont));
+                    text11.add(new Phrase(legalRepPhone, ordFont));
+                    text11.add(Chunk.NEWLINE);
+
+                    text11.add(new Phrase("\nАдрес места жительства: ", ordFont));
+                    text11.add(new Phrase(legalRepAddress, ordFont));
+                }
+
                 table_info.addCell(text11);
                 table_info.addCell(new Phrase("\n (М.П)", ordFont));
                 table_info.addCell(new Phrase("\nПодпись: ________________", ordFont));
