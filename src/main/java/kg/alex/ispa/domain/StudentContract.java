@@ -13,6 +13,7 @@ public class StudentContract implements Serializable {
     private int student_id;
     private int year_id;
     private int contract_id;
+    private int installmentPlanTypeId;
     private Double debt;
     private int employee_id;
     private int status_id;
@@ -22,6 +23,14 @@ public class StudentContract implements Serializable {
     private double contr_with_disc;
     private String correctionDetails;
     private Date creationDate;
+
+    public int getInstallmentPlanTypeId() {
+        return installmentPlanTypeId;
+    }
+
+    public void setInstallmentPlanTypeId(int installmentPlanTypeId) {
+        this.installmentPlanTypeId = installmentPlanTypeId;
+    }
 
     public Date getCreationDate() {
         return creationDate;

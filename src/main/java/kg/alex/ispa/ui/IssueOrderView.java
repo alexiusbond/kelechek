@@ -206,7 +206,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                 so.setStudent_id((Integer) next);
                                 so.setYear_id(myUI.getUser().getCurrent_year().getId());
                                 if (so.getTo_education_status_id() == 3) {
-                                    if (dbsc.execSQL_get_st_contract(so.getStudent_id(), so.getYear_id()) != 0) {
+                                    if (dbsc.execSQL(so.getStudent_id(), so.getYear_id()) != null) {
                                         contr_status = 1;
                                         so.setTo_education_status_id(2);
                                     }

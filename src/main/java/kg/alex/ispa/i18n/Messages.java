@@ -324,6 +324,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String EndDate = generateId();
     public static final String InstallmentPlan = generateId();
     public static final String DivideInto = generateId();
+    public static final String InstallmentPlanType = generateId();
     public static final String DownloadTemplateBtn = generateId();
     public static final String DownloadBranchesCode = generateId();
     public static final String FileData = generateId();

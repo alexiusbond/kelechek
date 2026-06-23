@@ -22,6 +22,7 @@ import kg.alex.ispa.reports.students.YearMonthReport;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Date;
 
 /**
@@ -35,8 +36,8 @@ public class DbStudentContract extends BaseDb {
 
     public int exec_insert_st_contract(MyVaadinUI myUi, StudentContract c) throws SQLException {
         String sql = "INSERT IGNORE INTO student_contract (student_id, year_id, contract_id, debt, employee_id, " +
-                "modification_date, activity_status_id, contr_with_disc, contract_number, creation_date) "
-                + "VALUES(?,?,?,?,?,NOW(),?,?,?,NOW())";
+                "modification_date, activity_status_id, contr_with_disc, contract_number, creation_date, " +
+                "installment_plan_type_id) VALUES(?,?,?,?,?,NOW(),?,?,?,NOW(),?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, c.getStudent_id());
         stat.setInt(2, c.getYear_id());
@@ -47,6 +48,11 @@ public class DbStudentContract extends BaseDb {
         stat.setDouble(7, c.getContr_with_disc());
         stat.setInt(8, exec_next_contract_number(myUi.getUser().getSchool().getId(),
                 myUi.getUser().getCurrent_year().getId()));
+        if (c.getInstallmentPlanTypeId() != 0) {
+            stat.setInt(9, c.getInstallmentPlanTypeId());
+        } else {
+            stat.setNull(9, Types.INTEGER);
+        }
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -58,7 +64,8 @@ public class DbStudentContract extends BaseDb {
     public int exec_update_st_contract(StudentContract c)
             throws SQLException {
         String sql = "UPDATE student_contract SET contract_id = ?,debt = ?,employee_id = ?,"
-                + "modification_date=NOW(),activity_status_id = ?,contr_with_disc = ? "
+                + "modification_date=NOW(),activity_status_id = ?,contr_with_disc = ?, "
+                + "installment_plan_type_id = ? "
                 + "where student_id = ? and year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, c.getContract_id());
@@ -66,8 +73,13 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(3, c.getEmployee_id());
         stat.setInt(4, c.getStatus_id());
         stat.setDouble(5, c.getContr_with_disc());
-        stat.setInt(6, c.getStudent_id());
-        stat.setInt(7, c.getYear_id());
+        if (c.getInstallmentPlanTypeId() != 0) {
+            stat.setInt(6, c.getInstallmentPlanTypeId());
+        } else {
+            stat.setNull(6, Types.INTEGER);
+        }
+        stat.setInt(7, c.getStudent_id());
+        stat.setInt(8, c.getYear_id());
         return stat.executeUpdate();
     }
 
@@ -141,18 +153,20 @@ public class DbStudentContract extends BaseDb {
         return id;
     }
 
-    public int execSQL_get_st_contract(int st_id, int year_id) throws SQLException {
-        String sql = "SELECT sc.contract_id FROM student_contract as sc "
+    public StudentContract execSQL(int st_id, int year_id) throws SQLException {
+        String sql = "SELECT sc.contract_id, sc.installment_plan_type_id FROM student_contract as sc "
                 + "where sc.student_id = ? and sc.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
-        int contr_id = 0;
+        StudentContract sc = null;
         if (result.next()) {
-            contr_id = result.getInt("sc.contract_id");
+            sc = new StudentContract();
+            sc.setContract_id(result.getInt("sc.contract_id"));
+            sc.setInstallmentPlanTypeId(result.getInt("sc.installment_plan_type_id"));
         }
-        return contr_id;
+        return sc;
     }
 
     public Double exec_get_debt(int st_id, int year_id) throws SQLException {

@@ -806,6 +806,9 @@ public class ContractPdfRu44 {
                 text15.add(new Phrase(". Дата регистрации: ", ordFont));
                 text15.add(new Phrase(Settings.df.format(studentInfo.getContractInfo().getCreationDate()), ordBoldFont));
                 text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("График оплаты: ", ordFont));
+                text15.add(new Phrase(studentInfo.getContractInfo().getInstallmentPlanType() + ".", ordFont));
+                text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Сумма контракта: ", ordFont));
                 text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getContract())), ordBoldFont));
                 text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));

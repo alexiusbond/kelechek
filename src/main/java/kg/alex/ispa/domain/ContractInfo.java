@@ -9,6 +9,7 @@ public class ContractInfo implements Serializable {
     private String contractTitle;
     private Double debt;
     private Double installmentPlanDebt;
+    private String installmentPlanType;
     private Double discount;
     private Double contractWithDiscount;
     private String currency;
@@ -24,6 +25,14 @@ public class ContractInfo implements Serializable {
     private int students;
     private int contractNumber;
     private Date creationDate;
+
+    public String getInstallmentPlanType() {
+        return installmentPlanType;
+    }
+
+    public void setInstallmentPlanType(String installmentPlanType) {
+        this.installmentPlanType = installmentPlanType;
+    }
 
     public Double getContractWithDiscount() {
         return contractWithDiscount;

@@ -348,6 +348,14 @@ public class Settings implements Serializable {
     public static final String dbColumnStudent_payments_id = "student_payments_id";
     public static final String download_button = "download_button";
     public static final String cancel_upload_button = "cancel_upload_button";
+    public static final String installment_plan_type_code = "installment_plan_type_code";
+    public static final String installment_payment_count = "installment_payment_count";
+    public static final String installment_payment_interval_months = "installment_payment_interval_months";
+    public static final String installment_start_month = "installment_start_month";
+    public static final String installment_due_day = "installment_due_day";
+    public static final String installment_divide_equal = "installment_divide_equal";
+    public static final String installment_is_custom = "installment_is_custom";
+    public static final String installment_description = "installment_description";
     public static final String KGS = "KGS";
     public static final String USD = "USD";
     public static final SimpleDateFormat dateRu = new SimpleDateFormat(
