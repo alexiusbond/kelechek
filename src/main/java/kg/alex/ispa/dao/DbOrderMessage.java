@@ -11,11 +11,11 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.CustomTable;
 import com.vaadin.ui.HorizontalLayout;
 import kg.alex.ispa.MyVaadinUI;
-import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.EmployeeMessage;
 import kg.alex.ispa.domain.OrderMessage;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.ui.SendOrderView;
+import kg.alex.ispa.utils.Settings;
 import org.tepi.filtertable.FilterTable;
 
 import java.sql.*;

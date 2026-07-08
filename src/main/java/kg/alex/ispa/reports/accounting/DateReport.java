@@ -15,7 +15,6 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
-import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.SchoolAccounting;
 import kg.alex.ispa.domain.StudentInfoPdf;
@@ -24,6 +23,7 @@ import kg.alex.ispa.pdf.AccountingByDatesPdf;
 import kg.alex.ispa.tableexport.EnhancedFormatExcelExport;
 import kg.alex.ispa.utils.FormattedTable;
 import kg.alex.ispa.utils.MyFilterDecorator;
+import kg.alex.ispa.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -33,7 +33,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.tepi.filtertable.FilterTreeTable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DateReport implements Button.ClickListener,
         Property.ValueChangeListener {

@@ -9,7 +9,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
 import kg.alex.ispa.MyVaadinUI;
-import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.domain.ContractInfo;
 import kg.alex.ispa.domain.Month;
 import kg.alex.ispa.domain.StudentContract;
@@ -18,6 +17,7 @@ import kg.alex.ispa.reports.students.ClassListReport;
 import kg.alex.ispa.reports.students.DebtReport;
 import kg.alex.ispa.reports.students.DiscountsReport;
 import kg.alex.ispa.reports.students.YearMonthReport;
+import kg.alex.ispa.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

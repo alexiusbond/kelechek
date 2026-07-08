@@ -16,17 +16,13 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.ispa.MyVaadinUI;
-import kg.alex.ispa.utils.Settings;
 import kg.alex.ispa.dao.*;
 import kg.alex.ispa.domain.AccTransaction;
 import kg.alex.ispa.domain.CashBox;
 import kg.alex.ispa.domain.Invoice;
 import kg.alex.ispa.i18n.Messages;
 import kg.alex.ispa.tableexport.EnhancedFormatExcelExport;
-import kg.alex.ispa.utils.ExistsValidator;
-import kg.alex.ispa.utils.FormattedFilterTable;
-import kg.alex.ispa.utils.FormattedTable;
-import kg.alex.ispa.utils.MyFilterDecorator;
+import kg.alex.ispa.utils.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -934,75 +930,6 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         }
     }
 
-    private void exec_copy() {
-        try {
-            double rate = myUI.getDb_currency_rate();
-            DbInvoice dbCon = new DbInvoice();
-            dbCon.connect();
-            DbAccTransactions dbAt = new DbAccTransactions();
-            dbAt.connect();
-            Invoice inv = getInvoice(0);
-            Calendar current = Calendar.getInstance();
-            current.setTime(inv.getCreation_date());
-            current.add(Calendar.MONTH, 1);
-            if (current.after(Calendar.getInstance())) {
-                inv.setCreation_date(new Date());
-            } else {
-                inv.setCreation_date(current.getTime());
-            }
-            if (rate == 0.0) {
-                Notification.show(myUI.getMessage(Messages.CantGetFromNBKR), Notification.Type.ERROR_MESSAGE);
-            } else {
-                AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), 2,
-                        inv.getCreation_date(), 0, totalAmount, 2);
-                if (tr != null) {
-                    Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                            + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-                } else {
-                    int id = dbCon.exec_insert(inv);
-                    if (id != 0) {
-                        DbAccTransactions dbTr = new DbAccTransactions();
-                        dbTr.connect();
-                        if (payoutsTable.getContainerDataSource().size() > 0) {
-                            for (Object next : payoutsTable.getItemIds()) {
-                                ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(Messages.Category)).getValue();
-                                tr = new AccTransaction();
-                                tr.setAcc_invoice_id(id);
-                                tr.setDate(inv.getCreation_date());
-                                tr.setEmployee_id(myUI.getUser().getId());
-                                tr.setSchool_id(myUI.getUser().getSchool().getId());
-                                tr.setCurrency_rate(rate);
-                                tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
-                                tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(Messages.Amount)).getValue()).getValue());
-                                tr.setCategory_id((Integer) cb.getValue());
-                                tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
-                                tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
-                                cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(Messages.CashBox)).getValue();
-                                tr.setCashbox(new CashBox((Integer) cb.getValue(),
-                                        (Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_currency_id).getValue()));
-                                dbTr.exec_insert(tr, dbTr.getConnection());
-                            }
-                        }
-                        dbTr.close();
-                        addDataContainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
-                        Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
-                    } else {
-                        Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
-                    }
-                    dbCon.close();
-                    prepareNormalMode();
-                }
-                dbAt.close();
-            }
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-    }
-
     public void setPayoutsFooter(double amountUsd, double amountKgs, double total) {
         totalAmount = total;
         payoutsTable.setColumnFooter(myUI.getMessage(Messages.Amount),
@@ -1073,5 +1000,226 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
     public Component getNewObj() {
         return new PayoutsView(myUI);
+    }
+
+    private AccTransaction buildCopiedPayoutTransaction(Object next, Invoice inv, double rate, Integer invoiceId) {
+        ComboBox cb = (ComboBox) payoutsTable.getItem(next)
+                .getItemProperty(myUI.getMessage(Messages.Category))
+                .getValue();
+
+        AccTransaction tr = new AccTransaction();
+
+        if (invoiceId != null && invoiceId > 0) {
+            tr.setAcc_invoice_id(invoiceId);
+        }
+
+        tr.setDate(inv.getCreation_date());
+        tr.setEmployee_id(myUI.getUser().getId());
+        tr.setSchool_id(myUI.getUser().getSchool().getId());
+        tr.setCurrency_rate(rate);
+
+        tr.setAmount((Double) ((TextField) payoutsTable.getItem(next)
+                .getItemProperty(myUI.getMessage(Messages.Amount))
+                .getValue())
+                .getPropertyDataSource()
+                .getValue());
+
+        tr.setNote(((TextField) payoutsTable.getItem(next)
+                .getItemProperty(myUI.getMessage(Messages.Note))
+                .getValue())
+                .getValue());
+
+        tr.setCategory_id((Integer) cb.getValue());
+
+        tr.setAccTypeId((Integer) cb
+                .getContainerProperty(cb.getValue(), Settings.acc_type_id)
+                .getValue());
+
+        tr.setFrom_to_employee_id((Integer) cb
+                .getContainerProperty(cb.getValue(), Settings.employee_id)
+                .getValue());
+
+        cb = (ComboBox) payoutsTable.getItem(next)
+                .getItemProperty(myUI.getMessage(Messages.CashBox))
+                .getValue();
+
+        tr.setCashbox(new CashBox(
+                (Integer) cb.getValue(),
+                (Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_currency_id).getValue()
+        ));
+
+        return tr;
+    }
+
+    private AccTransaction insertTestCopyPayouts(Invoice inv, double rate) {
+        AccTransaction lowBalance = null;
+
+        DbCashbox dbc = null;
+        DbAccTransactions dbat = null;
+
+        try {
+            dbc = new DbCashbox();
+            dbat = new DbAccTransactions();
+            dbc.connect();
+            dbat.connect();
+
+            boolean oldAutoCommit = dbat.getConnection().getAutoCommit();
+            dbat.getConnection().setAutoCommit(false);
+
+            try {
+                if (payoutsTable.getContainerDataSource().size() > 0) {
+                    for (Object next : payoutsTable.getItemIds()) {
+                        AccTransaction tr = buildCopiedPayoutTransaction(next, inv, rate, null);
+                        dbat.exec_insert(tr, dbat.getConnection());
+                    }
+                }
+
+                for (Object o : dbc.execSQL(myUI).getItemIds()) {
+                    Integer cashboxId = (Integer) o;
+
+                    lowBalance = dbat.exec_low_balance(
+                            dbat.getConnection(),
+                            myUI.getUser().getSchool().getId(),
+                            cashboxId,
+                            inv.getCreation_date(),
+                            0.0,
+                            0.0,
+                            2
+                    );
+
+                    if (lowBalance != null) {
+                        break;
+                    }
+                }
+
+                dbat.getConnection().rollback();
+            } catch (Exception e) {
+                dbat.getConnection().rollback();
+                throw e;
+            } finally {
+                dbat.getConnection().setAutoCommit(oldAutoCommit);
+            }
+
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        } finally {
+            try {
+                if (dbat != null) {
+                    dbat.close();
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+
+            try {
+                if (dbc != null) {
+                    dbc.close();
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+        }
+
+        return lowBalance;
+    }
+
+    private void exec_copy() {
+        DbInvoice dbCon = null;
+        try {
+            dbCon = new DbInvoice();
+            double rate = myUI.getDb_currency_rate();
+
+            if (rate == 0.0) {
+                Notification.show(
+                        myUI.getMessage(Messages.CantGetFromNBKR),
+                        Notification.Type.ERROR_MESSAGE
+                );
+                return;
+            }
+
+            dbCon.connect();
+
+            Invoice inv = getInvoice(0);
+
+            Calendar current = Calendar.getInstance();
+            current.setTime(inv.getCreation_date());
+            current.add(Calendar.MONTH, 1);
+
+            if (current.after(Calendar.getInstance())) {
+                inv.setCreation_date(new Date());
+            } else {
+                inv.setCreation_date(current.getTime());
+            }
+
+            AccTransaction lowBalance = insertTestCopyPayouts(inv, rate);
+
+            if (lowBalance != null) {
+                Notification.show(
+                        myUI.getMessage(Messages.LowBalance)
+                                + Settings.dFormat2.format(lowBalance.getOverLimit())
+                                + " "
+                                + lowBalance.getCashbox().getCurrency()
+                                + " ("
+                                + Settings.df.format(lowBalance.getDate())
+                                + ")",
+                        Notification.Type.ERROR_MESSAGE
+                );
+                return;
+            }
+
+            int id = dbCon.exec_insert(inv);
+
+            if (id != 0) {
+                DbAccTransactions dbTr = new DbAccTransactions();
+
+                try {
+                    dbTr.connect();
+
+                    if (payoutsTable.getContainerDataSource().size() > 0) {
+                        for (Object next : payoutsTable.getItemIds()) {
+                            AccTransaction tr = buildCopiedPayoutTransaction(next, inv, rate, id);
+                            dbTr.exec_insert(tr, dbTr.getConnection());
+                        }
+                    }
+                } finally {
+                    dbTr.close();
+                }
+
+                addDataContainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
+
+                Notification.show(
+                        myUI.getMessage(Messages.ValueSaved),
+                        Notification.Type.HUMANIZED_MESSAGE
+                );
+
+                prepareNormalMode();
+            } else {
+                Notification.show(
+                        myUI.getMessage(Messages.ValueCanNotBeSaved),
+                        Notification.Type.WARNING_MESSAGE
+                );
+            }
+
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+
+            Notification.show(
+                    myUI.getMessage(Messages.ValueCanNotBeSaved),
+                    Notification.Type.WARNING_MESSAGE
+            );
+        } finally {
+            try {
+                if (dbCon != null) {
+                    dbCon.close();
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+        }
     }
 }
