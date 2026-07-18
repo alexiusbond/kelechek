@@ -226,8 +226,6 @@ public class ClassListReport implements Button.ClickListener,
                     dataTable.setColumnAlignment(myUI.getMessage(Messages.OverPay), CustomTable.Align.RIGHT);
                     dataTable.setColumnFooter(myUI.getMessage(Messages.Id),
                             myUI.getMessage(Messages.Students) + ": " + dataCont.size());
-                    dataTable.setColumnFooter(myUI.getMessage(Messages.Gender),
-                            "М: " + males + "; Ж: " + (dataTable.getContainerDataSource().size() - males));
                     dataTable.setColumnFooter(myUI.getMessage(Messages.EducationStatus),
                             myUI.getMessage(Messages.Active) + activeStudents);
                     dataTable.setColumnFooter(myUI.getMessage(Messages.Contract),
@@ -236,6 +234,8 @@ public class ClassListReport implements Button.ClickListener,
                         dataTable.setColumnFooter(myUI.getMessage(Messages.Discount),
                                 Settings.dFormat2.format(discounts) + " (" +
                                         Settings.dFormat2.format(discounts * 100 / contracts) + "%)");
+                    } else {
+                        dataTable.setColumnFooter(myUI.getMessage(Messages.Discount), null);
                     }
                     dataTable.setColumnFooter(myUI.getMessage(Messages.Correction),
                             Settings.dFormat2.format(corrections));
@@ -257,6 +257,8 @@ public class ClassListReport implements Button.ClickListener,
                                 + discountedStudents * 100 / dataCont.size() + "%)");
                         makePdfBtn.setEnabled(true);
                         excelBtn.setEnabled(true);
+                    } else {
+                        dataTable.setColumnFooter(myUI.getMessage(Messages.DiscountType), myUI.getMessage(Messages.Discounted));
                     }
                     dbsc.close();
                 } catch (Exception e) {
