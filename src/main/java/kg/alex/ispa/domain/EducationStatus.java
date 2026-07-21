@@ -8,59 +8,59 @@ package kg.alex.ispa.domain;
 import java.io.Serializable;
 
 public class EducationStatus implements Serializable {
+    private int total;
+    private int pre_registered;
+    private int active;
+    private int not_confirmed;
+    private int outOf;
+    private int graduated;
 
-    private String total;
-    private String pre_registered;
-    private String active;
-    private String not_confirmed;
-    private String outOf;
-    private String graduated;
+    public int getTotal() {
 
-    public String getTotal() {
         return total;
     }
 
-    public void setTotal(String total) {
+    public void setTotal(int total) {
         this.total = total;
     }
 
-    public String getPre_registered() {
+    public int getPre_registered() {
         return pre_registered;
     }
 
-    public void setPre_registered(String pre_registered) {
+    public void setPre_registered(int pre_registered) {
         this.pre_registered = pre_registered;
     }
 
-    public String getActive() {
+    public int getActive() {
         return active;
     }
 
-    public void setActive(String active) {
+    public void setActive(int active) {
         this.active = active;
     }
 
-    public String getNot_confirmed() {
+    public int getNot_confirmed() {
         return not_confirmed;
     }
 
-    public void setNot_confirmed(String not_confirmed) {
+    public void setNot_confirmed(int not_confirmed) {
         this.not_confirmed = not_confirmed;
     }
 
-    public String getOutOf() {
+    public int getOutOf() {
         return outOf;
     }
 
-    public void setOutOf(String outOf) {
+    public void setOutOf(int outOf) {
         this.outOf = outOf;
     }
 
-    public String getGraduated() {
+    public int getGraduated() {
         return graduated;
     }
 
-    public void setGraduated(String graduated) {
+    public void setGraduated(int graduated) {
         this.graduated = graduated;
     }
 
