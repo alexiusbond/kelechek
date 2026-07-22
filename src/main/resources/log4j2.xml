@@ -7,8 +7,8 @@
             <PatternLayout pattern="%-5p %c{1} [%t] - %m%n"/>
         </Console>
         #Апендер для вывода логов в файл
-        <RollingFile name="ispa" fileName="/home/ispa/ispa.log"
-                     filePattern="/home/ispa/ispa-%d{MM-dd-yyyy}-%i.log">
+        <RollingFile name="abl" fileName="/home/abl/abl.log"
+                     filePattern="/home/abl/abl-%d{MM-dd-yyyy}-%i.log">
             <PatternLayout pattern="%d %d{Z} [%t] %-5p (%F:%L) - %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -19,8 +19,8 @@
 
     <Loggers>
 
-        <Logger name="kg.alex.ispa">
-            <AppenderRef ref="ispa"/>
+        <Logger name="kg.alex.abl">
+            <AppenderRef ref="abl"/>
         </Logger>
 
         <Root level="all">
