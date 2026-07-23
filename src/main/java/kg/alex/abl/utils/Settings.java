@@ -33,12 +33,12 @@ public class Settings implements Serializable {
     public static final String PATH_TO_UPLOADS_HR = "/home/abl/hr/";
     public static final DecimalFormat dFormat2 = new DecimalFormat("#,##0.00");
     public static final DecimalFormat dFormat4 = new DecimalFormat("#,##0.0000");
-    public static final String datePattern = "dd-MM-yyyy";
-    public static final String yearMonthPattern = "MM-yyyy";
+    public static final String datePattern = "dd.MM.yyyy";
+    public static final String yearMonthPattern = "MM.yyyy";
     public static final String yearPattern = "yyyy";
     public static final SimpleDateFormat df = new SimpleDateFormat(datePattern);
     public static final SimpleDateFormat mysql_only_year = new SimpleDateFormat("yyyy-01-01");
-    public static final String dateTimeMinPattern = "dd-MM-yyyy HH:mm";
+    public static final String dateTimeMinPattern = "dd.MM.yyyy HH:mm";
     public static final SimpleDateFormat dtmf = new SimpleDateFormat(dateTimeMinPattern);
     public static final SimpleDateFormat ymdf = new SimpleDateFormat(yearMonthPattern);
     public static final SimpleDateFormat ydf = new SimpleDateFormat(yearPattern);

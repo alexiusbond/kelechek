@@ -20,8 +20,8 @@ public class DbStudentInfoPdf extends BaseDb {
     public StudentInfoPdf execSQL(int year_id, int student_id) throws SQLException {
         StudentInfoPdf sti = new StudentInfoPdf();
         String sql = "SELECT s.id, s.login, s.photo, s.surname, s.name, s.middle_name, s.gender_id, "
-                + "s.date_of_birth, s.address, sr.fullname, "
-                + "sr.phone, sr.passport, sr.given_by, sr.issue_date, sr.address, r.name_ru, r.name_ru_dec, r.gender_id, "
+                + "s.date_of_birth, sr.fullname, "
+                + "sr.phone, sr.address, r.name_ru, r.name_ru_dec, r.gender_id, "
                 + "y.period, y.end_date, y.name, sc.contract_number, sc.creation_date, "
                 + "vcs.class_name, vcs.class_type "
                 + "FROM student as s "
@@ -53,7 +53,7 @@ public class DbStudentInfoPdf extends BaseDb {
                 sti.getStudent().setMiddle_name(result.getString("s.middle_name"));
             }
             sti.getStudent().setGender_id(result.getInt("s.gender_id"));
-            sti.getStudent().setClass_name(result.getString("vcs.class_type") + " " + result.getString("vcs.class_name"));
+            sti.getStudent().setClass_name(result.getString("vcs.class_name"));
             sti.getMainRelative().setFullName(result.getString("sr.fullname"));
             sti.getMainRelative().setPhone(result.getString("sr.phone"));
             sti.getMainRelative().setAddress(result.getString("sr.address"));

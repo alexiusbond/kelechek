@@ -50,7 +50,6 @@ public class ContractPdfRu {
                 BaseFont baseFontBold = BaseFont.createFont(FONT_LOCATION2, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
                 Font ordFont = new Font(baseFont, 10);
                 Font ordBoldFont = new Font(baseFontBold, 10);
-                Font boldFont = new Font(baseFontBold, 11);
                 Font font_header = new Font(baseFontBold, 11);
 
                 document.open();
@@ -62,8 +61,9 @@ public class ContractPdfRu {
                 spr.add(new Phrase("ДОГОВОР № "
                         + String.format("%07d", studentInfo.getContractInfo().getContractNumber()), font_header));
                 spr.add(Chunk.NEWLINE);
-
-                spr.add(new Phrase("об оказании платных образовательных услуг", font_header));
+                spr.add(new Phrase("между школой «Академия Будущих Лидеров»", font_header));
+                spr.add(Chunk.NEWLINE);
+                spr.add(new Phrase("и родителями (законными представителями) учащегося", font_header));
                 spr.add(Chunk.NEWLINE);
 
                 spr.setAlignment(Element.ALIGN_CENTER);
@@ -83,14 +83,11 @@ public class ContractPdfRu {
                 document.add(new Paragraph(10, " "));
 
                 Paragraph paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(25);
                 paragraph.setIndentationRight(25);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase(studentInfo.getSchool().getName_ru().replace(
-                        "ОсОО", "Общество с ограниченной ответственностью "), ordBoldFont));
-                paragraph.add(new Phrase(", именуемое в дальнейшем “Школа”, в лице директора ", ordFont));
+                paragraph.add(new Phrase("Школа «Академия Будущих Лидеров», в лице директора ", ordFont));
                 String fullName = null;
                 try {
                     boolean isFeminine = studentInfo.getDirector().getGender_id() == 2;
@@ -105,10 +102,9 @@ public class ContractPdfRu {
                     logger.catching(e);
                 }
                 paragraph.add(new Phrase(fullName + ", ", ordBoldFont));
-                paragraph.add(new Phrase("действующего на основании Устава и Закона КР  “Об образовании”  с одной стороны и родитель (законный представитель) ", ordFont));
-                paragraph.add(new Phrase(studentInfo.getMainRelative().getFullName() + ", ", ordBoldFont));
-                paragraph.add(new Phrase(" именуемый(ая) в дальнейшем Родитель, действующий в интересах учащегося ", ordFont));
-                paragraph.add(new Phrase(studentInfo.getStudent().getClass_name() + " класса ", ordFont));
+                paragraph.add(new Phrase("действующего на основании Устава, именуемое в дальнейшем «Школа», и ", ordFont));
+                paragraph.add(new Phrase(studentInfo.getMainRelative().getFullName() + " - " + studentInfo.getMainRelative().getRelativeTitle() + " ", ordBoldFont));
+                paragraph.add(new Phrase(" , именуемый в дальнейшем «Родитель» Учащегося ", ordFont));
 
                 fullName = studentInfo.getStudent().getSurname() + " " + studentInfo.getStudent().getName();
                 try {
@@ -125,784 +121,828 @@ public class ContractPdfRu {
                     logger.catching(e);
                 }
                 paragraph.add(new Phrase(fullName, ordBoldFont));
-                paragraph.add(new Phrase(" с другой стороны заключили настоящий договор о нижеследующем:", ordFont));
+                paragraph.add(new Phrase(
+                        " (дата рождения: "
+                                + Settings.df.format(studentInfo.getStudent().getBirth_date())
+                                + ", класс зачисления: "
+                                + studentInfo.getStudent().getClass_name() + ") ",
+                        ordFont));
+                paragraph.add(new Phrase("с другой стороны, вместе далее по тексту именуемые «Стороны», а по отдельности «Сторона», заключили настоящий Договор о нижеследующем:", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
                 paragraph.clear();
-                paragraph.add(new Phrase("1. Предмет договора", boldFont));
+                paragraph.add(new Phrase("1. ПРЕДМЕТ ДОГОВОРА", ordBoldFont));
                 paragraph.setAlignment(Element.ALIGN_CENTER);
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.setFirstLineIndent(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("1.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Предметом договора является организация процесса обучения, воспитания учащегося, получение им образования в рамках государственного образовательного стандарта и программ общеобразовательной средней школы и программ Кембридж (с 1 по 12 класс) на период ", ordFont));
-                paragraph.add(new Phrase(studentInfo.getYear().getPeriod(), ordBoldFont));
+                paragraph.add(new Phrase("Стороны настоящего Договора объединяют усилия в обучении, воспитании и развитии Учащегося, обеспечении самоопределения его личности, создании условий для самореализации, формирования человека и гражданина, интегрированного в современное общество и нацеленного на совершенствование этого общества, создании условий для формирования у него компетентности адекватной современному уровню знаний и уровню образовательной программы (ступени обучения).", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("1.2. ", ordBoldFont));
-                paragraph.add(new Phrase("Настоящий договор определяет и регулирует отношения между школой и родителями в период обучения учащегося в школе. Целью договора является установление ответственности сторон, юридическое закрепление сторон обучения учащегося на ступенях начального общего и основного общего образования, обеспечение взаимодействия между сторонами.", ordFont));
+                paragraph.add(new Phrase("«Школа» и «Родитель» совместно несут полную ответственность за результат своей деятельности в пределах компетенции, разграниченной настоящим договором.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
                 paragraph.clear();
-                paragraph.add(new Phrase("2. Права и обязанности сторон", boldFont));
+                paragraph.add(new Phrase("2. ПРАВА И ОБЯЗАННОСТИ ШКОЛЫ", ordBoldFont));
                 paragraph.setAlignment(Element.ALIGN_CENTER);
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.1 Школа обязуется:", boldFont));
+                paragraph.add(new Phrase("2.1 Школа имеет право:", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Организовать и обеспечить надлежащее исполнение услуг, предусмотренных в статье 1.1. настоящего договора. Образовательные услуги оказываются в соответствии с государственным образовательным стандартом и программой соответствующего уровня образования, утверждённого Министерством просвещения Кыргызской Республики.", ordFont));
+                paragraph.add(new Phrase("В случае необходимости использовать персональные данные Учащегося в интернете и печатной продукции (размещение на школьном сайте, образовательных журналах, баннерах, листовках и т. д.).", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.2. ", ordBoldFont));
-                paragraph.add(new Phrase("В целях усвоения Учащимся образовательных программ обеспечить учащегося методической и консультационной помощью, оказываемой в порядке, установленном школой.", ordFont));
+                paragraph.add(new Phrase("По своему усмотрению решать вопросы о приеме, переводе в следующий класс, применение дисциплинарных мер в отношении Учащегося.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.3. ", ordBoldFont));
-                paragraph.add(new Phrase("При первоначальном зачислении в школу родитель получает школьную форму для обучающегося бесплатно. В дальнейшем обновление школьной формы осуществляется за счёт родителя по мере необходимости.", ordFont));
+                paragraph.add(new Phrase("На отчисление Учащегося в случаях:", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("- регулярного пропуска занятий Учащимся без уважительных причин;", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("- неоднократного нарушения Учащимся дисциплины в школе, а также в случае нарушения им Правил внутреннего распорядка и иных локальных нормативных актов, регламентирующих образовательную, воспитательную и административную деятельность Школы. В этом случае Учащийся теряет право на повторную регистрацию;", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("- неудовлетворительных экзаменационных оценках;", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("- несвоевременной оплате услуг, предоставляемых Школой, до окончания месяца, следующего за соответствующим месяцем, в котором должна быть произведена оплата.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.4. ", ordBoldFont));
-                paragraph.add(new Phrase("Сохранить место за учащимся в случае пропуска занятий по уважительной причине.", ordFont));
+                paragraph.add(new Phrase("Изменять методы и способы обучения, а также используемый материал, не противоречащие законодательству Кыргызской Республики, в целях повышения качества образования без согласия Родителей (законных представителей) Учащегося.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.5. ", ordBoldFont));
-                paragraph.add(new Phrase("Обеспечить учащегося трёхразовым питанием (завтрак, обед, полдник).", ordFont));
+                paragraph.add(new Phrase("Не предоставлять Учащемуся табели оценок, дневники и прочую документацию в случае несвоевременной оплаты услуг, предоставляемых Школой.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.6. ", ordBoldFont));
-                paragraph.add(new Phrase("Вести медицинское наблюдение за учащимися на консультативно-рекомендательном уровне (оказание первой медицинской помощи).", ordFont));
+                paragraph.add(new Phrase("Разрабатывать образовательные программы Школы и учебные планы для их реализации.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.7. ", ordBoldFont));
-                paragraph.add(new Phrase("Осуществлять в установленном школой порядке полугодовую и годовую аттестацию Учащегося, соответствующую базисному учебному плану Министерства образования и науки Кыргызской Республики.", ordFont));
+                paragraph.add(new Phrase("Проводить педагогическую диагностику с целью мониторинга качества обученности учащихся.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.8. ", ordBoldFont));
-                paragraph.add(new Phrase("Переводить учащегося в следующий класс в установленном порядке по решению педагогического совета школы на основании результатов переводной и итоговой аттестации (за курс основной школы).", ordFont));
+                paragraph.add(new Phrase("Устанавливать режим работы Школы (расписание занятий, продолжительность учебной недели и т. д.)", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.9. ", ordBoldFont));
-                paragraph.add(new Phrase("При успешном окончании учащимся 2-й ступени образования выдать свидетельство, 3-й ступени – аттестат установленного образца.", ordFont));
+                paragraph.add(new Phrase("Формировать профильные классы в старшей школе, основываясь на потребности учащихся и возможности педагогического коллектива.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.10. ", ordBoldFont));
-                paragraph.add(new Phrase("Обеспечить безопасность учащегося во взаимодействии со структурными подразделениями школы, осуществляющими организацию внутриобъектного и пропускного режимов.", ordFont));
+                paragraph.add(new Phrase("Требовать от родителей обучающихся контроля за обучением и поведением ребенка, выполнения ими Правил внутреннего распорядка и иных локальных нормативных актов, регламентирующих образовательную, воспитательную и административную деятельность Школы и настоящего Договора.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.11. ", ordBoldFont));
-                paragraph.add(new Phrase("Обеспечить необходимыми учебными материалами учащегося (учебники будут выдаваться из школьной библиотеки).", ordFont));
+                paragraph.add(new Phrase("Поощрять учащихся или применять меры дисциплинарного взыскания в соответствии с Уставом Школы и Правилами внутреннего распорядка.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.1.12. ", ordBoldFont));
-                paragraph.add(new Phrase("Обеспечить контроль за учащимся в период его пребывания в школе при условии соблюдения им порядка «Режим дня» и «Правил внутреннего распорядка».", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.1.13. ", ordBoldFont));
-                paragraph.add(new Phrase("Предоставлять информацию родителю (законному представителю) об успеваемости и поведении учащегося по итогам каждой учебной четверти.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.1.14. ", ordBoldFont));
-                paragraph.add(new Phrase("Проявлять уважение к личности учащегося, не допускать физического и психологического насилия. Обеспечить условия для укрепления и развития нравственного, физического и психологического здоровья, эмоционального благополучия учащегося с учётом его индивидуальных особенностей.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.1.15. ", ordBoldFont));
-                paragraph.add(new Phrase("Предоставлять учащимся кружки и дополнительные занятия, проводимые школой, на безвозмездной основе в качестве бонуса; при этом перечень и условия их проведения определяются школой.", ordFont));
+                paragraph.add(new Phrase("Осуществлять иные права, предоставленные действующим законодательством и Уставом Школы.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2 Школа имеет право:", boldFont));
+                paragraph.add(new Phrase("2.2 Школа обязуется:", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Самостоятельно составлять меню блюд и производить их замену.", ordFont));
+                paragraph.add(new Phrase("Производить обучение и воспитание Учащегося в классе по программам общего образования в 2026-2027 учебном году в очной форме.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.2. ", ordBoldFont));
-                paragraph.add(new Phrase("Отчислить учащегося без возмещения стоимости обучения в следующих случаях:", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("а) ", ordBoldFont));
-                paragraph.add(new Phrase("совершения учащимся грубого, систематического нарушения «Правил внутреннего распорядка» с предоставлением документов (фактов), подтверждающих нарушение;", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("б) ", ordBoldFont));
-                paragraph.add(new Phrase("совершения противоправных действий по отношению к другим учащимся и персоналу школы.", ordFont));
+                paragraph.add(new Phrase("Ознакомить Родителя с учредительными документами Школы, лицензией на образовательную деятельность, свидетельством о государственной регистрации, основными и дополнительными образовательными программами, учебным планом, годовым календарным учебным графиком, расписанием занятий, правилами внутреннего распорядка и иными документами, регламентирующими образовательную и воспитательную деятельность Школы, а также не менее чем за 3 рабочих дня информировать Родителей о проведении родительских собраний и иных школьных мероприятий, в которых Родители обязаны или имеют право принимать участие.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.3. ", ordBoldFont));
-                paragraph.add(new Phrase("Не выдавать учащемуся документ государственного образца о соответствующем образовании в случае невыполнения им «Положения о проведении государственной итоговой аттестации выпускников и порядке перевода учащихся в последующий класс в государственных и негосударственных общеобразовательных учреждениях Кыргызской Республики», а также при имеющейся финансовой задолженности за обучение.", ordFont));
+                paragraph.add(new Phrase("Ознакомить Родителя с ходом и содержанием учебного процесса, с учебной программой Учащегося на текущий учебный год, включающей в себя указание всех предметов, количества часов в неделю по каждому предмету, а также перечень дополнительных занятий, распорядок дня Учащегося в Школе. Данная учебная программа содержится в утвержденном администрацией Школы учебном плане, который хранится в Школе.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.4. ", ordBoldFont));
-                paragraph.add(new Phrase("Не продлевать договор на обучение с родителями учащихся, систематически нарушающих положения настоящего договора.", ordFont));
+                paragraph.add(new Phrase("Обеспечить Учащемуся приобретение знаний, умений и навыков в объеме общего образования, с выдачей, при условии успешной сдачи выпускной итоговой аттестации, аттестата государственного образца.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.5. ", ordBoldFont));
-                paragraph.add(new Phrase("При заключении договора и оформлении учащегося в школу родитель или законный представитель оплачивает за услугу бронирования места, регистрацию и тестирование в размере 9 000 (девять тысяч) сомов (безвозвратно).", ordFont));
+                paragraph.add(new Phrase("Осуществлять обучение по образовательным программам, обеспечивающим усвоение государственного образовательного стандарта школьного образования.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.6. ", ordBoldFont));
-                paragraph.add(new Phrase("Школа не будет ежегодно изменять процентные ставки льготникам, однако льгота будет аннулирована в случае наличия у обучающегося дисциплинарного взыскания. Также в случае нарушения графика оплаты родителем 2 раза ранее предоставленные скидки каждый раз снижаются на 5%. Оплата за обучение для учащихся, продлевающих договор, будет повышаться один раз в два года с учётом инфляции.", ordFont));
+                paragraph.add(new Phrase("Предоставить обучающимся и их родителям (лицам их заменяющим) право выбора видов дополнительных (в том числе платных) услуг.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.7. ", ordBoldFont));
-                paragraph.add(new Phrase("Расторгнуть договор в одностороннем порядке в случае отсутствия оплаты за обучение в течение трёх полных календарных месяцев при условии предварительного письменного уведомления родителя (законного представителя) не менее чем за 10 (десять) календарных дней до даты расторжения.", ordFont));
+                paragraph.add(new Phrase("Оказывать услуги по присмотру и уходу за Учащимся во время его нахождения в Школе и/либо на проводимых Школой занятиях, осуществлять комплекс мер по организации питания и хозяйственно-бытового обслуживания Учащегося, обеспечению соблюдения им личной гигиены и режима дня.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.8. ", ordBoldFont));
-                paragraph.add(new Phrase("Не выдавать документы учащегося при переводе в другую школу при имеющейся финансовой задолженности за обучение.", ordFont));
+                paragraph.add(new Phrase("Обеспечить обучение и воспитание Учащегося квалифицированными педагогическими кадрами, предоставить индивидуальные консультации, факультативные и иные дополнительные занятия согласно учебному плану.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.9. ", ordBoldFont));
-                paragraph.add(new Phrase("Требовать оплату за обучение ежемесячно до 5-го (пятого) числа каждого месяца. В случае просрочки начисляется пеня в размере 0,5% за каждый день задержки.", ordFont));
+                paragraph.add(new Phrase("Осуществлять текущий и промежуточный контроль за успеваемостью и поведением обучающегося, в доступной форме информировать о его результатах Родителей и обучающегося.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.10. ", ordBoldFont));
-                paragraph.add(new Phrase("В целях компетентного подхода к трудовому воспитанию учащегося администрация школы имеет право привлекать учащихся к уборке своего рабочего места в учебных классах.", ordFont));
+                paragraph.add(new Phrase("Вести личное дело и документы по успеваемости Учащегося, в соответствии с принятыми стандартами школьного делопроизводства, предоставлять указанные документы Родителю на ознакомление по требованию последнего.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.11. ", ordBoldFont));
-                paragraph.add(new Phrase("Организовывать проведение подготовительных курсов, подготовку к TOEFL, IELTS и международным экзаменам, а также работу кружков по интересам учащихся.", ordFont));
+                paragraph.add(new Phrase("Предоставить Родителю соответствующие документы установленного образца при отчислении Учащегося (за исключением случаев, предусмотренных в п. 2.1.6 настоящего Договора).", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.12. ", ordBoldFont));
-                paragraph.add(new Phrase("Подготовка к ОРТ и SAT проводится бесплатно, однако за комплект пособий для подготовки к ОРТ взимается отдельная плата.", ordFont));
+                paragraph.add(new Phrase("Создать благоприятные условия для интеллектуального, нравственного и физического развития личности обучающегося, всестороннего развития его способностей, также гарантировать защиту прав и свобод личности Учащегося на территории Школы.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.13. ", ordBoldFont));
-                paragraph.add(new Phrase("Запретить использование сотовых телефонов, планшетов и ноутбуков на территории школы. Администрация школы не несёт ответственности за их хранение и утерю.", ordFont));
+                paragraph.add(new Phrase("Нести ответственность за жизнь и здоровье обучающегося на территории Школы во время образовательного процесса при условии выполнения ребенком правил внутреннего распорядка Школы. Школа не несет ответственности в случае, когда угроза жизни и здоровью Учащегося произошла по независящим от Школы обстоятельствам. Также школа обязуется соблюдать установленные санитарно-гигиенические нормы, правила и требования.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.14. ", ordBoldFont));
-                paragraph.add(new Phrase("Школа не предоставляет особых условий обучения для учащихся, состоящих на диспансерном учёте по хроническим заболеваниям (эпилепсия, астма, порок сердца, энурез и другие заболевания).", ordFont));
+                paragraph.add(new Phrase("Обеспечить охрану помещений.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.15. ", ordBoldFont));
-                paragraph.add(new Phrase("При несвоевременной оплате родителем за обучение учащегося школа вправе, с извещением родителя, ограничить доступ обучающегося ко всем формам учебных и неучебных занятий, а также к использованию материально-технических условий школы (занятий, библиотеки, столовой, кружков, этюдов и т.д.), не допускать к экзаменам и не выставлять оценки в электронном журнале.", ordFont));
+                paragraph.add(new Phrase("Обеспечить соблюдение техники безопасности на учебных занятиях и во время нахождения Учащегося в Школе.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.16. ", ordBoldFont));
-                paragraph.add(new Phrase("В случае расторжения настоящего договора по инициативе родителя (законного представителя), подлежит оплате стоимость обучения за один месяц с даты расторжения договора. При этом ранее предоставленные скидки при расчете не учитываются, начиная с сентября.", ordFont));
+                paragraph.add(new Phrase("Обеспечить обучающихся классов трехразовым питанием.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.17. ", ordBoldFont));
-                paragraph.add(new Phrase("При расторжении настоящего договора по непредвиденным обстоятельствам, с учётом всех понесённых расходов школы, сумма, подлежащая возврату, возвращается по мере возможности школы, но не позднее мая текущего года.", ordFont));
+                paragraph.add(new Phrase("Обеспечить организацию охраны здоровья Учащегося (оказание первичной медико-санитарной помощи) в Школе, в том числе при реализации образовательных программ Школа обеспечивает: текущий контроль за состоянием здоровья обучающихся; проведение санитарно-гигиенических, профилактических и оздоровительных мероприятий, обучение и воспитание в сфере охраны здоровья; соблюдение государственных санитарно-эпидемиологических правил и нормативов.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.18. ", ordBoldFont));
-                paragraph.add(new Phrase("В целях освещения образовательного процесса и деятельности школы школа вправе без уведомления учащегося и родителей размещать фото- и видеоматериалы на своих интернет-страницах и в СМИ.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.3. Родители (законные представители) обязуются:", boldFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Родитель обязуется осуществлять оплату образовательных услуг и иных предусмотренных настоящим договором платежей в установленные сроки и в полном объеме.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.2. ", ordBoldFont));
-                paragraph.add(new Phrase("Для сохранения за учащимся места на следующий учебный год Родитель обязуется ежегодно, в период с 1 апреля по 15 мая, заключить договор на следующий учебный год и внести невозвратный платеж в размере 9 000 (девять тысяч) сомов в качестве бронирования места либо произвести предоплату в размере одного месяца обучения. В случае невыполнения указанных условий образовательная Школа вправе предоставить учебное место другому учащемуся.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.3. ", ordBoldFont));
-                paragraph.add(new Phrase("Перед прибытием учащегося в школу провести его полную медицинскую диспансеризацию и предоставить администрации школы медицинское заключение о состоянии здоровья учащегося.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.4. ", ordBoldFont));
-                paragraph.add(new Phrase("В случае болезни и отсутствия учащегося на занятиях в течение длительного времени вносить оплату контракта в полном объёме, учитывая оплату праздничных и каникулярных дней.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.5. ", ordBoldFont));
-                paragraph.add(new Phrase("Содействовать выполнению учащимся порядка «Режим дня» и «Правил внутреннего распорядка» школы.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.6. ", ordBoldFont));
-                paragraph.add(new Phrase("Нести полную материальную ответственность за все действия учащегося, повлёкшие за собой порчу или уничтожение имущества школы.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.7. ", ordBoldFont));
-                paragraph.add(new Phrase("Возместить школе стоимость нанесённого ущерба в течение 7 (семи) календарных дней со дня получения официального счёта от администрации школы.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.8. ", ordBoldFont));
-                paragraph.add(new Phrase("Постоянно взаимодействовать со школой по всем направлениям воспитания и обучения учащегося. При изменении номера телефона, адреса проживания и иных документов в течение 7 (семи) календарных дней известить администрацию школы ", ordFont));
-                paragraph.add(new Phrase("(бухгалтерию, классного руководителя).", ordBoldFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.9. ", ordBoldFont));
-                paragraph.add(new Phrase("Своевременно и лично приводить и забирать учащегося из школы в случае отказа от трансфера. В случае если учащегося будут приводить и забирать из школы другие совершеннолетние родственники, родитель обязан заранее предупредить администрацию школы и написать соответствующее заявление.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.10. ", ordBoldFont));
-                paragraph.add(new Phrase("Обеспечить обучающегося всеми необходимыми канцелярскими принадлежностями для собственного использования (тетради, альбомы, ручки, цветные карандаши, точилки и т.д.).", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.11. ", ordBoldFont));
-                paragraph.add(new Phrase("Родители несут ответственность за сохранность учебников, выданных школой. В случае порчи или утери учебников родители возмещают их стоимость в полном объёме.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.3.12. ", ordBoldFont));
-                paragraph.add(new Phrase("Вне территории школы ответственность за жизнь и безопасность учащегося школа не несёт.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.4. Родители (законные представители) имеют право:", boldFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.4.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Требовать от администрации школы выполнения условий, изложенных в п. 2.1.1–2.1.12 настоящего договора.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.4.2. ", ordBoldFont));
-                paragraph.add(new Phrase("Досрочно расторгнуть договор с возмещением стоимости обучения за период пребывания учащегося в школе в соответствии с п. 2.2.8 и 2.2.9 настоящего договора.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("2.4.3. ", ordBoldFont));
-                paragraph.add(new Phrase("Требовать защиты законных прав и интересов детей.", ordFont));
+                paragraph.add(new Phrase("Обеспечить неразглашение сведений о личности и состоянии здоровья Учащегося и личных данных его Родителей, ставших известными Школе в соответствии с настоящим договором, за исключением случаев, когда предоставление таких сведений предусмотрено законодательством, кроме случаев, предусмотренных п.2.1.1 настоящего Договора.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
                 paragraph.clear();
+                paragraph.add(new Phrase("3. ПРАВА И ОБЯЗАННОСТИ РОДИТЕЛЯ", ordBoldFont));
                 paragraph.setAlignment(Element.ALIGN_CENTER);
-                paragraph.add(new Phrase("3. Условия платы", boldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Оплата обучения учащегося осуществляет родителем (законным представителем) в порядке, сроки и на условиях, установленных настоящим договором.", ordFont
-                ));
+                paragraph.add(new Phrase("3.1. Родитель имеет право:", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("3.1.1 ", ordBoldFont));
-                paragraph.add(new Phrase("В случае отсутствия оплаты за обучение родителями (законными представителями), учащийся не допускается к переводным и государственным экзаменам, а также не переводится в следующий класс.", ordFont));
+                paragraph.add(new Phrase("3.1.1. ", ordBoldFont));
+                paragraph.add(new Phrase("Знакомиться с личным делом Учащегося, оценками по всем изучаемым предметам.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.2. ", ordBoldFont));
-                paragraph.add(new Phrase("Стоимость оплаты за обучение составляет ", ordFont));
-                paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getContract())
-                        + " " + studentInfo.getContractInfo().getCurrency() + " (кыргызских сом) за период, указанный в пункте 1.1. Настоящего Договора.", ordBoldFont));
+                paragraph.add(new Phrase("Обращаться к классному руководителю, администрации Школы, педагогическому совету для разрешения конфликтных ситуаций, связанных с ребенком.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("- при полной оплате годовой суммы до 30 июня предусмотрена скидка в размере 5%. Расчёт в инвалюте производится по курсу Национального Банка Кыргызской Республики на дату оплаты.", ordFont));
-                document.add(paragraph);
-                paragraph.clear();
                 paragraph.add(new Phrase("3.1.3. ", ordBoldFont));
-                paragraph.add(new Phrase("При оформлении учащегося школа обеспечивает учащегося 1 (одним) комплектом школьной формы. В последующие годы обновление школьной формы осуществляется за счёт родителя по мере необходимости.", ordFont));
+                paragraph.add(new Phrase("Вносить предложения по улучшению образовательной деятельности Школы и организации дополнительных образовательных услуг.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.4. ", ordBoldFont));
-                paragraph.add(new Phrase("Ежегодно в период с 1 апреля по 15 мая родители обязаны заключить договор на образовательные услуги на следующий учебный год с обязательным внесением 9 000 (девять тысяч) сомов (безвозвратно) за бронь места или предоплаты стоимости обучения за один месяц. После заключения договора и внесения оплаты, в случае отказа от учёбы, внесённая сумма ", ordFont));
-                paragraph.add(new Phrase("не возвращается.", ordBoldFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("В случае не заключения договора в указанные сроки место обучающегося будет предоставлено другим желающим.", ordFont));
+                paragraph.add(new Phrase("Выбирать дополнительные платные образовательные услуги из перечня, предлагаемого образовательным учреждением, также участвовать в определении набора дополнительных услуг, предусмотренных для учащихся данного класса.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.5. ", ordBoldFont));
-                paragraph.add(new Phrase("В случае отказа от обучения в школе или перевода ученика в другую образовательную организацию родители (законные представители) обязуются уведомить школу в письменной форме не позднее чем за 1 (один) месяц до предполагаемой даты прекращения обучения. В случае прекращения обучения без соблюдения указанного срока уведомления школа вправе удержать/требовать сумму оплаты за 1 (один) месяц обучения в качестве компенсации. При этом родители (законные представители) обязуются оплатить сумму договора за 1 (один) месяц обучения в случае отсутствия своевременного уведомления.", ordFont));
+                paragraph.add(new Phrase("Осуществлять иные права, предоставленные действующим законодательством и Уставом Школы.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("3.1.6. ", ordBoldFont));
-                if (st_info.getContractInfo().getDiscount() != null && st_info.getContractInfo().getDiscount() != 0.0) {
-                    paragraph.add(new Phrase("Скидка на обучение в размере " + Settings.dFormat2.format(st_info.getContractInfo().getDiscount())
-                            + " " + studentInfo.getContractInfo().getCurrency()
-                            + " сохраняется до конца обучения при отличной академической успеваемости, отсутствии нарушений со стороны учащегося и пропусков без предупреждения.", ordFont));
-                } else {
-                    paragraph.add(new Phrase("Скидка на обучение сохраняется до конца обучения при отличной академической успеваемости, отсутствии нарушений со стороны учащегося и пропусков без предупреждения.", ordFont));
-                }
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("3.2. Родитель обязуется:", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("3.1.7. ", ordBoldFont));
-                paragraph.add(new Phrase("Своевременно вносить оплату за образовательные услуги обучающегося в школе согласно настоящему договору и индивидуальному графику оплаты, согласованному между школой и родителями.", ordFont));
+                paragraph.add(new Phrase("3.2.1. ", ordBoldFont));
+                paragraph.add(new Phrase("Приобрести учебные принадлежности согласно списку, предоставленного Школой.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("3.1.8. ", ordBoldFont));
-                paragraph.add(new Phrase("Родительская плата производится согласно графику, подписанному обеими сторонами и являющемуся неотъемлемой частью настоящего договора. При этом последняя оплата за услуги обучения должна быть внесена не позднее 15 мая следующего года. Размер родительской оплаты за обучение не меняется даже при условии перехода школы на дистанционную форму обучения.", ordFont));
+                paragraph.add(new Phrase("3.2.2. ", ordBoldFont));
+                paragraph.add(new Phrase("Оплатить стоимость услуги до 5 - числа каждого месяца. В случае оплаты позже указанной даты Школа оставляет за собой право применения штрафных санкций пени в размере 0,1% от общей суммы за обучение за каждый день просрочки).", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("3.1.9. ", ordBoldFont));
-                paragraph.add(new Phrase("Оплата за обучение производится в сомах на банковский счёт школы.", ordFont));
+                paragraph.add(new Phrase("3.2.3. ", ordBoldFont));
+                paragraph.add(new Phrase("В случае перевода либо исключения ребенка из школы по собственной инициативе, Родитель обязуется письменно уведомить администрацию Школы в срок не позднее 14 календарных дней. В противном случае Учащийся будет числиться в Школе, даже если он не посещает занятия, до момента официального письменного уведомления со стороны Родителя в адрес администрации Школы. При данных обстоятельствах Родитель обязуется оплатить услуги Школы в полном объеме.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.4. ", ordBoldFont));
+                paragraph.add(new Phrase("Заниматься воспитанием Учащегося в соответствии с концепцией школы, заботиться о его физическом развитии, создать необходимые условия для получения детьми образования.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.5. ", ordBoldFont));
+                paragraph.add(new Phrase("Не нарушать морально-этических норм при нахождении на территории Школы, при общении с администрацией Школы и ее сотрудниками, при общении с иными учащимися Школы и их представителями.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.6. ", ordBoldFont));
+                paragraph.add(new Phrase("Обеспечивать соблюдение Учащимся Устава Школы, правил нахождения в Школе.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.7. ", ordBoldFont));
+                paragraph.add(new Phrase("Обеспечить посещение Учащимся занятий согласно учебному расписанию и иных школьных мероприятий, предусмотренных документами, регламентирующими образовательную и воспитательную деятельность Школы.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.8. ", ordBoldFont));
+                paragraph.add(new Phrase("Обеспечить выполнение Учащимся устных домашних заданий.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.9. ", ordBoldFont));
+                paragraph.add(new Phrase("Обеспечить Учащегося предметами, необходимыми для участия в образовательном процессе (письменно-канцелярскими принадлежностями и т. П.), в количестве, соответствующем его возрасту и потребностям;", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.10. ", ordBoldFont));
+                paragraph.add(new Phrase("Обеспечивать своевременную явку Учащегося на занятия, своевременно забирать Учащегося из Школы не позднее 17.15 часов.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.11. ", ordBoldFont));
+                paragraph.add(new Phrase("Письменно информировать администрацию и педагогических работников (классного руководителя) о лицах, которым может быть доверен ребенок по окончании учебного дня, о телефонах для связи с Родителем в течение учебного дня.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.12. ", ordBoldFont));
+                paragraph.add(new Phrase("Посещать родительские собрания, по приглашению встречаться с администрацией и педагогами Школы.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.13. ", ordBoldFont));
+                paragraph.add(new Phrase("Возместить ущерб в кратчайший срок в случае нанесения Учащимся материального ущерба имуществу Школы.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.14. ", ordBoldFont));
+                paragraph.add(new Phrase("Не допускать наличия у Учащегося на территории Школы огнеопасных, токсичных, колющих и режущих, а также других опасных для жизни и здоровья предметов, продуктов питания и напитков (сигарет, спичек, зажигалок, ножей, опасных игрушек, лекарственных средств, газированных напитков, чипсов, жевательной резинки и т.д.).", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.15. ", ordBoldFont));
+                paragraph.add(new Phrase("Требовать от Учащегося толерантного отношения к другим Учащимся и педагогам, не допускать употребления нецензурных слов и националистических оскорблений.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.16. ", ordBoldFont));
+                paragraph.add(new Phrase("Своевременно ставить в известность Школу о болезни ребёнка или возможном его отсутствии с последующим предоставлением справки с медицинского учреждения.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.17. ", ordBoldFont));
+                paragraph.add(new Phrase("Не допускать посещение Школы Учащимся в случае обнаружения у него заболеваний, создающих угрозу заражения остальных обучающихся и персонала Школы, также информировать Школу об изменениях в физическом и психическом состоянии Учащегося, препятствующих обучению и воспитанию в Школе.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("3.2.18. ", ordBoldFont));
+                paragraph.add(new Phrase("Своевременно уведомлять Школу о наличии медицинских показаний по применению медикаментов, ограничении в питании, а также ограничении занятий Учащегося в рамках учебных планов.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_CENTER);
-                paragraph.add(new Phrase("4. Форс-мажорные обстоятельства", boldFont));
+                paragraph.add(new Phrase("4. СТОИМОСТЬ ОБРАЗОВАНИЯ И ПОРЯДОК РАСЧЕТОВ", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("4.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Ни одна из сторон не несёт ответственности за полное или частичное неисполнение своих    обязательств при возникновении обстоятельств, которые делают невозможным выполнение договора сторонами, а именно: пожар, стихийное природное бедствие (землетрясение, наводнение и др.), война, военные действия всех видов, забастовка, блокада, изменение текущего законодательства Кыргызской Республики и другие обстоятельства непреодолимой силы, независящие от воли сторон.", ordFont));
+                paragraph.add(new Phrase("Стоимость услуг, предоставляемых Школой в 2026-2027 учебном году, по настоящему Договору составляет: 455 000 (четыреста пятьдесят пять тысяч) сомов в год.", ordFont
+                ));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.2. ", ordBoldFont));
+                paragraph.add(new Phrase("Скидка на оплату обучения устанавливается в следующих случаях и размерах:", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("_____________________", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("- при оплате полной стоимости за год обучения Учащегося предоставляется скидка в размере 10% (пять) процентов от стоимости услуг, предусмотренных п. 4.1. настоящего договора;", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("- при регистрации более чем одного ребенка в данной Школе, за оплату обучения предоставляется скидка в размере 5% (пять) процентов от стоимости услуг, предусмотренных п. 4.1. настоящего договора.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("- скидки, предоставляемые Родителю в рамках настоящего договора, не подлежат суммированию. В случае наличия у Родителя права на получение нескольких скидок одновременно, применяется только одна скидка по выбору Родителя.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.3. ", ordBoldFont));
+                paragraph.add(new Phrase("Стоимость услуг, предоставляемых Школой в 2026-2027 – учебном году, по настоящему Договору после применения всех соответствующих скидок составляет ____________________ (_______________________________________________) сом в год.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.4. ", ordBoldFont));
+                paragraph.add(new Phrase("В случае невнесения Родителем полной стоимости за год обучения Учащегося в сроки, указанные в п. 4.5 настоящего Договора, Школа вправе отменить скидку, предусмотренную п. 4.2. настоящего Договора.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.5. ", ordBoldFont));
+                paragraph.add(new Phrase("В случае невнесения Родителем оплаты услуг (в полном размере, по частям), предусмотренных п. 4.3. настоящего договора, в течение 30 (тридцати) календарных дней с момента подписания настоящего Договора обеими сторонами, Школа вправе расторгнуть Договор в одностороннем порядке.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.6. ", ordBoldFont));
+                paragraph.add(new Phrase("Стоимость услуг, указанная в п. 4.1. настоящего Договора, может быть изменена в случае существенного изменения условий функционирования Школы (роста уровня заработной платы работников общего образования, изменения размера коммунальных платежей, цены работ и услуг сторонних организаций, которые обеспечивают образовательный процесс по настоящему Договору, роста иных подобных затрат Школы, введения дополнительных обязанностей по уплате налогов и сборов).", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.7. ", ordBoldFont));
+                paragraph.add(new Phrase("Об изменении стоимости услуг и ее причинах Школа обязана предупредить Родителя в срок не позднее 30 календарных дней до предполагаемого изменения стоимости услуг по Договору. В случае несогласия Родителя с изменением размера стоимости услуг по настоящему Договору он вправе отказаться от исполнения Договора. При этом Родитель обязан оплатить ранее оказанные по Договору услуги.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.8. ", ordBoldFont));
+                paragraph.add(new Phrase("Родитель оплачивает стоимость услуг, указанную в п.4.1. настоящего Договора, согласно графику оплаты, утвержденного Школой.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.9. ", ordBoldFont));
+                paragraph.add(new Phrase("Отсутствие Учащегося на уроках по какой-либо причине не влияет на стоимость услуг.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.10. ", ordBoldFont));
+                paragraph.add(new Phrase("Оплата услуг по Договору производится безналичными или наличными платежами по указанным в Договоре реквизитам.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.11. ", ordBoldFont));
+                paragraph.add(new Phrase("В случае досрочного расторжения настоящего договора в течение учебного года по инициативе любой из Сторон, Сторона, инициирующая расторжение, обязана уведомить другую Сторону в письменной форме не позднее чем за 30 (тридцать) календарных дней до предполагаемой даты расторжения.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("-В случае расторжения договора по инициативе Родителя, Родитель обязуется уведомить Школу в установленный срок и произвести оплату услуг Школе за фактически оказанный период обучения, включая период уведомления (30 календарных дней), независимо от фактического посещения занятий Учащимся.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("-В случае расторжения договора по инициативе Школы на основании пункта 2.1.3 настоящего договора, Школа вправе в одностороннем порядке потребовать немедленного расторжения договора без соблюдения срока предварительного уведомления. В указанном случае договор считается расторгнутым с момента направления соответствующего уведомления Родителю.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("4.13. ", ordBoldFont));
+                paragraph.add(new Phrase("Размер увеличения стоимости обучения на следующий учебный период не может превышать 15% (пятнадцать процентов) от стоимости обучения, установленной на текущий учебный период", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_CENTER);
-                paragraph.add(new Phrase("5. Срок действия Договора, порядок изменения, дополнения и расторжения", boldFont));
+                paragraph.add(new Phrase("5. ОТВЕТСТВЕННОСТЬ СТОРОН", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("5.1. ", ordBoldFont));
-                paragraph.add(new Phrase("Настоящий договор вступает в силу с момента его подписания обеими сторонами", ordFont));
+                paragraph.add(new Phrase("Стороны настоящего Договора несут установленную действующим законодательством Кыргызской Республики ответственность за ненадлежащее исполнение принятых на себя обязательств.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("5.2. ", ordBoldFont));
-                paragraph.add(new Phrase("Настоящий договор может быть расторгнут досрочно согласно п. 2.2.2 и 2.4.2 настоящего договора.", ordFont));
+                paragraph.add(new Phrase("В случае нарушения сроков оплаты услуг по настоящему Договору Родитель уплачивает Школе неустойку в размере 0,1% от суммы просроченного платежа за каждый день просрочки.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
                 paragraph.add(new Phrase("5.3. ", ordBoldFont));
-                paragraph.add(new Phrase("Любые дополнения и изменения к настоящему договору действительны лишь при условии, что они совершены в письменной форме и подписаны обеими сторонами.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("5.4. ", ordBoldFont));
-                paragraph.add(new Phrase("Все разногласия по настоящему договору решаются сторонами в порядке переговоров. В случае невозможности разрешения спора путём переговоров спор подлежит разрешению в порядке, установленном законодательством Кыргызской Республики.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("5.5. ", ordBoldFont));
-                paragraph.add(new Phrase("Стороны договорились, что деловая корреспонденция и иные документы, касающиеся настоящего договора, отправленные и полученные посредством факсимильной, электронной связи или иным способом, позволяющим достоверно установить, что документ исходит от стороны по договору, признаются имеющими юридическую силу.", ordFont));
-                document.add(paragraph);
-
-                paragraph.clear();
-                paragraph.add(new Phrase("5.6. ", ordBoldFont));
-                paragraph.add(new Phrase("Настоящий договор составлен в двух экземплярах на русском языке и подписан обеими сторонами. Оба экземпляра идентичны и имеют одинаковую юридическую силу. У каждой из сторон находится один экземпляр настоящего договора.", ordFont));
+                paragraph.add(new Phrase("В случае отказа Родителя уплатить неустойку Школа вправе не допускать до занятий Учащегося вплоть до ее погашения.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
                 paragraph.clear();
                 paragraph.setAlignment(Element.ALIGN_CENTER);
-                paragraph.add(new Phrase("6. Реквизиты сторон", boldFont));
+                paragraph.add(new Phrase("6. КОНФИДЕНЦИАЛЬНОСТЬ", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("6.1. ", ordBoldFont));
+                paragraph.add(new Phrase("Родитель обязан не разглашать в той либо иной форме сведения конфиденциального характера, сведения, составляющих коммерческую тайну по отношению к Школе, а также положения настоящего Договора.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
-                float[] table_info_colsWidth = {1.3f, 1f};
-                PdfPTable table_info = new PdfPTable(2);
-                table_info.getDefaultCell().setBorder(0);
-                table_info.getDefaultCell().setPaddingRight(10f);
-                table_info.setWidthPercentage(90f);
-                table_info.setWidths(table_info_colsWidth);
-                Paragraph text10 = new Paragraph();
-                text10.add(new Phrase(studentInfo.getSchool().getName_ru(), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("ИНН: " + (studentInfo.getSchool().getInn() == null ? "" :
-                        studentInfo.getSchool().getInn()), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Банк: " + (studentInfo.getSchool().getBank() == null ? "" :
-                        studentInfo.getSchool().getBank()), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("БИК: " + (studentInfo.getSchool().getBik() == null ? "" :
-                        studentInfo.getSchool().getBik()), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Р/С: " + (studentInfo.getSchool().getBank_account() == null ? "" :
-                        studentInfo.getSchool().getBank_account()), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("ОКПО: " + (studentInfo.getSchool().getOkpo() == null ? "" :
-                        studentInfo.getSchool().getOkpo()), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Юр. Адрес: " + (studentInfo.getSchool().getAddress() == null ? "" :
-                        studentInfo.getSchool().getAddress()), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Тел.: " + (studentInfo.getSchool().getPhone() == null ? "" :
-                        studentInfo.getSchool().getPhone()), ordFont));
-                text10.add(Chunk.NEWLINE);
-                text10.add(Chunk.NEWLINE);
-                text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Директор Школы: " + studentInfo.getDirector().getSurname() + " "
-                        + studentInfo.getDirector().getName() + " " +
-                        (studentInfo.getDirector().getMiddle_name() == null ?
-                                "" : studentInfo.getDirector().getMiddle_name()), ordFont));
-                text10.add(Chunk.NEWLINE);
+                paragraph.clear();
+                paragraph.setAlignment(Element.ALIGN_CENTER);
+                paragraph.add(new Phrase("7. ПРЕКРАЩЕНИЕ И ИЗМЕНЕНИЕ ДОГОВОРА", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("7.1. ", ordBoldFont));
+                paragraph.add(new Phrase("Договор вступает в силу с момента его подписания обеими сторонами.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("7.2. ", ordBoldFont));
+                paragraph.add(new Phrase("В случае одностороннего расторжения Договора одна из сторон (инициатор расторжения Договора) обязана предупредить другую сторону о досрочном расторжении договора за 14 календарных дней, за исключением случаев, предусмотренных п. 4.5. настоящего Договора.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.setAlignment(Element.ALIGN_CENTER);
+                paragraph.add(new Phrase("8. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ", ordBoldFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("8.1. ", ordBoldFont));
+                paragraph.add(new Phrase("Все дополнения и изменения к настоящему Договору совершаются в письменной форме и подписываются Сторонами. ", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("8.2. ", ordBoldFont));
+                paragraph.add(new Phrase("Настоящий Договор составлен в двух экземплярах, имеющих одинаковую юридическую силу на русском языке, принятыми сторонами рабочим языком, по одному экземпляру для каждой из сторон.", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("8.4. ", ordBoldFont));
+                paragraph.add(new Phrase("Место нахождения, банковские реквизиты, паспортные данные и места жительства сторон:", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("Школа\t\t\t\t\t\t\tРодитель (законный представитель)", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("Перечень лиц кому может быть передан Учащийся", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("Экземпляр договора с родителями (лицами, их заменяющими) на руки получил _______________________________________________ _______________________________подпись расшифровка подпись", ordFont));
+                document.add(paragraph);
+
+                paragraph.clear();
+                paragraph.add(new Phrase("Я внимательно прочитал, понял и принял вышеупомянутые статьи настоящего Договора. Я согласен и обязуюсь платить возможные штрафы, оплату за обучение и убытки, которые могут возникнуть у Учащегося. Я принимаю решение, которое школа примет в отношении моего ребенка в результате неспособности связаться со мной. _____________________________подпись расшифровка подписи.", ordFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+                paragraph.clear();
+                paragraph.setAlignment(Element.ALIGN_CENTER);
+                paragraph.add(new Phrase("9. РЕКВИЗИТЫ СТОРОН", ordBoldFont));
+                document.add(paragraph);
+                document.add(new Paragraph(10, " "));
+
+
+                PdfPTable requisitesTable = new PdfPTable(2);
+                requisitesTable.setWidthPercentage(85f);
+                requisitesTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+                requisitesTable.setWidths(new float[]{1f, 1f});
+                requisitesTable.setSplitLate(false);
+                requisitesTable.setKeepTogether(true);
+
+                String schoolName = "ОсОО «Академия будущих лидеров»";
+
+                String schoolAddress = studentInfo.getSchool().getAddress() == null
+                        ? ""
+                        : studentInfo.getSchool().getAddress();
+
+                String schoolInn = studentInfo.getSchool().getInn() == null
+                        ? ""
+                        : studentInfo.getSchool().getInn();
+
+                String schoolBankAccount = studentInfo.getSchool().getBank_account() == null
+                        ? ""
+                        : studentInfo.getSchool().getBank_account();
+
+                String schoolBik = studentInfo.getSchool().getBik() == null
+                        ? ""
+                        : studentInfo.getSchool().getBik();
+
+                String schoolBank = studentInfo.getSchool().getBank() == null
+                        ? ""
+                        : studentInfo.getSchool().getBank();
+
+                String schoolPhone = studentInfo.getSchool().getPhone() == null
+                        ? ""
+                        : studentInfo.getSchool().getPhone();
+
+                String directorFullName =
+                        (studentInfo.getDirector().getSurname() == null
+                                ? ""
+                                : studentInfo.getDirector().getSurname())
+                                + " "
+                                + (studentInfo.getDirector().getName() == null
+                                ? ""
+                                : studentInfo.getDirector().getName())
+                                + " "
+                                + (studentInfo.getDirector().getMiddle_name() == null
+                                ? ""
+                                : studentInfo.getDirector().getMiddle_name());
+
+                directorFullName = directorFullName.trim();
+
+                String bankInn = "02712199110068";
+                String bankRecipientAddress =
+                        "г Бишкек, г Бишкек, ул. Т.Молдо, 54-А";
+
+
+                String studentFullName = buildFullName(
+                        studentInfo.getStudent().getSurname(),
+                        studentInfo.getStudent().getName(),
+                        studentInfo.getStudent().getMiddle_name()
+                );
+
+                String legalRepName = "";
+                String legalRepPhone = "";
+                String legalRepAddress = "";
 
                 IndexedContainer relativeCont = null;
-                table_info.addCell(text10);
 
                 try {
                     DbStudentRelative dbr = new DbStudentRelative();
                     dbr.connect();
-                    relativeCont = dbr.execSQL(myUI, studentInfo.getStudent().getId());
+
+                    relativeCont = dbr.execSQL(
+                            myUI,
+                            studentInfo.getStudent().getId()
+                    );
+
                     dbr.close();
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);
                 }
 
-                Paragraph text11 = new Paragraph();
-
-                Iterator<?> iter = null;
                 if (relativeCont != null) {
-                    iter = relativeCont.getItemIds().iterator();
-                }
+                    Iterator<?> iterator = relativeCont.getItemIds().iterator();
 
-                String f_name = "";
-                String f_work_place = "";
+                    while (iterator.hasNext()) {
+                        Object itemId = iterator.next();
 
-                String m_name = "";
-                String m_work_place = "";
+                        Object isMainValue = null;
 
-                Integer legalRepId = null;
-                String legalRepName = "";
-                String legalRepWorkPlace = "";
-                String legalRepPassport = "";
-                String legalRepPhone = "";
-                String legalRepAddress = "";
+                        if (relativeCont.getContainerProperty(itemId, Settings.is_main) != null) {
+                            isMainValue = relativeCont
+                                    .getContainerProperty(itemId, Settings.is_main)
+                                    .getValue();
+                        }
 
-                while (iter != null && iter.hasNext()) {
-                    Object obj = iter.next();
+                        boolean isMain = false;
 
-                    Integer relativeId = null;
-                    if (obj instanceof Integer) {
-                        relativeId = (Integer) obj;
-                    } else if (obj != null) {
-                        try {
-                            relativeId = Integer.valueOf(obj.toString());
-                        } catch (Exception ex) {
-                            logger.error(ex);
-                            logger.catching(ex);
+                        if (isMainValue instanceof Integer) {
+                            isMain = ((Integer) isMainValue) == 1;
+                        } else if (isMainValue instanceof Boolean) {
+                            isMain = (Boolean) isMainValue;
+                        } else if (isMainValue != null) {
+                            isMain = "1".equals(isMainValue.toString())
+                                    || "true".equalsIgnoreCase(isMainValue.toString());
+                        }
+
+                        if (isMain) {
+                            legalRepName = getContainerValue(
+                                    relativeCont,
+                                    itemId,
+                                    myUI.getMessage(Messages.FullName)
+                            );
+
+                            legalRepPhone = getContainerValue(
+                                    relativeCont,
+                                    itemId,
+                                    myUI.getMessage(Messages.Phone)
+                            );
+
+                            legalRepAddress = getContainerValue(
+                                    relativeCont,
+                                    itemId,
+                                    myUI.getMessage(Messages.Address)
+                            );
                         }
                     }
-
-                    fullName = "";
-                    String workPlace = "";
-                    String phone = "";
-                    String address = "";
-                    String passportValue = "";
-
-                    if (relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.FullName)) != null
-                            && relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.FullName)).getValue() != null) {
-                        fullName = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.FullName)).getValue().toString();
-                    }
-
-                    if (relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.WorkPlace)) != null
-                            && relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.WorkPlace)).getValue() != null) {
-                        workPlace = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.WorkPlace)).getValue().toString();
-                    }
-
-                    if (relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Phone)) != null
-                            && relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Phone)).getValue() != null) {
-                        phone = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Phone)).getValue().toString();
-                    }
-
-                    if (relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Address)) != null
-                            && relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Address)).getValue() != null) {
-                        address = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Address)).getValue().toString();
-                    }
-
-                    if (relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Passport)) != null
-                            && relativeCont.getContainerProperty(obj, myUI.getMessage(Messages.Passport)).getValue() != null) {
-                        passportValue = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Passport)).getValue().toString();
-                    }
-
-                    if (relativeId != null && relativeId == 1) {
-                        f_name = fullName;
-                        f_work_place = workPlace;
-                    }
-
-                    if (relativeId != null && relativeId == 2) {
-                        m_name = fullName;
-                        m_work_place = workPlace;
-                    }
-
-                    Object isMainValue = null;
-                    if (relativeCont.getContainerProperty(obj, Settings.is_main) != null) {
-                        isMainValue = relativeCont.getContainerProperty(obj, Settings.is_main).getValue();
-                    }
-
-                    boolean isMain = false;
-                    if (isMainValue instanceof Integer) {
-                        isMain = ((Integer) isMainValue) == 1;
-                    } else if (isMainValue instanceof Boolean) {
-                        isMain = (Boolean) isMainValue;
-                    } else if (isMainValue != null) {
-                        isMain = "1".equals(isMainValue.toString()) || "true".equalsIgnoreCase(isMainValue.toString());
-                    }
-
-                    if (isMain) {
-                        legalRepId = relativeId;
-                        legalRepName = fullName;
-                        legalRepWorkPlace = workPlace;
-                        legalRepPassport = passportValue;
-                        legalRepPhone = phone;
-                        legalRepAddress = address;
-                    }
                 }
 
-                boolean legalRepIsParent = legalRepId != null && (legalRepId == 1 || legalRepId == 2);
+                Paragraph schoolRequisites = new Paragraph();
+                schoolRequisites.setLeading(14f);
 
-                if (legalRepIsParent) {
-                    text11.add(new Phrase("Ф.И.О. отца: " + f_name, ordFont));
-                    text11.add(Chunk.NEWLINE);
+                schoolRequisites.add(new Phrase(
+                        schoolName,
+                        ordFont
+                ));
+                schoolRequisites.add(Chunk.NEWLINE);
 
-                    text11.add(new Phrase("\nФ.И.О. матери: " + m_name, ordFont));
-                    text11.add(Chunk.NEWLINE);
+                schoolRequisites.add(new Phrase(
+                        schoolAddress,
+                        ordFont
+                ));
+                schoolRequisites.add(Chunk.NEWLINE);
+                schoolRequisites.add(Chunk.NEWLINE);
 
-                    text11.add(new Phrase("\nДанные паспорта: ", ordFont));
-                    text11.add(new Phrase(legalRepPassport, ordFont));
-                    text11.add(Chunk.NEWLINE);
+                schoolRequisites.add(new Phrase(
+                        "ИНН " + schoolInn,
+                        ordFont
+                ));
+                schoolRequisites.add(Chunk.NEWLINE);
 
-                    text11.add(new Phrase("\nМесто работы отца: " + f_work_place, ordFont));
-                    text11.add(Chunk.NEWLINE);
+                schoolRequisites.add(new Phrase(
+                        "Расчетный счет " + schoolBankAccount,
+                        ordFont
+                ));
+                schoolRequisites.add(Chunk.NEWLINE);
 
-                    text11.add(new Phrase("\nМесто работы матери: " + m_work_place, ordFont));
-                    text11.add(Chunk.NEWLINE);
+                schoolRequisites.add(new Phrase(
+                        "БИК банка " + schoolBik,
+                        ordFont
+                ));
+                schoolRequisites.add(Chunk.NEWLINE);
 
-                    text11.add(new Phrase("\nКонтактный тел: ", ordFont));
-                    text11.add(new Phrase(legalRepPhone, ordFont));
-                    text11.add(Chunk.NEWLINE);
+// В БД такого поля нет
+                schoolRequisites.add(new Phrase(
+                        "ИНН банка " + bankInn,
+                        ordFont
+                ));
+                schoolRequisites.add(Chunk.NEWLINE);
 
-                    text11.add(new Phrase("\nАдрес места жительства: ", ordFont));
-                    text11.add(new Phrase(legalRepAddress, ordFont));
-                } else {
-                    text11.add(new Phrase("Ф.И.О. законного представителя: " + legalRepName, ordFont));
-                    text11.add(Chunk.NEWLINE);
+                schoolRequisites.add(new Phrase(
+                        "Наименование банка получателя " + schoolBank,
+                        ordFont
+                ));
+                schoolRequisites.add(Chunk.NEWLINE);
 
-                    text11.add(new Phrase("\nДанные паспорта: ", ordFont));
-                    text11.add(new Phrase(legalRepPassport, ordFont));
-                    text11.add(Chunk.NEWLINE);
+// В БД такого поля нет
+                schoolRequisites.add(new Phrase(
+                        "Адрес банка получателя " + bankRecipientAddress,
+                        ordFont
+                ));
+                schoolRequisites.add(Chunk.NEWLINE);
 
-                    text11.add(new Phrase("\nМесто работы: " + legalRepWorkPlace, ordFont));
-                    text11.add(Chunk.NEWLINE);
+                schoolRequisites.add(new Phrase(
+                        "Тел. " + schoolPhone.replace("<br>", "\n"),
+                        ordFont
+                ));
+                schoolRequisites.add(Chunk.NEWLINE);
 
-                    text11.add(new Phrase("\nКонтактный тел: ", ordFont));
-                    text11.add(new Phrase(legalRepPhone, ordFont));
-                    text11.add(Chunk.NEWLINE);
+                schoolRequisites.add(new Phrase(
+                        "Генеральный директор " + directorFullName,
+                        ordFont
+                ));
 
-                    text11.add(new Phrase("\nАдрес места жительства: ", ordFont));
-                    text11.add(new Phrase(legalRepAddress, ordFont));
-                }
+                PdfPCell schoolCell = new PdfPCell(schoolRequisites);
 
-                table_info.addCell(text11);
-                table_info.addCell(new Phrase("\n (М.П)", ordFont));
-                table_info.addCell(new Phrase("\nПодпись: ________________", ordFont));
+                schoolCell.setPaddingTop(5f);
+                schoolCell.setPaddingBottom(6f);
+                schoolCell.setPaddingLeft(8f);
+                schoolCell.setPaddingRight(8f);
+                schoolCell.setVerticalAlignment(Element.ALIGN_TOP);
 
-                document.add(table_info);
-                document.add(new Paragraph(10, " "));
+                requisitesTable.addCell(schoolCell);
 
-                document.newPage();
-                Paragraph text15 = new Paragraph();
-                text15.setIndentationLeft(25);
-                text15.setIndentationRight(25);
-                text15.add(new Phrase("График оплаты за обучение", boldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Оплата стоимости обучения осуществляется одним из следующих способов по выбору Родителя:", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("1. Ежемесячная оплата", ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Стоимость обучения оплачивается равными платежами в течение 9 (девяти) учебных месяцев — с сентября по май включительно. Оплата производится ежемесячно не позднее 5 числа текущего месяца.", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("2. Ежеквартальная оплата", ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Стоимость обучения оплачивается частями один раз в квартал в соответствии с графиком, утвержденным Школой.", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("3. Единовременная оплата", ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Родитель вправе произвести полную оплату стоимости обучения за весь учебный год единовременно до начала учебного года либо в иной срок, установленный настоящим договором.", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("4. Порядок выбора формы оплаты", ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Выбранная форма оплаты указывается в настоящем договоре и может быть изменена по соглашению сторон путем подачи письменного заявления и заключения дополнительного соглашения.", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("ID ученика: ", ordFont));
-                text15.add(new Phrase(studentInfo.getStudent().getLogin(), ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Ф.И.О. Ученика: ", ordFont));
-                text15.add(new Phrase(studentInfo.getStudent().getSurname() + " "
-                        + studentInfo.getStudent().getName() + " " + studentInfo.getStudent().getMiddle_name(), ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Кл.: ", ordFont));
-                text15.add(new Phrase(studentInfo.getStudent().getClass_name(), ordBoldFont));
-                text15.add(new Phrase(". Дата регистрации: ", ordFont));
-                text15.add(new Phrase(Settings.df.format(studentInfo.getContractInfo().getCreationDate()), ordBoldFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("График оплаты: ", ordFont));
-                text15.add(new Phrase(studentInfo.getContractInfo().getInstallmentPlanType() + ".", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Сумма контракта: ", ordFont));
-                text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getContract())), ordBoldFont));
-                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
-                text15.add(Chunk.NEWLINE);
-                if (studentInfo.getContractInfo().getDebt() >= 0) {
-                    text15.add(new Phrase("Долг с предыдущего года: ", ordFont));
-                } else {
-                    text15.add(new Phrase("Переплата с предыдущего года: ", ordFont));
-                }
-                text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getDebt())), ordBoldFont));
-                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
+                PdfPTable parentTable = new PdfPTable(1);
+                parentTable.setWidthPercentage(100f);
 
-                if (studentInfo.getContractInfo().getDiscountStr() != null) {
-                    text15.add(Chunk.NEWLINE);
-                    text15.add(new Phrase("Скидка: ", ordFont));
-                    text15.add(new Phrase(studentInfo.getContractInfo().getDiscountStr(), ordBoldFont));
-                    text15.add(new Phrase(" (вид скидки прописью, %)", ordFont));
-                    text15.add(Chunk.NEWLINE);
-                    text15.add(new Phrase("Сумма после скидки: ", ordFont));
-                    text15.add(new Phrase(Settings.dFormat2.format(
-                            studentInfo.getContractInfo().getContractWithDiscount()), ordBoldFont));
-                    text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
-                }
-                if (studentInfo.getContractInfo().getCorrectionStr() != null) {
-                    text15.add(Chunk.NEWLINE);
-                    text15.add(new Phrase("Корректировка: ", ordFont));
-                    text15.add(new Phrase(studentInfo.getContractInfo().getCorrectionStr(), ordBoldFont));
-                }
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Предоплата: ", ordFont));
-                text15.add(new Phrase(studentInfo.getContractInfo().getInitialPayment() == null ? "0.00" :
-                        Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()), ordBoldFont));
-                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
-                text15.add(Chunk.NEWLINE);
-                text15.add(new Phrase("Остаток: ", ordFont));
-                text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()), ordBoldFont));
-                text15.add(new Phrase(" " + studentInfo.getContractInfo().getCurrency() + ".", ordFont));
-                document.add(text15);
-                document.add(new Paragraph(10, " "));
+                PdfPCell clientTitleCell = new PdfPCell(
+                        new Phrase("Клиент:", ordFont)
+                );
+                clientTitleCell.setBorder(Rectangle.NO_BORDER);
+                clientTitleCell.setPadding(0f);
+                clientTitleCell.setPaddingBottom(3f);
 
-                Paragraph text16 = new Paragraph();
-                text16.setIndentationLeft(25);
-                text16.setIndentationRight(25);
-                text16.add(new Phrase("Таблица 1.", ordBoldFont));
-                document.add(text16);
-                document.add(new Paragraph(10, " "));
-                text16.add(Chunk.NEWLINE);
+                parentTable.addCell(clientTitleCell);
 
-                float[] TContract_colsWidth = {1f, 4f, 4f, 4f, 4f};
-                PdfPTable TContract = new PdfPTable(5);
-                TContract.setWidthPercentage(90f);
-                TContract.setWidths(TContract_colsWidth);
-                TContract.addCell(new Phrase("№", ordBoldFont));
-                TContract.addCell(new Phrase("Дата оплаты", ordBoldFont));
-                TContract.addCell(new Phrase("Сумма", ordBoldFont));
-                TContract.addCell(new Phrase("Подтверждающий документ", ordBoldFont));
-                TContract.addCell(new Phrase("Подпись ", ordBoldFont));
-                int n = 1;
-                for (Object obj : instPlanCont.getItemIds()) {
-                    TContract.addCell(new Phrase(n + "", ordFont));
-                    TContract.addCell(new Phrase(Settings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(Messages.Date)).getValue()).getValue()), ordFont));
-                    TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(Messages.Amount)).getValue()).getValue(), ordFont));
-                    TContract.addCell(new Phrase("", ordFont));
-                    TContract.addCell(new Phrase("", ordFont));
-                    n += 1;
-                }
-                TContract.addCell(new Phrase("", ordFont));
-                TContract.addCell(new Phrase("Итого:", ordBoldFont));
-                TContract.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()), ordBoldFont));
-                TContract.addCell(new Phrase("", ordFont));
-                TContract.addCell(new Phrase("", ordFont));
+                PdfPTable parentNameLine = createRequisiteValueLine(
+                        "ФИО",
+                        legalRepName,
+                        ordFont,
+                        1f,
+                        5f
+                );
 
-                document.add(TContract);
-                paragraph = new Paragraph();
-                paragraph.setIndentationLeft(25);
-                paragraph.setIndentationRight(25);
-                paragraph.add(Chunk.NEWLINE);
-                paragraph.add(new Phrase("\nРодитель: ", ordBoldFont));
-                paragraph.add(new Phrase(studentInfo.getMainRelative().getFullName(), ordFont));
-                paragraph.add(new Phrase(" ___________________________", ordFont));
-                document.add(paragraph);
-                document.add(new Paragraph(5, " "));
-                paragraph = new Paragraph();
-                paragraph.setIndentationLeft(25);
-                paragraph.setIndentationRight(25);
-                paragraph.add(new Phrase("\n\nДиректор Школы: ", ordBoldFont));
-                paragraph.add(new Phrase(studentInfo.getDirector().getSurname() + " "
-                        + studentInfo.getDirector().getName() + " " +
-                        (studentInfo.getDirector().getMiddle_name() == null ?
-                                "" : studentInfo.getDirector().getMiddle_name()), ordFont));
-                paragraph.add(new Phrase(" ___________________________", ordFont));
-                document.add(paragraph);
+                PdfPCell parentNameContainer = new PdfPCell(parentNameLine);
+                parentNameContainer.setBorder(Rectangle.NO_BORDER);
+                parentNameContainer.setPadding(0f);
+                parentTable.addCell(parentNameContainer);
+
+                PdfPTable addressLine = createRequisiteValueLine(
+                        "Адрес:",
+                        legalRepAddress,
+                        ordFont,
+                        1.2f,
+                        5f
+                );
+
+                PdfPCell addressContainer = new PdfPCell(addressLine);
+                addressContainer.setBorder(Rectangle.NO_BORDER);
+                addressContainer.setPadding(0f);
+                parentTable.addCell(addressContainer);
+
+                PdfPTable phoneLine = createRequisiteValueLine(
+                        "Тел.:",
+                        legalRepPhone,
+                        ordFont,
+                        1.2f,
+                        5f
+                );
+
+                PdfPCell phoneContainer = new PdfPCell(phoneLine);
+                phoneContainer.setBorder(Rectangle.NO_BORDER);
+                phoneContainer.setPadding(0f);
+                parentTable.addCell(phoneContainer);
+
+                PdfPTable studentNameLine = createRequisiteValueLine(
+                        "ФИО ребенка",
+                        studentFullName,
+                        ordFont,
+                        1.8f,
+                        4.5f
+                );
+
+                PdfPCell studentNameContainer = new PdfPCell(studentNameLine);
+                studentNameContainer.setBorder(Rectangle.NO_BORDER);
+                studentNameContainer.setPadding(0f);
+                parentTable.addCell(studentNameContainer);
+
+                PdfPTable signatureLine = createRequisiteValueLine(
+                        "Подпись",
+                        "",
+                        ordFont,
+                        1.2f,
+                        5f
+                );
+
+                PdfPCell signatureContainer = new PdfPCell(signatureLine);
+                signatureContainer.setBorder(Rectangle.NO_BORDER);
+                signatureContainer.setPaddingLeft(0f);
+                signatureContainer.setPaddingRight(0f);
+                signatureContainer.setPaddingTop(10f);
+                signatureContainer.setPaddingBottom(0f);
+
+                parentTable.addCell(signatureContainer);
+
+                PdfPCell parentCell = new PdfPCell(parentTable);
+
+                parentCell.setPaddingTop(5f);
+                parentCell.setPaddingBottom(6f);
+                parentCell.setPaddingLeft(8f);
+                parentCell.setPaddingRight(8f);
+                parentCell.setVerticalAlignment(Element.ALIGN_TOP);
+
+                requisitesTable.addCell(parentCell);
+
+                document.add(requisitesTable);
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -923,6 +963,102 @@ public class ContractPdfRu {
         resource.setMIMEType("application/pdf");
 
         myUI.getPage().open(resource, nameOf, false);
+    }
+
+    private String safeValue(Object value) {
+        return value == null ? "" : value.toString().trim();
+    }
+
+    private String buildFullName(
+            Object surname,
+            Object name,
+            Object middleName
+    ) {
+        StringBuilder result = new StringBuilder();
+
+        appendNamePart(result, surname);
+        appendNamePart(result, name);
+        appendNamePart(result, middleName);
+
+        return result.toString().trim();
+    }
+
+    private void appendNamePart(
+            StringBuilder result,
+            Object value
+    ) {
+        String text = safeValue(value);
+
+        if (!text.isEmpty()) {
+            if (result.length() > 0) {
+                result.append(" ");
+            }
+
+            result.append(text);
+        }
+    }
+
+    private String getContainerValue(
+            IndexedContainer container,
+            Object itemId,
+            Object propertyId
+    ) {
+        if (container == null
+                || itemId == null
+                || propertyId == null
+                || container.getContainerProperty(itemId, propertyId) == null
+                || container.getContainerProperty(itemId, propertyId).getValue() == null) {
+
+            return "";
+        }
+
+        return container
+                .getContainerProperty(itemId, propertyId)
+                .getValue()
+                .toString()
+                .trim();
+    }
+
+    private PdfPTable createRequisiteValueLine(
+            String label,
+            String value,
+            Font font,
+            float labelWidth,
+            float valueWidth
+    ) throws DocumentException {
+
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(100f);
+        table.setWidths(new float[]{labelWidth, valueWidth});
+
+        PdfPCell labelCell = new PdfPCell(
+                new Phrase(label, font)
+        );
+
+        labelCell.setBorder(Rectangle.NO_BORDER);
+        labelCell.setPaddingLeft(0f);
+        labelCell.setPaddingRight(3f);
+        labelCell.setPaddingTop(3f);
+        labelCell.setPaddingBottom(3f);
+        labelCell.setVerticalAlignment(Element.ALIGN_TOP);
+
+        PdfPCell valueCell = new PdfPCell(
+                new Phrase(safeValue(value), font)
+        );
+
+        // Убираем нижнюю линию
+        valueCell.setBorder(Rectangle.NO_BORDER);
+
+        valueCell.setPaddingLeft(3f);
+        valueCell.setPaddingRight(0f);
+        valueCell.setPaddingTop(3f);
+        valueCell.setPaddingBottom(3f);
+        valueCell.setVerticalAlignment(Element.ALIGN_TOP);
+
+        table.addCell(labelCell);
+        table.addCell(valueCell);
+
+        return table;
     }
 
     private static class myPageEvent extends PdfPageEventHelper {
