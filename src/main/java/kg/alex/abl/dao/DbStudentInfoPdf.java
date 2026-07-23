@@ -45,7 +45,6 @@ public class DbStudentInfoPdf extends BaseDb {
             sti.getStudent().setPhoto(result.getString("s.photo"));
             sti.getStudent().setName(result.getString("s.name"));
             sti.getStudent().setSurname(result.getString("s.surname"));
-            sti.getStudent().setAddress(result.getString("s.address"));
             sti.getStudent().setBirth_date(result.getDate("s.date_of_birth"));
             if (result.getString("s.middle_name") == null
                     || result.getString("s.middle_name").isEmpty()) {
@@ -58,9 +57,6 @@ public class DbStudentInfoPdf extends BaseDb {
             sti.getMainRelative().setFullName(result.getString("sr.fullname"));
             sti.getMainRelative().setPhone(result.getString("sr.phone"));
             sti.getMainRelative().setAddress(result.getString("sr.address"));
-            sti.getMainRelative().setPassport(result.getString("sr.passport"));
-            sti.getMainRelative().setGivenBy(result.getString("sr.given_by"));
-            sti.getMainRelative().setIssueDate(result.getDate("sr.issue_date"));
             sti.getMainRelative().setRelativeTitle(result.getString("r.name_ru"));
             sti.getMainRelative().setGender_id(result.getInt("r.gender_id"));
             sti.getMainRelative().setRelativeDeclarative(result.getString("r.name_ru_dec"));

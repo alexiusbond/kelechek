@@ -9,36 +9,14 @@ public class StudentRelative implements Serializable {
     private String id;
     private int student_id;
     private String fullName;
-    private String givenBy;
-    private Date issueDate;
     private String phone;
     private String address;
-    private String passport;
-    private String workPlace;
     private int is_main;
     private int relative_id;
     private String relativeDeclarative;
     private String relativeTitle;
     private int gender_id;
 
-
-    public String getWorkPlace() {
-        return workPlace;
-    }
-
-    public void setWorkPlace(String workPlace) {
-        this.workPlace = workPlace;
-
-
-    }
-
-    public Date getIssueDate() {
-        return issueDate;
-    }
-
-    public void setIssueDate(Date issueDate) {
-        this.issueDate = issueDate;
-    }
 
     public int getGender_id() {
         return gender_id;
@@ -104,14 +82,6 @@ public class StudentRelative implements Serializable {
         this.address = address;
     }
 
-    public String getPassport() {
-        return passport;
-    }
-
-    public void setPassport(String passport) {
-        this.passport = passport;
-    }
-
     public int getIs_main() {
         return is_main;
     }
@@ -126,13 +96,5 @@ public class StudentRelative implements Serializable {
 
     public void setRelative_id(int relative_id) {
         this.relative_id = relative_id;
-    }
-
-    public String getGivenBy() {
-        return givenBy;
-    }
-
-    public void setGivenBy(String givenBy) {
-        this.givenBy = givenBy;
     }
 }

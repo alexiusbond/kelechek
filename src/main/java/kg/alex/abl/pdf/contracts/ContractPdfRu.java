@@ -20,9 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Iterator;
 
-public class ContractPdfRu47 {
+public class ContractPdfRu {
 
-    static final Logger logger = LogManager.getLogger(ContractPdfRu47.class);
+    static final Logger logger = LogManager.getLogger(ContractPdfRu.class);
     private final static String FONT_LOCATION = "/home/abl/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/abl/TimesNewRomanBold.ttf";
     private final MyVaadinUI myUI;
@@ -31,7 +31,7 @@ public class ContractPdfRu47 {
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
 
-    public ContractPdfRu47(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractPdfRu(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.studentInfo = st_info;
 
@@ -270,7 +270,7 @@ public class ContractPdfRu47 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.2.5. ", ordBoldFont));
-                paragraph.add(new Phrase("При заключении договора и оформлении учащегося в школу родитель или законный представитель оплачивает за услугу бронирования места, регистрацию и тестирование в размере 7 000 (семь тысяч) сомов (безвозвратно).", ordFont));
+                paragraph.add(new Phrase("При заключении договора и оформлении учащегося в школу родитель или законный представитель оплачивает за услугу бронирования места, регистрацию и тестирование в размере 9 000 (девять тысяч) сомов (безвозвратно).", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -350,7 +350,7 @@ public class ContractPdfRu47 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("2.3.2. ", ordBoldFont));
-                paragraph.add(new Phrase("Для сохранения за учащимся места на следующий учебный год Родитель обязуется ежегодно, в период с 1 апреля по 15 мая, заключить договор на следующий учебный год и внести невозвратный платеж в размере 7 000 (семь тысяч) сомов в качестве бронирования места либо произвести предоплату в размере одного месяца обучения. В случае невыполнения указанных условий образовательная Школа вправе предоставить учебное место другому учащемуся.", ordFont));
+                paragraph.add(new Phrase("Для сохранения за учащимся места на следующий учебный год Родитель обязуется ежегодно, в период с 1 апреля по 15 мая, заключить договор на следующий учебный год и внести невозвратный платеж в размере 9 000 (девять тысяч) сомов в качестве бронирования места либо произвести предоплату в размере одного месяца обучения. В случае невыполнения указанных условий образовательная Школа вправе предоставить учебное место другому учащемуся.", ordFont));
                 document.add(paragraph);
 
                 paragraph.clear();
@@ -459,7 +459,7 @@ public class ContractPdfRu47 {
 
                 paragraph.clear();
                 paragraph.add(new Phrase("3.1.4. ", ordBoldFont));
-                paragraph.add(new Phrase("Ежегодно в период с 1 апреля по 15 мая родители обязаны заключить договор на образовательные услуги на следующий учебный год с обязательным внесением 7 000 (семь тысяч) сомов (безвозвратно) за бронь места или предоплаты родительского взноса за один месяц. После заключения договора и внесения оплаты, в случае отказа от учёбы, внесённая сумма ", ordFont));
+                paragraph.add(new Phrase("Ежегодно в период с 1 апреля по 15 мая родители обязаны заключить договор на образовательные услуги на следующий учебный год с обязательным внесением 9 000 (девять тысяч) сомов (безвозвратно) за бронь места или предоплаты стоимости обучения за один месяц. После заключения договора и внесения оплаты, в случае отказа от учёбы, внесённая сумма ", ordFont));
                 paragraph.add(new Phrase("не возвращается.", ordBoldFont));
                 document.add(paragraph);
 
@@ -554,7 +554,7 @@ public class ContractPdfRu47 {
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
-                float[] table_info_colsWidth = {1.5f, 1f};
+                float[] table_info_colsWidth = {1.3f, 1f};
                 PdfPTable table_info = new PdfPTable(2);
                 table_info.getDefaultCell().setBorder(0);
                 table_info.getDefaultCell().setPaddingRight(10f);

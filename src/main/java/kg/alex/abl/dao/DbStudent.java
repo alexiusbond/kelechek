@@ -39,7 +39,7 @@ public class DbStudent extends BaseDb {
         if (edu_sts.isEmpty()) {
             edu_sts = "-1";
         }
-        String sql = "SELECT s.id, s.login, s.name, s.surname, s.address, s.middle_name, s.entering_year_id, " +
+        String sql = "SELECT s.id, s.login, s.name, s.surname, s.middle_name, s.entering_year_id, " +
                 "s.date_of_birth, s.photo, s.gender_id, y.name, sr.fullname, sr.phone, rel.name, " +
                 "ifnull(vcs.education_status, vlcs.education_status) as education_status, " +
                 "ifnull(vcs.class_name, vlcs.class_name) as class_name, " +
@@ -62,7 +62,6 @@ public class DbStudent extends BaseDb {
         container.addContainerProperty(myUi.getMessage(Messages.StudentId), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.FirstName), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.LastName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(Messages.Address), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Relative), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Phone), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.MiddleName), String.class, null);
@@ -90,8 +89,6 @@ public class DbStudent extends BaseDb {
                     result.getString("s.name"));
             item.getItemProperty(myUi.getMessage(Messages.LastName)).setValue(
                     result.getString("s.surname"));
-            item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
-                    result.getString("s.address"));
             if (result.getString("rel.name") != null) {
                 item.getItemProperty(myUi.getMessage(Messages.Relative)).setValue(
                         result.getString("rel.name") + " - " + result.getString("sr.fullname"));
@@ -217,8 +214,8 @@ public class DbStudent extends BaseDb {
     public int exec_insert(Student s) throws SQLException {
         String sql = "INSERT ignore INTO student (login, password, name, "
                 + "surname, middle_name, date_of_birth, photo, school_id, gender_id, "
-                + "entering_year_id, employee_id, modification_date, address) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW(),?)";
+                + "entering_year_id, employee_id, modification_date) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, s.getLogin());
         stat.setString(2, s.getPassword());
@@ -235,7 +232,6 @@ public class DbStudent extends BaseDb {
         stat.setInt(9, s.getGender_id());
         stat.setInt(10, s.getEntering_year_id());
         stat.setInt(11, s.getEmployee_id());
-        stat.setString(12, s.getAddress());
 
         int st = stat.executeUpdate();
         if (st != 0) {
@@ -247,8 +243,8 @@ public class DbStudent extends BaseDb {
 
     public int exec_update(Student s) throws SQLException {
         String sql = "UPDATE student SET login = ?, name = ?, surname = ?, middle_name = ?, " +
-                "date_of_birth = ?, photo = ?, gender_id = ?, employee_id = ?, modification_date = NOW(), " +
-                "address = ? WHERE id = ?";
+                "date_of_birth = ?, photo = ?, gender_id = ?, employee_id = ?, " +
+                "modification_date = NOW() WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, s.getLogin());
         stat.setString(2, s.getName().trim());
@@ -262,8 +258,7 @@ public class DbStudent extends BaseDb {
         stat.setString(6, s.getPhoto());
         stat.setInt(7, s.getGender_id());
         stat.setInt(8, s.getEmployee_id());
-        stat.setString(9, s.getAddress());
-        stat.setInt(10, s.getId());
+        stat.setInt(9, s.getId());
         return stat.executeUpdate();
     }
 
