@@ -1137,7 +1137,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         dbs.close();
                         DbEmployee dbEmployee = new DbEmployee();
                         dbEmployee.connect();
-                        studInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                        studInfo.setDirector(dbEmployee.exec_president(1));
                         studInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
                         dbEmployee.close();
                         DbSchool dbSchool = new DbSchool();

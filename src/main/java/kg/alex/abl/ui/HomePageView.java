@@ -398,10 +398,10 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         ttlCorrectionLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlCorrectionLab.setValue("<b>" + myUI.getMessage(Messages.TotalCorrection) + "</b>");
 
-        Label ttlDebtLab = new Label();
-        ttlDebtLab.setContentMode(ContentMode.HTML);
-        ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlDebtLab.setValue("<b>" + myUI.getMessage(Messages.TotalDebt) + "</b>");
+        Label ttlNetLab = new Label();
+        ttlNetLab.setContentMode(ContentMode.HTML);
+        ttlNetLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlNetLab.setValue("<b>" + myUI.getMessage(Messages.Net) + "</b>");
 
         Label ttlPaymentLab = new Label();
         ttlPaymentLab.setContentMode(ContentMode.HTML);
@@ -412,6 +412,11 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         ttlLeftLab.setContentMode(ContentMode.HTML);
         ttlLeftLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlLeftLab.setValue("<b>" + myUI.getMessage(Messages.TotalLeft) + "</b>");
+
+        Label ttlDebtLab = new Label();
+        ttlDebtLab.setContentMode(ContentMode.HTML);
+        ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlDebtLab.setValue("<b>" + myUI.getMessage(Messages.TotalDebt) + "</b>");
 
         try {
             DbStudentContract dbsc = new DbStudentContract();
@@ -428,12 +433,14 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         layout.addComponent(new Label(Settings.dFormat2.format(tc.getDiscount()) + " " + Settings.KGS));
         layout.addComponent(ttlCorrectionLab);
         layout.addComponent(new Label(Settings.dFormat2.format(tc.getCorrection()) + " " + Settings.KGS));
-        layout.addComponent(ttlDebtLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDebt()) + " " + Settings.KGS));
+        layout.addComponent(ttlNetLab);
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getNet()) + " " + Settings.KGS));
         layout.addComponent(ttlPaymentLab);
         layout.addComponent(new Label(Settings.dFormat2.format(tc.getPaid()) + " " + Settings.KGS));
         layout.addComponent(ttlLeftLab);
         layout.addComponent(new Label(Settings.dFormat2.format(tc.getLeft()) + " " + Settings.KGS));
+        layout.addComponent(ttlDebtLab);
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDebt()) + " " + Settings.KGS));
         return layout;
     }
 
