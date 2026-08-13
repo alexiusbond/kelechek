@@ -123,7 +123,7 @@ public class DbAccTransactions extends BaseDb {
                 "st.login, ' ', st.name, ' ', st.surname)) AS note, " +
                 "IF(t.student_payments_id IS NOT NULL OR t.dp_invoice_id IS NOT NULL " +
                 "OR t.acc_invoice_id IS NOT NULL, TRUE, FALSE) AS isDisabled, " +
-                "IF(t.date_time > concat(date(now()), ' 19:00:00'), TRUE, FALSE) AS isNotOld, t.from_to_employee_id, " +
+                "IF(t.date_time > DATE_SUB(NOW(), INTERVAL 24 HOUR), TRUE, FALSE) AS isNotOld, t.from_to_employee_id, " +
                 "CONCAT(e.surname, ' ', e.name) AS fullname " +
                 "FROM acc_transactions AS t " +
                 "LEFT JOIN employee AS e ON t.employee_id = e.id " +

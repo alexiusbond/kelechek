@@ -57,7 +57,7 @@ public class DbStudentPayment extends BaseDb {
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT sp.id, sp.amount, sp.dollar_rate, sp.payment_type_id, sp.payment_category_id, "
                 + "sp.who_paid, sp.note, sp.modification_date, bank_transaction_id, sp.acc_currency_id, c.id, "
-                + "if(sp.modification_date <= concat(date(now()), ' 19:00:00') or bank_transaction_id is not null, true, false) as isDisabled "
+                + "if(sp.modification_date <= DATE_SUB(NOW(), INTERVAL 24 HOUR) or bank_transaction_id is not null, true, false) as isDisabled "
                 + "FROM student_payments as sp "
                 + "LEFT JOIN acc_cashbox as c on c.acc_currency_id = sp.acc_currency_id and c.payment_type_id = sp.payment_type_id "
                 + "where sp.student_id = ? and sp.year_id = ?";
