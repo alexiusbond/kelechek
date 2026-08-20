@@ -12,6 +12,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -3688,6 +3689,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 currentUser.isPermitted(Settings.correctionsTable + ":" + Settings.prmMenu)) {
 
             VerticalLayout discountsLay = new VerticalLayout();
+            discountsLay.setMargin(new MarginInfo(true, false, false, false));
             discountsLay.setSpacing(true);
             discountsLay.setSizeFull();
             discountsLay.addComponent(plusDiscButton);
@@ -3696,6 +3698,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             discountsLay.setExpandRatio(discountsTable, 1);
 
             VerticalLayout correctionsLay = new VerticalLayout();
+            correctionsLay.setMargin(new MarginInfo(true, false, false, false));
             correctionsLay.setSpacing(true);
             correctionsLay.setSizeFull();
             correctionsLay.addComponent(plusCorrectionButton);
@@ -3703,17 +3706,17 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             correctionsLay.addComponent(correctionsTable);
             correctionsLay.setExpandRatio(correctionsTable, 1);
 
-            Accordion accordion = new Accordion();
-            accordion.setSizeFull();
+            TabSheet discountsCorrectionsTab = new TabSheet();
+            discountsCorrectionsTab.setSizeFull();
             if (currentUser.isPermitted(Settings.discountsTable + ":" + Settings.prmMenu)) {
-                accordion.addTab(discountsLay, myUI.getMessage(Messages.Discounts));
+                discountsCorrectionsTab.addTab(discountsLay, myUI.getMessage(Messages.Discounts));
             }
             if (currentUser.isPermitted(Settings.correctionsTable + ":" + Settings.prmMenu)) {
-                accordion.addTab(correctionsLay, myUI.getMessage(Messages.Correction));
+                discountsCorrectionsTab.addTab(correctionsLay, myUI.getMessage(Messages.Correction));
             }
-            accordion.setSelectedTab(discountsLay);
-            leftVL.addComponent(accordion);
-            leftVL.setExpandRatio(accordion, 1);
+            discountsCorrectionsTab.setSelectedTab(discountsLay);
+            leftVL.addComponent(discountsCorrectionsTab);
+            leftVL.setExpandRatio(discountsCorrectionsTab, 1);
         }
     }
 

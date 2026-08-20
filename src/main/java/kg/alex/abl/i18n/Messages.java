@@ -587,6 +587,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String EduLevel = generateId();
     public static final String CorrectionType = generateId();
     public static final String Correction = generateId();
+    public static final String Corrections = generateId();
     public static final String Any = generateId();
     public static final String AnyDate = generateId();
     public static final String DateAndPlaceOfBirth = generateId();

@@ -592,6 +592,7 @@ public class Messages_ru extends kg.alex.abl.i18n.Messages {
             {EduLevel, "Степень"},
             {CorrectionType, "Тип корректировки"},
             {Correction, "Корректировка"},
+            {Corrections, "Корректировки"},
             {Any, "Любое"},
             {AnyDate, "Любая дата"},
             {DontHave, "Не имею"},
