@@ -21,6 +21,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.abl.MyVaadinUI;
 import kg.alex.abl.dao.*;
 import kg.alex.abl.domain.*;
+import kg.alex.abl.enums.InstallmentPlanTypeCode;
 import kg.alex.abl.i18n.Messages;
 import kg.alex.abl.pdf.Invoice2023PDF;
 import kg.alex.abl.pdf.contracts.ContractPdfRu;
@@ -709,12 +710,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         discountLab = new Label();
         discountLab.setContentMode(ContentMode.HTML);
         discountLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        discountLab.setValue(myUI.getMessage(Messages.Discount) + ":");
+        discountLab.setValue(myUI.getMessage(Messages.Discounts) + ":");
 
         correctionLab = new Label();
         correctionLab.setContentMode(ContentMode.HTML);
         correctionLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        correctionLab.setValue(myUI.getMessage(Messages.Correction) + ":");
+        correctionLab.setValue(myUI.getMessage(Messages.Corrections) + ":");
 
         debtLab = new Label();
         debtLab.setContentMode(ContentMode.HTML);
@@ -807,7 +808,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             addCallsItem();
         } else if (source == calculateInitialPaymentButton) {
             if (netContrAmount != null) {
-                initialPaymentTF.setValue(Settings.dFormat2.format(netContrAmount * 0.3));
+                initialPaymentTF.setValue("20000");
             }
         } else if (source == divideBtn) {
             if (instTypeCB.getValue() != null) {
@@ -1441,16 +1442,26 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
 
         String code = (String) item.getItemProperty(
-                Settings.installment_plan_type_code).getValue();
+                Settings.installment_plan_type_code
+        ).getValue();
 
-        if ("MONTHLY".equals(code) || "QUARTERLY".equals(code) || "FULL".equals(code)) {
+        InstallmentPlanTypeCode planType =
+                InstallmentPlanTypeCode.fromString(code);
+
+        if (planType.isAutoStartDate()) {
+
             Integer startMonth = (Integer) item.getItemProperty(
-                    Settings.installment_start_month).getValue();
+                    Settings.installment_start_month
+            ).getValue();
 
             Integer dueDay = (Integer) item.getItemProperty(
-                    Settings.installment_due_day).getValue();
+                    Settings.installment_due_day
+            ).getValue();
 
-            currDate.setValue(getInstallmentStartDate(startMonth, dueDay));
+            currDate.setValue(
+                    getInstallmentStartDate(startMonth, dueDay)
+            );
+
         } else {
             currDate.setValue(new Date());
         }
@@ -1805,7 +1816,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         classCB.setValue(null);
         statusCB.setValue(null);
         contractCB.setValue(null);
-        instTypeCB.setValue(null);
+        instTypeCB.setValue(1);
         currDate.setValue(null);
         photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + "no_photo.jpg")));
         photoName = null;
@@ -3712,7 +3723,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 discountsCorrectionsTab.addTab(discountsLay, myUI.getMessage(Messages.Discounts));
             }
             if (currentUser.isPermitted(Settings.correctionsTable + ":" + Settings.prmMenu)) {
-                discountsCorrectionsTab.addTab(correctionsLay, myUI.getMessage(Messages.Correction));
+                discountsCorrectionsTab.addTab(correctionsLay, myUI.getMessage(Messages.Corrections));
             }
             discountsCorrectionsTab.setSelectedTab(discountsLay);
             leftVL.addComponent(discountsCorrectionsTab);
@@ -4060,8 +4071,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 value += " (" + Settings.df.format(studentContract.getCreationDate()) + ")";
             }
             contractLab.setValue(value);
-            discountLab.setValue(myUI.getMessage(Messages.Discount) + ": " + discountsStr);
-            correctionLab.setValue(myUI.getMessage(Messages.Correction) + ": " + (studentContract.getCorrectionDetails() == null ? "0.00 " + currency : studentContract.getCorrectionDetails()));
+            discountLab.setValue(myUI.getMessage(Messages.Discounts) + ": " + discountsStr);
+            correctionLab.setValue(myUI.getMessage(Messages.Corrections) + ": " + (studentContract.getCorrectionDetails() == null ? "0.00 " + currency : studentContract.getCorrectionDetails()));
             if (debt > 0) {
                 debtLab.setStyleName(ValoTheme.LABEL_FAILURE);
             } else {
@@ -4640,8 +4651,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void clearContractInfo() {
         contractLab.setValue(myUI.getMessage(Messages.Contract) + ":");
-        discountLab.setValue(myUI.getMessage(Messages.Discount) + ":");
-        correctionLab.setValue(myUI.getMessage(Messages.Correction) + ":");
+        discountLab.setValue(myUI.getMessage(Messages.Discounts) + ":");
+        correctionLab.setValue(myUI.getMessage(Messages.Corrections) + ":");
         debtLab.setValue(myUI.getMessage(Messages.PreviousYearDebt) + ":");
         netLab.setValue(myUI.getMessage(Messages.Net) + ":");
         paidLab.setValue(myUI.getMessage(Messages.Paid) + ":");
