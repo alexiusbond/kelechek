@@ -28,7 +28,6 @@ import kg.alex.abl.pdf.contracts.ContractPdfRu;
 import kg.alex.abl.tableexport.ExcelExport;
 import kg.alex.abl.utils.*;
 import net.coobird.thumbnailator.Thumbnails;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -57,7 +56,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private final Button plusRelButton;
     private final Button plusMatGiveButton;
     private final Button plusInstButton;
-    private Button calculateInitialPaymentButton;
     private final Button plusPayButton;
     private final Button plusMatReceiveButton;
     private final Button plusDiscButton;
@@ -94,13 +92,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Button cancelBtn;
     private Button divideBtn;
     private final Button copyRelBtn;
-    private TextField nameTF, loginTF, surnameTF, middleNameTF, initialPaymentTF, initialPaymentRateTF;
+    private TextField nameTF, loginTF, surnameTF, middleNameTF;
     private DateField birthDateDF, currDate;
     private ComboBox genderCB;
     private ComboBox classCB;
     private ComboBox statusCB;
     private ComboBox contractCB;
-    private ComboBox initialPayCashBoxCB;
     private final ComboBox studentsCB;
     private ComboBox instTypeCB;
     private FormLayout fieldsLay1, fieldsLay2;
@@ -110,7 +107,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Double instCtrAmount;
     private Double netContrAmount;
     private Double contract_amount;
-    private Double instFirstPay;
     private Double instPlanContSum;
     private Double contr_with_disc;
     private Double ttl_left;
@@ -467,16 +463,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         setCorrectionsTable();
                         setContractTab((Integer) studDataTable.getValue(),
                                 myUI.getUser().getCurrent_year().getId());
-                        if (initialPaymentTF.isValid()) {
-                            recountInstPlanLabel();
-                        }
+                        recountInstPlanLabel();
                         prepareNormalMode();
-                        if ((Integer) studDataTable.getContainerProperty(studDataTable.getValue(),
-                                Settings.education_status_id).getValue() == 4
-                                || (Integer) studDataTable.getContainerProperty(studDataTable.getValue(),
-                                Settings.education_status_id).getValue() == 5) {
-                            modifyBtn.setEnabled(false);
-                        }
                     } else if (event.getTabSheet().getSelectedTab() == payTableLay
                             && studDataTable.getValue() != null) {
                         setPaymentsTable();
@@ -806,18 +794,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             addPaymentsItem();
         } else if (source == plusCallButton) {
             addCallsItem();
-        } else if (source == calculateInitialPaymentButton) {
-            if (netContrAmount != null) {
-                initialPaymentTF.setValue("20000");
-            }
         } else if (source == divideBtn) {
             if (instTypeCB.getValue() != null) {
                 recount();
                 addInstallmentPlanItem(true);
-
-                if (initialPaymentTF.isValid()) {
-                    recountInstPlanLabel();
-                }
+                recountInstPlanLabel();
             }
         } else if (source == copyRelBtn) {
             if (studentsCB.getValue() != null) {
@@ -1033,7 +1014,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                             } //pressed save button on contract tab
                                             else if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
                                                 insertDiscounts();
-                                                insertInitialPayment((Integer) studDataTable.getValue());
                                                 insertContractToDb();
                                                 execDeleteInstPlanFromDb((Integer) studDataTable.getValue(),
                                                         myUI.getUser().getCurrent_year().getId());
@@ -1233,7 +1213,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         }
                         studInfo.getContractInfo().setCorrectionStr(allCorrections.toString());
                     }
-                    studInfo.getContractInfo().setInitialPayment(instFirstPay);
                     studInfo.getContractInfo().setNet(toPay);
                     studInfo.getContractInfo().setLeft(ttl_left);
                     studInfo.getContractInfo().setContractWithDiscount(contractWithDiscount);
@@ -1283,22 +1262,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             acsReceiveTable.removeItem(event.getButton().getData().toString());
         } else if (source.getId() != null && source.getId().equals(Settings.dbStudentInstallment)) {
             installmentTable.removeItem(event.getButton().getData().toString());
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
+            recountInstPlanLabel();
         } else if (source.getId() != null && source.getId().equals(Settings.dbStudentDiscount)) {
             discCounter--;
             delDiscIds.add(source.getData().toString());
             discountsTable.removeItem(event.getButton().getData().toString());
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
+            recountInstPlanLabel();
         } else if (source.getId() != null && source.getId().equals(Settings.dbStudentCorrection)) {
             delCorrectionIds.add(source.getData().toString());
             correctionsTable.removeItem(event.getButton().getData().toString());
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
+            recountInstPlanLabel();
         } else if (tabs.getSelectedTab() == tabs.getTab(payTableLay).getComponent() && source.getCaption() == null) {
             delPayIds.add(source.getData().toString());
             paymentsTable.removeItem(event.getButton().getData().toString());
@@ -1322,9 +1295,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
-        if (property == initialPayCashBoxCB && initialPaymentRateTF.getValue() == null) {
-            initialPaymentRateTF.getPropertyDataSource().setValue(myUI.getDb_currency_rate());
-        }
         if (property == studDataTable) {
             if (studDataTable.getItem(studDataTable.getValue()) != null) {
                 netContrAmount = 0.0;
@@ -1336,12 +1306,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     financialHistoryButton.setEnabled(true);
                 }
                 setContractCb(contr_id);
-                initialPaymentTF.setData(null);
-                initialPaymentRateTF.setData(null);
-                initialPayCashBoxCB.setData(null);
-                initialPaymentTF.getPropertyDataSource().setValue(null);
-                initialPaymentRateTF.getPropertyDataSource().setValue(null);
-                initialPayCashBoxCB.setValue(null);
             }
         } else if (property == classCB) {
             if (classCB.getValue() != null) {
@@ -1354,38 +1318,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 photoUpl.setEnabled(false);
             }
         } else if (property == contractCB) {
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
+            recountInstPlanLabel();
         } else if (property == instTypeCB) {
             if (instTypeCB.isValid()) {
                 changeCurrDateByInstallmentPlanType();
-            }
-        } else if ((property == initialPaymentTF || property == initialPaymentRateTF || property == initialPayCashBoxCB)
-                && initialPaymentTF != null && initialPaymentRateTF != null && initialPayCashBoxCB != null) {
-            try {
-                AccTransaction tr = insertTestInitialPayment();
-                if (tr != null) {
-                    double amount = 0.0;
-                    if (initialPaymentTF.getPropertyDataSource().getValue() != null) {
-                        amount = (Double) initialPaymentTF.getPropertyDataSource().getValue();
-                    }
-                    initialPaymentTF.removeAllValidators();
-                    initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                            + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
-                            amount + tr.getOverLimit(), null));
-                    Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
-                                    + " " + tr.getCashbox().getCurrency() + " (" + Settings.df.format(tr.getDate()) + ")",
-                            Notification.Type.ERROR_MESSAGE);
-                } else {
-                    initialPaymentTF.removeAllValidators();
-                    initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.1, null));
-                    changeRequiredInitialPayment();
-                    recountInstPlanLabel();
-                }
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
             }
         } else if (property == statusesOG) {
             setStudDataTable(property.getValue().toString());
@@ -1398,9 +1334,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 getDescription().
 
                 equals(myUI.getMessage(Messages.Amount))) {
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
+            recountInstPlanLabel();
         } else if (property instanceof CheckBox) {
             if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
                 familyTableCheck((Boolean) property.getValue(), ((CheckBox) property).getData().toString());
@@ -1422,9 +1356,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 getId().
 
                 equals(Settings.correction_type_id)) {
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
+            recountInstPlanLabel();
         }
     }
 
@@ -1506,83 +1438,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         return cal.getTime();
     }
 
-    private AccTransaction insertTestInitialPayment() {
-        AccTransaction lowBalance = null;
-        try {
-            DbPaymentCategory dbpc = new DbPaymentCategory();
-            dbpc.connect();
-            DbCashbox dbc = new DbCashbox();
-            dbc.connect();
-            DbAccTransactions dbat = new DbAccTransactions();
-            dbat.connect();
-            dbat.getConnection().setAutoCommit(false);
-            try {
-                AccTransaction tr = new AccTransaction();
-                if (initialPaymentTF.getPropertyDataSource().getValue() != null
-                        && (Double) initialPaymentTF.getPropertyDataSource().getValue() != 0.0
-                        && initialPaymentRateTF.getPropertyDataSource().getValue() != null
-                        && (Double) initialPaymentRateTF.getPropertyDataSource().getValue() != 0.0
-                        && initialPayCashBoxCB.getValue() != null) {
-                    tr.setCashbox(new CashBox((Integer) initialPayCashBoxCB.getValue(),
-                            (Integer) initialPayCashBoxCB.getContainerProperty(initialPayCashBoxCB.getValue(),
-                                    Settings.acc_currency_id).getValue()));
-                    tr.setCurrency_rate((Double) initialPaymentRateTF.getPropertyDataSource().getValue());
-                    try {
-                        tr.setAmount(Settings.dFormat2.parse(initialPaymentTF.getValue()).doubleValue());
-                    } catch (Exception ignored) {
-                    }
-                    tr.setDate(new Date());
-                }
-                tr.setCategory_id(dbpc.get_initial_payment_category_id());
-                tr.setAccTypeId(1);
-                tr.setEmployee_id(myUI.getUser().getId());
-                tr.setSchool_id(myUI.getUser().getSchool().getId());
-                int status = 0;
-                if (initialPaymentTF.getValue() == null && initialPaymentTF.getData() != null) {
-                    String payment_id = Integer.toString(((StudentPayment) initialPaymentTF.getData()).getId());
-                    tr.setDate(((StudentPayment) initialPaymentTF.getData()).getModification_date());
-                    status = dbat.exec_delete(Settings.dbColumnStudent_payments_id, payment_id, dbat.getConnection());//delete transaction
-                } else if (initialPaymentTF.getValue() != null
-                        && (Double) initialPaymentTF.getPropertyDataSource().getValue() != 0.0
-                        && initialPaymentRateTF.getPropertyDataSource().getValue() != null
-                        && (Double) initialPaymentRateTF.getPropertyDataSource().getValue() != 0.0
-                        && initialPayCashBoxCB.getValue() != null && initialPaymentTF.getData() != null) {
-                    tr.setStudent_payments_id(((StudentPayment) initialPaymentTF.getData()).getId());
-                    tr.setDate(((StudentPayment) initialPaymentTF.getData()).getModification_date());
-                    status = dbat.exec_update(tr, Settings.dbColumnStudent_payments_id,
-                            tr.getStudent_payments_id(), dbat.getConnection());
-                    if (status == 0) {
-                        status = dbat.exec_insert(tr, dbat.getConnection());
-                    }
-                }
-                if (status != 0) {
-                    for (Object o : dbc.execSQL(myUI).getItemIds()) {
-                        Integer cashboxId = (Integer) o;
-                        lowBalance = dbat.exec_low_balance(dbat.getConnection(), myUI.getUser().getSchool().getId(),
-                                cashboxId, ((StudentPayment) initialPaymentTF.getData()).getModification_date(),
-                                0, 0, 2);
-                        if (lowBalance != null) {
-                            break;
-                        }
-                    }
-                }
-                dbpc.close();
-                dbc.close();
-                dbat.getConnection().rollback();
-            } catch (Exception e) {
-                dbat.getConnection().rollback();
-                logger.error(e);
-                logger.catching(e);
-            }
-            dbat.getConnection().setAutoCommit(true);
-            dbat.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-        return lowBalance;
-    }
-
     private void prepareModificationMode() {
         if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()
                 || tabs.getSelectedTab() == tabs.getTab(studSearchLay).getComponent()) {
@@ -1594,13 +1449,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             classCB.setEnabled(true);
         }
         contractCB.setEnabled(true);
-        if (currentUser.hasRole("admin") || initialPaymentTF.getData() == null
-                || DateUtils.truncate(((StudentPayment) initialPaymentTF.getData()).getModification_date(),
-                java.util.Calendar.DAY_OF_MONTH).compareTo(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)) == 0) {
-            initialPaymentTF.setEnabled(true);
-            initialPaymentRateTF.setEnabled(true);
-            initialPayCashBoxCB.setEnabled(true);
-        }
         discountsTable.setEnabled(true);
         correctionsTable.setEnabled(true);
         if (currentUser.isPermitted(Settings.discountsTable + ":" + Settings.actAdd)) {
@@ -1611,7 +1459,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
         divideBtn.setEnabled(true);
         copyRelBtn.setEnabled(true);
-        calculateInitialPaymentButton.setEnabled(true);
         instTypeCB.setEnabled(true);
         plusInstButton.setEnabled(true);
         installmentTable.setEnabled(true);
@@ -1729,13 +1576,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         plusInstButton.setEnabled(false);
         plusDiscButton.setEnabled(false);
         plusCorrectionButton.setEnabled(false);
-        initialPaymentTF.setEnabled(false);
-        initialPaymentRateTF.setEnabled(false);
-        initialPayCashBoxCB.setEnabled(false);
         installmentTable.setEnabled(false);
         divideBtn.setEnabled(false);
         copyRelBtn.setEnabled(false);
-        calculateInitialPaymentButton.setEnabled(false);
         for (Component component : tabs) {
             TabSheet.Tab tab = tabs.getTab(component);
             if (tab.getComponent() == contractTabLay) {
@@ -2637,94 +2480,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Responsible), 0.2f);
     }
 
-    private void insertInitialPayment(int student_id) {
-        try {
-            if (initialPaymentTF.isValid()) {
-                DbStudentPayment dbsp = new DbStudentPayment();
-                DbAccTransactions dbat = new DbAccTransactions();
-                dbsp.connect();
-                DbPaymentCategory dbpc = new DbPaymentCategory();
-                dbpc.connect();
-                DbStudentRelative dbsr = new DbStudentRelative();
-                dbsr.connect();
-                int status;
-                AccTransaction tr = new AccTransaction();
-                StudentPayment sp = new StudentPayment();
-                sp.setStudent_id(student_id);
-                sp.setModification_date(new Date());
-                sp.setYear_id(myUI.getUser().getCurrent_year().getId());
-                sp.setPayment_cat_type_id(1);
-                if (initialPaymentTF.getPropertyDataSource().getValue() != null
-                        && (Double) initialPaymentTF.getPropertyDataSource().getValue() != 0.0
-                        && initialPaymentRateTF.getPropertyDataSource().getValue() != null
-                        && (Double) initialPaymentRateTF.getPropertyDataSource().getValue() != 0.0
-                        && initialPayCashBoxCB.getValue() != null) {
-                    sp.setAmount((Double) initialPaymentTF.getPropertyDataSource().getValue());
-                    sp.setRate((Double) initialPaymentRateTF.getPropertyDataSource().getValue());
-                    sp.setPayment_type_id((Integer) initialPayCashBoxCB.getContainerProperty(
-                            initialPayCashBoxCB.getValue(), Settings.payment_type_id).getValue());
-                    sp.setCurrency_id((Integer) initialPayCashBoxCB.getContainerProperty(
-                            initialPayCashBoxCB.getValue(), Settings.acc_currency_id).getValue());
-                    tr.setCashbox(new CashBox((Integer) initialPayCashBoxCB.getValue(), sp.getCurrency_id()));
-                }
-                sp.setWho_paid(dbsr.exec_get_who_paid(student_id));
-                sp.setNoteForCashBox(studDataTable.getContainerProperty(studDataTable.getValue(),
-                        myUI.getMessage(Messages.ClassName)).getValue().toString() + " "
-                        + studDataTable.getContainerProperty(studDataTable.getValue(),
-                        myUI.getMessage(Messages.StudentId)).getValue().toString() + " "
-                        + studDataTable.getContainerProperty(studDataTable.getValue(),
-                        myUI.getMessage(Messages.FirstName)).getValue().toString() + " "
-                        + studDataTable.getContainerProperty(studDataTable.getValue(),
-                        myUI.getMessage(Messages.LastName)).getValue().toString());
-                sp.setEmployee_id(myUI.getUser().getId());
-                sp.setSchool_id(myUI.getUser().getSchool().getId());
-                tr.setAmount(sp.getAmount());
-                tr.setCurrency_rate(sp.getRate());
-                tr.setDate(sp.getModification_date());
-                tr.setCategory_id(dbpc.get_initial_payment_category_id());
-                tr.setAccTypeId(1);
-                tr.setNote(sp.getNoteForCashBox());
-                tr.setEmployee_id(sp.getEmployee_id());
-                tr.setSchool_id(sp.getSchool_id());
-                if (initialPaymentTF.getValue() == null && initialPaymentTF.getData() != null) {
-                    sp.setId(((StudentPayment) initialPaymentTF.getData()).getId());
-                    String payment_id = Integer.toString(((StudentPayment) initialPaymentTF.getData()).getId());
-                    dbat.exec_delete(Settings.dbColumnStudent_payments_id, payment_id, dbsp.getConnection());//delete transaction
-                    dbsp.exec_update_emp_id(myUI.getUser().getId(), payment_id);
-                    dbsp.exec_delete(payment_id);
-                    initialPaymentTF.setData(null);
-                } else if (initialPaymentTF.getValue() != null
-                        && (Double) initialPaymentTF.getPropertyDataSource().getValue() != 0.0
-                        && initialPaymentTF.getData() != null) {
-                    sp.setId(((StudentPayment) initialPaymentTF.getData()).getId());
-                    sp.setModification_date(((StudentPayment) initialPaymentTF.getData()).getModification_date());
-                    tr.setStudent_payments_id(sp.getId());
-                    tr.setDate(sp.getModification_date());
-                    status = dbsp.exec_update(sp);
-                    if (status != 0) {
-                        int update_status = dbat.exec_update(tr, Settings.dbColumnStudent_payments_id,
-                                tr.getStudent_payments_id(), dbsp.getConnection());//update transaction normal
-                        if (update_status == 0) {
-                            dbat.exec_insert(tr, dbsp.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
-                        }
-                    }
-                } else if (initialPaymentTF.getValue() != null) {
-                    int order_num = dbsp.getMaxOrderNum(student_id);
-                    int payment_id = dbsp.exec_insert(sp, order_num);
-                    tr.setStudent_payments_id(payment_id);
-                    dbat.exec_insert(tr, dbsp.getConnection());
-                    initialPaymentTF.setData(dbsp.exec_get_init_payment(student_id, myUI.getUser().getCurrent_year().getId()));
-                }
-                dbpc.close();
-                dbsr.close();
-                dbsp.close();
-            }
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-    }
-
     private void insertInstPlanToDb(int student_id) {
         double diff;
         try {
@@ -3572,67 +3327,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
 
-        ObjectProperty<Double> property = new ObjectProperty<>(0.0);
-        initialPaymentTF = new TextField(myUI.getMessage(Messages.InitialPayment), property);
-        initialPaymentTF.setWidth(Settings.PERCENTS100);
-        initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.01, null));
-        initialPaymentTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        initialPaymentTF.setRequired(false);
-        initialPaymentTF.setNullSettingAllowed(true);
-        initialPaymentTF.setNullRepresentation("");
-        initialPaymentTF.setConverter(Settings.getStringToDoubleConverter(2));
-
-        initialPayCashBoxCB = new ComboBox(myUI.getMessage(Messages.CashBox));
-        initialPayCashBoxCB.setWidth("100%");
-        initialPayCashBoxCB.setNullSelectionAllowed(true);
-        initialPayCashBoxCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-        initialPayCashBoxCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
-        initialPayCashBoxCB.setFilteringMode(FilteringMode.CONTAINS);
-        try {
-            DbCashbox dbc = new DbCashbox();
-            dbc.connect();
-            initialPayCashBoxCB.setContainerDataSource(dbc.execSQLForStudentPayments(myUI));
-            dbc.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-
-        property = new ObjectProperty<>(0.0);
-        initialPaymentRateTF = new TextField(myUI.getMessage(Messages.Rate), property);
-        initialPaymentRateTF.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue),
-                0.01, null));
-        initialPaymentRateTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        initialPaymentRateTF.setRequired(false);
-        initialPaymentRateTF.setNullSettingAllowed(true);
-        initialPaymentRateTF.setNullRepresentation("");
-        initialPaymentRateTF.setConverter(Settings.getStringToDoubleConverter(4));
-        initialPaymentRateTF.setWidth(Settings.PERCENTS100);
-
-        calculateInitialPaymentButton = new Button();
-        calculateInitialPaymentButton.setDescription(myUI.getMessage(Messages.CalculateInitialPaymentButton));
-        calculateInitialPaymentButton.setStyleName(ValoTheme.BUTTON_TINY);
-        calculateInitialPaymentButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        calculateInitialPaymentButton.setIcon(FontAwesome.CALCULATOR);
-        calculateInitialPaymentButton.addClickListener(this);
-
-        HorizontalLayout hl = new HorizontalLayout();
-        hl.setSpacing(true);
-        hl.setWidth(Settings.PERCENTS100);
-        hl.addComponent(calculateInitialPaymentButton);
-        hl.addComponent(initialPaymentTF);
-        hl.addComponent(initialPayCashBoxCB);
-        hl.addComponent(initialPaymentRateTF);
-        hl.setExpandRatio(initialPaymentTF, 1);
-        hl.setExpandRatio(initialPayCashBoxCB, 1);
-        hl.setExpandRatio(initialPaymentRateTF, 1);
-        hl.setComponentAlignment(calculateInitialPaymentButton, Alignment.BOTTOM_LEFT);
-
         VerticalLayout leftVL = new VerticalLayout();
         leftVL.setSpacing(true);
         leftVL.setSizeFull();
         leftVL.addComponent(contractCB);
-        leftVL.addComponent(hl);
 
         VerticalLayout rightVL = new VerticalLayout();
         rightVL.setSpacing(true);
@@ -3669,7 +3367,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         divideBtn.setIcon(FontAwesome.CHECK);
         divideBtn.addClickListener(this);
 
-        hl = new HorizontalLayout();
+        HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
         hl.setWidth(Settings.PERCENTS100);
         hl.addComponent(instTypeCB);
@@ -3882,55 +3580,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             instTypeCB.setValue(sc.getInstallmentPlanTypeId());
             instTypeCB.addValueChangeListener(this);
         }
-        initialPaymentTF.removeAllValidators();
-        initialPaymentTF.setRequired(false);
-        initialPaymentRateTF.setRequired(false);
-        initialPayCashBoxCB.setRequired(false);
-        if (ip == null) {
-            initialPaymentTF.removeValueChangeListener(this);
-            initialPaymentTF.setValue(null);
-            initialPaymentTF.addValueChangeListener(this);
-            initialPaymentRateTF.removeValueChangeListener(this);
-            initialPaymentRateTF.setValue(null);
-            initialPaymentRateTF.addValueChangeListener(this);
-            initialPayCashBoxCB.removeValueChangeListener(this);
-            initialPayCashBoxCB.setValue(null);
-            initialPayCashBoxCB.addValueChangeListener(this);
-            initialPaymentTF.setData(null);
-            initialPaymentRateTF.setData(null);
-            initialPayCashBoxCB.setData(null);
-        } else {
-            initialPaymentTF.removeValueChangeListener(this);
-            initialPaymentTF.setValue(ip.getAmount() + "");
-            initialPaymentTF.addValueChangeListener(this);
-            initialPaymentTF.setData(ip);
-            initialPaymentRateTF.removeValueChangeListener(this);
-            initialPaymentRateTF.setValue(ip.getRate() + "");
-            initialPaymentRateTF.addValueChangeListener(this);
-            initialPaymentRateTF.setData(ip);
-            initialPayCashBoxCB.removeValueChangeListener(this);
-            initialPayCashBoxCB.setValue(ip.getCashBox_id());
-            initialPayCashBoxCB.addValueChangeListener(this);
-            initialPayCashBoxCB.setData(ip);
-            changeRequiredInitialPayment();
-        }
-    }
-
-    private void changeRequiredInitialPayment() {
-        if (initialPaymentTF.getValue() != null || initialPaymentRateTF.getValue() != null
-                || initialPayCashBoxCB.getValue() != null) {
-            initialPaymentTF.setRequired(true);
-            initialPaymentTF.setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
-            initialPaymentRateTF.setRequired(true);
-            initialPaymentRateTF.setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
-            initialPayCashBoxCB.setRequired(true);
-            initialPayCashBoxCB.setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
-        } else {
-            initialPaymentTF.setRequired(false);
-            initialPaymentTF.removeAllValidators();
-            initialPaymentRateTF.setRequired(false);
-            initialPayCashBoxCB.setRequired(false);
-        }
     }
 
     private StudentDiscount getStudentDiscount(int st_id, int year_id, String disc_id) {
@@ -4142,7 +3791,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         if (contractCB.getValue() != null) {
             instCtrAmount = 0.0;
             netContrAmount = 0.0;
-            instFirstPay = 0.0;
             instPlanContSum = 0.0;
             instCtrAmount = Double.parseDouble(contractCB.getContainerProperty(contractCB.getValue(),
                     myUI.getMessage(Messages.Amount)).getValue().toString());
@@ -4201,18 +3849,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             instCtrAmount += debt;
             netContrAmount = instCtrAmount;
-            if (initialPaymentTF.getPropertyDataSource().getValue() != null
-                    && !initialPaymentTF.getPropertyDataSource().getValue().equals("")
-                    && initialPayCashBoxCB.getValue() != null) {
-                if ((Integer) initialPayCashBoxCB.getContainerProperty(initialPayCashBoxCB.getValue(),
-                        Settings.acc_currency_id).getValue() == 1) {
-                    instFirstPay = (Double) initialPaymentTF.getPropertyDataSource().getValue();
-                } else {
-                    instFirstPay = (Double) initialPaymentTF.getPropertyDataSource().getValue()
-                            * (Double) initialPaymentRateTF.getPropertyDataSource().getValue();
-                }
-                instCtrAmount -= instFirstPay;
-            }
             if (ttl_payment != null && ttl_payment != 0.0) {
                 instCtrAmount -= (ttl_payment - init_payment);
             }

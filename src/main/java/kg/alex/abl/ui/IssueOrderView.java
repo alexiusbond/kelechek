@@ -387,8 +387,6 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 dbso.exec_update_future_orders(myUI.getUser().getCurrent_year().getId(),
                         1, selected_student_id);
                 dbso.close();
-                DbStudent dbs = new DbStudent();
-                dbs.connect();
                 DbStudentContract dbsc = new DbStudentContract();
                 dbsc.connect();
                 dbsc.exec_update_status_by_id(selected_student_id, 2, myUI.getUser().getId());
