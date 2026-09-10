@@ -4,7 +4,7 @@ public class Messages_ru extends kg.alex.kelechek.i18n.Messages {
 
     static final Object[][] contents_ru = {
             // Application
-            {AppTitle, "Академия будущих лидеров"},
+            {AppTitle, "Келечек MIT"},
             // Login Form
             {Language, "Язык"},
             {Level, "Уровень"},
@@ -172,7 +172,7 @@ public class Messages_ru extends kg.alex.kelechek.i18n.Messages {
             {ExtraPosition, "Доп. должность"},
             {ExtraPositions, "Доп должности"},
             {TotalWorkExperience, "Общий стаж работы"},
-            {AblWorkExperience, "Стаж работы в АБЛ"},
+            {KelechekWorkExperience, "Стаж работы в Kelechek MIT"},
             {ExtraBranches, "Доп. области преподавания"},
             {GenerateButton, "Сгенерировать"},
             {Permissions, "Разрешения"},
@@ -287,7 +287,7 @@ public class Messages_ru extends kg.alex.kelechek.i18n.Messages {
             {Left, "Осталось"},
             {TotalHours, "Кол-во часов за "},
             {WorkPlace, "Место работы"},
-            {Abl, "Академия будущих лидеров"},
+            {Kelechek, "Kelechek MIT"},
             {RelativeType, "Кем является"},
             {Relative, "Родственник"},
             {Passport, "Серия и номер паспорта"},
@@ -411,7 +411,7 @@ public class Messages_ru extends kg.alex.kelechek.i18n.Messages {
             {To, "по"},
             {ToAge, "Возраст по"},
             {Director, "Директор"},
-            {AblExam, "Экзамен-АБЛ"},
+            {KelechekExam, "Экзамен-Kelechek MIT"},
             {AllClasses, "Все классы"},
             {All, "Все"},
             {AllIncomes, "Все доходы"},

@@ -33,8 +33,8 @@ public class BranchCodesPdf {
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
             private static final long serialVersionUID = 1L;
-            private final static String FONT_LOCATION = "/home/abl/PT_Sans-Web-Regular.ttf";
-            private final static String FONT_LOCATION2 = "/home/abl/PT_Sans-Web-Bold.ttf";
+            private final static String FONT_LOCATION = "/home/kelechek/PT_Sans-Web-Regular.ttf";
+            private final static String FONT_LOCATION2 = "/home/kelechek/PT_Sans-Web-Bold.ttf";
 
             @Override
             public InputStream getStream() {

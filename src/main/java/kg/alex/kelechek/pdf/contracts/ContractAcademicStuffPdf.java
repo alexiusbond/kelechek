@@ -18,8 +18,8 @@ import java.io.ByteArrayOutputStream;
 public class ContractAcademicStuffPdf {
 
     static final Logger logger = LogManager.getLogger(ContractAcademicStuffPdf.class);
-    private final static String FONT_LOCATION = "/home/abl/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/abl/TimesNewRomanBold.ttf";
+    private final static String FONT_LOCATION = "/home/kelechek/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/kelechek/TimesNewRomanBold.ttf";
     private final EmployeeInfoPdf employeeInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;

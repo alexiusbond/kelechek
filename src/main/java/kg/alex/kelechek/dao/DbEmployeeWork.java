@@ -164,8 +164,8 @@ public class DbEmployeeWork extends BaseDb {
             item.getItemProperty(myUI.getMessage(Messages.End)).setValue(
                     edv.createDateField(result.getDate("ew.end_date"),
                             myUI.getMessage(Messages.End), null, false, Settings.datePattern, Resolution.DAY));
-            item.getItemProperty(myUI.getMessage(Messages.Abl)).setValue(
-                    edv.createCheckBox(result.getBoolean("ew.is_sapat"), myUI.getMessage(Messages.Abl)));
+            item.getItemProperty(myUI.getMessage(Messages.Kelechek)).setValue(
+                    edv.createCheckBox(result.getBoolean("ew.is_sapat"), myUI.getMessage(Messages.Kelechek)));
             item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
@@ -187,7 +187,7 @@ public class DbEmployeeWork extends BaseDb {
         ResultSet result = stat.executeQuery();
         final IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.WorkPlace), String.class, null);
-        container.addContainerProperty(myUI.getMessage(Messages.Abl), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Kelechek), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.MainPosition), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.ExtraPositions), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.WorkingStatus), String.class, null);
@@ -197,7 +197,7 @@ public class DbEmployeeWork extends BaseDb {
             String id = result.getString("ew.id");
             Item item = container.addItem(id);
             item.getItemProperty(myUI.getMessage(Messages.WorkPlace)).setValue(result.getString("wp.name"));
-            item.getItemProperty(myUI.getMessage(Messages.Abl)).setValue(result.getInt("ew.is_sapat") == 1 ?
+            item.getItemProperty(myUI.getMessage(Messages.Kelechek)).setValue(result.getInt("ew.is_sapat") == 1 ?
                     myUI.getMessage(Messages.Yes) : myUI.getMessage(Messages.No));
             item.getItemProperty(myUI.getMessage(Messages.MainPosition)).setValue(result.getString("p.name"));
             item.getItemProperty(myUI.getMessage(Messages.ExtraPositions)).setValue(result.getString("extra_positions"));

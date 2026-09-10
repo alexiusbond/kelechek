@@ -20,9 +20,9 @@ public class BaseDb {
         Context env;
         try {
             env = (Context) new InitialContext().lookup("java:comp/env");
-            pool = (DataSource) env.lookup("jdbc/abl");
+            pool = (DataSource) env.lookup("jdbc/kelechek");
             if (pool == null) {
-                throw new Exception("abl can not found");
+                throw new Exception("kelechek can not found");
             }
         } catch (NamingException ne) {
             throw new Exception("...BaseDB... " + ne.getMessage());

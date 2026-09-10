@@ -138,7 +138,7 @@ public class EmployeeCvWindow extends Window {
                 0, rowNum, 1, rowNum);
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +
-                                         myUI.getMessage(Messages.AblWorkExperience) + ": </b>" + employeeExtraInfo.getWorkExperienceSapat(), null),
+                                         myUI.getMessage(Messages.KelechekWorkExperience) + ": </b>" + employeeExtraInfo.getWorkExperienceSapat(), null),
                 0, rowNum, 1, rowNum);
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +

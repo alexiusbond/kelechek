@@ -47,8 +47,8 @@ public class CVPdf {
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
             private static final long serialVersionUID = 1L;
-            private final static String FONT_LOCATION = "/home/abl/PT_Sans-Web-Regular.ttf";
-            private final static String FONT_LOCATION2 = "/home/abl/PT_Sans-Web-Bold.ttf";
+            private final static String FONT_LOCATION = "/home/kelechek/PT_Sans-Web-Regular.ttf";
+            private final static String FONT_LOCATION2 = "/home/kelechek/PT_Sans-Web-Bold.ttf";
 
             @Override
             public InputStream getStream() {
@@ -215,7 +215,7 @@ public class CVPdf {
                     paragraph.add(new Phrase(employeeExtraInfo.getExtraPositions() + "\n", ordFont));
                     paragraph.add(new Phrase(myUI.getMessage(Messages.TotalWorkExperience) + ": ", ordFontBold));
                     paragraph.add(new Phrase(employeeExtraInfo.getWorkExperience() + "\n", ordFont));
-                    paragraph.add(new Phrase(myUI.getMessage(Messages.AblWorkExperience) + ": ", ordFontBold));
+                    paragraph.add(new Phrase(myUI.getMessage(Messages.KelechekWorkExperience) + ": ", ordFontBold));
                     paragraph.add(new Phrase(employeeExtraInfo.getWorkExperienceSapat() + "\n", ordFont));
                     paragraph.add(new Phrase(myUI.getMessage(Messages.MainBranch) + ": ", ordFontBold));
                     paragraph.add(new Phrase(employeeExtraInfo.getMainBranch() + "\n", ordFont));
