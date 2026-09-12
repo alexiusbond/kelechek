@@ -111,7 +111,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Double contr_with_disc;
     private Double ttl_left;
     private Double ttl_payment;
-    private Double init_payment;
     private Double discountAmount;
     private Double debt;
     private Double toPay;
@@ -3557,7 +3556,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void setContractTab(int st_id, int year_id) {
-        StudentPayment ip = null;
         StudentContract sc = null;
         try {
             DbStudentContract dbsc = new DbStudentContract();
@@ -3565,7 +3563,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             dbsc.connect();
             dbsp.connect();
             sc = dbsc.execSQL(st_id, year_id);
-            ip = dbsp.exec_get_init_payment(st_id, year_id);
             dbsc.close();
             dbsp.close();
         } catch (Exception e) {
@@ -3666,7 +3663,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             sp = dbsp.exec_recount_payment((Integer) studDataTable.getValue(),
                     myUI.getUser().getCurrent_year().getId());
             ttl_payment = sp.getTtl_pay();
-            init_payment = sp.getInit_pay();
             contract_amount = studentContract.getAmount();
             toPay = studentContract.getContr_with_disc() + studentContract.getCorrection() + debt;
             contractWithDiscount = studentContract.getContr_with_disc();
@@ -3850,7 +3846,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             instCtrAmount += debt;
             netContrAmount = instCtrAmount;
             if (ttl_payment != null && ttl_payment != 0.0) {
-                instCtrAmount -= (ttl_payment - init_payment);
+                instCtrAmount -= ttl_payment;
             }
             netIPlanTtlLab.setValue(myUI.getMessage(Messages.ToPlan) + ": " + Settings.dFormat2.format(Settings.round(instCtrAmount, 2)) + " " + currency);
             instPlanTtlLab.setValue(myUI.getMessage(Messages.InstallmentPlanTotal) + ": " + Settings.dFormat2.format(instPlanContSum) + " " + currency);
