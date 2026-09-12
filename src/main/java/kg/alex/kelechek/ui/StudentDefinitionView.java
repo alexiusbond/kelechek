@@ -589,15 +589,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         loginTF.setEnabled(false);
         fieldsLay1.addComponent(loginTF);
 
-        nameTF = new TextField(myUI.getMessage(Messages.FirstName));
-        nameTF.setRequired(true);
-        nameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        nameTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
-        nameTF.setWidth(Settings.PERCENTS100);
-        nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false));
-        fieldsLay1.addComponent(nameTF);
-
         surnameTF = new TextField(myUI.getMessage(Messages.LastName));
         surnameTF.setRequired(true);
         surnameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
@@ -606,6 +597,15 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         surnameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false));
         fieldsLay1.addComponent(surnameTF);
+
+        nameTF = new TextField(myUI.getMessage(Messages.FirstName));
+        nameTF.setRequired(true);
+        nameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
+        nameTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
+        nameTF.setWidth(Settings.PERCENTS100);
+        nameTF.addValidator(new StringLengthValidator(
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false));
+        fieldsLay1.addComponent(nameTF);
 
         middleNameTF = new TextField(myUI.getMessage(Messages.MiddleName));
         middleNameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
@@ -2017,15 +2017,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void setRelativesTable() {
-        if (NATURAL_COL_ORDER_RELATIVES == null) {
-            NATURAL_COL_ORDER_RELATIVES = new String[]{
-                    Settings.button,
-                    myUI.getMessage(Messages.RelativeType),
-                    myUI.getMessage(Messages.FullName),
-                    myUI.getMessage(Messages.Address),
-                    myUI.getMessage(Messages.Phone),
-                    myUI.getMessage(Messages.Responsible)};
-        }
         try {
             DbStudentRelative dbr = new DbStudentRelative();
             dbr.connect();
@@ -2036,11 +2027,34 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.error(e);
             logger.catching(e);
         }
+        configureRelativesTableColumns();
+    }
+
+    /** The same column order and proportions for loaded, new and copied rows. */
+    private void configureRelativesTableColumns() {
+        NATURAL_COL_ORDER_RELATIVES = new String[]{
+                Settings.button,
+                myUI.getMessage(Messages.RelativeType),
+                myUI.getMessage(Messages.FullName),
+                myUI.getMessage(Messages.Phone),
+                myUI.getMessage(Messages.Address),
+                myUI.getMessage(Messages.WorkPlace),
+                myUI.getMessage(Messages.Passport),
+                myUI.getMessage(Messages.PassportGiven),
+                myUI.getMessage(Messages.PassportDate),
+                myUI.getMessage(Messages.Responsible)
+        };
         relativesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_RELATIVES);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.FullName), 1);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Address), 1);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.RelativeType), 0.5f);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Responsible), 0.2f);
+        relativesTable.setColumnExpandRatio(Settings.button, 0.3f);
+        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.RelativeType), 0.8f);
+        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.FullName), 2.0f);
+        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Phone), 1.2f);
+        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Address), 1.8f);
+        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.WorkPlace), 1.3f);
+        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Passport), 1f);
+        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.PassportGiven), 1.3f);
+        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.PassportDate), 1f);
+        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Responsible), 0.5f);
     }
 
     public IndexedContainer prepareRelativesContainer() {
@@ -2056,6 +2070,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             relativesContainer.addContainerProperty(
                     myUI.getMessage(Messages.Address), TextField.class, null);
             relativesContainer.addContainerProperty(
+                    myUI.getMessage(Messages.WorkPlace), TextField.class, null);
+            relativesContainer.addContainerProperty(
+                    myUI.getMessage(Messages.Passport), TextField.class, null);
+            relativesContainer.addContainerProperty(
+                    myUI.getMessage(Messages.PassportGiven), TextField.class, null);
+            relativesContainer.addContainerProperty(
+                    myUI.getMessage(Messages.PassportDate), DateField.class, null);
+            relativesContainer.addContainerProperty(
                     myUI.getMessage(Messages.Responsible), CheckBox.class, false);
             relativesContainer.addContainerProperty(
                     Settings.crud_status, String.class, null);
@@ -2063,6 +2085,44 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             relativesContainer.removeAllItems();
         }
         return relativesContainer;
+    }
+
+    /**
+     * Creates the additional fields, then applies the rules to the complete row.
+     * Used for loading from the DAO, adding a row and copying another student's family.
+     */
+    public void fillRelativeAdditionalFields(Item item, String itemId, StudentRelative relative) {
+        item.getItemProperty(myUI.getMessage(Messages.WorkPlace)).setValue(
+                createTextField(relative == null ? null : relative.getWork_place(),
+                        myUI.getMessage(Messages.WorkPlace), itemId,
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
+                                0, 100, true), false));
+        item.getItemProperty(myUI.getMessage(Messages.Passport)).setValue(
+                createTextField(relative == null ? null : relative.getPassport(),
+                        myUI.getMessage(Messages.Passport), itemId,
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
+                                0, 45, true), false));
+        item.getItemProperty(myUI.getMessage(Messages.PassportGiven)).setValue(
+                createTextField(relative == null ? null : relative.getPassport_issue_place(),
+                        myUI.getMessage(Messages.PassportGiven), itemId,
+                        new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue),
+                                0, 45, true), false));
+
+        // SQL DATE: no time and no automatically supplied current date.
+        // Requiredness is configured below from the representative checkbox.
+        DateField issueDate = createDateField(
+                relative == null ? null : relative.getPassport_issue_date(),
+                myUI.getMessage(Messages.PassportDate), itemId,
+                true, false, Settings.datePattern, Resolution.DAY);
+        issueDate.setLenient(false);
+        issueDate.setParseErrorMessage(myUI.getMessage(Messages.NotificationWrongValue));
+        item.getItemProperty(myUI.getMessage(Messages.PassportDate)).setValue(issueDate);
+
+        // All core fields have already been created in each of the three callers.
+        // Read the actual checkbox: the DAO's partial model only contains extra fields.
+        CheckBox representative = (CheckBox) item.getItemProperty(
+                myUI.getMessage(Messages.Responsible)).getValue();
+        applyRelativeRequiredFields(item, Boolean.TRUE.equals(representative.getValue()));
     }
 
     public Button createButton(String description, String itemId, String table_name, Resource icon) {
@@ -2305,8 +2365,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 int counter = 0;
                 while (iter.hasNext()) {
                     Object next = iter.next();
-                    if (((CheckBox) relativesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(Messages.Responsible)).getValue()).getValue()) {
+                    Item relativeItem = relativesTable.getItem(next);
+                    boolean isMain = Boolean.TRUE.equals(((CheckBox) relativeItem.getItemProperty(
+                            myUI.getMessage(Messages.Responsible)).getValue()).getValue());
+                    applyRelativeRequiredFields(relativeItem, isMain);
+                    if (isMain) {
                         counter++;
                     }
                     if (!((TextField) relativesTable.getItem(next).getItemProperty(
@@ -2323,6 +2386,18 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     }
                     if (!((TextField) relativesTable.getItem(next).getItemProperty(
                             myUI.getMessage(Messages.Address)).getValue()).isValid()) {
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
+                                Notification.Type.WARNING_MESSAGE);
+                        return false;
+                    }
+                    if (!((TextField) relativesTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.WorkPlace)).getValue()).isValid()
+                            || !((TextField) relativesTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.Passport)).getValue()).isValid()
+                            || !((TextField) relativesTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.PassportGiven)).getValue()).isValid()
+                            || !((DateField) relativesTable.getItem(next).getItemProperty(
+                            myUI.getMessage(Messages.PassportDate)).getValue()).isValid()) {
                         Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                         return false;
@@ -2434,15 +2509,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void addRelativeItem() {
-        if (NATURAL_COL_ORDER_RELATIVES == null) {
-            NATURAL_COL_ORDER_RELATIVES = new String[]{
-                    Settings.button,
-                    myUI.getMessage(Messages.RelativeType),
-                    myUI.getMessage(Messages.FullName),
-                    myUI.getMessage(Messages.Address),
-                    myUI.getMessage(Messages.Phone),
-                    myUI.getMessage(Messages.Responsible)};
-        }
         String id = Settings.FreshItem + (--r_table_counter);
         if (relativesTable.getContainerDataSource().size() == 0) {
             relativesTable.setContainerDataSource(prepareRelativesContainer());
@@ -2470,13 +2536,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(Messages.RelativeType)).setValue(
                 createCombobox(0, myUI.getMessage(Messages.RelativeType), id,
                         Settings.dbRelatives, false));
+        fillRelativeAdditionalFields(item, id, null);
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
 
-        relativesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_RELATIVES);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.FullName), 1);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Address), 1);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.RelativeType), 0.5f);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Responsible), 0.2f);
+        configureRelativesTableColumns();
     }
 
     private void insertInstPlanToDb(int student_id) {
@@ -2571,6 +2634,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         rel.setRelative_id((Integer) ((ComboBox) item.getItemProperty(
                 myUI.getMessage(Messages.RelativeType)).getValue()).getValue());
 
+        rel.setWork_place(((TextField) item.getItemProperty(
+                myUI.getMessage(Messages.WorkPlace)).getValue()).getValue());
+        rel.setPassport(((TextField) item.getItemProperty(
+                myUI.getMessage(Messages.Passport)).getValue()).getValue());
+        rel.setPassport_issue_place(((TextField) item.getItemProperty(
+                myUI.getMessage(Messages.PassportGiven)).getValue()).getValue());
+        rel.setPassport_issue_date(((DateField) item.getItemProperty(
+                myUI.getMessage(Messages.PassportDate)).getValue()).getValue());
         rel.setId(id);
         return rel;
     }
@@ -3919,33 +3990,54 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void familyTableCheck(boolean isMain, String itemId) {
-        if (isMain) {
-            ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Address)).getValue()).setRequired(true);
-            ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Address)).getValue()).setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
-            ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Address)).getValue()).addValidator(new StringLengthValidator(
-                    myUI.getMessage(Messages.NotificationWrongValue), 1, 300, false));
+        Item item = relativesTable.getItem(itemId);
+        // Ignore a late event for a row that has already been removed.
+        if (item != null) {
+            applyRelativeRequiredFields(item, isMain);
+        }
+    }
 
-            ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Phone)).getValue()).setRequired(true);
-            ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Phone)).getValue()).setRequiredError(myUI.getMessage(Messages.NotificationWrongValue));
-            ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Phone)).getValue()).addValidator(new StringLengthValidator(
-                    myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false));
-        } else {
+    /** Business rules for a complete relative row; does not change field values. */
+    private void applyRelativeRequiredFields(Item item, boolean isMain) {
+        ComboBox relativeType = (ComboBox) item.getItemProperty(
+                myUI.getMessage(Messages.RelativeType)).getValue();
+        relativeType.setRequired(true);
+        relativeType.setRequiredError(myUI.getMessage(Messages.RequiredField));
 
-            ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Address)).getValue()).setRequired(false);
-            ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Address)).getValue()).removeAllValidators();
+        configureRelativeTextField(item, Messages.FullName, true, 250);
+        configureRelativeTextField(item, Messages.Phone, true, 100);
+        configureRelativeTextField(item, Messages.Address, isMain, 300);
+        configureRelativeTextField(item, Messages.WorkPlace, isMain, 100);
+        configureRelativeTextField(item, Messages.Passport, isMain, 45);
+        configureRelativeTextField(item, Messages.PassportGiven, isMain, 45);
 
-            ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Phone)).getValue()).setRequired(false);
-            ((TextField) relativesTable.getContainerProperty(itemId,
-                    myUI.getMessage(Messages.Phone)).getValue()).removeAllValidators();
+        DateField issueDate = (DateField) item.getItemProperty(
+                myUI.getMessage(Messages.PassportDate)).getValue();
+        issueDate.setRequired(isMain);
+        issueDate.setRequiredError(myUI.getMessage(Messages.RequiredField));
+
+        CheckBox representative = (CheckBox) item.getItemProperty(
+                myUI.getMessage(Messages.Responsible)).getValue();
+        representative.setImmediate(true);
+    }
+
+    private void configureRelativeTextField(Item item, String messageKey,
+                                            boolean required, int maxLength) {
+        TextField field = (TextField) item.getItemProperty(myUI.getMessage(messageKey)).getValue();
+        field.setRequired(required);
+        field.setRequiredError(myUI.getMessage(Messages.RequiredField));
+
+        // Rebuild this row field's validators so toggling does not accumulate them.
+        // Optional fields retain their database length limit.
+        field.removeAllValidators();
+        field.addValidator(new StringLengthValidator(
+                myUI.getMessage(Messages.NotificationWrongValue), 0, maxLength, true));
+        if (required) {
+            field.addValidator((Validator) value -> {
+                if (value == null || value.toString().trim().isEmpty()) {
+                    throw new Validator.InvalidValueException(myUI.getMessage(Messages.RequiredField));
+                }
+            });
         }
     }
 
@@ -4483,16 +4575,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             return;
         }
 
-        if (NATURAL_COL_ORDER_RELATIVES == null) {
-            NATURAL_COL_ORDER_RELATIVES = new String[]{
-                    Settings.button,
-                    myUI.getMessage(Messages.RelativeType),
-                    myUI.getMessage(Messages.FullName),
-                    myUI.getMessage(Messages.Address),
-                    myUI.getMessage(Messages.Phone),
-                    myUI.getMessage(Messages.Responsible)
-            };
-        }
 
         if (relativesTable.getContainerDataSource().size() == 0) {
             relativesTable.setContainerDataSource(prepareRelativesContainer());
@@ -4576,15 +4658,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     )
             );
 
+            fillRelativeAdditionalFields(item, id, relative);
+
             item.getItemProperty(Settings.crud_status).setValue(
                     myUI.getMessage(Messages.Insert)
             );
         }
 
-        relativesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_RELATIVES);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.FullName), 1);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Address), 1);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.RelativeType), 0.5f);
-        relativesTable.setColumnExpandRatio(myUI.getMessage(Messages.Responsible), 0.2f);
+        configureRelativesTableColumns();
     }
 }

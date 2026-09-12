@@ -17,6 +17,8 @@ import kg.alex.kelechek.utils.Settings;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,8 @@ public class DbStudentRelative extends BaseDb {
                                            StudentDefinitionView dw) throws SQLException {
 
         String sql = "SELECT sr.id, sr.student_id, sr.fullname, "
-                + "sr.phone, sr.address, sr.is_main, sr.relatives_id "
+                + "sr.phone, sr.address, sr.is_main, sr.relatives_id, "
+                + "sr.work_place, sr.passport, sr.passport_issue_place, sr.passport_issue_date "
                 + "FROM student_relatives as sr "
                 + "where sr.student_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -85,6 +88,9 @@ public class DbStudentRelative extends BaseDb {
                     dw.createCombobox(result.getInt("sr.relatives_id"),
                             myUi.getMessage(Messages.RelativeType),
                             id, Settings.dbRelatives, false));
+            StudentRelative relative = new StudentRelative();
+            readAdditionalFields(result, relative);
+            dw.fillRelativeAdditionalFields(item, id, relative);
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
         }
         return container;
@@ -92,7 +98,9 @@ public class DbStudentRelative extends BaseDb {
 
     public List<StudentRelative> allRelativesByStudentId(int stud_id) throws SQLException {
 
-        String sql = "select distinct(r.id) as id, r.name, sr.fullname, sr.phone, sr.is_main from student_relatives as sr " +
+        String sql = "select distinct(r.id) as id, r.name, sr.fullname, sr.phone, sr.is_main, " +
+                "sr.work_place, sr.passport, sr.passport_issue_place, sr.passport_issue_date " +
+                "from student_relatives as sr " +
                 "left join relatives as r on sr.relatives_id = r.id " +
                 "where sr.student_id = ? order by sr.is_main desc";
 
@@ -106,6 +114,7 @@ public class DbStudentRelative extends BaseDb {
             studentRelative.setFullName(result.getString("sr.fullname"));
             studentRelative.setPhone(result.getString("sr.phone"));
             studentRelative.setRelativeTitle(result.getString("r.name"));
+            readAdditionalFields(result, studentRelative);
             list.add(studentRelative);
         }
         return list;
@@ -113,32 +122,37 @@ public class DbStudentRelative extends BaseDb {
 
     public int exec_insert(StudentRelative sr) throws SQLException {
         String sql = "INSERT INTO student_relatives (student_id, fullname, "
-                + "phone, address, is_main, relatives_id) "
-                + "VALUES(?,?,?,?,?,?)";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, sr.getStudent_id());
-        stat.setString(2, sr.getFullName());
-        stat.setString(3, sr.getPhone());
-        stat.setString(4, sr.getAddress());
-        stat.setInt(5, sr.getIs_main());
-        stat.setInt(6, sr.getRelative_id());
-        return stat.executeUpdate();
+                + "phone, address, is_main, relatives_id, work_place, passport, "
+                + "passport_issue_place, passport_issue_date) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?)";
+        try (PreparedStatement stat = dbCon.prepareStatement(sql)) {
+            stat.setInt(1, sr.getStudent_id());
+            stat.setString(2, sr.getFullName());
+            stat.setString(3, sr.getPhone());
+            stat.setString(4, sr.getAddress());
+            stat.setInt(5, sr.getIs_main());
+            stat.setInt(6, sr.getRelative_id());
+            bindAdditionalFields(stat, sr);
+            return stat.executeUpdate();
+        }
     }
 
     public int exec_update(StudentRelative sr) throws SQLException {
-        String sql = "update student_relatives set student_id = ?, "
-                + "fullname = ?, phone = ?, address = ?, is_main = ?, relatives_id = ? "
+        String sql = "UPDATE student_relatives SET student_id = ?, "
+                + "fullname = ?, phone = ?, address = ?, is_main = ?, relatives_id = ?, "
+                + "work_place = ?, passport = ?, passport_issue_place = ?, passport_issue_date = ? "
                 + "WHERE id = ?";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, sr.getStudent_id());
-        stat.setString(2, sr.getFullName());
-        stat.setString(3, sr.getPhone());
-        stat.setString(4, sr.getAddress());
-        stat.setInt(5, sr.getIs_main());
-        stat.setInt(6, sr.getRelative_id());
-
-        stat.setString(7, sr.getId());
-        return stat.executeUpdate();
+        try (PreparedStatement stat = dbCon.prepareStatement(sql)) {
+            stat.setInt(1, sr.getStudent_id());
+            stat.setString(2, sr.getFullName());
+            stat.setString(3, sr.getPhone());
+            stat.setString(4, sr.getAddress());
+            stat.setInt(5, sr.getIs_main());
+            stat.setInt(6, sr.getRelative_id());
+            bindAdditionalFields(stat, sr);
+            stat.setString(11, sr.getId());
+            return stat.executeUpdate();
+        }
     }
 
     public String exec_get_who_paid(int stud_id) throws SQLException {
@@ -156,7 +170,8 @@ public class DbStudentRelative extends BaseDb {
     public List<StudentRelative> getStudentRelatives(int studId) throws SQLException {
 
         String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.phone, sr.address, "
-                + "sr.is_main, sr.relatives_id FROM student_relatives sr "
+                + "sr.is_main, sr.relatives_id, sr.work_place, sr.passport, "
+                + "sr.passport_issue_place, sr.passport_issue_date FROM student_relatives sr "
                 + "WHERE sr.student_id = ?";
 
         List<StudentRelative> relatives = new ArrayList<>();
@@ -175,6 +190,7 @@ public class DbStudentRelative extends BaseDb {
                     relative.setAddress(result.getString("address"));
                     relative.setIs_main(result.getInt("is_main"));
                     relative.setRelative_id(result.getInt("relatives_id"));
+                    readAdditionalFields(result, relative);
 
                     relatives.add(relative);
                 }
@@ -186,7 +202,8 @@ public class DbStudentRelative extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi, int stud_id) throws SQLException {
 
         String sql = "SELECT sr.fullname, sr.phone, "
-                + "sr.address, sr.relatives_id, sr.is_main "
+                + "sr.address, sr.relatives_id, sr.is_main, sr.work_place, sr.passport, "
+                + "sr.passport_issue_place, sr.passport_issue_date "
                 + "FROM student_relatives as sr where sr.student_id = ? "
                 + "group by sr.relatives_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -196,6 +213,10 @@ public class DbStudentRelative extends BaseDb {
         container.addContainerProperty(myUi.getMessage(Messages.FullName), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Phone), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Address), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.WorkPlace), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Passport), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.PassportGiven), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.PassportDate), Date.class, null);
         container.addContainerProperty(Settings.is_main, Integer.class, 0);
 
         while (result.next()) {
@@ -206,9 +227,48 @@ public class DbStudentRelative extends BaseDb {
                     result.getString("sr.phone"));
             item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
                     result.getString("sr.address"));
+            item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
+                    result.getString("work_place"));
+            item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
+                    result.getString("passport"));
+            item.getItemProperty(myUi.getMessage(Messages.PassportGiven)).setValue(
+                    result.getString("passport_issue_place"));
+            item.getItemProperty(myUi.getMessage(Messages.PassportDate)).setValue(
+                    result.getDate("passport_issue_date"));
             item.getItemProperty(Settings.is_main).setValue(
                     result.getInt("sr.is_main"));
         }
         return container;
+    }
+
+    private void readAdditionalFields(ResultSet result, StudentRelative relative) throws SQLException {
+        relative.setWork_place(result.getString("work_place"));
+        relative.setPassport(result.getString("passport"));
+        relative.setPassport_issue_place(result.getString("passport_issue_place"));
+        relative.setPassport_issue_date(result.getDate("passport_issue_date"));
+    }
+
+    /**
+     * Parameters 7-10 are shared by INSERT and UPDATE.
+     */
+    private void bindAdditionalFields(PreparedStatement stat, StudentRelative relative) throws SQLException {
+        setNullableString(stat, 7, relative.getWork_place());
+        setNullableString(stat, 8, relative.getPassport());
+        setNullableString(stat, 9, relative.getPassport_issue_place());
+        Date issueDate = relative.getPassport_issue_date();
+        if (issueDate == null) {
+            stat.setNull(10, Types.DATE);
+        } else {
+            stat.setDate(10, new java.sql.Date(issueDate.getTime()));
+        }
+    }
+
+    private void setNullableString(PreparedStatement stat, int index, String value) throws SQLException {
+        // Clearing an optional field must clear the corresponding database value.
+        if (value == null || value.trim().isEmpty()) {
+            stat.setNull(index, Types.VARCHAR);
+        } else {
+            stat.setString(index, value);
+        }
     }
 }

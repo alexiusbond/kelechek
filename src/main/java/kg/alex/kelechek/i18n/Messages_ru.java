@@ -293,7 +293,7 @@ public class Messages_ru extends kg.alex.kelechek.i18n.Messages {
             {Passport, "Серия и номер паспорта"},
             {PassportGiven, "Выдавший орган"},
             {PassportDate, "Дата выдачи"},
-            {Responsible, "Законный представитель"},
+            {Responsible, "Законный представ."},
             {NotificationOnlyOneMain, "Основная область может быть выбрана только 1"},
             {NotificationUploadDocument, "Загрузите справку для подтверждения скидки"},
             {Main, "Основной"},

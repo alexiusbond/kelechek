@@ -2,6 +2,7 @@
 package kg.alex.kelechek.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class StudentRelative implements Serializable {
 
@@ -10,6 +11,10 @@ public class StudentRelative implements Serializable {
     private String fullName;
     private String phone;
     private String address;
+    private String work_place;
+    private String passport;
+    private String passport_issue_place;
+    private Date passport_issue_date;
     private int is_main;
     private int relative_id;
     private String relativeDeclarative;
@@ -95,5 +100,37 @@ public class StudentRelative implements Serializable {
 
     public void setRelative_id(int relative_id) {
         this.relative_id = relative_id;
+    }
+
+    public String getWork_place() {
+        return work_place;
+    }
+
+    public void setWork_place(String work_place) {
+        this.work_place = work_place;
+    }
+
+    public String getPassport() {
+        return passport;
+    }
+
+    public void setPassport(String passport) {
+        this.passport = passport;
+    }
+
+    public String getPassport_issue_place() {
+        return passport_issue_place;
+    }
+
+    public void setPassport_issue_place(String passport_issue_place) {
+        this.passport_issue_place = passport_issue_place;
+    }
+
+    public Date getPassport_issue_date() {
+        return passport_issue_date;
+    }
+
+    public void setPassport_issue_date(Date passport_issue_date) {
+        this.passport_issue_date = passport_issue_date;
     }
 }
