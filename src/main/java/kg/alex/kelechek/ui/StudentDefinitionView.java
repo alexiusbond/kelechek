@@ -1,6 +1,7 @@
 package kg.alex.kelechek.ui;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
@@ -285,17 +286,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studentsCB.setWidth(Settings.PERCENTS100);
         studentsCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         studentsCB.setFilteringMode(FilteringMode.CONTAINS);
-        try {
-            DbStudent dbDef = new DbStudent();
-            dbDef.connect();
-            studentsCB.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, myUI.getUser().getSchool().getId(),
-                            myUI.getUser().getCurrent_year().getId(), "1,2,3,4,5"));
-            dbDef.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
+        refreshStudentsForCopy();
 
         copyRelBtn = new Button(myUI.getMessage(Messages.Copy));
         copyRelBtn.setStyleName(ValoTheme.BUTTON_SMALL);
@@ -478,6 +469,48 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 });
         this.setSecondComponent(tabs);
         prepareNormalMode();
+    }
+
+    /**
+     * Reloads copy-source students using the existing school/year/status selection.
+     * Runs on initial load, after successful creation and when opening the popup.
+     * Does not select a newly created student or modify any relatives.
+     */
+    private void refreshStudentsForCopy() {
+        Object selectedStudentId = studentsCB.getValue();
+        DbStudent dbStudent = null;
+        try {
+            dbStudent = new DbStudent();
+            dbStudent.connect();
+            Container refreshedStudents = dbStudent.exec_for_select(
+                    myUI,
+                    myUI.getUser().getSchool().getId(),
+                    myUI.getUser().getCurrent_year().getId(),
+                    "1,2,3,4,5");
+
+            if (refreshedStudents == null) {
+                throw new IllegalStateException("Student selection query returned null");
+            }
+
+            // Do not clear the current list before the query has succeeded.
+            studentsCB.setContainerDataSource(refreshedStudents);
+            studentsCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
+            studentsCB.setValue(selectedStudentId != null
+                    && refreshedStudents.containsId(selectedStudentId)
+                    ? selectedStudentId : null);
+        } catch (Exception e) {
+            // A list refresh failure must not turn a saved student into a failed save.
+            // Opening the copy popup retries the query.
+            logger.error("Unable to refresh students for copying relatives", e);
+        } finally {
+            if (dbStudent != null) {
+                try {
+                    dbStudent.close();
+                } catch (Exception e) {
+                    logger.error("Unable to close student selection connection", e);
+                }
+            }
+        }
     }
 
     private void buildButtonsLayout() {
@@ -785,6 +818,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if (source == plusRelButton) {
             addRelativeItem();
         } else if (source == copyRelPopupButton) {
+            refreshStudentsForCopy();
         } else if (source == plusMatGiveButton) {
             addAccessoriesItem(give);
         } else if (source == plusMatReceiveButton) {
@@ -923,6 +957,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 if (validateContractsTab(contractTabLay) && validateDiscountsTable() &&
                                         validateCorrectionsTable() && validateInstallmentTable()) {
                                     if (validatePaymentsTable(paymentsTable)) {
+                                        boolean studentCreated = false;
                                         DbStudent dbst = new DbStudent();
                                         dbst.connect();
                                         if (isNew) {
@@ -938,6 +973,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     relativeItem = insertRelatives(id);
                                                 }
                                                 addDataContainerItem(id, relativeItem);
+                                                studentCreated = true;
                                                 Notification.show(myUI.getMessage(Messages.ValueSaved),
                                                         Notification.Type.HUMANIZED_MESSAGE);
                                                 prepareNormalMode();
@@ -1055,6 +1091,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                             }
                                         }
                                         dbst.close();
+                                        if (studentCreated) {
+                                            refreshStudentsForCopy();
+                                        }
                                     }
                                 }
                             }
@@ -1125,11 +1164,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         dbSchool.connect();
                         studInfo.setSchool(dbSchool.execSchool(myUI.getUser().getSchool().getId()));
                         dbSchool.close();
-                        DbStudentRelative dbRel = new DbStudentRelative();
-                        dbRel.connect();
-                        studInfo.setRelatives(dbRel.allRelativesByStudentId(
-                                (Integer) studDataTable.getValue()));
-                        dbRel.close();
                     } catch (Exception e) {
                         logger.error(e);
                         logger.catching(e);
@@ -1220,7 +1254,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (studInfo.getMainRelative() != null && studInfo.getMainRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
-                                new ContractPdfRu(myUI, studInfo, instPlanCont);
+                                new ContractPdfRu(myUI, studInfo);
                             } else {
                                 Notification.show(myUI.getMessage(Messages.NoDirectorAssigned),
                                         Notification.Type.WARNING_MESSAGE);
@@ -2030,7 +2064,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         configureRelativesTableColumns();
     }
 
-    /** The same column order and proportions for loaded, new and copied rows. */
+    /**
+     * The same column order and proportions for loaded, new and copied rows.
+     */
     private void configureRelativesTableColumns() {
         NATURAL_COL_ORDER_RELATIVES = new String[]{
                 Settings.button,
@@ -3997,7 +4033,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
     }
 
-    /** Business rules for a complete relative row; does not change field values. */
+    /**
+     * Business rules for a complete relative row; does not change field values.
+     */
     private void applyRelativeRequiredFields(Item item, boolean isMain) {
         ComboBox relativeType = (ComboBox) item.getItemProperty(
                 myUI.getMessage(Messages.RelativeType)).getValue();

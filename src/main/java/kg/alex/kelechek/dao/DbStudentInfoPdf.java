@@ -20,7 +20,7 @@ public class DbStudentInfoPdf extends BaseDb {
     public StudentInfoPdf execSQL(int year_id, int student_id) throws SQLException {
         StudentInfoPdf sti = new StudentInfoPdf();
         String sql = "SELECT s.id, s.login, s.photo, s.surname, s.name, s.middle_name, s.gender_id, "
-                + "s.date_of_birth, sr.fullname, "
+                + "s.date_of_birth, sr.fullname, sr.passport, sr.work_place, sr.passport_issue_place, sr.passport_issue_date, "
                 + "sr.phone, sr.address, r.name_ru, r.name_ru_dec, r.gender_id, "
                 + "y.period, y.end_date, y.name, sc.contract_number, sc.creation_date, "
                 + "vcs.class_name, vcs.class_type "
@@ -58,6 +58,10 @@ public class DbStudentInfoPdf extends BaseDb {
             sti.getMainRelative().setPhone(result.getString("sr.phone"));
             sti.getMainRelative().setAddress(result.getString("sr.address"));
             sti.getMainRelative().setRelativeTitle(result.getString("r.name_ru"));
+            sti.getMainRelative().setPassport(result.getString("sr.passport"));
+            sti.getMainRelative().setPassport_issue_place(result.getString("sr.passport_issue_place"));
+            sti.getMainRelative().setWork_place(result.getString("sr.work_place"));
+            sti.getMainRelative().setPassport_issue_date(result.getDate("sr.passport_issue_date"));
             sti.getMainRelative().setGender_id(result.getInt("r.gender_id"));
             sti.getMainRelative().setRelativeDeclarative(result.getString("r.name_ru_dec"));
             sti.setYear(new Year(result.getString("y.period"),
