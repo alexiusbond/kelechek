@@ -23,7 +23,7 @@ public class DbStudentInfoPdf extends BaseDb {
                 + "s.date_of_birth, sr.fullname, sr.passport, sr.work_place, sr.passport_issue_place, sr.passport_issue_date, "
                 + "sr.phone, sr.address, r.name_ru, r.name_ru_dec, r.gender_id, "
                 + "y.period, y.end_date, y.name, sc.contract_number, sc.creation_date, "
-                + "vcs.class_name, vcs.class_type "
+                + "vcs.class_name, vcs.class_number, vcs.class_type "
                 + "FROM student as s "
                 + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = s.id and vcs.year_id = ? "
                 + "left join student_relatives as sr on sr.student_id = s.id "
@@ -54,6 +54,7 @@ public class DbStudentInfoPdf extends BaseDb {
             }
             sti.getStudent().setGender_id(result.getInt("s.gender_id"));
             sti.getStudent().setClass_name(result.getString("vcs.class_name"));
+            sti.getStudent().setClass_number(result.getInt("vcs.class_number"));
             sti.getMainRelative().setFullName(result.getString("sr.fullname"));
             sti.getMainRelative().setPhone(result.getString("sr.phone"));
             sti.getMainRelative().setAddress(result.getString("sr.address"));

@@ -19,6 +19,7 @@ public class Student implements Serializable {
     private int gender_id;
     private Date birth_date;
     private String class_name;
+    private int class_number;
     private int class_name_id;
     private int edu_status_id;
     private String photo;
@@ -26,6 +27,14 @@ public class Student implements Serializable {
     private int school_id;
     private int entering_year_id;
     private int employee_id;
+
+    public int getClass_number() {
+        return class_number;
+    }
+
+    public void setClass_number(int class_number) {
+        this.class_number = class_number;
+    }
 
     public int getId() {
         return id;

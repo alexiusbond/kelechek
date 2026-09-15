@@ -8,6 +8,7 @@ import kg.alex.kelechek.domain.StudentInfoPdf;
 import kg.alex.kelechek.domain.StudentRelative;
 import kg.alex.kelechek.utils.Decliner;
 import kg.alex.kelechek.utils.Settings;
+import kg.alex.kelechek.utils.money.WritableSummRuSOM;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -195,14 +196,23 @@ public class ContractPdfRu {
                 paragraph.add(new Phrase("2.1. ", ordBoldFont));
                 paragraph.add(new Phrase("Стоимость услуг по настоящему Договору составляет:", ordFont));
                 document.add(paragraph);
-
+                WritableSummRuSOM money = new WritableSummRuSOM();
                 paragraph.clear();
-                // Стоимость оставлена как в шаблоне договора.
-                paragraph.add(new Phrase("49500 (сорок девять тысяч пятьсот) сом 00 т. сомов в месяц,", ordBoldFont));
+
+                double paymentMonthly = studentInfo.getContractInfo().getNet() /
+                        (studentInfo.getStudent().getClass_number() == 9
+                                || studentInfo.getStudent().getClass_number() == 11
+                                ? 9.5 : 9);
+
+                paragraph.add(new Phrase(Settings.dFormat2.format(paymentMonthly)
+                        + " (" + money.numberToString(paymentMonthly).trim()
+                        + ") сомов в месяц.", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("445500 (четыреста сорок пять тысяч пятьсот) сом 00 т. сомов за один учебный год.", ordBoldFont));
+                paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getNet())
+                        + " (" + money.numberToString(studentInfo.getContractInfo().getNet()).trim()
+                        + ") за один учебный год.", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();
