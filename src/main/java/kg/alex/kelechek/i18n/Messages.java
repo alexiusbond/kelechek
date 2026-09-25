@@ -431,7 +431,6 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String CanNotSaveIdNumber = generateId();
     public static final String NotificationEmptyTable = generateId();
     public static final String NotificationSameDiscountsAreNotAllowed = generateId();
-    public static final String NotificationSameDatesAreNotAllowed = generateId();
     public static final String NotificationWrongSumInstSum = generateId();
     public static final String CanNotModify = generateId();
     public static final String DownloadBackupButton = generateId();
@@ -605,6 +604,12 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String ShortTermDebtsUSD = generateId();
     public static final String ProfitOfPreviousPeriods = generateId();
     public static final String ProfitForPeriod = generateId();
+
+    // Discount calculation: append new keys to preserve existing generated IDs.
+    public static final String NotificationContractDiscountRecalculationRequired = generateId();
+    public static final String NotificationContractNotSelected = generateId();
+    public static final String NotificationInvalidDiscountRow = generateId();
+    public static final String NotificationIncompleteDiscountRow = generateId();
 
     private static String generateId() {
         return Integer.toString(ids++);

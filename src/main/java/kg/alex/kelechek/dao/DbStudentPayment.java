@@ -355,27 +355,12 @@ public class DbStudentPayment extends BaseDb {
         return container;
     }
 
-    public double exec_get_difference(int st_id, int year_id) throws SQLException {
-        double ip = 0;
-        String sql = "SELECT ifnull(SUM(IF(payment_category_id != 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)) - "
-                + "SUM(IF(payment_category_id = 3, CASE WHEN sp.acc_currency_id = 1 THEN sp.amount ELSE sp.amount * sp.dollar_rate END, 0)), 0.0)  as total "
-                + "FROM student_payments as sp where sp.student_id = ? and sp.year_id = ?";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, st_id);
-        stat.setInt(2, year_id);
-        ResultSet result = stat.executeQuery();
-        if (result.next()) {
-            ip = (result.getDouble("total"));
-        }
-        return ip;
-    }
-
     public String execGetWeeklyPaid(String students, int scl_id, int year_id)
             throws SQLException {
         String sql = "SELECT count(distinct st.id) as st, "
                 + "ifnull(sum(if(sp.payment_category_id = 3, "
-                + "-if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount), "
-                + "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount))),0.00) as week_paid "
+                + "-if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount, sp.amount * sp.dollar_rate), "
+                + "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount, sp.amount * sp.dollar_rate))),0.00) as week_paid "
                 + "FROM student_payments as sp "
                 + "left join student as st on st.id = sp.student_id "
                 + "where st.school_id = ? and sp.year_id = ? and "
@@ -396,8 +381,8 @@ public class DbStudentPayment extends BaseDb {
 
         String sql = "SELECT count(distinct st.id) as st, "
                 + "ifnull(sum(if(sp.payment_category_id = 3, "
-                + "-if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate, sp.amount), "
-                + "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate, sp.amount))),0.00) as month_paid "
+                + "-if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount, sp.amount * sp.dollar_rate), "
+                + "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount, sp.amount * sp.dollar_rate))),0.00) as month_paid "
                 + "FROM student_payments as sp "
                 + "left join student as st on st.id = sp.student_id "
                 + "where st.school_id = ? and sp.year_id = ? and "

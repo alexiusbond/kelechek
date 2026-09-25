@@ -71,18 +71,6 @@ public class DbStudentInstallmentPlan extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int exec_insert_notVisible(int st_id, int year_id, double amount)
-            throws SQLException {
-        String sql = "INSERT INTO student_installement_plan (student_id, year_id, "
-                + "amount, date_of_payment, is_visible) "
-                + "VALUES(?,?,?,NOW(),0)";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, st_id);
-        stat.setInt(2, year_id);
-        stat.setDouble(3, amount);
-        return stat.executeUpdate();
-    }
-
     public int exec_delete(int stud_id, int year_id) throws SQLException {
         String sql = "DELETE FROM student_installement_plan WHERE student_id = ? "
                 + "and year_id = ?";

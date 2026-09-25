@@ -438,7 +438,6 @@ public class Messages_ru extends kg.alex.kelechek.i18n.Messages {
             {CanNotSaveIdNumber, "Этот ID номер уже используется"},
             {NotificationEmptyTable, "Таблица не может быть пустой"},
             {NotificationSameDiscountsAreNotAllowed, "Нельзя использовать одну и ту же скидку дважды"},
-            {NotificationSameDatesAreNotAllowed, "Выбраны две одинаковые даты в плане оплат"},
             {NotificationWrongSumInstSum, "Неверные сумма и сумма плана оплат"},
             {CanNotModify, "Данная запись используется в других таблицах, вы не можете ее изменить!"},
             {DownloadBackupButton, "Скачать бекап"},
@@ -611,6 +610,14 @@ public class Messages_ru extends kg.alex.kelechek.i18n.Messages {
             {ShortTermDebtsUSD, "КРАТКОСРОЧНЫЕ ЗАДОЛЖЕННОСТИ (USD)"},
             {ProfitOfPreviousPeriods, "Прибыль прошлых периодов"},
             {ProfitForPeriod, "Прибыль за период"},
+            // Discount calculation
+            {NotificationContractDiscountRecalculationRequired,
+                    "Сохраненная сумма договора не соответствует суммарному расчету скидок. "
+                            + "Пересчитайте план оплаты и сохраните договор перед печатью."},
+            {NotificationContractNotSelected, "Выберите договор для расчета скидок."},
+            {NotificationInvalidDiscountRow,
+                    "Строка скидки {0} не заполнена или содержит неверные значения."},
+            {NotificationIncompleteDiscountRow, "Строка скидки {0} заполнена не полностью."},
     };
 
     @Override

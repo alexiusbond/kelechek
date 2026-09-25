@@ -41,7 +41,10 @@ import org.vaadin.hene.popupbutton.PopupButton;
 import org.vaadin.simplefiledownloader.SimpleFileDownloader;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.Calendar;
 
@@ -112,7 +115,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Double contr_with_disc;
     private Double ttl_left;
     private Double ttl_payment;
-    private Double discountAmount;
     private Double debt;
     private Double toPay;
     private Double contractWithDiscount;
@@ -830,6 +832,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if (source == divideBtn) {
             if (instTypeCB.getValue() != null) {
                 recount();
+                recountInstPlanLabel();
                 addInstallmentPlanItem(true);
                 recountInstPlanLabel();
             }
@@ -1148,6 +1151,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
                     && studDataTable.getValue() != null) {
                 if (contractCB.getValue() != null) {
+                    recount();
+                    DiscountCalculation printedDiscounts = calculateDiscounts(true);
+                    if (contractWithDiscount == null || printedDiscounts.netAmount.compareTo(
+                            DiscountCalculation.money(BigDecimal.valueOf(contractWithDiscount))) != 0) {
+                        Notification.show(myUI.getMessage(Messages.NotificationContractDiscountRecalculationRequired),
+                                Notification.Type.WARNING_MESSAGE);
+                        return;
+                    }
                     StudentInfoPdf studInfo = new StudentInfoPdf();
                     try {
                         DbStudentInfoPdf dbs = new DbStudentInfoPdf();
@@ -1179,55 +1190,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 myUI.getMessage(Messages.ShortTitle)).getValue().toString());
                     }
                     studInfo.getContractInfo().setDebt(debt);
-                    if (discountsTable.size() > 0) {
-                        Iterator<?> iter = discountsTable.getItemIds().iterator();
-                        StringBuilder allDisc = new StringBuilder();
-                        String dis;
-                        double count_amount = (Double) (contractCB.getContainerProperty(contractCB.getValue(),
-                                myUI.getMessage(Messages.Amount)).getValue());
-                        while (iter.hasNext()) {
-                            Object next = iter.next();
-                            dis = ((((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
-                                    .getContainerProperty(((ComboBox) discountsTable
-                                                    .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                                            myUI.getMessage(Messages.Title)).getValue().toString()));
-                            dis = dis.substring(0, dis.indexOf(" - "));
-                            allDisc.append(dis);
-
-                            if (((Integer) ((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
-                                    .getContainerProperty(((ComboBox) discountsTable
-                                                    .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                                            myUI.getMessage(Messages.DiscountType)).getValue() == 1)
-                                    || ((Integer) ((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
-                                    .getContainerProperty(((ComboBox) discountsTable
-                                                    .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                                            myUI.getMessage(Messages.DiscountType)).getValue() == 3)) {
-                                allDisc.append(" - ").append(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue().toString()).append("% (").append(Settings.dFormat2.format(count_amount
-                                        * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue()) / 100)).append(" ").append(currency).append(")");
-                                count_amount -= count_amount
-                                        * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue()) / 100;
-                            } else if (((Integer) ((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
-                                    .getContainerProperty(((ComboBox) discountsTable
-                                                    .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                                            myUI.getMessage(Messages.DiscountType)).getValue() == 2)
-                                    || ((Integer) ((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
-                                    .getContainerProperty(((ComboBox) discountsTable
-                                                    .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                                            myUI.getMessage(Messages.DiscountType)).getValue() == 4)) {
-                                allDisc.append(" (").append(Settings.dFormat2.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue())).append(" ").append(currency).append(")");
-                                count_amount -= (Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue();
-                            }
-                            if (iter.hasNext()) {
-                                allDisc.append(", ");
-                            }
-                        }
-                        studInfo.getContractInfo().setDiscountStr(allDisc.toString());
-                    }
+                    studInfo.getContractInfo().setDiscountStr(buildDiscountDescription(printedDiscounts));
                     if (correctionsTable.size() > 0) {
                         Iterator<?> iter = correctionsTable.getItemIds().iterator();
                         StringBuilder allCorrections = new StringBuilder();
@@ -2579,12 +2542,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void insertInstPlanToDb(int student_id) {
-        double diff;
         try {
             DbStudentInstallmentPlan dbip = new DbStudentInstallmentPlan();
-            DbStudentPayment dbsp = new DbStudentPayment();
             dbip.connect();
-            dbsp.connect();
             for (Object next : ((IndexedContainer) installmentTable
                     .getContainerDataSource()).getItemIds()) {
 
@@ -2594,11 +2554,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     dbip.exec_insert(ip);
                 }
             }
-            diff = dbsp.exec_get_difference(student_id, myUI.getUser().getCurrent_year().getId());
-            if (diff != 0) {
-                dbip.exec_insert_notVisible(student_id, myUI.getUser().getCurrent_year().getId(), diff);
-            }
-            dbsp.close();
             dbip.close();
         } catch (Exception e) {
             logger.error(e);
@@ -3537,14 +3492,22 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private Boolean validateDiscountsTable() {
         for (Object obj : discountsTable.getItemIds()) {
-            if (!((TextField) discountsTable.getItem(obj).getItemProperty(
-                    myUI.getMessage(Messages.Amount)).getValue()).isValid()) {
+            TextField amountField = (TextField) discountsTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(Messages.Amount)).getValue();
+            ComboBox discountField = (ComboBox) discountsTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(Messages.Title)).getValue();
+            if (amountField == null || discountField == null
+                    || !amountField.isValid() || !discountField.isValid()) {
                 Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                         Notification.Type.WARNING_MESSAGE);
                 return false;
             }
-            if (!((ComboBox) discountsTable.getItem(obj).getItemProperty(
-                    myUI.getMessage(Messages.Title)).getValue()).isValid()) {
+        }
+        if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
+            try {
+                calculateDiscounts(true);
+            } catch (IllegalArgumentException e) {
+                logger.error("Invalid discount calculation", e);
                 Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                         Notification.Type.WARNING_MESSAGE);
                 return false;
@@ -3575,7 +3538,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private Boolean validateInstallmentTable() {
         if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
-            ArrayList<String> dates = new ArrayList<>();
             Iterator<?> iter = instPlanCont.getItemIds().iterator();
             Double amount = 0.0;
             while (iter.hasNext()) {
@@ -3592,18 +3554,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             Notification.Type.WARNING_MESSAGE);
                     return false;
                 }
-                if (((DateField) installmentTable.getItem(obj).getItemProperty(
-                        myUI.getMessage(Messages.Date)).getValue()).isValid()) {
-                    if (dates.contains(Settings.df.format(((DateField) installmentTable.getItem(obj).getItemProperty(
-                            myUI.getMessage(Messages.Date)).getValue()).getValue()))) {
-                        Notification.show(myUI.getMessage(Messages.NotificationSameDatesAreNotAllowed),
-                                Notification.Type.WARNING_MESSAGE);
-                        return false;
-                    } else if ((Integer) installmentTable.getItem(obj).getItemProperty(Settings.status_id).getValue() == 1) {
-                        dates.add(Settings.df.format(((DateField) installmentTable.getItem(obj).getItemProperty(
-                                myUI.getMessage(Messages.Date)).getValue()).getValue()));
-                    }
-                }
                 if ((Integer) installmentTable.getItem(obj).getItemProperty(
                         Settings.status_id).getValue() != 0) {
                     amount += (Double) (((TextField) installmentTable.getItem(obj).getItemProperty(
@@ -3611,6 +3561,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 }
             }
             recount();
+            recountInstPlanLabel();
             if (Settings.round(instCtrAmount, 2) != Settings.round(amount, 2)) {
                 Notification.show(myUI.getMessage(Messages.NotificationWrongSumInstSum),
                         Notification.Type.WARNING_MESSAGE);
@@ -3686,52 +3637,233 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
     }
 
-    private StudentDiscount getStudentDiscount(int st_id, int year_id, String disc_id) {
-        StudentDiscount d = new StudentDiscount();
-        if ((((ComboBox) discountsTable.getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue())
-                .getContainerProperty(((ComboBox) discountsTable
-                                .getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                        myUI.getMessage(Messages.DiscountType)).getValue().toString().equals("3"))
-                || (((ComboBox) discountsTable.getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue())
-                .getContainerProperty(((ComboBox) discountsTable
-                                .getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                        myUI.getMessage(Messages.DiscountType)).getValue().toString().equals("4"))) {
-            d.setFree_entry_amount((Double) (((TextField) discountsTable.getContainerProperty(disc_id,
-                    myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()));
+    /**
+     * Percentage discounts (types 1 and 3) share the original contract base.
+     * Fixed discounts (types 2 and 4) are subtracted after their combined percentage.
+     * No implicit 100% cap or zero floor is applied.
+     */
+    private static final class DiscountCalculation {
+        private static final BigDecimal CENT = new BigDecimal("0.01");
+
+        private final BigDecimal totalPercent;
+        private final BigDecimal percentageAmount;
+        private final BigDecimal fixedAmount;
+        private final BigDecimal netAmount;
+        private final Map<String, BigDecimal> rowAmounts;
+
+        private DiscountCalculation(BigDecimal totalPercent,
+                                    BigDecimal percentageAmount,
+                                    BigDecimal fixedAmount,
+                                    BigDecimal netAmount,
+                                    Map<String, BigDecimal> rowAmounts) {
+            this.totalPercent = totalPercent;
+            this.percentageAmount = percentageAmount;
+            this.fixedAmount = fixedAmount;
+            this.netAmount = netAmount;
+            this.rowAmounts = Collections.unmodifiableMap(rowAmounts);
         }
-        d.setDiscount_id(Integer.parseInt(((ComboBox) discountsTable
-                .getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue()).getValue().toString()));
+
+        private static BigDecimal money(BigDecimal value) {
+            return value.setScale(2, RoundingMode.HALF_UP);
+        }
+
+        private static DiscountCalculation calculate(
+                BigDecimal contractAmount,
+                Map<String, BigDecimal> percentages,
+                Map<String, BigDecimal> fixedAmounts) {
+            BigDecimal base = money(contractAmount);
+            BigDecimal totalPercent = BigDecimal.ZERO;
+            BigDecimal allocatedPercentage = BigDecimal.ZERO;
+            BigDecimal fixedTotal = BigDecimal.ZERO;
+            Map<String, BigDecimal> rowAmounts = new LinkedHashMap<>();
+            Map<String, BigDecimal> remainders = new HashMap<>();
+
+            for (Map.Entry<String, BigDecimal> entry : percentages.entrySet()) {
+                totalPercent = totalPercent.add(entry.getValue());
+                BigDecimal exact = base.multiply(entry.getValue()).movePointLeft(2);
+                BigDecimal roundedDown = exact.setScale(2, RoundingMode.FLOOR);
+                rowAmounts.put(entry.getKey(), roundedDown);
+                remainders.put(entry.getKey(), exact.subtract(roundedDown));
+                allocatedPercentage = allocatedPercentage.add(roundedDown);
+            }
+
+            // Apply the SUM of percentages once, not one after another.
+            BigDecimal percentageTotal = money(base.multiply(totalPercent).movePointLeft(2));
+
+            // Reconcile row cents with the once-rounded percentage total.
+            // Largest fractional remainder first; stable discount ID breaks ties.
+            // Reordering the table cannot change the total or its row allocation.
+            int centsToAllocate = percentageTotal.subtract(allocatedPercentage)
+                    .movePointRight(2).intValueExact();
+            List<String> percentageIds = new ArrayList<>(percentages.keySet());
+            Collections.sort(percentageIds, (left, right) -> {
+                int comparison = remainders.get(right).compareTo(remainders.get(left));
+                return comparison != 0 ? comparison : left.compareTo(right);
+            });
+            for (int i = 0; i < centsToAllocate; i++) {
+                String id = percentageIds.get(i);
+                rowAmounts.put(id, rowAmounts.get(id).add(CENT));
+            }
+
+            for (Map.Entry<String, BigDecimal> entry : fixedAmounts.entrySet()) {
+                BigDecimal amount = money(entry.getValue());
+                rowAmounts.put(entry.getKey(), amount);
+                fixedTotal = fixedTotal.add(amount);
+            }
+
+            BigDecimal net = base.subtract(percentageTotal).subtract(fixedTotal);
+            return new DiscountCalculation(totalPercent, percentageTotal,
+                    money(fixedTotal), money(net), rowAmounts);
+        }
+    }
+
+    private Integer getDiscountType(Object itemId) {
+        Item item = discountsTable.getItem(itemId);
+        if (item == null) {
+            return null;
+        }
+        Property titleProperty = item.getItemProperty(myUI.getMessage(Messages.Title));
+        if (titleProperty == null || !(titleProperty.getValue() instanceof ComboBox)) {
+            return null;
+        }
+        ComboBox cb = (ComboBox) titleProperty.getValue();
+        if (cb.getValue() == null) {
+            return null;
+        }
+        Property typeProperty = cb.getContainerProperty(
+                cb.getValue(), myUI.getMessage(Messages.DiscountType));
+        if (typeProperty == null || typeProperty.getValue() == null) {
+            return null;
+        }
+        try {
+            return Integer.valueOf(typeProperty.getValue().toString());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private BigDecimal getDiscountInputValue(Object itemId) {
+        Item item = discountsTable.getItem(itemId);
+        if (item == null) {
+            return null;
+        }
+        Property amountProperty = item.getItemProperty(myUI.getMessage(Messages.Amount));
+        if (amountProperty == null || !(amountProperty.getValue() instanceof TextField)) {
+            return null;
+        }
+        TextField field = (TextField) amountProperty.getValue();
+        if (field.getPropertyDataSource() == null
+                || field.getPropertyDataSource().getValue() == null) {
+            return null;
+        }
+        try {
+            // Read the numeric data source, not locale-formatted field text.
+            return new BigDecimal(field.getPropertyDataSource().getValue().toString());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private DiscountCalculation calculateDiscounts(boolean requireComplete) {
+        if (contractCB.getValue() == null) {
+            throw new IllegalArgumentException(myUI.getMessage(Messages.NotificationContractNotSelected));
+        }
+        BigDecimal base = new BigDecimal(contractCB.getContainerProperty(
+                contractCB.getValue(), myUI.getMessage(Messages.Amount)).getValue().toString());
+        Map<String, BigDecimal> percentages = new LinkedHashMap<>();
+        Map<String, BigDecimal> fixedAmounts = new LinkedHashMap<>();
+
+        for (Object itemId : discountsTable.getItemIds()) {
+            Integer type = getDiscountType(itemId);
+            BigDecimal amount = getDiscountInputValue(itemId);
+            if (type == null || type < 1 || type > 4 || amount == null || amount.signum() < 0) {
+                if (requireComplete) {
+                    throw new IllegalArgumentException(MessageFormat.format(
+                            myUI.getMessage(Messages.NotificationInvalidDiscountRow),
+                            String.valueOf(itemId)));
+                }
+                // A just-added row is allowed to remain incomplete during editing.
+                continue;
+            }
+            ComboBox discountCB = (ComboBox) discountsTable.getContainerProperty(
+                    itemId, myUI.getMessage(Messages.Title)).getValue();
+            // Catalog ID is stable even when a new UI row receives a DB row ID.
+            String discountId = discountCB.getValue().toString();
+            if (percentages.containsKey(discountId) || fixedAmounts.containsKey(discountId)) {
+                if (requireComplete) {
+                    throw new IllegalArgumentException(
+                            myUI.getMessage(Messages.NotificationSameDiscountsAreNotAllowed)
+                                    + " (" + discountId + ")");
+                }
+                continue;
+            }
+            if (type == 1 || type == 3) {
+                percentages.put(discountId, amount);
+            } else {
+                fixedAmounts.put(discountId, amount);
+            }
+        }
+        return DiscountCalculation.calculate(base, percentages, fixedAmounts);
+    }
+
+    private String buildDiscountDescription(DiscountCalculation calculation) {
+        StringBuilder result = new StringBuilder();
+        // Show percentages before fixed amounts without reordering the UI table.
+        for (int group = 0; group < 2; group++) {
+            for (Object itemId : discountsTable.getItemIds()) {
+                Integer type = getDiscountType(itemId);
+                boolean isPercentage = type != null && (type == 1 || type == 3);
+                if ((group == 0) != isPercentage) {
+                    continue;
+                }
+                ComboBox cb = (ComboBox) discountsTable.getContainerProperty(
+                        itemId, myUI.getMessage(Messages.Title)).getValue();
+                String title = cb.getContainerProperty(
+                        cb.getValue(), myUI.getMessage(Messages.Title)).getValue().toString();
+                int separator = title.indexOf(" - ");
+                if (separator >= 0) {
+                    title = title.substring(0, separator);
+                }
+                if (result.length() > 0) {
+                    result.append(", ");
+                }
+                result.append(title);
+                if (isPercentage) {
+                    result.append(" - ").append(getDiscountInputValue(itemId)
+                            .stripTrailingZeros().toPlainString()).append("%");
+                }
+                result.append(" (").append(Settings.dFormat2.format(
+                                calculation.rowAmounts.get(cb.getValue().toString())))
+                        .append(" ").append(currency).append(")");
+            }
+        }
+        return result.toString();
+    }
+
+    private StudentDiscount getStudentDiscount(int st_id, int year_id, String disc_id,
+                                               DiscountCalculation calculation) {
+        Integer type = getDiscountType(disc_id);
+        BigDecimal value = getDiscountInputValue(disc_id);
+        ComboBox cb = (ComboBox) discountsTable.getContainerProperty(
+                disc_id, myUI.getMessage(Messages.Title)).getValue();
+        BigDecimal discountValue = calculation.rowAmounts.get(cb.getValue().toString());
+        if (type == null || value == null || discountValue == null) {
+            throw new IllegalArgumentException(MessageFormat.format(
+                    myUI.getMessage(Messages.NotificationIncompleteDiscountRow), disc_id));
+        }
+        StudentDiscount d = new StudentDiscount();
+        if (type == 3 || type == 4) {
+            d.setFree_entry_amount(value.doubleValue());
+        }
+        d.setDiscount_id(Integer.parseInt(cb.getValue().toString()));
         d.setStudent_id(st_id);
         d.setEmployee_id(myUI.getUser().getId());
         d.setYear_id(year_id);
         d.setId(disc_id);
-        d.setNote(((TextField) discountsTable
-                .getContainerProperty(disc_id, myUI.getMessage(Messages.Note)).getValue()).getValue());
-        if (contractCB.getValue() != null) {
-            discountAmount = (Double) (((TextField) discountsTable.getContainerProperty(disc_id,
-                    myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
-            if ((((ComboBox) discountsTable.getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue())
-                    .getContainerProperty(((ComboBox) discountsTable
-                                    .getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                            myUI.getMessage(Messages.DiscountType)).getValue().toString().equals("1"))
-                    || (((ComboBox) discountsTable.getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue())
-                    .getContainerProperty(((ComboBox) discountsTable
-                                    .getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                            myUI.getMessage(Messages.DiscountType)).getValue().toString().equals("3"))) {
-                d.setDiscount_value(Settings.round((contr_with_disc * discountAmount / 100), 2));
-                contr_with_disc -= contr_with_disc * discountAmount / 100;
-            } else if ((((ComboBox) discountsTable.getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue())
-                    .getContainerProperty(((ComboBox) discountsTable
-                                    .getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                            myUI.getMessage(Messages.DiscountType)).getValue().toString().equals("2"))
-                    || (((ComboBox) discountsTable.getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue())
-                    .getContainerProperty(((ComboBox) discountsTable
-                                    .getContainerProperty(disc_id, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                            myUI.getMessage(Messages.DiscountType)).getValue().toString().equals("4"))) {
-                d.setDiscount_value(Settings.round((discountAmount), 2));
-                contr_with_disc = contr_with_disc - discountAmount;
-            }
-        }
+        d.setNote(((TextField) discountsTable.getContainerProperty(
+                disc_id, myUI.getMessage(Messages.Note)).getValue()).getValue());
+        d.setDiscount_value(discountValue.doubleValue());
+        // Do not mutate contr_with_disc while creating an individual row.
         return d;
     }
 
@@ -3892,40 +4024,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void recountInstPlanLabel() {
         if (contractCB.getValue() != null) {
-            instCtrAmount = 0.0;
             netContrAmount = 0.0;
             instPlanContSum = 0.0;
-            instCtrAmount = Double.parseDouble(contractCB.getContainerProperty(contractCB.getValue(),
-                    myUI.getMessage(Messages.Amount)).getValue().toString());
-
-            if (discountsTable.size() > 0) {
-                for (Object next : discountsTable.getItemIds()) {
-                    if (((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue() != null
-                            && (!((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue().equals(""))) {
-                        discountAmount = (Double) (((TextField) discountsTable.getContainerProperty(next,
-                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
-                        if ((((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
-                                .getContainerProperty(((ComboBox) discountsTable
-                                                .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                                        myUI.getMessage(Messages.DiscountType)).getValue().toString().equals("1"))
-                                || (((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
-                                .getContainerProperty(((ComboBox) discountsTable
-                                                .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                                        myUI.getMessage(Messages.DiscountType)).getValue().toString().equals("3"))) {
-                            instCtrAmount -= instCtrAmount * discountAmount / 100;
-                        } else if ((((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
-                                .getContainerProperty(((ComboBox) discountsTable
-                                                .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                                        myUI.getMessage(Messages.DiscountType)).getValue().toString().equals("2"))
-                                || (((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue())
-                                .getContainerProperty(((ComboBox) discountsTable
-                                                .getContainerProperty(next, myUI.getMessage(Messages.Title)).getValue()).getValue(),
-                                        myUI.getMessage(Messages.DiscountType)).getValue().toString().equals("4"))) {
-                            instCtrAmount = instCtrAmount - discountAmount;
-                        }
-                    }
-                }
-            }
+            instCtrAmount = calculateDiscounts(false).netAmount.doubleValue();
 
             if (correctionsTable.size() > 0) {
                 for (Object next : correctionsTable.getItemIds()) {
@@ -3952,9 +4053,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             instCtrAmount += debt;
             netContrAmount = instCtrAmount;
-            if (ttl_payment != null && ttl_payment != 0.0) {
-                instCtrAmount -= ttl_payment;
-            }
             netIPlanTtlLab.setValue(myUI.getMessage(Messages.ToPlan) + ": " + Settings.dFormat2.format(Settings.round(instCtrAmount, 2)) + " " + currency);
             instPlanTtlLab.setValue(myUI.getMessage(Messages.InstallmentPlanTotal) + ": " + Settings.dFormat2.format(instPlanContSum) + " " + currency);
             if (instPlanCont != null) {
@@ -4124,9 +4222,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         myUI.getMessage(Messages.Amount)).getValue()).setRequired(true);
             }
         }
+        recountInstPlanLabel();
     }
 
     private void insertDiscounts() {
+        // Compute once, before any deletion or insert/update is attempted.
+        DiscountCalculation calculation = calculateDiscounts(true);
+        contr_with_disc = calculation.netAmount.doubleValue();
         try {
             DbStudentDiscount dbsd = new DbStudentDiscount();
             dbsd.connect();
@@ -4138,12 +4240,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     dbCon.exec_delete(delDiscId, Settings.dbStudentDiscount);
                 }
             }
-            contr_with_disc = (Double) contractCB.getContainerProperty(contractCB.getValue(), myUI.getMessage(Messages.Amount)).getValue();
-
             if (discountsTable.getContainerDataSource().size() > 0) {
                 for (Object next : discountsTable.getItemIds()) {
                     StudentDiscount studentDiscount = getStudentDiscount((Integer) studDataTable.getValue(),
-                            myUI.getUser().getCurrent_year().getId(), ((String) next));
+                            myUI.getUser().getCurrent_year().getId(), next.toString(), calculation);
                     if (discountsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(Messages.Update))) {
                         dbsd.exec_update(studentDiscount);
